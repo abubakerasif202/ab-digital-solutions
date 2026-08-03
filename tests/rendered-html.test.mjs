@@ -1,33 +1,61 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const developmentPreviewMeta =
-  /<meta(?=[^>]*\bname=["']codex-preview["'])(?=[^>]*\bcontent=["']development["'])[^>]*>/i;
+const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
 
-test("renders development preview metadata", async () => {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+test("homepage exposes content directly instead of using an iframe", async () => {
+  const [page, homepage] = await Promise.all([
+    read("../app/page.tsx"),
+    read("../app/agency-home.tsx"),
+  ]);
 
-  const response = await worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
+  assert.doesNotMatch(page, /<iframe\b/i);
+  assert.match(homepage, /Websites that make your business/);
+  assert.match(homepage, /id="contact"/);
+  assert.match(homepage, /aria-roledescription="carousel"/);
+  assert.match(homepage, /prefers-reduced-motion/);
+});
 
-  assert.equal(response.status, 200);
-  assert.match(
-    response.headers.get("content-type") ?? "",
-    /^text\/html\b/i,
-  );
-  assert.match(await response.text(), developmentPreviewMeta);
+test("portfolio contains every required live project", async () => {
+  const homepage = await read("../app/agency-home.tsx");
+  const requiredProjects = [
+    "https://www.maplerentals.com.au/",
+    "https://www.galarentals.com.au/",
+    "https://zqremovals.au/",
+    "https://www.decentdevelopment.com.au/",
+    "https://milestonedevelopment.com.au/",
+    "https://4-point-concrete-design.vercel.app/",
+  ];
+
+  for (const project of requiredProjects) assert.match(homepage, new RegExp(project.replaceAll(".", "\\.")));
+});
+
+test("SEO routes and metadata are configured", async () => {
+  const [layout, robots, sitemap] = await Promise.all([
+    read("../app/layout.tsx"),
+    read("../app/robots.ts"),
+    read("../app/sitemap.ts"),
+  ]);
+
+  assert.match(layout, /alternates: \{ canonical: "\/" \}/);
+  assert.match(layout, /application\/ld\+json/);
+  assert.match(layout, /ProfessionalService/);
+  assert.match(robots, /sitemap\.xml/);
+  assert.match(sitemap, /priority: 1/);
+});
+
+test("Vercel configuration uses the Next.js production build", async () => {
+  const [rawVercelConfig, rawPackage] = await Promise.all([
+    read("../vercel.json"),
+    read("../package.json"),
+  ]);
+  const vercelConfig = JSON.parse(rawVercelConfig);
+  const packageJson = JSON.parse(rawPackage);
+
+  assert.equal(vercelConfig.framework, "nextjs");
+  assert.equal(vercelConfig.installCommand, "npm ci");
+  assert.equal(vercelConfig.buildCommand, "npm run build");
+  assert.equal(packageJson.scripts.build, "next build");
+  assert.equal(packageJson.scripts.typecheck, "bash scripts/sites-env.sh -- tsc --noEmit");
 });

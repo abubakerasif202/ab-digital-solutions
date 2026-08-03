@@ -1,77 +1,144 @@
 import type { Metadata, Viewport } from "next";
+import { assetBase, siteConfig } from "./site-config";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ab-digital-solutions.sites.chatgpt.com"),
-  other: { "codex-preview": "development" },
-  title: "AB Digital Solutions | Premium Websites & Digital Growth",
-  description:
-    "AB Digital Solutions creates premium websites, SEO strategies and digital experiences that help Australian businesses grow.",
+  metadataBase: new URL(siteConfig.url),
+  applicationName: siteConfig.name,
+  title: {
+    default: "Web Design Sydney | AB Digital Solutions",
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
   keywords: [
-    "website design Sydney",
-    "web development Australia",
-    "SEO services",
-    "digital marketing",
+    "web design Sydney",
+    "website development Australia",
+    "Sydney web design agency",
+    "SEO services Australia",
+    "small business websites Sydney",
     "AB Digital Solutions",
   ],
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  category: "Web design and development",
+  alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "AB Digital Solutions | Premium Websites & Digital Growth",
-    description:
-      "Premium websites, SEO and digital growth solutions for Australian businesses.",
+    title: "AB Digital Solutions | Websites Built to Earn Attention",
+    description: siteConfig.description,
+    url: "/",
+    siteName: siteConfig.name,
     type: "website",
     locale: "en_AU",
     images: [
       {
-        url: "/site/ab-digital-premium/assets/ab-hero-website-creation.png",
-        width: 1942,
-        height: 809,
-        alt: "AB Digital Solutions website creation presentation",
+        url: `${assetBase}/ab-brand-banner.webp`,
+        width: 1800,
+        height: 750,
+        alt: "AB Digital Solutions website design and digital growth studio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AB Digital Solutions | Premium Websites & Digital Growth",
-    description:
-      "Premium websites, SEO and digital growth solutions for Australian businesses.",
-    images: ["/site/ab-digital-premium/assets/ab-hero-website-creation.png"],
+    title: "Web Design Sydney | AB Digital Solutions",
+    description: siteConfig.description,
+    images: [`${assetBase}/ab-brand-banner.webp`],
   },
   icons: {
-    icon: "/site/ab-digital-premium/assets/ab-logo-mark.png",
-    shortcut: "/site/ab-digital-premium/assets/ab-logo-mark.png",
-    apple: "/site/ab-digital-premium/assets/ab-logo-mark.png",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: `${assetBase}/ab-logo-mark.png`, type: "image/png" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: `${assetBase}/ab-logo-mark.png`,
   },
+  manifest: "/manifest.webmanifest",
+  other: { "codex-preview": "development" },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: "#050505",
+  colorScheme: "dark light",
 };
 
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "AB Digital Solutions",
-  description:
-    "Website design, development, SEO, branding and digital marketing for Australian businesses.",
-  telephone: "+61 423 332 037",
-  email: "abubakerasif202@yahoo.com",
-  areaServed: "Australia",
+  "@graph": [
+    {
+      "@type": ["Organization", "ProfessionalService"],
+      "@id": `${siteConfig.url}/#organization`,
+      name: siteConfig.name,
+      url: siteConfig.url,
+      logo: `${siteConfig.url}${assetBase}/ab-logo-mark.png`,
+      image: `${siteConfig.url}${assetBase}/ab-brand-banner.webp`,
+      description: siteConfig.description,
+      telephone: siteConfig.phoneInternational,
+      email: siteConfig.email,
+      areaServed: { "@type": "Country", name: "Australia" },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Sydney",
+        addressRegion: "NSW",
+        addressCountry: "AU",
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: siteConfig.phoneInternational,
+        email: siteConfig.email,
+        contactType: "sales",
+        areaServed: "AU",
+        availableLanguage: "English",
+      },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Digital services",
+        itemListElement: [
+          "Website design and development",
+          "SEO and local visibility",
+          "Branding and content",
+          "E-commerce solutions",
+          "Digital marketing",
+          "Website care and support",
+        ].map((name) => ({
+          "@type": "Offer",
+          itemOffered: { "@type": "Service", name },
+        })),
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteConfig.url}/#website`,
+      url: siteConfig.url,
+      name: siteConfig.name,
+      description: siteConfig.description,
+      inLanguage: "en-AU",
+      publisher: { "@id": `${siteConfig.url}/#organization` },
+    },
+  ],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-AU">
       <body>
         {children}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
         />
       </body>
     </html>
