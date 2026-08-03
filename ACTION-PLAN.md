@@ -3,11 +3,12 @@
 ## Completed in source
 
 - [x] Replace the iframe homepage with native semantic React content.
-- [x] Rebuild the visual system around premium black, white and red art direction.
+- [x] Rebuild the visual system around the supplied premium black-and-gold art direction.
 - [x] Add the six required live projects and retained screenshot previews.
 - [x] Add an accessible, pausable hero project slideshow.
 - [x] Improve navigation, typography, spacing, cards, forms and mobile reflow.
 - [x] Add canonical, social, robots, sitemap, manifest and JSON-LD metadata.
+- [x] Add six substantive service routes, a privacy policy and a secure server-side contact flow.
 - [x] Configure native Next.js output for Vercel while retaining the Sites build fallback.
 - [x] Add deployment contract tests and a custom not-found route.
 

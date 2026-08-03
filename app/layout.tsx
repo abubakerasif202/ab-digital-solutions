@@ -41,20 +41,13 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     type: "website",
     locale: "en_AU",
-    images: [
-      {
-        url: `${assetBase}/ab-brand-banner.webp`,
-        width: 1800,
-        height: 750,
-        alt: "AB Digital Solutions website design and digital growth studio",
-      },
-    ],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "AB Digital Solutions website design and digital growth studio" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Web Design Sydney | AB Digital Solutions",
     description: siteConfig.description,
-    images: [`${assetBase}/ab-brand-banner.webp`],
+    images: ["/opengraph-image"],
   },
   icons: {
     icon: [
@@ -84,7 +77,7 @@ const structuredData = {
       name: siteConfig.name,
       url: siteConfig.url,
       logo: `${siteConfig.url}${assetBase}/ab-logo-mark.png`,
-      image: `${siteConfig.url}${assetBase}/ab-brand-banner.webp`,
+      image: `${siteConfig.url}/opengraph-image`,
       description: siteConfig.description,
       telephone: siteConfig.phoneInternational,
       email: siteConfig.email,

@@ -44,8 +44,22 @@ test("SEO routes and metadata are configured", async () => {
   assert.match(layout, /ProfessionalService/);
   assert.match(robots, /sitemap\.xml/);
   assert.match(sitemap, /priority: 1/);
+  assert.match(sitemap, /servicePages/);
   assert.match(llms, /^# AB Digital Solutions/m);
   assert.match(llms, /https:\/\/www\.abwebstudio\.com\.au/);
+});
+
+test("contact form posts to the protected server endpoint", async () => {
+  const [homepage, route] = await Promise.all([
+    read("../app/agency-home.tsx"),
+    read("../app/api/contact/route.ts"),
+  ]);
+  assert.match(homepage, /fetch\("\/api\/contact"/);
+  assert.doesNotMatch(homepage, /window\.location\.assign/);
+  assert.match(route, /RESEND_API_KEY/);
+  assert.match(route, /allowedOrigin/);
+  assert.match(route, /withinRateLimit/);
+  assert.match(route, /company/);
 });
 
 test("Vercel configuration uses the Next.js production build", async () => {

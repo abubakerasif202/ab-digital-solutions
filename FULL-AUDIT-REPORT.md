@@ -4,7 +4,7 @@
 
 Scope: full repository and single public homepage, covering crawlability, metadata, content structure, structured data, images, accessibility-linked SEO and deploy configuration.
 
-Overall rating: implementation-ready. The original root route exposed only an iframe, which was a confirmed rendering and content-discovery weakness. The homepage now renders its complete semantic content natively through Next.js, with a canonical URL, crawl directives, structured data, responsive images and a generated sitemap.
+Overall rating: implementation-ready. The original root route exposed only an iframe, which was a confirmed rendering and content-discovery weakness. The homepage now renders its complete semantic content natively through Next.js, with the custom-domain canonical URL, crawl directives, structured data, responsive images, dedicated service routes and a generated sitemap.
 
 Top remediated issues:
 
@@ -16,7 +16,7 @@ Top opportunities after launch:
 
 1. Collect real-user Core Web Vitals once the production origin has enough traffic.
 2. Validate the production schema and social preview against Google's and major social platforms' live tools.
-3. Add dedicated service and case-study routes when unique, substantive content is available.
+3. Expand the portfolio into detailed case studies as project evidence becomes available.
 
 ## Findings
 

@@ -139,6 +139,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [sliderPauseOverride, setSliderPauseOverride] = useState<boolean | null>(null);
   const [formStatus, setFormStatus] = useState("");
+  const [formState, setFormState] = useState<"idle" | "sending" | "success" | "error">("idle");
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const prefersReducedMotion = useSyncExternalStore(
     subscribeToReducedMotion,
@@ -177,20 +178,24 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
   const showNextSlide = () =>
     setActiveSlide((current) => (current + 1) % projects.length);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
-
-    const data = new FormData(form);
-    const name = `${data.get("firstName") ?? ""} ${data.get("lastName") ?? ""}`.trim();
-    const subject = encodeURIComponent(`Website enquiry from ${name}`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${data.get("email")}\nPhone: ${data.get("phone") || "Not supplied"}\nService: ${data.get("service")}\nApprox. budget: ${data.get("budget")}\nIdeal timeline: ${data.get("timeline")}\n\nProject details:\n${data.get("message")}`,
-    );
-
-    setFormStatus("Your email app is opening with the enquiry ready to review and send.");
-    window.location.assign(`mailto:${siteConfig.email}?subject=${subject}&body=${body}`);
+    setFormState("sending");
+    setFormStatus("Sending your enquiry…");
+    const data = Object.fromEntries(new FormData(form).entries());
+    try {
+      const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      const result = await response.json() as { error?: string };
+      if (!response.ok) throw new Error(result.error || "We could not send your enquiry.");
+      form.reset();
+      setFormState("success");
+      setFormStatus("Thanks — your enquiry has been sent. We’ll be in touch shortly.");
+    } catch (error) {
+      setFormState("error");
+      setFormStatus(error instanceof Error ? error.message : `Please email ${siteConfig.email}.`);
+    }
   };
 
   return (
@@ -258,6 +263,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   Book a free consultation <ArrowIcon />
                 </a>
                 <a className="button button-ghost" href="#work">View selected work</a>
+              </div>
+              <div className="hero-brand-art">
+                <Image src={`${assetBase}/ab-hero-website-creation.png`} alt="AB Digital Solutions — website creation that represents your brand" width={1942} height={809} priority />
               </div>
               <div className="hero-proof" aria-label="Studio highlights">
                 <div><strong>06</strong><span>Live projects featured</span></div>
@@ -369,6 +377,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <ul>
                     {service.details.map((detail) => <li key={detail}>{detail}</li>)}
                   </ul>
+                  <a className="service-link" href={`/services/${["web-design-sydney", "seo-local-visibility", "branding-content", "ecommerce-website-development", "digital-marketing", "website-maintenance"][Number(service.number) - 1]}`}>Explore service <ArrowIcon /></a>
                 </article>
               ))}
             </div>
@@ -491,6 +500,10 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             </div>
 
             <form className="contact-form" data-reveal onSubmit={handleSubmit}>
+              <div className="form-trap" aria-hidden="true">
+                <label htmlFor="company">Company website</label>
+                <input id="company" name="company" type="text" tabIndex={-1} autoComplete="off" />
+              </div>
               <div className="form-grid">
                 <label htmlFor="first-name">First name <span aria-hidden="true">*</span></label>
                 <input id="first-name" name="firstName" type="text" autoComplete="given-name" required />
@@ -528,9 +541,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <label htmlFor="message">Project details <span aria-hidden="true">*</span></label>
                 <textarea id="message" name="message" rows={5} required />
               </div>
-              <button className="button button-primary" type="submit">Prepare project enquiry <ArrowIcon /></button>
-              <p className="form-note">This opens your email app with the details ready to review. No mailing lists. No spam.</p>
-              <p className="form-status" role="status" aria-live="polite">{formStatus}</p>
+              <button className="button button-primary" type="submit" disabled={formState === "sending"}>{formState === "sending" ? "Sending…" : "Send project enquiry"} <ArrowIcon /></button>
+              <p className="form-note">Your details are used only to respond to this enquiry. No mailing lists. No spam.</p>
+              <p className={`form-status ${formState}`} role="status" aria-live="polite">{formStatus}</p>
             </form>
           </div>
         </section>
@@ -543,7 +556,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           </a>
           <p>Premium websites, digital marketing and online growth solutions for Australian businesses.</p>
           <nav aria-label="Footer navigation">
-            <a href="#services">Services</a><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a>
+            <a href="#services">Services</a><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a><a href="/privacy">Privacy</a>
           </nav>
         </div>
         <div className="container footer-bottom">

@@ -36,6 +36,10 @@ npm run build
 
 The legacy OpenAI Sites/Vinext build remains available as `npm run build:sites`.
 
+## Contact delivery
+
+The contact form posts to `/api/contact`, which validates and rate-limits enquiries before delivering them through Resend. Configure `RESEND_API_KEY` as a sensitive Vercel environment variable. See `.env.example`; never commit the real key.
+
 ## Vercel deployment
 
 The committed `vercel.json` pins framework detection to Next.js and uses:
@@ -51,7 +55,7 @@ vercel pull --yes --environment=production
 vercel --prod
 ```
 
-`NEXT_PUBLIC_SITE_URL` is optional. When it is absent, Vercel's automatically supplied `VERCEL_PROJECT_PRODUCTION_URL` is used for canonical URLs, the sitemap and structured data.
+The canonical production origin is `https://www.abwebstudio.com.au`.
 
 ## Content and contact
 
