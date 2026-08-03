@@ -45,8 +45,18 @@ test("SEO routes and metadata are configured", async () => {
   assert.match(robots, /sitemap\.xml/);
   assert.match(sitemap, /priority: 1/);
   assert.match(sitemap, /servicePages/);
+  assert.match(sitemap, /\/privacy/);
   assert.match(llms, /^# AB Digital Solutions/m);
   assert.match(llms, /https:\/\/www\.abwebstudio\.com\.au/);
+});
+
+test("brand theme keeps gold primary accents and red secondary accents", async () => {
+  const styles = await read("../app/globals.css");
+
+  assert.match(styles, /--red: #c99732/);
+  assert.match(styles, /--brand-red: #e32636/);
+  assert.match(styles, /box-shadow: inset 0 2px 0 var\(--brand-red\)/);
+  assert.match(styles, /\.button-primary[\s\S]*background: var\(--red\)/);
 });
 
 test("contact form posts to the protected server endpoint", async () => {
