@@ -56,6 +56,7 @@ test("Vercel configuration uses the Next.js production build", async () => {
   assert.equal(vercelConfig.framework, "nextjs");
   assert.equal(vercelConfig.installCommand, "npm ci");
   assert.equal(vercelConfig.buildCommand, "npm run build");
-  assert.equal(packageJson.scripts.build, "next build");
+  assert.match(packageJson.scripts.build, /next build$/);
+  assert.equal(packageJson.scripts.verify, "npm run lint && npm run typecheck && npm test");
   assert.equal(packageJson.scripts.typecheck, "bash scripts/sites-env.sh -- tsc --noEmit");
 });
