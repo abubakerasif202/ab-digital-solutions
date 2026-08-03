@@ -393,7 +393,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   key={project.name}
-                  aria-label={`${project.name}. ${project.category}. ${project.description} Live website. Visit ${project.name} live website (opens in a new tab)`}
+                  aria-label={`${project.alt}. Live website. ${String(index + 1).padStart(2, "0")}. ${project.category}. ${project.name}. ${project.description} Visit ${project.name} live website (opens in a new tab)`}
                 >
                   <div className="project-image">
                     <Image
@@ -467,6 +467,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <h2 id="about-heading">Your digital presence should work as hard as you do.</h2>
               <p>AB Digital Solutions is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
               <p>We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</p>
+              <p>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</p>
               <dl className="about-values">
                 <div><dt>Clear communication</dt><dd>Simple advice and transparent decisions.</dd></div>
                 <div><dt>Reliable delivery</dt><dd>A professional process from brief to launch.</dd></div>
