@@ -45,7 +45,7 @@ test("SEO routes and metadata are configured", async () => {
   assert.match(robots, /sitemap\.xml/);
   assert.match(sitemap, /priority: 1/);
   assert.match(llms, /^# AB Digital Solutions/m);
-  assert.match(llms, /https:\/\/ab-digital-solutions\.vercel\.app/);
+  assert.match(llms, /https:\/\/www\.abwebstudio\.com\.au/);
 });
 
 test("Vercel configuration uses the Next.js production build", async () => {
