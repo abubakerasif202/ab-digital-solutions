@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   applicationName: siteConfig.name,
   title: {
-    default: "Web Design Sydney | AB Digital Solutions",
+    default: "Web Design Sydney & Digital Agency | AB Digital Solutions",
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -127,6 +127,9 @@ const structuredData = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-AU">
+      <head>
+        <link rel="preconnect" href="https://api.resend.com" />
+      </head>
       <body>
         {children}
         <script

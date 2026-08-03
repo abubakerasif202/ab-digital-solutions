@@ -28,11 +28,21 @@ export default async function ServicePage({ params }: Props) {
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "Service", name: service.title, description: service.summary, provider: { "@id": `${siteConfig.url}/#organization` }, areaServed: "Australia" },
-      { "@type": "BreadcrumbList", itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
-        { "@type": "ListItem", position: 2, name: service.title, item: `${siteConfig.url}/services/${service.slug}` },
-      ] },
+      {
+        "@type": "Service",
+        name: service.title,
+        description: service.summary,
+        provider: { "@id": `${siteConfig.url}/#organization` },
+        areaServed: { "@type": "Country", name: "Australia" },
+        offers: { "@type": "Offer", priceCurrency: "AUD", availability: "https://schema.org/InStock" },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
+          { "@type": "ListItem", position: 2, name: service.title, item: `${siteConfig.url}/services/${service.slug}` },
+        ],
+      },
     ],
   };
 

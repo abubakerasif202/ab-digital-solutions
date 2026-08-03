@@ -306,7 +306,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                         src={project.image}
                         alt={project.alt}
                         fill
-                        preload={index === 0}
+                        priority={index === 0}
                         sizes="(max-width: 900px) 94vw, 52vw"
                       />
                     </a>
@@ -319,7 +319,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <strong>{projects[activeSlide].name}</strong>
                 </div>
                 <div className="slider-controls">
-                  <button type="button" onClick={showPreviousSlide} aria-label="← Previous project">←</button>
+                  <button type="button" onClick={showPreviousSlide} aria-label="Previous project">
+                    <span aria-hidden="true">←</span>
+                  </button>
                   <button
                     className="pause-control"
                     type="button"
@@ -328,7 +330,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   >
                     {sliderPaused ? "Play" : "Pause"}
                   </button>
-                  <button type="button" onClick={showNextSlide} aria-label="→ Next project">→</button>
+                  <button type="button" onClick={showNextSlide} aria-label="Next project">
+                    <span aria-hidden="true">→</span>
+                  </button>
                 </div>
               </div>
               <div className="slider-tabs" role="group" aria-label="Choose a featured project">
@@ -500,7 +504,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             </div>
 
             <form className="contact-form" data-reveal onSubmit={handleSubmit}>
-              <div className="form-trap" aria-hidden="true">
+              <div className="form-trap" aria-hidden="true" style={{ display: "none" }}>
                 <label htmlFor="company">Company website</label>
                 <input id="company" name="company" type="text" tabIndex={-1} autoComplete="off" />
               </div>
