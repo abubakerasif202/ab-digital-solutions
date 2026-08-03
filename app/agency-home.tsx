@@ -329,11 +329,11 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                     type="button"
                     key={project.name}
                     className={index === activeSlide ? "is-active" : ""}
-                    aria-label={`${String(index + 1).padStart(2, "0")} — show ${project.name}`}
                     aria-current={index === activeSlide ? "true" : undefined}
                     onClick={() => setActiveSlide(index)}
                   >
                     <span>{String(index + 1).padStart(2, "0")}</span>
+                    <span className="sr-only"> — show {project.name}</span>
                   </button>
                 ))}
               </div>
@@ -393,7 +393,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   key={project.name}
-                  aria-label={`${project.alt}. Live website. ${String(index + 1).padStart(2, "0")}. ${project.category}. ${project.name}. ${project.description} Visit ${project.name} live website (opens in a new tab)`}
                 >
                   <div className="project-image">
                     <Image

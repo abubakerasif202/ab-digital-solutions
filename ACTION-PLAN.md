@@ -13,15 +13,15 @@
 
 ## Release gates
 
-- [ ] Complete `npm ci` in a network-enabled environment.
-- [ ] Pass `npm run lint`.
-- [ ] Pass `npm run typecheck`.
+- [x] Complete `npm ci` in Vercel's production build environment.
+- [x] Pass `npm run lint`.
+- [x] Pass `npm run typecheck`.
 - [x] Pass `npm test`.
-- [ ] Pass `npm run build`.
-- [ ] Review and commit the final diff.
-- [ ] Push `main` to the configured GitHub remote.
-- [ ] Deploy the already-linked Vercel project with `vercel --prod`.
-- [ ] Verify the live desktop and mobile experience, metadata, links and form actions.
+- [x] Pass `npm run build`.
+- [x] Review and commit the final diff.
+- [x] Push `main` to the configured GitHub remote.
+- [x] Deploy the production release to the single Vercel project.
+- [x] Verify the live responsive implementation, metadata, links, images and contact actions; confirm the production runtime error scan is clean.
 
 ## Post-launch maintenance
 
