@@ -32,10 +32,11 @@ test("portfolio contains every required live project", async () => {
 });
 
 test("SEO routes and metadata are configured", async () => {
-  const [layout, robots, sitemap] = await Promise.all([
+  const [layout, robots, sitemap, llms] = await Promise.all([
     read("../app/layout.tsx"),
     read("../app/robots.ts"),
     read("../app/sitemap.ts"),
+    read("../public/llms.txt"),
   ]);
 
   assert.match(layout, /alternates: \{ canonical: "\/" \}/);
@@ -43,6 +44,8 @@ test("SEO routes and metadata are configured", async () => {
   assert.match(layout, /ProfessionalService/);
   assert.match(robots, /sitemap\.xml/);
   assert.match(sitemap, /priority: 1/);
+  assert.match(llms, /^# AB Digital Solutions/m);
+  assert.match(llms, /https:\/\/ab-digital-solutions\.vercel\.app/);
 });
 
 test("Vercel configuration uses the Next.js production build", async () => {

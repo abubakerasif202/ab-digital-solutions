@@ -292,7 +292,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                       aria-hidden={index !== activeSlide}
                       tabIndex={index === activeSlide ? 0 : -1}
                       key={project.name}
-                      aria-label={`Visit ${project.name} live website (opens in a new tab)`}
+                      aria-label={`${project.alt} — visit live website (opens in a new tab)`}
                     >
                       <Image
                         src={project.image}
@@ -311,7 +311,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <strong>{projects[activeSlide].name}</strong>
                 </div>
                 <div className="slider-controls">
-                  <button type="button" onClick={showPreviousSlide} aria-label="Previous project">←</button>
+                  <button type="button" onClick={showPreviousSlide} aria-label="← Previous project">←</button>
                   <button
                     className="pause-control"
                     type="button"
@@ -320,7 +320,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   >
                     {sliderPaused ? "Play" : "Pause"}
                   </button>
-                  <button type="button" onClick={showNextSlide} aria-label="Next project">→</button>
+                  <button type="button" onClick={showNextSlide} aria-label="→ Next project">→</button>
                 </div>
               </div>
               <div className="slider-tabs" role="group" aria-label="Choose a featured project">
@@ -329,7 +329,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                     type="button"
                     key={project.name}
                     className={index === activeSlide ? "is-active" : ""}
-                    aria-label={`Show ${project.name}`}
+                    aria-label={`${String(index + 1).padStart(2, "0")} — show ${project.name}`}
                     aria-current={index === activeSlide ? "true" : undefined}
                     onClick={() => setActiveSlide(index)}
                   >
@@ -393,7 +393,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   key={project.name}
-                  aria-label={`Visit ${project.name} live website (opens in a new tab)`}
+                  aria-label={`${project.name}. ${project.category}. ${project.description} Live website. Visit ${project.name} live website (opens in a new tab)`}
                 >
                   <div className="project-image">
                     <Image
