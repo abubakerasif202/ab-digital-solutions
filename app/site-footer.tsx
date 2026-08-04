@@ -1,21 +1,22 @@
 import Image from "next/image";
+import Link from "next/link";
 import { assetBase, siteConfig } from "./site-config";
 
 export function SiteFooter({ currentYear }: { currentYear: number }) {
   return (
     <footer className="site-footer">
       <div className="container footer-main">
-        <a className="brand footer-brand" href="/" aria-label="AB Digital Solutions home">
+        <Link className="brand footer-brand" href="/" aria-label="AB Digital Solutions home">
           <Image src={`${assetBase}/ab-logo-mark.png`} alt="" width={500} height={500} />
           <span className="brand-name">AB Digital Solutions</span>
-        </a>
+        </Link>
         <p>Premium websites, digital marketing and online growth solutions for Australian businesses.</p>
         <nav aria-label="Footer navigation">
-          <a href="/#services">Services</a>
-          <a href="/#work">Work</a>
-          <a href="/#about">About</a>
-          <a href="/#contact">Contact</a>
-          <a href="/privacy">Privacy</a>
+          <Link href="/#services">Services</Link>
+          <Link href="/#work">Work</Link>
+          <Link href="/#about">About</Link>
+          <Link href="/#contact">Contact</Link>
+          <Link href="/privacy">Privacy</Link>
         </nav>
       </div>
       <div className="container footer-bottom">

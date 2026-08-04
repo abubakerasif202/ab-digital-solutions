@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { assetBase } from "./site-config";
 
@@ -35,10 +36,10 @@ export function SiteHeader() {
       <a className="skip-link" href="#main-content">Skip to content</a>
       <header className="site-header" id="top">
         <div className="container nav-wrap">
-          <a className="brand" href="/" aria-label="AB Digital Solutions home">
+          <Link className="brand" href="/" aria-label="AB Digital Solutions home">
             <Image src={`${assetBase}/ab-logo-mark.png`} alt="" width={500} height={500} priority />
             <span className="brand-name">AB Digital Solutions</span>
-          </a>
+          </Link>
 
           <button
             ref={menuButtonRef}
@@ -59,13 +60,13 @@ export function SiteHeader() {
             className={`site-nav${menuOpen ? " is-open" : ""}`}
             aria-label="Primary navigation"
           >
-            <a href="/#services" onClick={closeMenu}>Services</a>
-            <a href="/#work" onClick={closeMenu}>Work</a>
-            <a href="/#process" onClick={closeMenu}>Process</a>
-            <a href="/#about" onClick={closeMenu}>About</a>
-            <a className="nav-cta" href="/#contact" onClick={closeMenu}>
+            <Link href="/#services" onClick={closeMenu}>Services</Link>
+            <Link href="/#work" onClick={closeMenu}>Work</Link>
+            <Link href="/#process" onClick={closeMenu}>Process</Link>
+            <Link href="/#about" onClick={closeMenu}>About</Link>
+            <Link className="nav-cta" href="/#contact" onClick={closeMenu}>
               Start a project <ArrowIcon />
-            </a>
+            </Link>
           </nav>
         </div>
       </header>
