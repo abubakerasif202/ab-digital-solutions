@@ -4,7 +4,7 @@
 
 - [x] Replace the iframe homepage with native semantic React content.
 - [x] Rebuild the visual system around the supplied premium black-and-gold art direction.
-- [x] Add the six required live projects and retained screenshot previews.
+- [x] Add seven live projects with retained screenshot previews or clearly labelled portfolio artwork.
 - [x] Add an accessible, pausable hero project slideshow.
 - [x] Improve navigation, typography, spacing, cards, forms and mobile reflow.
 - [x] Add canonical, social, robots, sitemap, manifest and JSON-LD metadata.

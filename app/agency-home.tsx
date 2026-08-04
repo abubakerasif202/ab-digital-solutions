@@ -1,70 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import type { FormEvent } from "react";
+import { ProjectArtwork } from "./project-artwork";
+import { projects } from "./project-data";
+import { SiteHeader } from "./site-chrome";
+import { SiteFooter } from "./site-footer";
 import { assetBase, siteConfig } from "./site-config";
-
-const projects = [
-  {
-    name: "Maple Rentals",
-    category: "Mobility / Car rentals",
-    description: "Premium driver rentals and streamlined online applications.",
-    url: "https://www.maplerentals.com.au/",
-    displayUrl: "maplerentals.com.au",
-    image: `${assetBase}/ab-portfolio-maple-rentals.jpg`,
-    alt: "Maple Rentals website homepage preview",
-  },
-  {
-    name: "Gala Rentals",
-    category: "Mobility / Car rentals",
-    description: "A confident booking experience for weekly car rentals in Sydney.",
-    url: "https://www.galarentals.com.au/",
-    displayUrl: "galarentals.com.au",
-    image: `${assetBase}/ab-portfolio-gala-rentals.jpg`,
-    alt: "Gala Rentals website homepage preview",
-  },
-  {
-    name: "ZQ Removals",
-    category: "Services / Removals",
-    description: "Local-service positioning and a direct path to quote requests.",
-    url: "https://zqremovals.au/",
-    displayUrl: "zqremovals.au",
-    image: `${assetBase}/ab-portfolio-zq-removals.jpg`,
-    alt: "ZQ Removals website homepage preview",
-  },
-  {
-    name: "DECENT Development",
-    category: "Property / Development",
-    description: "A refined digital presence for a Sydney construction business.",
-    url: "https://www.decentdevelopment.com.au/",
-    displayUrl: "decentdevelopment.com.au",
-    image: `${assetBase}/ab-portfolio-decent-development.jpg`,
-    alt: "DECENT Development website homepage preview",
-  },
-  {
-    name: "Milestone Development",
-    category: "Property / Construction",
-    description: "A project-led showcase for residential and commercial construction.",
-    url: "https://milestonedevelopment.com.au/",
-    displayUrl: "milestonedevelopment.com.au",
-    image: `${assetBase}/ab-portfolio-milestone-development.jpg`,
-    alt: "Milestone Development website homepage preview",
-  },
-  {
-    name: "4 Point Concrete",
-    category: "Construction / Civil",
-    description: "Capability-focused presentation for concrete and structural works.",
-    url: "https://4-point-concrete-design.vercel.app/",
-    displayUrl: "4-point-concrete-design.vercel.app",
-    image: `${assetBase}/ab-portfolio-four-point-concrete.jpg`,
-    alt: "4 Point Concrete website homepage preview",
-  },
-] as const;
 
 const services = [
   {
     number: "01",
+    slug: "web-design-sydney",
     title: "Website design & development",
     description:
       "Custom service, portfolio and business websites with sharp positioning, persuasive journeys and a premium finish.",
@@ -72,6 +20,7 @@ const services = [
   },
   {
     number: "02",
+    slug: "seo-local-visibility",
     title: "SEO & local visibility",
     description:
       "Search-ready architecture and content foundations designed to help the right customers discover your business.",
@@ -79,6 +28,7 @@ const services = [
   },
   {
     number: "03",
+    slug: "branding-content",
     title: "Branding & content",
     description:
       "A coherent visual direction and confident messaging that make your business easier to recognise, trust and choose.",
@@ -86,6 +36,7 @@ const services = [
   },
   {
     number: "04",
+    slug: "ecommerce-website-development",
     title: "E-commerce solutions",
     description:
       "Clear, friction-conscious storefronts that showcase products, simplify purchasing and leave room to scale.",
@@ -93,6 +44,7 @@ const services = [
   },
   {
     number: "05",
+    slug: "digital-marketing",
     title: "Digital marketing",
     description:
       "Focused landing pages and campaigns built to create attention, generate enquiries and support the sales process.",
@@ -100,6 +52,7 @@ const services = [
   },
   {
     number: "06",
+    slug: "website-maintenance",
     title: "Website care & support",
     description:
       "Practical ongoing support for updates, technical health and continuous improvement after your site goes live.",
@@ -135,12 +88,10 @@ function ArrowIcon() {
 }
 
 export default function AgencyHome({ currentYear }: { currentYear: number }) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [sliderPauseOverride, setSliderPauseOverride] = useState<boolean | null>(null);
   const [formStatus, setFormStatus] = useState("");
   const [formState, setFormState] = useState<"idle" | "sending" | "success" | "error">("idle");
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const prefersReducedMotion = useSyncExternalStore(
     subscribeToReducedMotion,
     getReducedMotionSnapshot,
@@ -157,22 +108,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
     return () => window.clearInterval(timer);
   }, [sliderPaused]);
 
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && menuOpen) {
-        setMenuOpen(false);
-        menuButtonRef.current?.focus();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    document.body.classList.toggle("nav-open", menuOpen);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.body.classList.remove("nav-open");
-    };
-  }, [menuOpen]);
-
-  const closeMenu = () => setMenuOpen(false);
   const showPreviousSlide = () =>
     setActiveSlide((current) => (current - 1 + projects.length) % projects.length);
   const showNextSlide = () =>
@@ -200,50 +135,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
   return (
     <>
-      <a className="skip-link" href="#main-content">
-        Skip to content
-      </a>
-
-      <header className="site-header" id="top">
-        <div className="container nav-wrap">
-          <a className="brand" href="#top" aria-label="AB Digital Solutions home">
-            <Image
-              src={`${assetBase}/ab-logo-lockup.png`}
-              alt=""
-              width={1020}
-              height={500}
-            />
-          </a>
-
-          <button
-            ref={menuButtonRef}
-            className="menu-toggle"
-            type="button"
-            aria-expanded={menuOpen}
-            aria-controls="primary-navigation"
-            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <span />
-            <span />
-            <span />
-          </button>
-
-          <nav
-            id="primary-navigation"
-            className={`site-nav${menuOpen ? " is-open" : ""}`}
-            aria-label="Primary navigation"
-          >
-            <a href="#services" onClick={closeMenu}>Services</a>
-            <a href="#work" onClick={closeMenu}>Work</a>
-            <a href="#process" onClick={closeMenu}>Process</a>
-            <a href="#about" onClick={closeMenu}>About</a>
-            <a className="nav-cta" href="#contact" onClick={closeMenu}>
-              Start a project <ArrowIcon />
-            </a>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main id="main-content">
         <section className="hero" aria-labelledby="hero-heading">
@@ -264,13 +156,14 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 </a>
                 <a className="button button-ghost" href="#work">View selected work</a>
               </div>
-              <div className="hero-brand-art">
-                <Image src={`${assetBase}/ab-hero-website-creation.png`} alt="AB Digital Solutions — website creation that represents your brand" width={1942} height={809} priority />
-              </div>
-              <div className="hero-proof" aria-label="Studio highlights">
-                <div><strong>06</strong><span>Live projects featured</span></div>
-                <div><strong>AU</strong><span>Built for local business</span></div>
-                <div><strong>01</strong><span>Partner from brief to launch</span></div>
+              <div className="client-proof" aria-label="Selected client work">
+                <span>Live client work</span>
+                <ul>
+                  <li>Maple Rentals</li>
+                  <li>DECENT Development</li>
+                  <li>ZQ Removals</li>
+                </ul>
+                <a href="#work">View all seven projects <ArrowIcon /></a>
               </div>
             </div>
 
@@ -302,10 +195,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                       key={project.name}
                       aria-label={`${project.alt} — visit live website (opens in a new tab)`}
                     >
-                      <Image
-                        src={project.image}
-                        alt={project.alt}
-                        fill
+                      <ProjectArtwork
+                        project={project}
                         priority={index === 0}
                         sizes="(max-width: 900px) 94vw, 52vw"
                       />
@@ -371,7 +262,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             </div>
             <div className="services-grid">
               {services.map((service) => (
-                <article className="service-card" data-reveal key={service.number}>
+                <a className="service-card" data-reveal key={service.number} href={`/services/${service.slug}`}>
                   <div className="service-card-top">
                     <span>{service.number}</span>
                     <span aria-hidden="true">↘</span>
@@ -381,8 +272,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <ul>
                     {service.details.map((detail) => <li key={detail}>{detail}</li>)}
                   </ul>
-                  <a className="service-link" href={`/services/${["web-design-sydney", "seo-local-visibility", "branding-content", "ecommerce-website-development", "digital-marketing", "website-maintenance"][Number(service.number) - 1]}`}>Explore service <ArrowIcon /></a>
-                </article>
+                  <span className="service-link">Explore service <ArrowIcon /></span>
+                </a>
               ))}
             </div>
           </div>
@@ -395,7 +286,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <p className="eyebrow">02 / Selected work</p>
                 <h2 id="work-heading">Built for real businesses. Live in the real world.</h2>
               </div>
-              <p>Six responsive digital experiences across mobility, local services, construction and property.</p>
+              <p>Seven responsive digital experiences across mobility, logistics, local services, construction and property.</p>
             </div>
             <div className="work-grid">
               {projects.map((project, index) => (
@@ -408,10 +299,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   key={project.name}
                 >
                   <div className="project-image">
-                    <Image
-                      src={project.image}
-                      alt={project.alt}
-                      fill
+                    <ProjectArtwork
+                      project={project}
                       sizes="(max-width: 720px) 94vw, (max-width: 1100px) 47vw, 31vw"
                     />
                     <span className="live-label"><i /> Live website</span>
@@ -553,22 +442,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="container footer-main">
-          <a className="brand footer-brand" href="#top" aria-label="AB Digital Solutions home">
-            <Image src={`${assetBase}/ab-logo-lockup.png`} alt="" width={1020} height={500} />
-          </a>
-          <p>Premium websites, digital marketing and online growth solutions for Australian businesses.</p>
-          <nav aria-label="Footer navigation">
-            <a href="#services">Services</a><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a><a href="/privacy">Privacy</a>
-          </nav>
-        </div>
-        <div className="container footer-bottom">
-          <small>© {currentYear} AB Digital Solutions. All rights reserved.</small>
-          <span>{siteConfig.location} · Australia-wide</span>
-          <a href="#top">Back to top ↑</a>
-        </div>
-      </footer>
+      <SiteFooter currentYear={currentYear} />
     </>
   );
 }
