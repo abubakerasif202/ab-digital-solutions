@@ -60,10 +60,23 @@ test("reviewed design issues remain remediated", async () => {
   assert.match(styles, /\.button-primary\s*\{[\s\S]*?color: var\(--ink\)/);
   assert.match(styles, /\.slider-controls button\s*\{[\s\S]*?min-width: 44px;[\s\S]*?height: 44px;/);
   assert.match(styles, /\.slider-tabs button\s*\{[\s\S]*?min-height: 44px;/);
+  assert.match(styles, /\.hero-marquee\s*\{[\s\S]*?color: var\(--ink\)/);
   assert.doesNotMatch(styles, /\.slider-controls \.pause-control\s*\{\s*display: none;/);
   assert.match(styles, /--type-action: 0\.875rem/);
   assert.match(styles, /\.site-nav a\s*\{[\s\S]*?font-size: var\(--type-action\)/);
   assert.doesNotMatch(styles, /font-size:\s*0\.[56]\d*rem/);
+});
+
+test("mobile navigation keeps keyboard focus within its open menu", async () => {
+  const chrome = await read("../app/site-chrome.tsx");
+
+  assert.match(chrome, /const navRef = useRef<HTMLElement>\(null\)/);
+  assert.match(chrome, /event\.key !== "Tab" \|\| !menuOpen \|\| !navRef\.current/);
+  assert.match(chrome, /const focusableItems = \[menuButtonRef\.current, \.\.\.navItems\]\.filter/);
+  assert.match(chrome, /event\.preventDefault\(\);\s*lastItem\.focus\(\)/);
+  assert.match(chrome, /event\.preventDefault\(\);\s*firstItem\.focus\(\)/);
+  assert.match(chrome, /if \(menuOpen\) navRef\.current\?\.querySelector<HTMLElement>\("a"\)\?\.focus\(\)/);
+  assert.match(chrome, /ref=\{navRef\}/);
 });
 
 test("SEO routes and metadata are configured", async () => {
@@ -86,12 +99,18 @@ test("SEO routes and metadata are configured", async () => {
 });
 
 test("brand theme keeps gold primary accents and red secondary accents", async () => {
-  const styles = await read("../app/globals.css");
+  const [styles, designTokens] = await Promise.all([
+    read("../app/globals.css"),
+    read("../opendesign/design-systems/ab-digital/colors_and_type.css"),
+  ]);
 
   assert.match(styles, /--red: #c99732/);
   assert.match(styles, /--brand-red: #e32636/);
   assert.match(styles, /box-shadow: inset 0 2px 0 var\(--brand-red\)/);
   assert.match(styles, /\.button-primary[\s\S]*background: var\(--red\)/);
+  assert.match(designTokens, /--ab-ink: #050505/);
+  assert.match(designTokens, /--ab-gold: #c99732/);
+  assert.match(designTokens, /--ab-display:/);
 });
 
 test("contact form posts to the protected server endpoint", async () => {

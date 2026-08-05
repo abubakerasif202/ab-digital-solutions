@@ -1408,7 +1408,7 @@ h1 em {
   overflow: hidden;
   border-block: 1px solid rgba(255, 255, 255, 0.12);
   background: var(--gold);
-  color: var(--white);
+  color: var(--ink);
 }
 
 .hero-marquee div {

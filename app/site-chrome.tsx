@@ -9,17 +9,42 @@ import { ArrowIcon } from "./icons";
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape" && menuOpen) {
         setMenuOpen(false);
         menuButtonRef.current?.focus();
+        return;
+      }
+
+      if (event.key !== "Tab" || !menuOpen || !navRef.current) return;
+
+      const navItems = Array.from(
+        navRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      const focusableItems = [menuButtonRef.current, ...navItems].filter(
+        (item): item is HTMLElement => item !== null,
+      );
+      const firstItem = focusableItems[0];
+      const lastItem = focusableItems.at(-1);
+
+      if (!firstItem || !lastItem) return;
+      if (event.shiftKey && document.activeElement === firstItem) {
+        event.preventDefault();
+        lastItem.focus();
+      } else if (!event.shiftKey && document.activeElement === lastItem) {
+        event.preventDefault();
+        firstItem.focus();
       }
     };
 
     document.addEventListener("keydown", onKeyDown);
     document.body.classList.toggle("nav-open", menuOpen);
+    if (menuOpen) navRef.current?.querySelector<HTMLElement>("a")?.focus();
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.body.classList.remove("nav-open");
@@ -53,6 +78,7 @@ export function SiteHeader() {
           </button>
 
           <nav
+            ref={navRef}
             id="primary-navigation"
             className={`site-nav${menuOpen ? " is-open" : ""}`}
             aria-label="Primary navigation"

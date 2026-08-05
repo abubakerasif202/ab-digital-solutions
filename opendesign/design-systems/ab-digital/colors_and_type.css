@@ -1,0 +1,24 @@
+/* AB Digital Solutions: source-aligned design tokens. */
+:root {
+  --ab-ink: #050505;
+  --ab-ink-soft: #0c0c0d;
+  --ab-panel: #111113;
+  --ab-paper: #f2f0ec;
+  --ab-paper-warm: #e8e6e1;
+  --ab-muted: #aaa9a6;
+  --ab-gold: #c99732;
+  --ab-gold-bright: #efc96a;
+  --ab-gold-dark: #8a6116;
+  --ab-red: #e32636;
+  --ab-red-bright: #ff4a59;
+
+  --ab-display: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
+  --ab-sans: "Avenir Next", "Helvetica Neue", "Segoe UI", sans-serif;
+  --ab-mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+
+  --ab-container: min(100% - 64px, 1440px);
+  --ab-header-height: 92px;
+  --ab-type-micro: 0.75rem;
+  --ab-type-small: 0.875rem;
+  --ab-type-action: 0.875rem;
+}
