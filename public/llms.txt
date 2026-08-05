@@ -2,17 +2,30 @@
 
 > Sydney web design and digital growth studio creating premium, fast and search-ready websites for ambitious Australian businesses.
 
-## Website
+## Key Facts
 
-- [Homepage](https://www.abwebstudio.com.au/): Services, selected client work, process, studio principles and contact details.
-- [Services](https://www.abwebstudio.com.au/#services): Website design and development, SEO, branding, e-commerce, digital marketing and ongoing support.
-- [Selected work](https://www.abwebstudio.com.au/#work): Seven live Australian business websites with project previews.
-- [Process](https://www.abwebstudio.com.au/#process): Discover, plan, design, build, launch and support.
-- [Contact](https://www.abwebstudio.com.au/#contact): Phone, email, WhatsApp and project enquiry form.
+- Primary Services: Custom Web Design, Next.js Development, Technical SEO, Brand Strategy, E-commerce Solutions, Digital Marketing & Website Maintenance.
+- Location: Sydney, NSW, Australia.
+- Service Area: Sydney, Melbourne, Brisbane, Adelaide, Perth, and Australia-wide.
+- Tech Stack: Next.js 16, React 19, TypeScript, Tailwind CSS, Vanilla CSS, Vercel Edge.
+- Typical Pricing: $1,500 – $6,000+ AUD depending on scope and business requirements.
+- Proven Portfolio: 7 live commercial client websites across logistics, property, removalists, equipment hire, and local services.
 
-## Business details
+## Main Services & Pages
 
-- Location: Sydney, NSW, Australia
-- Service area: Australia-wide
+- [Homepage](https://www.abwebstudio.com.au/): Services, selected client work, studio process, principles, and contact form.
+- [Web Design Sydney](https://www.abwebstudio.com.au/services/web-design-sydney): Custom website design and Next.js development for Sydney businesses.
+- [SEO & Local Visibility](https://www.abwebstudio.com.au/services/seo-local-visibility): Technical SEO, local search optimization, and search architecture.
+- [E-commerce Solutions](https://www.abwebstudio.com.au/services/ecommerce-website-development): Mobile-first storefronts, catalog management, and checkout integration.
+- [Branding & Website Content](https://www.abwebstudio.com.au/services/branding-content): Visual direction, brand positioning, and website copy.
+- [Digital Marketing](https://www.abwebstudio.com.au/services/digital-marketing): Landing page design, lead generation, and campaign strategy.
+- [Website Maintenance & Support](https://www.abwebstudio.com.au/services/website-maintenance): Ongoing support, technical health checks, and performance updates.
+- [Privacy Policy](https://www.abwebstudio.com.au/privacy): Information handling and privacy guidelines under Australian law.
+
+## Contact & Authority Information
+
+- Studio Name: AB Digital Solutions
+- Founder: Abubakar Asif
 - Email: abubakerasif202@yahoo.com
-- Phone: +61 423 332 037
+- Phone: +61 423 332 037 (0423 332 037)
+- Headquarters: Sydney, NSW, Australia

@@ -82,6 +82,10 @@ const structuredData = {
       telephone: siteConfig.phoneInternational,
       email: siteConfig.email,
       areaServed: { "@type": "Country", name: "Australia" },
+      sameAs: [
+        "https://github.com/abubakerasif202",
+        "https://www.linkedin.com/company/ab-digital-solutions",
+      ],
       address: {
         "@type": "PostalAddress",
         addressLocality: "Sydney",
@@ -111,6 +115,14 @@ const structuredData = {
           itemOffered: { "@type": "Service", name },
         })),
       },
+    },
+    {
+      "@type": "Person",
+      "@id": `${siteConfig.url}/#founder`,
+      name: "Abubakar Asif",
+      jobTitle: "Founder & Lead Developer",
+      worksFor: { "@id": `${siteConfig.url}/#organization` },
+      sameAs: ["https://github.com/abubakerasif202"],
     },
     {
       "@type": "WebSite",
