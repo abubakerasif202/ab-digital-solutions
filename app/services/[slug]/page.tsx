@@ -43,7 +43,6 @@ export default async function ServicePage({ params }: Props) {
   const relatedServices = relatedSlugs
     .map((slug) => findService(slug))
     .filter((s): s is (typeof servicePages)[number] => Boolean(s));
-
   const process = [
     ["01", "Clarify", "We define the audience, commercial goal, constraints and evidence the work needs to communicate."],
     ["02", "Shape", "We turn that context into a clear direction, structure and practical delivery plan."],
