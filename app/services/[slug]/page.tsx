@@ -124,7 +124,13 @@ export default async function ServicePage({ params }: Props) {
               <h2 id="work-proof-heading">See the standard in practice.</h2>
               <p>Explore a real client website that reflects the same focus on clarity, credibility and an obvious next step.</p>
             </div>
-            <a className="service-project" href={featuredProject.url} target="_blank" rel="noopener noreferrer">
+            <a
+              className="service-project"
+              href={featuredProject.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${featuredProject.name} live website (opens in a new tab)`}
+            >
               <div className="service-project-image">
                 <ProjectArtwork project={featuredProject} sizes="(max-width: 900px) 94vw, 48vw" />
                 <span>Live website ↗</span>

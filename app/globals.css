@@ -99,7 +99,9 @@ select {
   cursor: pointer;
 }
 
+:target,
 :focus-visible {
+  scroll-margin-top: calc(var(--header-height) + 24px);
   outline: 3px solid var(--gold-bright);
   outline-offset: 4px;
 }
@@ -479,8 +481,8 @@ h1 em {
 }
 
 .contact-form button:disabled { cursor: wait; opacity: 0.7; }
-.form-status.success { color: #b9df9d; }
-.form-status.error { color: #ffd0b6; }
+.form-status.success { color: #1b6628; }
+.form-status.error { color: var(--brand-red-dark); }
 
 .content-page {
   min-height: 100vh;
