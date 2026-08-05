@@ -18,7 +18,7 @@ test("homepage exposes content directly instead of using an iframe", async () =>
 });
 
 test("portfolio contains every required live project", async () => {
-  const homepage = await read("../app/agency-home.tsx");
+  const projects = await read("../app/project-data.ts");
   const requiredProjects = [
     "https://www.maplerentals.com.au/",
     "https://www.galarentals.com.au/",
@@ -26,9 +26,44 @@ test("portfolio contains every required live project", async () => {
     "https://www.decentdevelopment.com.au/",
     "https://milestonedevelopment.com.au/",
     "https://4-point-concrete-design.vercel.app/",
+    "https://www.1stclassexpress.com.au/",
   ];
 
-  for (const project of requiredProjects) assert.match(homepage, new RegExp(project.replaceAll(".", "\\.")));
+  for (const project of requiredProjects) assert.match(projects, new RegExp(project.replaceAll(".", "\\.")));
+});
+
+test("homepage project count reflects the seven live projects", async () => {
+  const homepage = await read("../app/agency-home.tsx");
+  assert.match(homepage, /View all seven projects/);
+  assert.match(homepage, /Seven responsive digital experiences/);
+  assert.doesNotMatch(await read("../app/globals.css"), /grid-template-columns: repeat\(6, 1fr\)/);
+});
+
+test("reviewed design issues remain remediated", async () => {
+  const [homepage, chrome, servicePage, styles] = await Promise.all([
+    read("../app/agency-home.tsx"),
+    read("../app/site-chrome.tsx"),
+    read("../app/services/[slug]/page.tsx"),
+    read("../app/globals.css"),
+  ]);
+
+  assert.doesNotMatch(homepage, /hero-brand-art/);
+  assert.match(homepage, /className="client-proof"/);
+  assert.match(homepage, /<a[\s\S]*className="service-card"/);
+  assert.match(chrome, /ab-logo-mark\.png/);
+  assert.match(chrome, /AB Digital Solutions/);
+  assert.match(servicePage, /<SiteHeader/);
+  assert.match(servicePage, /<SiteFooter/);
+  assert.match(servicePage, /Frequently asked questions/);
+  assert.match(servicePage, /Related services/);
+
+  assert.match(styles, /\.button-primary\s*\{[\s\S]*?color: var\(--ink\)/);
+  assert.match(styles, /\.slider-controls button\s*\{[\s\S]*?min-width: 44px;[\s\S]*?height: 44px;/);
+  assert.match(styles, /\.slider-tabs button\s*\{[\s\S]*?min-height: 44px;/);
+  assert.doesNotMatch(styles, /\.slider-controls \.pause-control\s*\{\s*display: none;/);
+  assert.match(styles, /--type-action: 0\.875rem/);
+  assert.match(styles, /\.site-nav a\s*\{[\s\S]*?font-size: var\(--type-action\)/);
+  assert.doesNotMatch(styles, /font-size:\s*0\.[56]\d*rem/);
 });
 
 test("SEO routes and metadata are configured", async () => {
