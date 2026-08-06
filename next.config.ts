@@ -15,6 +15,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
+  // Pin the workspace root so an unrelated lockfile in a parent directory
+  // cannot be inferred as the build root.
+  turbopack: { root: import.meta.dirname },
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920],

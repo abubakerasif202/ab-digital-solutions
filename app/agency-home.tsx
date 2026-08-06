@@ -296,7 +296,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   key={project.name}
-                  aria-label={`${project.name} live website (opens in a new tab)`}
+                  aria-label={`${project.name} — View Live Website (opens in a new tab)`}
                 >
                   <div className="project-image">
                     <ProjectArtwork
@@ -310,6 +310,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                     <p>{project.category}</p>
                     <div><h3>{project.name}</h3><ArrowIcon /></div>
                     <span>{project.description}</span>
+                    <span className="project-cta">View Live Website <ArrowIcon /></span>
                   </div>
                 </a>
               ))}

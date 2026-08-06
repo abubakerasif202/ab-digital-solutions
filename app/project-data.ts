@@ -6,7 +6,7 @@ export type Project = {
   description: string;
   url: string;
   displayUrl: string;
-  image: string | null;
+  image: string;
   alt: string;
 };
 
@@ -67,11 +67,12 @@ export const projects = [
   },
   {
     name: "1st Class Express",
-    category: "Transport / Logistics",
-    description: "A service-led freight and logistics presence for flexible fleet and delivery solutions.",
+    category: "Transport & Logistics Website",
+    description:
+      "Interstate freight positioning, a clear fleet showcase and a fast path to quote enquiries on every screen size.",
     url: "https://www.1stclassexpress.com.au/",
     displayUrl: "1stclassexpress.com.au",
-    image: null,
-    alt: "1st Class Express transport and logistics website portfolio cover",
+    image: `${assetBase}/ab-portfolio-1st-class-express.jpg`,
+    alt: "1st Class Express transport and logistics website homepage preview",
   },
 ] as const satisfies readonly Project[];

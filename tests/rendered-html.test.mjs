@@ -32,6 +32,29 @@ test("portfolio contains every required live project", async () => {
   for (const project of requiredProjects) assert.match(projects, new RegExp(project.replaceAll(".", "\\.")));
 });
 
+test("every project ships a real preview image and a View Live Website action", async () => {
+  const [projects, homepage, artwork] = await Promise.all([
+    read("../app/project-data.ts"),
+    read("../app/agency-home.tsx"),
+    read("../app/project-artwork.tsx"),
+  ]);
+
+  const imageNames = [...projects.matchAll(/\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
+  assert.equal(imageNames.length, 7);
+  assert.ok(imageNames.includes("ab-portfolio-1st-class-express.jpg"));
+  assert.doesNotMatch(projects, /image: null/);
+
+  const { statSync } = await import("node:fs");
+  for (const name of imageNames) {
+    const asset = new URL(`../public/site/ab-digital-premium/assets/${name}`, import.meta.url);
+    assert.ok(statSync(asset).size > 0, `${name} is missing`);
+  }
+
+  assert.match(homepage, /className="project-cta">View Live Website/);
+  assert.match(homepage, /target="_blank"[\s\S]{0,80}rel="noopener noreferrer"/);
+  assert.doesNotMatch(artwork, /project-cover/);
+});
+
 test("homepage project count reflects the seven live projects", async () => {
   const homepage = await read("../app/agency-home.tsx");
   assert.match(homepage, /View all seven projects/);
