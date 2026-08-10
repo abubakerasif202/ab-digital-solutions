@@ -1816,6 +1816,12 @@ h1 em {
   color: var(--ink);
 }
 
+.standard-section .standard-points a,
+.standard-section .standard-points a:hover {
+  color: var(--ink);
+  text-decoration-color: var(--ink);
+}
+
 .standard-points {
   border-top: 1px solid rgba(0, 0, 0, 0.38);
 }
@@ -2203,7 +2209,7 @@ h1 em {
   margin-top: 42px;
   padding-top: 22px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  color: #707074;
+  color: #8f8f92;
   font-family: var(--mono);
   font-size: var(--type-micro);
   letter-spacing: 0.04em;

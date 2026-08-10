@@ -389,7 +389,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <div className="contact-options">
                 <a href={`tel:${siteConfig.phoneInternational}`}><span>Call</span><strong>{siteConfig.phoneDisplay}</strong><ArrowIcon /></a>
                 <a href={`mailto:${siteConfig.email}`}><span>Email</span><strong>{siteConfig.email}</strong><ArrowIcon /></a>
-                <a href={`https://wa.me/${siteConfig.phoneInternational.replace("+", "")}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp — Message directly (opens in a new tab)"><span>WhatsApp</span><strong>Message directly</strong><ArrowIcon /></a>
+                <a href={`https://wa.me/${siteConfig.phoneInternational.replace("+", "")}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp — Message directly ↗ (opens in a new tab)"><span>WhatsApp</span><strong>Message directly</strong><ArrowIcon /></a>
               </div>
             </div>
 
