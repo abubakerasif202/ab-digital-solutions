@@ -80,10 +80,10 @@ test("reviewed design issues remain remediated", async () => {
   assert.match(servicePage, /Frequently asked questions/);
   assert.match(servicePage, /Related services/);
 
-  assert.match(styles, /\.button-primary\s*\{[\s\S]*?color: var\(--ink\)/);
+  assert.match(styles, /\.button-primary\s*\{\s*background: var\(--red\);\s*color: var\(--white\);/);
   assert.match(styles, /\.slider-controls button\s*\{[\s\S]*?min-width: 44px;[\s\S]*?height: 44px;/);
   assert.match(styles, /\.slider-tabs button\s*\{[\s\S]*?min-height: 44px;/);
-  assert.match(styles, /\.hero-marquee\s*\{[\s\S]*?color: var\(--ink\)/);
+  assert.match(styles, /\.hero-marquee\s*\{[\s\S]*?background: var\(--red\);\s*color: var\(--white\);/);
   assert.doesNotMatch(styles, /\.slider-controls \.pause-control\s*\{\s*display: none;/);
   assert.match(styles, /--type-action: 0\.875rem/);
   assert.match(styles, /\.site-nav a\s*\{[\s\S]*?font-size: var\(--type-action\)/);
@@ -121,16 +121,19 @@ test("SEO routes and metadata are configured", async () => {
   assert.match(llms, /https:\/\/www\.abwebstudio\.com\.au/);
 });
 
-test("brand theme keeps gold primary accents and red secondary accents", async () => {
+test("brand theme balances premium red and gold accents", async () => {
   const [styles, designTokens] = await Promise.all([
     read("../app/globals.css"),
     read("../opendesign/design-systems/ab-digital/colors_and_type.css"),
   ]);
 
-  assert.match(styles, /--red: #c99732/);
-  assert.match(styles, /--brand-red: #e32636/);
+  assert.match(styles, /--red: #b5121b/);
+  assert.match(styles, /--brand-red: #b5121b/);
+  assert.match(styles, /--gold: #d4a32f/);
   assert.match(styles, /box-shadow: inset 0 2px 0 var\(--brand-red\)/);
-  assert.match(styles, /\.button-primary[\s\S]*background: var\(--red\)/);
+  assert.match(styles, /\.button-primary[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
+  assert.match(styles, /\.hero-marquee[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
+  assert.match(styles, /\.site-nav \.nav-cta[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
   assert.match(designTokens, /--ab-ink: #050505/);
   assert.match(designTokens, /--ab-gold: #c99732/);
   assert.match(designTokens, /--ab-display:/);
