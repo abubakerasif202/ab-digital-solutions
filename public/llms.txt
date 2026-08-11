@@ -6,10 +6,9 @@
 
 - Primary Services: Custom Web Design, Next.js Development, Technical SEO, Brand Strategy, E-commerce Solutions, Digital Marketing & Website Maintenance.
 - Location: Sydney, NSW, Australia.
-- Service Area: Sydney, Melbourne, Brisbane, Adelaide, Perth, and Australia-wide.
-- Tech Stack: Next.js 16, React 19, TypeScript, Tailwind CSS, Vanilla CSS, Vercel Edge.
-- Typical Pricing: $1,500 – $6,000+ AUD depending on scope and business requirements.
-- Proven Portfolio: 7 live commercial client websites across logistics, property, removalists, equipment hire, and local services.
+- Service Area: Sydney and Australia-wide.
+- Website Stack: Next.js 16, React 19, TypeScript, CSS, and Vercel.
+- Selected Portfolio: Seven live websites across mobility, logistics, property, construction, removalists, and local services.
 
 ## Main Services & Pages
 
@@ -22,7 +21,7 @@
 - [Website Maintenance & Support](https://www.abwebstudio.com.au/services/website-maintenance): Ongoing support, technical health checks, and performance updates.
 - [Privacy Policy](https://www.abwebstudio.com.au/privacy): Information handling and privacy guidelines under Australian law.
 
-## Selected Client Work (live production websites)
+## Selected Portfolio (live websites)
 
 - [Maple Rentals](https://www.maplerentals.com.au/): Mobility / car rentals — premium driver rentals and streamlined online applications.
 - [Gala Rentals](https://www.galarentals.com.au/): Mobility / car rentals — weekly car rental booking experience in Sydney.
@@ -38,4 +37,4 @@
 - Founder: Abubakar Asif
 - Email: abubakerasif202@yahoo.com
 - Phone: +61 423 332 037 (0423 332 037)
-- Headquarters: Sydney, NSW, Australia
+- Location: Sydney, NSW, Australia

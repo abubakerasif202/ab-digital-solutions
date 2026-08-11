@@ -58,7 +58,6 @@ export const metadata: Metadata = {
     apple: `${assetBase}/ab-logo-mark.png`,
   },
   manifest: "/manifest.webmanifest",
-  other: { "codex-preview": "development" },
 };
 
 export const viewport: Viewport = {
@@ -139,9 +138,6 @@ const structuredData = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-AU">
-      <head>
-        <link rel="preconnect" href="https://api.resend.com" />
-      </head>
       <body>
         {children}
         <script

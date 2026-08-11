@@ -89,6 +89,7 @@ function getReducedMotionServerSnapshot() {
 export default function AgencyHome({ currentYear }: { currentYear: number }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [sliderPauseOverride, setSliderPauseOverride] = useState<boolean | null>(null);
+  const [carouselEngaged, setCarouselEngaged] = useState(false);
   const [formStatus, setFormStatus] = useState("");
   const [formState, setFormState] = useState<"idle" | "sending" | "success" | "error">("idle");
   const prefersReducedMotion = useSyncExternalStore(
@@ -96,7 +97,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
     getReducedMotionSnapshot,
     getReducedMotionServerSnapshot,
   );
-  const sliderPaused = sliderPauseOverride ?? prefersReducedMotion;
+  const sliderPreferencePaused = sliderPauseOverride ?? prefersReducedMotion;
+  const sliderPaused = sliderPreferencePaused || carouselEngaged;
 
   useEffect(() => {
     if (sliderPaused) return;
@@ -107,10 +109,14 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
     return () => window.clearInterval(timer);
   }, [sliderPaused]);
 
-  const showPreviousSlide = () =>
+  const showPreviousSlide = () => {
+    setSliderPauseOverride(true);
     setActiveSlide((current) => (current - 1 + projects.length) % projects.length);
-  const showNextSlide = () =>
+  };
+  const showNextSlide = () => {
+    setSliderPauseOverride(true);
     setActiveSlide((current) => (current + 1) % projects.length);
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -162,7 +168,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <li>DECENT Development</li>
                   <li>ZQ Removals</li>
                 </ul>
-                <a href="#work">View all seven projects <ArrowIcon /></a>
+                <a href="#work">Explore seven live websites <ArrowIcon /></a>
               </div>
             </div>
 
@@ -172,6 +178,14 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               role="region"
               aria-roledescription="carousel"
               aria-label="Featured website projects"
+              onMouseEnter={() => setCarouselEngaged(true)}
+              onMouseLeave={() => setCarouselEngaged(false)}
+              onFocusCapture={() => setCarouselEngaged(true)}
+              onBlurCapture={(event) => {
+                if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) {
+                  setCarouselEngaged(false);
+                }
+              }}
             >
               <div className="showcase-topline">
                 <span>Selected work / 2026</span>
@@ -215,8 +229,12 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <button
                     className="pause-control"
                     type="button"
-                    onClick={() => setSliderPauseOverride(!sliderPaused)}
-                    aria-label={sliderPaused ? "Play project slideshow" : "Pause project slideshow"}
+                    onClick={() => setSliderPauseOverride(!sliderPreferencePaused)}
+                    aria-label={sliderPaused
+                      ? carouselEngaged
+                        ? "Resume project slideshow after leaving the carousel"
+                        : "Play project slideshow"
+                      : "Pause project slideshow"}
                   >
                     {sliderPaused ? "Play" : "Pause"}
                   </button>
@@ -232,7 +250,10 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                     key={project.name}
                     className={index === activeSlide ? "is-active" : ""}
                     aria-current={index === activeSlide ? "true" : undefined}
-                    onClick={() => setActiveSlide(index)}
+                    onClick={() => {
+                      setSliderPauseOverride(true);
+                      setActiveSlide(index);
+                    }}
                   >
                     <span>{String(index + 1).padStart(2, "0")}</span>
                     <span className="sr-only"> — show {project.name}</span>

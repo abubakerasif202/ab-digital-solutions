@@ -57,7 +57,7 @@ test("every project ships a real preview image and a View Live Website action", 
 
 test("homepage project count reflects the seven live projects", async () => {
   const homepage = await read("../app/agency-home.tsx");
-  assert.match(homepage, /View all seven projects/);
+  assert.match(homepage, /Explore seven live websites/);
   assert.match(homepage, /Seven responsive digital experiences/);
   assert.doesNotMatch(await read("../app/globals.css"), /grid-template-columns: repeat\(6, 1fr\)/);
 });
@@ -72,12 +72,18 @@ test("reviewed design issues remain remediated", async () => {
 
   assert.doesNotMatch(homepage, /hero-brand-art/);
   assert.match(homepage, /className="client-proof"/);
+  assert.match(homepage, /setCarouselEngaged\(true\)/);
+  assert.match(homepage, /setSliderPauseOverride\(true\)/);
   assert.match(homepage, /<a[\s\S]*className="service-card"/);
   assert.match(chrome, /ab-logo-mark\.png/);
   assert.match(chrome, /AB Digital Solutions/);
   assert.match(servicePage, /<SiteHeader/);
   assert.match(servicePage, /<SiteFooter/);
   assert.match(servicePage, /Frequently asked questions/);
+  assert.match(servicePage, /"@type": "FAQPage"/);
+  assert.doesNotMatch(servicePage, /offers:\s*\{/);
+  assert.match(servicePage, /images: \[\{/);
+  assert.match(servicePage, /className="service-context"/);
   assert.match(servicePage, /Related services/);
 
   assert.match(styles, /\.button-primary\s*\{\s*background: var\(--red\);\s*color: var\(--white\);/);
@@ -100,14 +106,22 @@ test("mobile navigation keeps keyboard focus within its open menu", async () => 
   assert.match(chrome, /event\.preventDefault\(\);\s*firstItem\.focus\(\)/);
   assert.match(chrome, /if \(menuOpen\) navRef\.current\?\.querySelector<HTMLElement>\("a"\)\?\.focus\(\)/);
   assert.match(chrome, /ref=\{navRef\}/);
+  assert.match(chrome, /className="mobile-project-cta"/);
+  assert.match(chrome, /window\.scrollY > window\.innerHeight \* 0\.72/);
+  assert.match(chrome, /const pathname = usePathname\(\)/);
+  assert.match(chrome, /const conversionAreaVisible = conversionAreas\.some/);
+  assert.match(chrome, /\}, \[pathname\]\);/);
 });
 
 test("SEO routes and metadata are configured", async () => {
-  const [layout, robots, sitemap, llms] = await Promise.all([
+  const [layout, robots, sitemap, llms, servicePage, services, footer] = await Promise.all([
     read("../app/layout.tsx"),
     read("../app/robots.ts"),
     read("../app/sitemap.ts"),
     read("../public/llms.txt"),
+    read("../app/services/[slug]/page.tsx"),
+    read("../app/services/service-data.ts"),
+    read("../app/site-footer.tsx"),
   ]);
 
   assert.match(layout, /alternates: \{ canonical: "\/" \}/);
@@ -117,8 +131,17 @@ test("SEO routes and metadata are configured", async () => {
   assert.match(sitemap, /priority: 1/);
   assert.match(sitemap, /servicePages/);
   assert.match(sitemap, /\/privacy/);
+  assert.doesNotMatch(sitemap, /new Date\(\)/);
   assert.match(llms, /^# AB Digital Solutions/m);
   assert.match(llms, /https:\/\/www\.abwebstudio\.com\.au/);
+  assert.doesNotMatch(llms, /Typical Pricing|Vercel Edge|Proven Portfolio/);
+  assert.doesNotMatch(layout, /codex-preview|preconnect.*api\.resend/);
+  assert.match(servicePage, /siteName: siteConfig\.name/);
+  assert.match(servicePage, /"@type": "FAQPage"/);
+  assert.doesNotMatch(servicePage, /availability:|priceCurrency:/);
+  assert.doesNotMatch(services, /WCAG accessibility compliance|high-converting|profitable, predictable|maintain search engine rankings|rapid technical issue resolution/);
+  assert.match(footer, /servicePages\.map/);
+  assert.match(footer, /footer-contact-cta/);
 });
 
 test("brand theme balances premium red and gold accents", async () => {
@@ -134,6 +157,8 @@ test("brand theme balances premium red and gold accents", async () => {
   assert.match(styles, /\.button-primary[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
   assert.match(styles, /\.hero-marquee[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
   assert.match(styles, /\.site-nav \.nav-cta[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
+  assert.equal([...styles.matchAll(/\.service-page \.content-shell\s*\{/g)].length, 1);
+  assert.match(styles, /\.mobile-project-cta\s*\{\s*display: none/);
   assert.match(designTokens, /--ab-ink: #050505/);
   assert.match(designTokens, /--ab-gold: #c99732/);
   assert.match(designTokens, /--ab-display:/);
@@ -153,9 +178,10 @@ test("contact form posts to the protected server endpoint", async () => {
 });
 
 test("Vercel configuration uses the Next.js production build", async () => {
-  const [rawVercelConfig, rawPackage] = await Promise.all([
+  const [rawVercelConfig, rawPackage, eslintConfig] = await Promise.all([
     read("../vercel.json"),
     read("../package.json"),
+    read("../eslint.config.mjs"),
   ]);
   const vercelConfig = JSON.parse(rawVercelConfig);
   const packageJson = JSON.parse(rawPackage);
@@ -166,4 +192,7 @@ test("Vercel configuration uses the Next.js production build", async () => {
   assert.match(packageJson.scripts.build, /next build$/);
   assert.equal(packageJson.scripts.verify, "npm run lint && npm run typecheck && npm test");
   assert.equal(packageJson.scripts.typecheck, "bash scripts/sites-env.sh -- tsc --noEmit");
+  for (const generatedDirectory of [".sites-runtime", ".agents", ".codex", ".claude"]) {
+    assert.ok(eslintConfig.includes(`"${generatedDirectory}/**"`));
+  }
 });

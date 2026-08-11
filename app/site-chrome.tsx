@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { assetBase } from "./site-config";
 import { ArrowIcon } from "./icons";
 
 export function SiteHeader() {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileCtaVisible, setMobileCtaVisible] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
@@ -51,6 +54,39 @@ export function SiteHeader() {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    const mobileViewport = window.matchMedia("(max-width: 720px)");
+    const conversionAreas = [
+      document.getElementById("contact"),
+      document.querySelector(".site-footer"),
+    ].filter((element): element is Element => element !== null);
+    const updateVisibility = () => {
+      const eligibleRoute = pathname !== "/privacy";
+      const conversionAreaVisible = conversionAreas.some((element) => {
+        const rect = element.getBoundingClientRect();
+        return rect.bottom > 0 && rect.top < window.innerHeight;
+      });
+      setMobileCtaVisible(
+        eligibleRoute
+        && mobileViewport.matches
+        && window.scrollY > window.innerHeight * 0.72
+        && !conversionAreaVisible,
+      );
+    };
+    const observer = new IntersectionObserver(updateVisibility, { threshold: 0.05 });
+
+    conversionAreas.forEach((element) => observer.observe(element));
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    mobileViewport.addEventListener("change", updateVisibility);
+    updateVisibility();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", updateVisibility);
+      mobileViewport.removeEventListener("change", updateVisibility);
+    };
+  }, [pathname]);
+
   const closeMenu = () => setMenuOpen(false);
 
   return (
@@ -93,6 +129,11 @@ export function SiteHeader() {
           </nav>
         </div>
       </header>
+      {mobileCtaVisible && !menuOpen ? (
+        <Link className="mobile-project-cta" href="/#contact">
+          Start a project <ArrowIcon />
+        </Link>
+      ) : null}
     </>
   );
 }

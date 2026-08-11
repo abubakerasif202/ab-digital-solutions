@@ -21,7 +21,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: service.title,
     description: service.summary,
     alternates: { canonical: `/services/${service.slug}` },
-    openGraph: { title: `${service.title} | ${siteConfig.name}`, description: service.summary, url: `/services/${service.slug}` },
+    openGraph: {
+      title: `${service.title} | ${siteConfig.name}`,
+      description: service.summary,
+      url: `/services/${service.slug}`,
+      siteName: siteConfig.name,
+      type: "website",
+      locale: "en_AU",
+      images: [{
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: `${service.title} by ${siteConfig.name}`,
+      }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${service.title} | ${siteConfig.name}`,
+      description: service.summary,
+      images: ["/opengraph-image"],
+    },
   };
 }
 
@@ -71,9 +90,9 @@ export default async function ServicePage({ params }: Props) {
         "@type": "Service",
         name: service.title,
         description: service.summary,
+        url: `${siteConfig.url}/services/${service.slug}`,
         provider: { "@id": `${siteConfig.url}/#organization` },
         areaServed: { "@type": "Country", name: "Australia" },
-        offers: { "@type": "Offer", priceCurrency: "AUD", availability: "https://schema.org/InStock" },
       },
       {
         "@type": "BreadcrumbList",
@@ -81,6 +100,14 @@ export default async function ServicePage({ params }: Props) {
           { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
           { "@type": "ListItem", position: 2, name: service.title, item: `${siteConfig.url}/services/${service.slug}` },
         ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: faqs.map(({ question, answer }) => ({
+          "@type": "Question",
+          name: question,
+          acceptedAnswer: { "@type": "Answer", text: answer },
+        })),
       },
     ],
   };
@@ -101,9 +128,7 @@ export default async function ServicePage({ params }: Props) {
           <header className="service-hero">
             <p className="eyebrow">Digital services / Sydney</p>
             <h1>{service.title}</h1>
-            <p className="content-lead">
-              {service.intro} Delivered by our <Link href="/">Sydney digital studio</Link> with clear communication and commercial purpose.
-            </p>
+            <p className="content-lead">{service.intro}</p>
             <div className="content-actions">
               <Link className="button button-primary" href="/#contact">Start your project <span aria-hidden="true">↗</span></Link>
               <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>Call {siteConfig.phoneDisplay}</a>
@@ -116,6 +141,15 @@ export default async function ServicePage({ params }: Props) {
               <h2 id="included-heading">What&apos;s included</h2>
             </div>
             <ul>{service.benefits.map((benefit, index) => <li key={benefit}><span>{String(index + 1).padStart(2, "0")}</span>{benefit}</li>)}</ul>
+          </section>
+
+          <section className="service-context" aria-labelledby="service-context-heading">
+            <p className="eyebrow">Strategy before output</p>
+            <div>
+              <h2 id="service-context-heading">{service.detailTitle}</h2>
+              <p>{service.detail}</p>
+              <Link className="text-link" href="/">Meet the Sydney studio <span aria-hidden="true">↗</span></Link>
+            </div>
           </section>
 
           <section className="service-showcase" aria-labelledby="work-proof-heading">
