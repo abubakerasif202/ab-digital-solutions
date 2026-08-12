@@ -29,7 +29,8 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
         <nav className="footer-link-group" aria-label="Footer studio navigation">
           <span>Studio</span>
           <div>
-            <Link href="/#work">Selected work</Link>
+            <Link href="/work">Case studies &amp; work</Link>
+            <Link href="/#work">Featured work</Link>
             <Link href="/#process">Process</Link>
             <Link href="/#about">About</Link>
             <Link href="/privacy">Privacy</Link>

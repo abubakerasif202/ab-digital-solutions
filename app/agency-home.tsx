@@ -9,7 +9,16 @@ import { projects } from "./project-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { assetBase, siteConfig } from "./site-config";
+import dynamic from "next/dynamic";
 import { ArrowIcon } from "./icons";
+
+const Hero3DCanvas = dynamic(
+  () => import("./components/Hero3DCanvas").then((mod) => mod.Hero3DCanvas),
+  {
+    ssr: false,
+    loading: () => <div className="hero-3d-fallback" aria-hidden="true" />,
+  }
+);
 
 const services = [
   {
@@ -144,6 +153,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
       <main id="main-content">
         <section className="hero" aria-labelledby="hero-heading">
+          <div className="hero-3d-bg-wrap" aria-hidden="true">
+            <Hero3DCanvas />
+          </div>
           <div className="hero-grid-lines" aria-hidden="true" />
           <div className="hero-glow" aria-hidden="true" />
           <div className="container hero-layout">
@@ -299,6 +311,23 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           </div>
         </section>
 
+        <aside className="conversion-banner" data-reveal aria-label="Book a consultation">
+          <div className="container conversion-banner-layout">
+            <div className="conversion-banner-copy">
+              <p className="eyebrow">Strategy & Position</p>
+              <h3>Ready for a website that elevates your market positioning and converts visits into enquiries?</h3>
+            </div>
+            <div className="conversion-banner-actions">
+              <a className="button button-primary" href="#contact">
+                Book a free consultation <ArrowIcon />
+              </a>
+              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
+                Call {siteConfig.phoneDisplay}
+              </a>
+            </div>
+          </div>
+        </aside>
+
         <section className="section work-section" id="work" aria-labelledby="work-heading">
           <div className="container">
             <div className="section-heading" data-reveal>
@@ -331,6 +360,11 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                     <p>{project.category}</p>
                     <div><h3>{project.name}</h3><ArrowIcon /></div>
                     <span>{project.description}</span>
+                    <div className="project-tags">
+                      {project.tags.map((tag) => (
+                        <span key={tag} className="project-tag-pill">{tag}</span>
+                      ))}
+                    </div>
                     <span className="project-cta">View Live Website <ArrowIcon /></span>
                   </div>
                 </a>
