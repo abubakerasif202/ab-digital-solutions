@@ -32,11 +32,13 @@ test("portfolio contains every required live project", async () => {
   for (const project of requiredProjects) assert.match(projects, new RegExp(project.replaceAll(".", "\\.")));
 });
 
-test("every project ships a real preview image and a View Live Website action", async () => {
-  const [projects, homepage, artwork] = await Promise.all([
+test("every project ships a real preview image and routes visitors through a case study", async () => {
+  const [projects, homepage, artwork, workPage, caseStudy] = await Promise.all([
     read("../app/project-data.ts"),
     read("../app/agency-home.tsx"),
     read("../app/project-artwork.tsx"),
+    read("../app/work/page.tsx"),
+    read("../app/work/[slug]/page.tsx"),
   ]);
 
   const imageNames = [...projects.matchAll(/\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
@@ -50,9 +52,29 @@ test("every project ships a real preview image and a View Live Website action", 
     assert.ok(statSync(asset).size > 0, `${name} is missing`);
   }
 
-  assert.match(homepage, /className="project-cta">View Live Website/);
-  assert.match(homepage, /target="_blank"[\s\S]{0,80}rel="noopener noreferrer"/);
+  assert.match(homepage, /className="project-cta">View Case Study/);
+  assert.match(homepage, /href=\{`\/work\/\$\{project\.slug\}`\}/);
+  assert.doesNotMatch(homepage, /href=\{project\.url\}/);
+  assert.doesNotMatch(workPage, /href=\{project\.url\}/);
+  assert.match(caseStudy, /href=\{project\.url\}[\s\S]{0,120}target="_blank"[\s\S]{0,120}rel="noopener noreferrer"/);
+  assert.match(caseStudy, /opens in a new tab/);
   assert.doesNotMatch(artwork, /project-cover/);
+});
+
+test("Three.js is delayed, constrained on smaller devices and paused off screen", async () => {
+  const [homepage, canvas] = await Promise.all([
+    read("../app/agency-home.tsx"),
+    read("../app/components/Hero3DCanvas.tsx"),
+  ]);
+  assert.match(homepage, /requestIdleCallback/);
+  assert.match(homepage, /max-width: 540px/);
+  assert.match(homepage, /connection\?\.saveData/);
+  assert.match(canvas, /IntersectionObserver/);
+  assert.match(canvas, /visibilitychange/);
+  assert.match(canvas, /cancelAnimationFrame/);
+  assert.match(canvas, /visibilityObserver\.disconnect/);
+  assert.match(canvas, /\.dispose\(\)/);
+  assert.match(canvas, /pointerEvents: "none"/);
 });
 
 test("homepage project count reflects the seven live projects", async () => {
@@ -175,6 +197,8 @@ test("contact form posts to the protected server endpoint", async () => {
   assert.match(route, /allowedOrigin/);
   assert.match(route, /withinRateLimit/);
   assert.match(route, /company/);
+  assert.match(route, /readPayload/);
+  assert.match(route, /MAX_BODY_BYTES/);
 });
 
 test("Vercel configuration uses the Next.js production build", async () => {

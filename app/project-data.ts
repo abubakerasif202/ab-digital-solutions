@@ -67,7 +67,7 @@ export const projects = [
     category: "Services / Removals",
     description: "Local-service positioning and a direct path to quote requests.",
     overview:
-      "ZQ Removals delivers residential and commercial moving services across Sydney requiring local discoverability and instant quote conversion.",
+      "ZQ Removals presents residential and commercial moving services in Adelaide with a direct path to quote enquiries.",
     solution:
       "We engineered a conversion-focused local service layout with clear service categories, coverage maps, and a fast multi-step quote request form.",
     url: "https://zqremovals.au/",
@@ -77,7 +77,7 @@ export const projects = [
     tags: ["Lead Conversion", "Local Service SEO", "Fast Touch-UI"],
     keyFeatures: [
       "Direct quote request form integration",
-      "Local service area & suburb targeting",
+      "Adelaide service area positioning",
       "Residential vs commercial service breakdown",
       "Touch-optimised mobile call & enquiry triggers",
     ],

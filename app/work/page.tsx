@@ -112,17 +112,8 @@ export default function WorkPage() {
                     </div>
                     <div className="project-actions-group">
                       <Link className="button button-primary case-study-btn" href={`/work/${project.slug}`}>
-                        Read Case Study <ArrowIcon />
+                        View Case Study <ArrowIcon />
                       </Link>
-                      <a
-                        className="project-cta live-site-link"
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Visit ${project.name} live website (opens in a new tab)`}
-                      >
-                        View Live Website <ArrowIcon />
-                      </a>
                     </div>
                   </div>
                 </article>
@@ -138,7 +129,7 @@ export default function WorkPage() {
               </div>
               <div className="conversion-banner-actions">
                 <Link className="button button-primary" href="/#contact">
-                  Book a free consultation <ArrowIcon />
+                  Start a Project <ArrowIcon />
                 </Link>
                 <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
                   Call {siteConfig.phoneDisplay}

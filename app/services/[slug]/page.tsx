@@ -130,8 +130,8 @@ export default async function ServicePage({ params }: Props) {
             <h1>{service.title}</h1>
             <p className="content-lead">{service.intro}</p>
             <div className="content-actions">
-              <Link className="button button-primary" href="/#contact">Start your project <span aria-hidden="true">↗</span></Link>
-              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>Call {siteConfig.phoneDisplay}</a>
+              <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
+              <Link className="button button-ghost" href="/work">View Our Work</Link>
             </div>
           </header>
 
@@ -158,23 +158,21 @@ export default async function ServicePage({ params }: Props) {
               <h2 id="work-proof-heading">See the standard in practice.</h2>
               <p>Explore a real client website that reflects the same focus on clarity, credibility and an obvious next step.</p>
             </div>
-            <a
+            <Link
               className="service-project"
-              href={featuredProject.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${featuredProject.name} live website (opens in a new tab)`}
+              href={`/work/${featuredProject.slug}`}
+              aria-label={`${featuredProject.name} — View Case Study`}
             >
               <div className="service-project-image">
                 <ProjectArtwork project={featuredProject} sizes="(max-width: 900px) 94vw, 48vw" />
-                <span>Live website ↗</span>
+                <span>View Case Study →</span>
               </div>
               <div>
                 <p>{featuredProject.category}</p>
                 <h3>{featuredProject.name}</h3>
                 <span>{featuredProject.description}</span>
               </div>
-            </a>
+            </Link>
           </section>
 
           <section className="service-process" aria-labelledby="service-process-heading">
@@ -225,7 +223,8 @@ export default async function ServicePage({ params }: Props) {
             <p className="eyebrow">Ready when you are</p>
             <h2 id="service-cta-heading">Let&apos;s turn the next digital decision into useful progress.</h2>
             <p>Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
-            <Link className="button button-primary" href="/#contact">Start a conversation <span aria-hidden="true">↗</span></Link>
+            <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
+            <Link className="button button-ghost" href="/work">View Our Work</Link>
           </section>
         </div>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />

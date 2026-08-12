@@ -5,6 +5,7 @@ import * as THREE from "three";
 
 interface Hero3DCanvasProps {
   className?: string;
+  quality?: "tablet" | "desktop";
 }
 
 const emptySubscribe = () => () => {};
@@ -25,7 +26,7 @@ function getWebGLServerSnapshot(): boolean {
   return false;
 }
 
-export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
+export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const webglSupported = useSyncExternalStore(
     emptySubscribe,
@@ -42,10 +43,6 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
     // Check prefers-reduced-motion
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let prefersReducedMotion = reducedMotionQuery.matches;
-    const handleMotionChange = (e: MediaQueryListEvent) => {
-      prefersReducedMotion = e.matches;
-    };
-    reducedMotionQuery.addEventListener("change", handleMotionChange);
 
     // Scene Setup
     const scene = new THREE.Scene();
@@ -63,8 +60,8 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
       powerPreference: "high-performance",
     });
     
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
-    const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
+    const isTablet = quality === "tablet";
+    const dpr = isTablet ? 1 : Math.min(window.devicePixelRatio, 1.75);
     renderer.setPixelRatio(dpr);
     renderer.setSize(width, height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -93,8 +90,8 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
     scene.add(heroGroup);
 
     // 1. Central Complex Sculptural Geometry
-    const tubularSegments = isMobile ? 60 : 120;
-    const radialSegments = isMobile ? 10 : 16;
+    const tubularSegments = isTablet ? 72 : 120;
+    const radialSegments = isTablet ? 10 : 16;
     const mainGeometry = new THREE.TorusKnotGeometry(1.15, 0.3, tubularSegments, radialSegments, 2, 3);
     const mainMaterial = new THREE.MeshPhysicalMaterial({
       color: 0x08090a,
@@ -111,7 +108,7 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
     heroGroup.add(mainMesh);
 
     // 2. Outer Gold Wireframe Ring
-    const ringGeometry = new THREE.IcosahedronGeometry(2.15, isMobile ? 1 : 2);
+    const ringGeometry = new THREE.IcosahedronGeometry(2.15, isTablet ? 1 : 2);
     const ringMaterial = new THREE.MeshBasicMaterial({
       color: 0xd4a32f,
       wireframe: true,
@@ -150,7 +147,7 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
     satelliteGroup.add(sat2);
 
     // 4. Interactive Particle Field
-    const particleCount = isMobile ? 120 : 280;
+    const particleCount = isTablet ? 100 : 240;
     const particleGeometry = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
 
@@ -167,7 +164,7 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
 
     const particleMaterial = new THREE.PointsMaterial({
       color: 0xfef08a,
-      size: isMobile ? 0.04 : 0.045,
+      size: isTablet ? 0.04 : 0.045,
       transparent: true,
       opacity: 0.55,
       blending: THREE.AdditiveBlending,
@@ -178,6 +175,8 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
 
     // Animation & Smooth Control State
     let animationFrameId: number;
+    let isVisible = false;
+    let isRunning = false;
     let mouseX = 0;
     let mouseY = 0;
     let targetMouseX = 0;
@@ -196,13 +195,18 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
       targetScrollY = window.scrollY;
     };
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    if (!isTablet) window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     // Render Loop
     const clock = new THREE.Clock();
 
     const animate = () => {
+      if (!isVisible || prefersReducedMotion) {
+        isRunning = false;
+        return;
+      }
+      isRunning = true;
       animationFrameId = requestAnimationFrame(animate);
 
       const elapsedTime = clock.getElapsedTime();
@@ -244,7 +248,34 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
       renderer.render(scene, camera);
     };
 
-    animate();
+    const renderStaticFrame = () => {
+      camera.lookAt(scene.position);
+      renderer.render(scene, camera);
+    };
+
+    const handleMotionChange = (event: MediaQueryListEvent) => {
+      prefersReducedMotion = event.matches;
+      if (prefersReducedMotion) {
+        renderStaticFrame();
+      } else if (isVisible && !isRunning) {
+        animate();
+      }
+    };
+    reducedMotionQuery.addEventListener("change", handleMotionChange);
+
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting && document.visibilityState === "visible";
+      if (isVisible && !prefersReducedMotion && !isRunning) animate();
+      else if (prefersReducedMotion) renderStaticFrame();
+    }, { rootMargin: "120px 0px", threshold: 0.01 });
+    visibilityObserver.observe(container);
+
+    const handleVisibilityChange = () => {
+      isVisible = !document.hidden && container.getBoundingClientRect().bottom > -120;
+      if (isVisible && !prefersReducedMotion && !isRunning) animate();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    renderStaticFrame();
 
     // Resize Handler
     const handleResize = () => {
@@ -255,9 +286,9 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
       camera.aspect = newWidth / newHeight;
       camera.updateProjectionMatrix();
 
-      const newIsMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
-      renderer.setPixelRatio(newIsMobile ? 1 : Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(isTablet ? 1 : Math.min(window.devicePixelRatio, 1.75));
       renderer.setSize(newWidth, newHeight);
+      renderStaticFrame();
     };
 
     const resizeObserver = new ResizeObserver(() => {
@@ -272,6 +303,8 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
       window.removeEventListener("scroll", handleScroll);
       reducedMotionQuery.removeEventListener("change", handleMotionChange);
       resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
 
       // Dispose Geometries & Materials
       mainGeometry.dispose();
@@ -290,7 +323,7 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
         renderer.domElement.parentNode.removeChild(renderer.domElement);
       }
     };
-  }, [webglSupported]);
+  }, [quality, webglSupported]);
 
   if (!webglSupported) {
     return (

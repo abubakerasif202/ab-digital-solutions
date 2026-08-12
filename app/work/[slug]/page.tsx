@@ -98,8 +98,11 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             <h1>{project.name}</h1>
             <p className="content-lead">{project.overview}</p>
             <div className="content-actions">
+              <Link className="button button-primary" href="/#contact">
+                Start a Project <ArrowIcon />
+              </Link>
               <a
-                className="button button-primary"
+                className="button button-ghost"
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -107,9 +110,6 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
               >
                 View Live Website <ArrowIcon />
               </a>
-              <Link className="button button-ghost" href="/#contact">
-                Start a conversation
-              </Link>
             </div>
           </header>
 
@@ -126,16 +126,22 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           </div>
 
           <div className="case-study-grid">
-            <section className="case-study-main" aria-labelledby="solution-heading">
+            <section className="case-study-main" aria-label="Case study overview and solution">
               <div className="case-study-block">
-                <p className="eyebrow">Strategy & Approach</p>
-                <h2 id="solution-heading">Delivering a clearer path to customer action.</h2>
+                <p className="eyebrow">Overview</p>
+                <h2>A digital experience built around the project.</h2>
+                <p className="case-study-body-text">{project.overview}</p>
+              </div>
+
+              <div className="case-study-block">
+                <p className="eyebrow">Solution</p>
+                <h2>Clear structure, responsive delivery and an obvious next step.</h2>
                 <p className="case-study-body-text">{project.solution}</p>
               </div>
 
               <div className="case-study-block">
-                <p className="eyebrow">Key Features</p>
-                <h2>Implemented Functionality</h2>
+                <p className="eyebrow">Key functionality</p>
+                <h2>What the experience delivers.</h2>
                 <ul className="key-features-list">
                   {project.keyFeatures.map((feature, idx) => (
                     <li key={feature}>
@@ -149,7 +155,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
 
             <aside className="case-study-sidebar" aria-label="Project details">
               <div className="sidebar-card">
-                <h3>Project Metadata</h3>
+                <h3>Project details</h3>
                 <dl className="metadata-list">
                   <div>
                     <dt>Client / Project</dt>
@@ -162,21 +168,21 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                   <div>
                     <dt>Live Domain</dt>
                     <dd>
-                      <a href={project.url} target="_blank" rel="noopener noreferrer">
+                      <a href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.name} live website (opens in a new tab)`}>
                         {project.displayUrl} ↗
                       </a>
                     </dd>
                   </div>
                 </dl>
 
-                <h3 className="sidebar-subheading">Services Delivered</h3>
+                <h3 className="sidebar-subheading">Capabilities</h3>
                 <div className="sidebar-tags">
                   {project.tags.map((tag) => (
                     <span key={tag} className="project-tag-pill">{tag}</span>
                   ))}
                 </div>
 
-                <h3 className="sidebar-subheading">Tech Stack</h3>
+                <h3 className="sidebar-subheading">Verified technology</h3>
                 <div className="sidebar-tech">
                   {project.techStack.map((tech) => (
                     <span key={tech} className="tech-pill">{tech}</span>
@@ -186,12 +192,30 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             </aside>
           </div>
 
+          <section className="case-study-visuals" aria-labelledby="visual-showcase-heading">
+            <div className="case-study-visuals-heading">
+              <p className="eyebrow">Visual showcase</p>
+              <h2 id="visual-showcase-heading">The live project, presented across viewports.</h2>
+              <p>Real project imagery from the published website, shown in desktop and focused mobile compositions.</p>
+            </div>
+            <div className="device-showcase">
+              <div className="desktop-device">
+                <div className="browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
+                <div className="device-image"><ProjectArtwork project={project} sizes="(max-width: 900px) 94vw, 65vw" /></div>
+              </div>
+              <div className="mobile-device" aria-label={`${project.name} mobile viewport detail`}>
+                <span className="mobile-speaker" aria-hidden="true" />
+                <div className="device-image"><ProjectArtwork project={project} sizes="(max-width: 720px) 48vw, 20vw" /></div>
+              </div>
+            </div>
+          </section>
+
           <section className="case-study-live-cta" aria-labelledby="live-proof-heading">
             <div className="live-cta-card">
               <div>
                 <p className="eyebrow">Live Digital Experience</p>
                 <h2 id="live-proof-heading">See {project.name} in action.</h2>
-                <p>Explore the live website on desktop or mobile to test performance and user journeys.</p>
+                <p>Continue to the client website when you are ready to explore the published experience.</p>
               </div>
               <a
                 className="button button-primary"
@@ -200,7 +224,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 rel="noopener noreferrer"
                 aria-label={`Visit ${project.name} live website (opens in a new tab)`}
               >
-                Visit Live Site <ArrowIcon />
+                Visit Live Website <ArrowIcon />
               </a>
             </div>
           </section>
@@ -212,19 +236,19 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 <p>{nextProject.category}</p>
                 <h3>{nextProject.name}</h3>
               </div>
-              <span className="next-arrow">Read Case Study <ArrowIcon /></span>
+              <span className="next-arrow">View Case Study <ArrowIcon /></span>
             </Link>
           </nav>
 
           <aside className="conversion-banner" data-reveal aria-label="Start your project">
             <div className="container conversion-banner-layout">
               <div className="conversion-banner-copy">
-                <p className="eyebrow">Start A Project</p>
-                <h3>Ready to create a website that elevates your business positioning?</h3>
+                <p className="eyebrow">Have a project in mind?</p>
+                <h3>Let&apos;s create a digital experience with a clear commercial purpose.</h3>
               </div>
               <div className="conversion-banner-actions">
                 <Link className="button button-primary" href="/#contact">
-                  Book a free consultation <ArrowIcon />
+                  Start a Project <ArrowIcon />
                 </Link>
                 <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
                   Call {siteConfig.phoneDisplay}

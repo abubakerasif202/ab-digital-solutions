@@ -40,7 +40,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
         <div className="footer-contact">
           <span>Start a project</span>
           <p>Tell us what you are building and we will come back with a practical next step.</p>
-          <Link className="footer-contact-cta" href="/#contact">Start a conversation <ArrowIcon /></Link>
+          <Link className="footer-contact-cta" href="/#contact">Start a Project <ArrowIcon /></Link>
           <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
         </div>
       </div>

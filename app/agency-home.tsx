@@ -101,6 +101,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
   const [carouselEngaged, setCarouselEngaged] = useState(false);
   const [formStatus, setFormStatus] = useState("");
   const [formState, setFormState] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [hero3DMode, setHero3DMode] = useState<"fallback" | "tablet" | "desktop">("fallback");
   const prefersReducedMotion = useSyncExternalStore(
     subscribeToReducedMotion,
     getReducedMotionSnapshot,
@@ -108,6 +109,50 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
   );
   const sliderPreferencePaused = sliderPauseOverride ?? prefersReducedMotion;
   const sliderPaused = sliderPreferencePaused || carouselEngaged;
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia(reducedMotionQuery);
+    const mobileQuery = window.matchMedia("(max-width: 540px)");
+    const tabletQuery = window.matchMedia("(max-width: 1024px)");
+    const connection = (navigator as Navigator & { connection?: EventTarget & { saveData?: boolean } }).connection;
+    const idleWindow = window as unknown as {
+      requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    let ready = false;
+    const updateMode = () => {
+      const constrainedDevice = connection?.saveData
+        || (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4);
+      if (!ready || motionQuery.matches || constrainedDevice || mobileQuery.matches) {
+        setHero3DMode("fallback");
+        return;
+      }
+      setHero3DMode(tabletQuery.matches ? "tablet" : "desktop");
+    };
+    const enable3D = () => {
+      ready = true;
+      updateMode();
+    };
+    motionQuery.addEventListener("change", updateMode);
+    mobileQuery.addEventListener("change", updateMode);
+    tabletQuery.addEventListener("change", updateMode);
+    connection?.addEventListener?.("change", updateMode);
+    let cancelDelay = () => {};
+    if (idleWindow.requestIdleCallback) {
+      const idleId = idleWindow.requestIdleCallback(enable3D, { timeout: 1500 });
+      cancelDelay = () => idleWindow.cancelIdleCallback?.(idleId);
+    } else {
+      const timer = window.setTimeout(enable3D, 500);
+      cancelDelay = () => window.clearTimeout(timer);
+    }
+    return () => {
+      cancelDelay();
+      motionQuery.removeEventListener("change", updateMode);
+      mobileQuery.removeEventListener("change", updateMode);
+      tabletQuery.removeEventListener("change", updateMode);
+      connection?.removeEventListener?.("change", updateMode);
+    };
+  }, []);
 
   useEffect(() => {
     if (sliderPaused) return;
@@ -154,7 +199,11 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
       <main id="main-content">
         <section className="hero" aria-labelledby="hero-heading">
           <div className="hero-3d-bg-wrap" aria-hidden="true">
-            <Hero3DCanvas />
+            {hero3DMode === "fallback" ? (
+              <div className="hero-3d-fallback" />
+            ) : (
+              <Hero3DCanvas quality={hero3DMode} />
+            )}
           </div>
           <div className="hero-grid-lines" aria-hidden="true" />
           <div className="hero-glow" aria-hidden="true" />
@@ -169,9 +218,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               </p>
               <div className="hero-actions">
                 <a className="button button-primary" href="#contact">
-                  Book a free consultation <ArrowIcon />
+                  Start a Project <ArrowIcon />
                 </a>
-                <a className="button button-ghost" href="#work">View selected work</a>
+                <a className="button button-ghost" href="#work">View Our Work</a>
               </div>
               <div className="client-proof" aria-label="Selected client work">
                 <span>Live client work</span>
@@ -210,22 +259,20 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 </div>
                 <div className="showcase-slides" aria-live={sliderPaused ? "polite" : "off"}>
                   {projects.map((project, index) => (
-                    <a
+                    <Link
                       className={`showcase-slide${index === activeSlide ? " is-active" : ""}`}
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={`/work/${project.slug}`}
                       aria-hidden={index !== activeSlide}
                       tabIndex={index === activeSlide ? 0 : -1}
                       key={project.name}
-                      aria-label={`${project.alt} — visit live website (opens in a new tab)`}
+                      aria-label={`${project.name} — View Case Study`}
                     >
                       <ProjectArtwork
                         project={project}
                         priority={index === 0}
                         sizes="(max-width: 900px) 94vw, 52vw"
                       />
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -272,13 +319,15 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   </button>
                 ))}
               </div>
+              <Link className="showcase-case-study" href={`/work/${projects[activeSlide].slug}`}>
+                View Case Study <ArrowIcon />
+              </Link>
             </div>
           </div>
 
           <div className="hero-marquee" aria-label="Core capabilities">
             <div>
               <span>Strategy</span><i>✦</i><span>Design</span><i>✦</i><span>Development</span><i>✦</i><span>SEO</span><i>✦</i><span>Growth</span><i>✦</i>
-              <span aria-hidden="true">Strategy</span><i aria-hidden="true">✦</i><span aria-hidden="true">Design</span><i aria-hidden="true">✦</i><span aria-hidden="true">Development</span><i aria-hidden="true">✦</i><span aria-hidden="true">SEO</span><i aria-hidden="true">✦</i><span aria-hidden="true">Growth</span><i aria-hidden="true">✦</i>
             </div>
           </div>
         </section>
@@ -319,7 +368,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             </div>
             <div className="conversion-banner-actions">
               <a className="button button-primary" href="#contact">
-                Book a free consultation <ArrowIcon />
+                Start a Project <ArrowIcon />
               </a>
               <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
                 Call {siteConfig.phoneDisplay}
@@ -339,14 +388,12 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             </div>
             <div className="work-grid">
               {projects.map((project, index) => (
-                <a
+                <Link
                   className="project-card"
                   data-reveal
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={`/work/${project.slug}`}
                   key={project.name}
-                  aria-label={`${project.name} — View Live Website (opens in a new tab)`}
+                  aria-label={`${project.name} — View Case Study`}
                 >
                   <div className="project-image">
                     <ProjectArtwork
@@ -365,9 +412,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                         <span key={tag} className="project-tag-pill">{tag}</span>
                       ))}
                     </div>
-                    <span className="project-cta">View Live Website <ArrowIcon /></span>
+                    <span className="project-cta">View Case Study <ArrowIcon /></span>
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -379,7 +426,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <p className="eyebrow">03 / How we work</p>
               <h2 id="process-heading">A clear path from ambition to launch.</h2>
               <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
-              <a className="text-link" href="#contact">Talk through your project <ArrowIcon /></a>
+              <a className="text-link" href="#contact">Start a Project <ArrowIcon /></a>
             </div>
             <ol className="process-list">
               {processSteps.map(([number, title, description]) => (
@@ -423,6 +470,11 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <p className="eyebrow">04 / About AB</p>
               <h2 id="about-heading">Your digital presence should work as hard as you do.</h2>
               <p>AB Digital Solutions is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
+              <div className="studio-trust" aria-label="Studio details">
+                <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
+                <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>
+                <p><strong>Real project portfolio</strong><span>Seven live website case studies</span></p>
+              </div>
               <p>We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</p>
               <p>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</p>
               <dl className="about-values">
@@ -454,10 +506,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <input id="company" name="company" type="text" tabIndex={-1} autoComplete="off" />
               </div>
               <div className="form-grid">
-                <label htmlFor="first-name">First name <span aria-hidden="true">*</span></label>
-                <input id="first-name" name="firstName" type="text" autoComplete="given-name" required aria-required="true" />
-                <label htmlFor="last-name">Last name <span aria-hidden="true">*</span></label>
-                <input id="last-name" name="lastName" type="text" autoComplete="family-name" required aria-required="true" />
+                <label htmlFor="full-name">Name <span aria-hidden="true">*</span></label>
+                <input id="full-name" name="fullName" type="text" autoComplete="name" required aria-required="true" />
                 <label htmlFor="email">Email <span aria-hidden="true">*</span></label>
                 <input id="email" name="email" type="email" autoComplete="email" required aria-required="true" />
                 <label htmlFor="phone">Phone</label>
