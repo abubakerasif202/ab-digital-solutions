@@ -1,34 +1,40 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useSyncExternalStore } from "react";
 import * as THREE from "three";
 
 interface Hero3DCanvasProps {
   className?: string;
 }
 
+const emptySubscribe = () => () => {};
+
+function getWebGLSnapshot(): boolean {
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+    );
+  } catch {
+    return false;
+  }
+}
+
+function getWebGLServerSnapshot(): boolean {
+  return false;
+}
+
 export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [webglSupported, setWebglSupported] = useState<boolean>(true);
-  const [isClient, setIsClient] = useState<boolean>(false);
+  const webglSupported = useSyncExternalStore(
+    emptySubscribe,
+    getWebGLSnapshot,
+    getWebGLServerSnapshot
+  );
 
   useEffect(() => {
-    setIsClient(true);
-    // WebGL support check
-    try {
-      const canvas = document.createElement("canvas");
-      const hasWebGL = !!(
-        window.WebGLRenderingContext &&
-        (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
-      );
-      if (!hasWebGL) {
-        setWebglSupported(false);
-        return;
-      }
-    } catch {
-      setWebglSupported(false);
-      return;
-    }
+    if (!webglSupported) return;
 
     const container = containerRef.current;
     if (!container) return;
@@ -284,9 +290,7 @@ export function Hero3DCanvas({ className = "" }: Hero3DCanvasProps) {
         renderer.domElement.parentNode.removeChild(renderer.domElement);
       }
     };
-  }, []);
-
-  if (!isClient) return null;
+  }, [webglSupported]);
 
   if (!webglSupported) {
     return (
