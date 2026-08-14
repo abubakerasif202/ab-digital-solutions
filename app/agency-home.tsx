@@ -108,8 +108,13 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           </div>
 
           <div className="hero-marquee" aria-label="Core capabilities">
-            <div>
-              <span>Strategy</span><i>✦</i><span>Design</span><i>✦</i><span>Development</span><i>✦</i><span>SEO</span><i>✦</i><span>Growth</span><i>✦</i>
+            <div className="hero-marquee-track">
+              <div className="hero-marquee-group">
+                <span>Strategy</span><i>✦</i><span>Design</span><i>✦</i><span>Development</span><i>✦</i><span>SEO</span><i>✦</i><span>Growth</span><i>✦</i>
+              </div>
+              <div className="hero-marquee-group" aria-hidden="true">
+                <span>Strategy</span><i>✦</i><span>Design</span><i>✦</i><span>Development</span><i>✦</i><span>SEO</span><i>✦</i><span>Growth</span><i>✦</i>
+              </div>
             </div>
           </div>
         </section>

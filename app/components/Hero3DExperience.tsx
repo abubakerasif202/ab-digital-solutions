@@ -11,7 +11,7 @@ const Hero3DCanvas = dynamic(
   },
 );
 
-type Hero3DMode = "fallback" | "tablet" | "desktop";
+type Hero3DMode = "fallback" | "mobile" | "tablet" | "desktop";
 
 export function Hero3DExperience() {
   const [mode, setMode] = useState<Hero3DMode>("fallback");
@@ -30,15 +30,21 @@ export function Hero3DExperience() {
     let ready = false;
 
     const updateMode = () => {
-      const constrainedDevice = connection?.saveData
-        || (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4);
-
-      if (!ready || motionQuery.matches || constrainedDevice || mobileQuery.matches) {
+      if (!ready || motionQuery.matches) {
         setMode("fallback");
         return;
       }
 
-      setMode(tabletQuery.matches ? "tablet" : "desktop");
+      const constrainedDevice = connection?.saveData
+        || (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4);
+
+      if (mobileQuery.matches) {
+        setMode("mobile");
+      } else if (tabletQuery.matches || constrainedDevice) {
+        setMode("tablet");
+      } else {
+        setMode("desktop");
+      }
     };
 
     const enable3D = () => {

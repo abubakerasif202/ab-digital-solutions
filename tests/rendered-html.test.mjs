@@ -82,6 +82,25 @@ test("Three.js is delayed, constrained on smaller devices and paused off screen"
   assert.match(canvas, /pointerEvents: "none"/);
 });
 
+test("premium motion remains present while mobile rendering is constrained", async () => {
+  const [homepage, experience, canvas, styles] = await Promise.all([
+    read("../app/agency-home.tsx"),
+    read("../app/components/Hero3DExperience.tsx"),
+    read("../app/components/Hero3DCanvas.tsx"),
+    read("../app/globals.css"),
+  ]);
+
+  assert.match(homepage, /className="hero-marquee-track"/);
+  assert.match(homepage, /className="hero-marquee-group" aria-hidden="true"/);
+  assert.match(styles, /\.hero-marquee-track\s*\{[\s\S]*?width: max-content;[\s\S]*?animation: hero-marquee-scroll 24s linear infinite;/);
+  assert.match(styles, /@keyframes hero-marquee-scroll[\s\S]*?translate3d\(-50%, 0, 0\)/);
+  assert.match(experience, /setMode\("mobile"\)/);
+  assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.25\)/);
+  assert.match(canvas, /const particleCount = isMobile \? 88/);
+  assert.match(styles, /\.service-card\s*\{\s*min-height: 0;/);
+  assert.match(styles, /@media \(max-width: 960px\) and \(orientation: landscape\)/);
+});
+
 test("homepage interactive work is isolated and pauses when hidden", async () => {
   const [homepage, showcase, contact] = await Promise.all([
     read("../app/agency-home.tsx"),

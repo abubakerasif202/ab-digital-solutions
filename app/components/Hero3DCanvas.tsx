@@ -5,7 +5,7 @@ import * as THREE from "three";
 
 interface Hero3DCanvasProps {
   className?: string;
-  quality?: "tablet" | "desktop";
+  quality?: "mobile" | "tablet" | "desktop";
 }
 
 export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanvasProps) {
@@ -32,12 +32,13 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     camera.position.set(0, 0, 7.5);
 
     // Renderer Setup
+    const isMobile = quality === "mobile";
     const isTablet = quality === "tablet";
     let renderer: THREE.WebGLRenderer;
 
     try {
       renderer = new THREE.WebGLRenderer({
-        antialias: !isTablet,
+        antialias: !isTablet && !isMobile,
         alpha: true,
         powerPreference: "high-performance",
       });
@@ -46,7 +47,11 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       return () => window.clearTimeout(failureTimer);
     }
 
-    const dpr = isTablet ? 1 : Math.min(window.devicePixelRatio, 1.5);
+    const dpr = isMobile
+      ? Math.min(window.devicePixelRatio, 1.25)
+      : isTablet
+        ? 1
+        : Math.min(window.devicePixelRatio, 1.5);
     renderer.setPixelRatio(dpr);
     renderer.setSize(width, height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -75,8 +80,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     scene.add(heroGroup);
 
     // 1. Central Complex Sculptural Geometry
-    const tubularSegments = isTablet ? 72 : 120;
-    const radialSegments = isTablet ? 10 : 16;
+    const tubularSegments = isMobile ? 60 : isTablet ? 72 : 120;
+    const radialSegments = isMobile ? 9 : isTablet ? 10 : 16;
     const mainGeometry = new THREE.TorusKnotGeometry(1.15, 0.3, tubularSegments, radialSegments, 2, 3);
     const mainMaterial = new THREE.MeshPhysicalMaterial({
       color: 0x08090a,
@@ -90,7 +95,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     heroGroup.add(mainMesh);
 
     // 2. Outer Gold Wireframe Ring
-    const ringGeometry = new THREE.IcosahedronGeometry(2.15, isTablet ? 1 : 2);
+    const ringGeometry = new THREE.IcosahedronGeometry(2.15, isMobile || isTablet ? 1 : 2);
     const ringMaterial = new THREE.MeshBasicMaterial({
       color: 0xd4a32f,
       wireframe: true,
@@ -129,7 +134,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     satelliteGroup.add(sat2);
 
     // 4. Interactive Particle Field
-    const particleCount = isTablet ? 100 : 240;
+    const particleCount = isMobile ? 88 : isTablet ? 100 : 240;
     const particleGeometry = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
 
@@ -146,7 +151,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     const particleMaterial = new THREE.PointsMaterial({
       color: 0xfef08a,
-      size: isTablet ? 0.04 : 0.045,
+      size: isMobile || isTablet ? 0.04 : 0.045,
       transparent: true,
       opacity: 0.55,
       blending: THREE.AdditiveBlending,
@@ -169,7 +174,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     let targetMouseY = 0;
     let scrollY = 0;
     let targetScrollY = window.scrollY;
-    const frameInterval = 1000 / (isTablet ? 30 : 60);
+    const frameInterval = 1000 / (isMobile || isTablet ? 30 : 60);
 
     const handleMouseMove = (event: MouseEvent) => {
       const windowHalfX = window.innerWidth / 2;
@@ -333,7 +338,11 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       camera.aspect = newWidth / newHeight;
       camera.updateProjectionMatrix();
 
-      renderer.setPixelRatio(isTablet ? 1 : Math.min(window.devicePixelRatio, 1.5));
+      renderer.setPixelRatio(isMobile
+        ? Math.min(window.devicePixelRatio, 1.25)
+        : isTablet
+          ? 1
+          : Math.min(window.devicePixelRatio, 1.5));
       renderer.setSize(newWidth, newHeight);
       if (isVisible || prefersReducedMotion) renderStaticFrame();
     };
@@ -382,7 +391,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
           height: "100%",
           minHeight: "450px",
           background:
-            "radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.15), rgba(168, 85, 247, 0.08), transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(212, 163, 47, 0.18), rgba(181, 18, 27, 0.1), transparent 70%)",
         }}
         aria-label="3D background visual representation"
       />
