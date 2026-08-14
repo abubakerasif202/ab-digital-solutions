@@ -2000,6 +2000,13 @@ h1 em {
   box-shadow: inset 4px 0 0 var(--brand-red);
 }
 
+.form-grid input:focus-visible,
+.form-grid select:focus-visible,
+.form-grid textarea:focus-visible {
+  outline: 3px solid var(--gold-dark);
+  outline-offset: -3px;
+}
+
 .contact-form .button {
   width: 100%;
   margin-top: 28px;
