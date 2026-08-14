@@ -10,7 +10,13 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
       <div className="container footer-main">
         <div className="footer-intro">
           <Link className="brand" href="/" aria-label="AB Digital Solutions home">
-            <Image src={`${assetBase}/ab-logo-mark.png`} alt="" width={500} height={500} />
+            <Image
+              src={`${assetBase}/ab-logo-mark.png`}
+              alt=""
+              width={400}
+              height={340}
+              sizes="48px"
+            />
             <span className="brand-name">AB Digital Solutions</span>
           </Link>
           <p>Premium websites, digital marketing and online growth solutions for Australian businesses.</p>

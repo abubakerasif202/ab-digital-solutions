@@ -12,6 +12,7 @@ export default function NotFound() {
           alt="AB Digital Solutions"
           width={1020}
           height={500}
+          sizes="190px"
         />
         <p className="eyebrow">404 / Page not found</p>
         <h1>This page has moved off the map.</h1>

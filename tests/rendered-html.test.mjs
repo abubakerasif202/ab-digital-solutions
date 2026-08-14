@@ -5,16 +5,19 @@ import test from "node:test";
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
 
 test("homepage exposes content directly instead of using an iframe", async () => {
-  const [page, homepage] = await Promise.all([
+  const [page, homepage, showcase, heroExperience] = await Promise.all([
     read("../app/page.tsx"),
     read("../app/agency-home.tsx"),
+    read("../app/components/ProjectShowcase.tsx"),
+    read("../app/components/Hero3DExperience.tsx"),
   ]);
 
   assert.doesNotMatch(page, /<iframe\b/i);
   assert.match(homepage, /Websites that make your business/);
   assert.match(homepage, /id="contact"/);
-  assert.match(homepage, /aria-roledescription="carousel"/);
-  assert.match(homepage, /prefers-reduced-motion/);
+  assert.match(showcase, /aria-roledescription="carousel"/);
+  assert.match(heroExperience, /prefers-reduced-motion/);
+  assert.doesNotMatch(homepage, /^"use client"/);
 });
 
 test("portfolio contains every required live project", async () => {
@@ -62,19 +65,36 @@ test("every project ships a real preview image and routes visitors through a cas
 });
 
 test("Three.js is delayed, constrained on smaller devices and paused off screen", async () => {
-  const [homepage, canvas] = await Promise.all([
-    read("../app/agency-home.tsx"),
+  const [experience, canvas] = await Promise.all([
+    read("../app/components/Hero3DExperience.tsx"),
     read("../app/components/Hero3DCanvas.tsx"),
   ]);
-  assert.match(homepage, /requestIdleCallback/);
-  assert.match(homepage, /max-width: 540px/);
-  assert.match(homepage, /connection\?\.saveData/);
+  assert.match(experience, /requestIdleCallback/);
+  assert.match(experience, /max-width: 540px/);
+  assert.match(experience, /connection\?\.saveData/);
   assert.match(canvas, /IntersectionObserver/);
   assert.match(canvas, /visibilitychange/);
   assert.match(canvas, /cancelAnimationFrame/);
   assert.match(canvas, /visibilityObserver\.disconnect/);
+  assert.match(canvas, /renderer\.forceContextLoss\(\)/);
+  assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.5\)/);
   assert.match(canvas, /\.dispose\(\)/);
   assert.match(canvas, /pointerEvents: "none"/);
+});
+
+test("homepage interactive work is isolated and pauses when hidden", async () => {
+  const [homepage, showcase, contact] = await Promise.all([
+    read("../app/agency-home.tsx"),
+    read("../app/components/ProjectShowcase.tsx"),
+    read("../app/components/ContactForm.tsx"),
+  ]);
+
+  assert.doesNotMatch(homepage, /useState|useEffect|setInterval/);
+  assert.match(showcase, /IntersectionObserver/);
+  assert.match(showcase, /document\.visibilityState/);
+  assert.match(showcase, /\[activeSlide, nextSlide\]\.map/);
+  assert.match(showcase, /window\.clearInterval/);
+  assert.match(contact, /fetch\("\/api\/contact"/);
 });
 
 test("homepage project count reflects the seven live projects", async () => {
@@ -85,8 +105,9 @@ test("homepage project count reflects the seven live projects", async () => {
 });
 
 test("reviewed design issues remain remediated", async () => {
-  const [homepage, chrome, servicePage, styles] = await Promise.all([
+  const [homepage, showcase, chrome, servicePage, styles] = await Promise.all([
     read("../app/agency-home.tsx"),
+    read("../app/components/ProjectShowcase.tsx"),
     read("../app/site-chrome.tsx"),
     read("../app/services/[slug]/page.tsx"),
     read("../app/globals.css"),
@@ -94,8 +115,8 @@ test("reviewed design issues remain remediated", async () => {
 
   assert.doesNotMatch(homepage, /hero-brand-art/);
   assert.match(homepage, /className="client-proof"/);
-  assert.match(homepage, /setCarouselEngaged\(true\)/);
-  assert.match(homepage, /setSliderPauseOverride\(true\)/);
+  assert.match(showcase, /setCarouselEngaged\(true\)/);
+  assert.match(showcase, /setSliderPauseOverride\(true\)/);
   assert.match(homepage, /<a[\s\S]*className="service-card"/);
   assert.match(chrome, /ab-logo-mark\.png/);
   assert.match(chrome, /AB Digital Solutions/);
@@ -131,7 +152,9 @@ test("mobile navigation keeps keyboard focus within its open menu", async () => 
   assert.match(chrome, /className="mobile-project-cta"/);
   assert.match(chrome, /window\.scrollY > window\.innerHeight \* 0\.72/);
   assert.match(chrome, /const pathname = usePathname\(\)/);
-  assert.match(chrome, /const conversionAreaVisible = conversionAreas\.some/);
+  assert.match(chrome, /const visibleConversionAreas = new Set<Element>\(\)/);
+  assert.doesNotMatch(chrome, /getBoundingClientRect/);
+  assert.match(chrome, /window\.requestAnimationFrame\(updateVisibility\)/);
   assert.match(chrome, /\}, \[pathname\]\);/);
 });
 
@@ -187,12 +210,12 @@ test("brand theme balances premium red and gold accents", async () => {
 });
 
 test("contact form posts to the protected server endpoint", async () => {
-  const [homepage, route] = await Promise.all([
-    read("../app/agency-home.tsx"),
+  const [contactForm, route] = await Promise.all([
+    read("../app/components/ContactForm.tsx"),
     read("../app/api/contact/route.ts"),
   ]);
-  assert.match(homepage, /fetch\("\/api\/contact"/);
-  assert.doesNotMatch(homepage, /window\.location\.assign/);
+  assert.match(contactForm, /fetch\("\/api\/contact"/);
+  assert.doesNotMatch(contactForm, /window\.location\.assign/);
   assert.match(route, /RESEND_API_KEY/);
   assert.match(route, /allowedOrigin/);
   assert.match(route, /withinRateLimit/);

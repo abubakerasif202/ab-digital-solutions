@@ -56,34 +56,79 @@ export function SiteHeader() {
 
   useEffect(() => {
     const mobileViewport = window.matchMedia("(max-width: 720px)");
+    const eligibleRoute = pathname !== "/privacy";
     const conversionAreas = [
       document.getElementById("contact"),
       document.querySelector(".site-footer"),
     ].filter((element): element is Element => element !== null);
+    const visibleConversionAreas = new Set<Element>();
+    const observedConversionAreas = new Set<Element>();
+    let animationFrameId: number | null = null;
+    let mobileTrackingActive = false;
+    let renderedVisibility = false;
+
+    const publishVisibility = (visible: boolean) => {
+      if (visible === renderedVisibility) return;
+      renderedVisibility = visible;
+      setMobileCtaVisible(visible);
+    };
     const updateVisibility = () => {
-      const eligibleRoute = pathname !== "/privacy";
-      const conversionAreaVisible = conversionAreas.some((element) => {
-        const rect = element.getBoundingClientRect();
-        return rect.bottom > 0 && rect.top < window.innerHeight;
-      });
-      setMobileCtaVisible(
+      animationFrameId = null;
+      const observerReady = observedConversionAreas.size === conversionAreas.length;
+      publishVisibility(
         eligibleRoute
         && mobileViewport.matches
+        && observerReady
         && window.scrollY > window.innerHeight * 0.72
-        && !conversionAreaVisible,
+        && visibleConversionAreas.size === 0,
       );
     };
-    const observer = new IntersectionObserver(updateVisibility, { threshold: 0.05 });
+    const scheduleVisibilityUpdate = () => {
+      if (animationFrameId !== null) return;
+      animationFrameId = window.requestAnimationFrame(updateVisibility);
+    };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        observedConversionAreas.add(entry.target);
+        if (entry.isIntersecting) visibleConversionAreas.add(entry.target);
+        else visibleConversionAreas.delete(entry.target);
+      });
+      scheduleVisibilityUpdate();
+    }, { threshold: 0 });
 
-    conversionAreas.forEach((element) => observer.observe(element));
-    window.addEventListener("scroll", updateVisibility, { passive: true });
-    mobileViewport.addEventListener("change", updateVisibility);
-    updateVisibility();
+    const stopMobileTracking = () => {
+      if (!mobileTrackingActive) return;
+      mobileTrackingActive = false;
+      observer.disconnect();
+      visibleConversionAreas.clear();
+      observedConversionAreas.clear();
+      window.removeEventListener("scroll", scheduleVisibilityUpdate);
+      window.removeEventListener("resize", scheduleVisibilityUpdate);
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      publishVisibility(false);
+    };
+    const startMobileTracking = () => {
+      if (mobileTrackingActive || !mobileViewport.matches) return;
+      mobileTrackingActive = true;
+      conversionAreas.forEach((element) => observer.observe(element));
+      window.addEventListener("scroll", scheduleVisibilityUpdate, { passive: true });
+      window.addEventListener("resize", scheduleVisibilityUpdate, { passive: true });
+      scheduleVisibilityUpdate();
+    };
+    const handleViewportChange = () => {
+      if (eligibleRoute && mobileViewport.matches) startMobileTracking();
+      else stopMobileTracking();
+    };
+
+    mobileViewport.addEventListener("change", handleViewportChange);
+    handleViewportChange();
 
     return () => {
-      observer.disconnect();
-      window.removeEventListener("scroll", updateVisibility);
-      mobileViewport.removeEventListener("change", updateVisibility);
+      stopMobileTracking();
+      mobileViewport.removeEventListener("change", handleViewportChange);
     };
   }, [pathname]);
 
@@ -95,7 +140,14 @@ export function SiteHeader() {
       <header className="site-header" id="top">
         <div className="container nav-wrap">
           <Link className="brand" href="/" aria-label="AB Digital Solutions home">
-            <Image src={`${assetBase}/ab-logo-mark.png`} alt="" width={500} height={500} priority />
+            <Image
+              src={`${assetBase}/ab-logo-mark.png`}
+              alt=""
+              width={400}
+              height={340}
+              sizes="48px"
+              priority
+            />
             <span className="brand-name">AB Digital Solutions</span>
           </Link>
 

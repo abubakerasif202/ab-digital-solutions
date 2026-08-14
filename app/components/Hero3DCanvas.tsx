@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useSyncExternalStore } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 interface Hero3DCanvasProps {
@@ -8,34 +8,12 @@ interface Hero3DCanvasProps {
   quality?: "tablet" | "desktop";
 }
 
-const emptySubscribe = () => () => {};
-
-function getWebGLSnapshot(): boolean {
-  try {
-    const canvas = document.createElement("canvas");
-    return !!(
-      window.WebGLRenderingContext &&
-      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
-    );
-  } catch {
-    return false;
-  }
-}
-
-function getWebGLServerSnapshot(): boolean {
-  return false;
-}
-
 export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const webglSupported = useSyncExternalStore(
-    emptySubscribe,
-    getWebGLSnapshot,
-    getWebGLServerSnapshot
-  );
+  const [rendererFailed, setRendererFailed] = useState(false);
 
   useEffect(() => {
-    if (!webglSupported) return;
+    if (rendererFailed) return;
 
     const container = containerRef.current;
     if (!container) return;
@@ -54,14 +32,21 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     camera.position.set(0, 0, 7.5);
 
     // Renderer Setup
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-      powerPreference: "high-performance",
-    });
-    
     const isTablet = quality === "tablet";
-    const dpr = isTablet ? 1 : Math.min(window.devicePixelRatio, 1.75);
+    let renderer: THREE.WebGLRenderer;
+
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: !isTablet,
+        alpha: true,
+        powerPreference: "high-performance",
+      });
+    } catch {
+      const failureTimer = window.setTimeout(() => setRendererFailed(true), 0);
+      return () => window.clearTimeout(failureTimer);
+    }
+
+    const dpr = isTablet ? 1 : Math.min(window.devicePixelRatio, 1.5);
     renderer.setPixelRatio(dpr);
     renderer.setSize(width, height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -100,9 +85,6 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       clearcoat: 1.0,
       clearcoatRoughness: 0.08,
       reflectivity: 0.95,
-      transmission: 0.15,
-      ior: 1.5,
-      thickness: 0.4,
     });
     const mainMesh = new THREE.Mesh(mainGeometry, mainMaterial);
     heroGroup.add(mainMesh);
@@ -174,15 +156,20 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     scene.add(particleSystem);
 
     // Animation & Smooth Control State
-    let animationFrameId: number;
+    let animationFrameId = 0;
     let isVisible = false;
     let isRunning = false;
+    let inputListenersAttached = false;
+    let lastRenderTime = 0;
+    let nextRenderTime = 0;
+    let elapsedTime = 0;
     let mouseX = 0;
     let mouseY = 0;
     let targetMouseX = 0;
     let targetMouseY = 0;
     let scrollY = 0;
-    let targetScrollY = 0;
+    let targetScrollY = window.scrollY;
+    const frameInterval = 1000 / (isTablet ? 30 : 60);
 
     const handleMouseMove = (event: MouseEvent) => {
       const windowHalfX = window.innerWidth / 2;
@@ -195,21 +182,45 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       targetScrollY = window.scrollY;
     };
 
-    if (!isTablet) window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const attachInputListeners = () => {
+      if (inputListenersAttached) return;
+      if (!isTablet) window.addEventListener("mousemove", handleMouseMove, { passive: true });
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      inputListenersAttached = true;
+    };
 
-    // Render Loop
-    const clock = new THREE.Clock();
+    const detachInputListeners = () => {
+      if (!inputListenersAttached) return;
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
+      inputListenersAttached = false;
+    };
 
-    const animate = () => {
+    const stopLoop = () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      animationFrameId = 0;
+      isRunning = false;
+      lastRenderTime = 0;
+      nextRenderTime = 0;
+    };
+
+    const animate = (timestamp: number) => {
       if (!isVisible || prefersReducedMotion) {
-        isRunning = false;
+        stopLoop();
         return;
       }
-      isRunning = true;
-      animationFrameId = requestAnimationFrame(animate);
 
-      const elapsedTime = clock.getElapsedTime();
+      animationFrameId = requestAnimationFrame(animate);
+      if (!nextRenderTime) nextRenderTime = timestamp;
+      if (timestamp < nextRenderTime) return;
+
+      if (lastRenderTime) {
+        elapsedTime += Math.min((timestamp - lastRenderTime) / 1000, 0.1);
+      }
+      lastRenderTime = timestamp;
+      do {
+        nextRenderTime += frameInterval;
+      } while (nextRenderTime <= timestamp);
 
       // Smooth mouse lerping
       mouseX += (targetMouseX - mouseX) * 0.05;
@@ -232,8 +243,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
         satelliteGroup.rotation.y = elapsedTime * 0.4 + mouseX * 0.4;
         satelliteGroup.rotation.z = elapsedTime * 0.2;
 
-        sat1.rotation.x += 0.01;
-        sat2.rotation.y += 0.015;
+        sat1.rotation.x = elapsedTime * 0.6;
+        sat2.rotation.y = elapsedTime * 0.9;
 
         // Particle field floating effect
         particleSystem.rotation.y = elapsedTime * 0.03 + mouseX * 0.1;
@@ -248,6 +259,14 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       renderer.render(scene, camera);
     };
 
+    const startLoop = () => {
+      if (isRunning || !isVisible || prefersReducedMotion) return;
+      isRunning = true;
+      lastRenderTime = 0;
+      nextRenderTime = 0;
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
     const renderStaticFrame = () => {
       camera.lookAt(scene.position);
       renderer.render(scene, camera);
@@ -256,25 +275,53 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     const handleMotionChange = (event: MediaQueryListEvent) => {
       prefersReducedMotion = event.matches;
       if (prefersReducedMotion) {
+        stopLoop();
         renderStaticFrame();
-      } else if (isVisible && !isRunning) {
-        animate();
+      } else {
+        startLoop();
       }
     };
     reducedMotionQuery.addEventListener("change", handleMotionChange);
 
     const visibilityObserver = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting && document.visibilityState === "visible";
-      if (isVisible && !prefersReducedMotion && !isRunning) animate();
-      else if (prefersReducedMotion) renderStaticFrame();
-    }, { rootMargin: "120px 0px", threshold: 0.01 });
+      if (isVisible) {
+        attachInputListeners();
+        if (prefersReducedMotion) renderStaticFrame();
+        else startLoop();
+      } else {
+        stopLoop();
+        detachInputListeners();
+      }
+    }, { threshold: 0.01 });
     visibilityObserver.observe(container);
 
     const handleVisibilityChange = () => {
-      isVisible = !document.hidden && container.getBoundingClientRect().bottom > -120;
-      if (isVisible && !prefersReducedMotion && !isRunning) animate();
+      const bounds = container.getBoundingClientRect();
+      isVisible = !document.hidden
+        && bounds.bottom > 0
+        && bounds.top < window.innerHeight
+        && bounds.right > 0
+        && bounds.left < window.innerWidth;
+
+      if (isVisible) {
+        attachInputListeners();
+        startLoop();
+      } else {
+        stopLoop();
+        detachInputListeners();
+      }
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    const handleContextLost: EventListener = (event) => {
+      event.preventDefault();
+      isVisible = false;
+      stopLoop();
+      detachInputListeners();
+      setRendererFailed(true);
+    };
+    renderer.domElement.addEventListener("webglcontextlost", handleContextLost);
     renderStaticFrame();
 
     // Resize Handler
@@ -286,9 +333,9 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       camera.aspect = newWidth / newHeight;
       camera.updateProjectionMatrix();
 
-      renderer.setPixelRatio(isTablet ? 1 : Math.min(window.devicePixelRatio, 1.75));
+      renderer.setPixelRatio(isTablet ? 1 : Math.min(window.devicePixelRatio, 1.5));
       renderer.setSize(newWidth, newHeight);
-      renderStaticFrame();
+      if (isVisible || prefersReducedMotion) renderStaticFrame();
     };
 
     const resizeObserver = new ResizeObserver(() => {
@@ -298,13 +345,13 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     // Cleanup
     return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("scroll", handleScroll);
+      stopLoop();
+      detachInputListeners();
       reducedMotionQuery.removeEventListener("change", handleMotionChange);
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      renderer.domElement.removeEventListener("webglcontextlost", handleContextLost);
 
       // Dispose Geometries & Materials
       mainGeometry.dispose();
@@ -318,14 +365,15 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       particleGeometry.dispose();
       particleMaterial.dispose();
       renderer.dispose();
+      renderer.forceContextLoss();
 
       if (renderer.domElement && renderer.domElement.parentNode) {
         renderer.domElement.parentNode.removeChild(renderer.domElement);
       }
     };
-  }, [quality, webglSupported]);
+  }, [quality, rendererFailed]);
 
-  if (!webglSupported) {
+  if (rendererFailed) {
     return (
       <div
         className={`hero-3d-fallback ${className}`}
