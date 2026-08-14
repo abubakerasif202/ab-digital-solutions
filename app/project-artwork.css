@@ -28,6 +28,8 @@
   height: 24px;
   flex: 0 0 auto;
   object-fit: contain !important;
+  transition: none !important;
+  transform: none !important;
 }
 
 .project-artwork-watermark > span {
