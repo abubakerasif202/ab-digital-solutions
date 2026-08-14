@@ -19,4 +19,5 @@ test("shared project artwork adds a non-interactive AB Web Studio watermark", as
   assert.match(artwork, /import "\.\/project-artwork\.css"/);
   assert.match(styles, /\.project-artwork-watermark\s*\{[\s\S]*?pointer-events: none;[\s\S]*?opacity: 0\.62;/);
   assert.match(styles, /@media \(max-width: 720px\)[\s\S]*?\.project-artwork-watermark\s*\{/);
+  assert.match(styles, /\.project-artwork-watermark-logo\s*\{[\s\S]*?transition: none !important;[\s\S]*?transform: none !important;/);
 });
