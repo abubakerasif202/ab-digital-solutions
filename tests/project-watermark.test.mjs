@@ -21,8 +21,10 @@ import {
 } from "../scripts/watermark-projects.mjs";
 
 const projectRoot = fileURLToPath(new URL("../", import.meta.url));
-const sourceDir = path.join(projectRoot, "public/site/ab-digital-premium/assets");
-const watermarkedDir = path.join(sourceDir, WATERMARK_DIR);
+// Masters live outside public/ so the clean original is never served.
+const sourceDir = path.join(projectRoot, "assets-src/portfolio");
+const publicAssetsDir = path.join(projectRoot, "public/site/ab-digital-premium/assets");
+const watermarkedDir = path.join(publicAssetsDir, WATERMARK_DIR);
 
 const sourcePath = (name) => path.join(sourceDir, name);
 const watermarkedPath = (name) => path.join(watermarkedDir, name);
@@ -235,6 +237,32 @@ test("there is exactly one watermark system, baked into the pixels", async () =>
     existsSync(new URL("../app/project-artwork.css", import.meta.url)),
     false,
     "the overlay stylesheet should not return",
+  );
+});
+
+test("no unwatermarked portfolio master is reachable from public/", async () => {
+  const { readdirSync, existsSync } = await import("node:fs");
+
+  // The masters must live outside public/. When they sat beside the
+  // derivatives, the clean image was one URL edit away (drop watermarked/v2),
+  // which defeats watermarking entirely.
+  assert.equal(existsSync(sourceDir), true, "assets-src/portfolio should hold the masters");
+  assert.ok((await listPortfolioSources()).length > 0, "masters should be found outside public/");
+
+  const walk = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const full = path.join(dir, entry.name);
+    return entry.isDirectory() ? walk(full) : [full];
+  });
+
+  const publicRoot = path.join(projectRoot, "public");
+  const strays = walk(publicRoot)
+    .filter((file) => /ab-portfolio-.*\.jpg$/i.test(file))
+    .filter((file) => !file.includes(path.join("watermarked", `v${WATERMARK_VERSION}`)));
+
+  assert.deepEqual(
+    strays.map((f) => path.relative(projectRoot, f)),
+    [],
+    "unwatermarked portfolio images must not be served from public/",
   );
 });
 

@@ -164,12 +164,15 @@ test("the legacy standalone prototype is gone but its live assets remain", async
     assert.equal(await exists(removed), false, `${removed} should have been removed`);
   }
 
-  // Everything the running site actually references must survive.
+  // Everything the running site actually references must survive. Portfolio
+  // screenshots are now served only as watermarked derivatives; their masters
+  // live in assets-src/ outside public/.
   for (const kept of [
     "../public/site/ab-digital-premium/assets/ab-logo-mark.png",
     "../public/site/ab-digital-premium/assets/ab-logo-lockup.png",
-    "../public/site/ab-digital-premium/assets/ab-portfolio-zq-removals.jpg",
-    "../public/site/ab-digital-premium/assets/ab-portfolio-1st-class-express.jpg",
+    "../public/site/ab-digital-premium/assets/watermarked/v2/ab-portfolio-zq-removals.jpg",
+    "../public/site/ab-digital-premium/assets/watermarked/v2/ab-portfolio-1st-class-express.jpg",
+    "../assets-src/portfolio/ab-portfolio-zq-removals.jpg",
   ]) {
     assert.equal(await exists(kept), true, `${kept} is still referenced and must stay`);
   }
@@ -184,13 +187,13 @@ test("no oversized images ship from public/", async () => {
   const assets = [
     "ab-logo-lockup.png",
     "ab-logo-mark.png",
-    "ab-portfolio-1st-class-express.jpg",
-    "ab-portfolio-decent-development.jpg",
-    "ab-portfolio-four-point-concrete.jpg",
-    "ab-portfolio-gala-rentals.jpg",
-    "ab-portfolio-maple-rentals.jpg",
-    "ab-portfolio-milestone-development.jpg",
-    "ab-portfolio-zq-removals.jpg",
+    "watermarked/v2/ab-portfolio-1st-class-express.jpg",
+    "watermarked/v2/ab-portfolio-decent-development.jpg",
+    "watermarked/v2/ab-portfolio-four-point-concrete.jpg",
+    "watermarked/v2/ab-portfolio-gala-rentals.jpg",
+    "watermarked/v2/ab-portfolio-maple-rentals.jpg",
+    "watermarked/v2/ab-portfolio-milestone-development.jpg",
+    "watermarked/v2/ab-portfolio-zq-removals.jpg",
   ];
 
   for (const asset of assets) {

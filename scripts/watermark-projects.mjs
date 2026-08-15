@@ -28,7 +28,15 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const projectRoot = fileURLToPath(new URL("../", import.meta.url));
-const sourceDir = path.join(projectRoot, "public/site/ab-digital-premium/assets");
+/**
+ * Unwatermarked masters, deliberately OUTSIDE public/.
+ *
+ * When these lived next to the derivatives, the clean original was reachable
+ * simply by dropping `watermarked/v2` from the URL — which defeats the point of
+ * watermarking at all. They stay in version control (the mark has to be
+ * regenerable) but are never published.
+ */
+const sourceDir = path.join(projectRoot, "assets-src/portfolio");
 
 /**
  * Bumping this invalidates every derivative.
@@ -52,7 +60,9 @@ export const WATERMARK_DOMAIN = "abwebstudio.com.au";
 
 /** Public directory the versioned derivatives are written to. */
 export const WATERMARK_DIR = `watermarked/v${WATERMARK_VERSION}`;
-const outputDir = path.join(sourceDir, "watermarked", `v${WATERMARK_VERSION}`);
+export const SOURCE_DIR = sourceDir;
+const publicAssetsDir = path.join(projectRoot, "public/site/ab-digital-premium/assets");
+const outputDir = path.join(publicAssetsDir, "watermarked", `v${WATERMARK_VERSION}`);
 
 const GOLD = "#d4a32f";
 const INK = "#050505";

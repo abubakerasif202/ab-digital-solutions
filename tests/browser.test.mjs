@@ -151,26 +151,39 @@ test("the contact endpoint rejects hostile submissions", describeServer, async (
     body: typeof body === "string" ? body : JSON.stringify(body),
   });
 
+  // Remotely we cannot control the client address, so a shared rate-limit
+  // window may already be exhausted and turn an expected 400 into a 429. Both
+  // are refusals, which is what this test is about; locally we hold the
+  // stricter line because each case gets its own synthetic address.
+  const refusedWith = (response, expected, label) => {
+    const allowed = isLocal ? [expected] : [expected, 429];
+    assert.ok(
+      allowed.includes(response.status),
+      `${label}: got ${response.status}, expected ${allowed.join(" or ")}`,
+    );
+  };
+
+  // The origin check runs before the rate limiter, so this is always a 403.
   const crossOrigin = await post({}, { Origin: "https://attacker.example" });
   assert.equal(crossOrigin.status, 403, "cross-origin post should be refused");
 
   const malformed = await post("not json");
-  assert.equal(malformed.status, 400, "malformed JSON should be refused");
+  refusedWith(malformed, 400, "malformed JSON");
 
   const arrayBody = await post("[1,2,3]");
-  assert.equal(arrayBody.status, 400, "non-object JSON should be refused");
+  refusedWith(arrayBody, 400, "non-object JSON");
 
   const badEmail = await post({
     fullName: "Test", email: "nope", service: "Website design & development",
     budget: "Not sure yet", timeline: "As soon as possible", message: "hi",
   });
-  assert.equal(badEmail.status, 400, "malformed email should be refused");
+  refusedWith(badEmail, 400, "malformed email");
 
   const unknownService = await post({
     fullName: "Test", email: "a@b.co", service: "Not a real service",
     budget: "Not sure yet", timeline: "As soon as possible", message: "hi",
   });
-  assert.equal(unknownService.status, 400, "off-list service should be refused");
+  refusedWith(unknownService, 400, "off-list service");
 
   // No response may leak the mail provider or its credentials.
   for (const response of [malformed, badEmail, unknownService]) {
@@ -183,7 +196,20 @@ test("the contact endpoint rejects hostile submissions", describeServer, async (
   // covered by the unit tests in tests/contact-validation.test.mjs.
 });
 
-test("the contact endpoint rate-limits a flood from one address", describeServer, async () => {
+// Controlling the client address requires x-forwarded-for to reach the app
+// untouched, which is only true locally. In production Vercel overwrites that
+// header — correctly, since otherwise any client could spoof its way past the
+// limiter — so the per-address form of this test cannot run there.
+const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)/.test(baseUrl ?? "");
+const describeLocal = {
+  skip: !baseUrl
+    ? "set AB_TEST_BASE_URL to run"
+    : isLocal
+      ? false
+      : "per-address limits need a controllable x-forwarded-for (local only)",
+};
+
+test("the contact endpoint rate-limits a flood from one address", describeLocal, async () => {
   const address = freshAddress();
   const post = () => fetch(`${baseUrl}/api/contact`, {
     method: "POST",
@@ -196,6 +222,26 @@ test("the contact endpoint rate-limits a flood from one address", describeServer
     assert.equal((await post()).status, 400, `attempt ${attempt} should not be throttled`);
   }
   assert.equal((await post()).status, 429, "sixth attempt should be throttled");
+});
+
+test("a sustained flood is throttled whatever the environment", describeServer, async () => {
+  // Environment-agnostic form: whoever the limiter thinks we are, hammering the
+  // endpoint with invalid bodies must stop returning plain 400s and start
+  // refusing. Uses only malformed payloads, so nothing can be delivered.
+  const post = () => fetch(`${baseUrl}/api/contact`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "not json",
+  });
+
+  let throttled = false;
+  for (let attempt = 1; attempt <= 12 && !throttled; attempt += 1) {
+    const status = (await post()).status;
+    assert.ok([400, 429].includes(status), `unexpected status ${status}`);
+    if (status === 429) throttled = true;
+  }
+
+  assert.ok(throttled, "endpoint never throttled a sustained flood of invalid requests");
 });
 
 test("robots allows crawling and points at the sitemap", describeServer, async () => {
