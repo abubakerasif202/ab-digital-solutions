@@ -100,7 +100,7 @@ test("portfolio imagery is served watermarked and the originals are not linked",
   assert.match(html, /watermarked/, "work page should reference watermarked imagery");
 
   const watermarked = await get(
-    "/site/ab-digital-premium/assets/watermarked/ab-portfolio-zq-removals.jpg",
+    "/site/ab-digital-premium/assets/watermarked/v2/ab-portfolio-zq-removals.jpg",
   );
   assert.equal(watermarked.status, 200);
   assert.match(watermarked.headers.get("content-type") ?? "", /image\/jpeg/);

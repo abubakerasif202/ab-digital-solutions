@@ -55,7 +55,7 @@ test("every project ships a real preview image and routes visitors through a cas
   const { statSync } = await import("node:fs");
   for (const name of imageNames) {
     const asset = new URL(
-      `../public/site/ab-digital-premium/assets/watermarked/${name}`,
+      `../public/site/ab-digital-premium/assets/watermarked/v2/${name}`,
       import.meta.url,
     );
     assert.ok(statSync(asset).size > 0, `${name} is missing`);

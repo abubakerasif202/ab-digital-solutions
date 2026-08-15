@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 import {
+  WATERMARK_DIR,
   WATERMARK_DOMAIN,
   WATERMARK_VERSION,
   WATERMARK_WORDMARK,
@@ -21,7 +22,7 @@ import {
 
 const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 const sourceDir = path.join(projectRoot, "public/site/ab-digital-premium/assets");
-const watermarkedDir = path.join(sourceDir, "watermarked");
+const watermarkedDir = path.join(sourceDir, WATERMARK_DIR);
 
 const sourcePath = (name) => path.join(sourceDir, name);
 const watermarkedPath = (name) => path.join(watermarkedDir, name);
@@ -215,4 +216,25 @@ test("there is exactly one watermark system, baked into the pixels", async () =>
 test("watermark version is recorded so derivatives can be invalidated", () => {
   assert.equal(typeof WATERMARK_VERSION, "number");
   assert.ok(WATERMARK_VERSION >= 1);
+  assert.equal(WATERMARK_DIR, `watermarked/v${WATERMARK_VERSION}`);
+});
+
+test("the app and the generator agree on the watermark version", async () => {
+  const siteConfig = await readFile(new URL("../app/site-config.ts", import.meta.url), "utf8");
+
+  // These assets are served immutable for a year, so a restyle must change the
+  // URL. If the two constants drift, the site would request a directory the
+  // generator never wrote, or keep serving a stale watermark from cache.
+  const declared = siteConfig.match(/export const WATERMARK_VERSION = (\d+)/);
+  assert.ok(declared, "site-config must declare WATERMARK_VERSION");
+  assert.equal(
+    Number(declared[1]),
+    WATERMARK_VERSION,
+    "app/site-config.ts and scripts/watermark-projects.mjs disagree on the watermark version",
+  );
+  assert.match(siteConfig, /watermarked\/v\$\{WATERMARK_VERSION\}/);
+
+  // And the versioned directory the app points at must actually exist.
+  const { existsSync } = await import("node:fs");
+  assert.equal(existsSync(watermarkedDir), true, `${watermarkedDir} is missing`);
 });

@@ -22,9 +22,17 @@ import sharp from "sharp";
 
 const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 const sourceDir = path.join(projectRoot, "public/site/ab-digital-premium/assets");
-const outputDir = path.join(sourceDir, "watermarked");
 
-/** Bumping this invalidates every derivative, so tests can catch stale output. */
+/**
+ * Bumping this invalidates every derivative.
+ *
+ * It is also part of the public path (`watermarked/v<N>/`). Those assets are
+ * served `immutable, max-age=31536000`, so restyling the mark without changing
+ * the URL would leave browsers and the image optimizer serving the previous
+ * watermark for up to a year. Versioning the directory makes a restyle a new
+ * URL, which is the only safe way to combine an immutable cache with content
+ * that can change. `app/site-config.ts` must be kept in step; a test enforces it.
+ */
 export const WATERMARK_VERSION = 2;
 
 /**
@@ -34,6 +42,10 @@ export const WATERMARK_VERSION = 2;
  */
 export const WATERMARK_WORDMARK = "AB WEB STUDIO";
 export const WATERMARK_DOMAIN = "abwebstudio.com.au";
+
+/** Public directory the versioned derivatives are written to. */
+export const WATERMARK_DIR = `watermarked/v${WATERMARK_VERSION}`;
+const outputDir = path.join(sourceDir, "watermarked", `v${WATERMARK_VERSION}`);
 
 const GOLD = "#d4a32f";
 const INK = "#050505";
