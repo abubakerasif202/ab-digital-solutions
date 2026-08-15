@@ -12,7 +12,14 @@
  * output, which `tests/project-watermark.test.mjs` relies on.
  *
  *   npm run watermark            regenerate
- *   npm run watermark -- --check verify without writing (used by tests/CI)
+ *   npm run watermark -- --check verify without writing
+ *
+ * `--check` compares a fresh encode against the committed bytes, so it is only
+ * meaningful on a machine whose libvips/mozjpeg build matches the one that
+ * generated them. Do NOT wire it into CI on a different OS: encoders legitimately
+ * emit different bytes per platform. The cross-platform guarantees (watermark
+ * present in the pixels, correct dimensions, originals untouched) are enforced by
+ * tests/project-watermark.test.mjs instead.
  */
 import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
