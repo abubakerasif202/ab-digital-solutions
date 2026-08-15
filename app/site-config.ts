@@ -15,3 +15,12 @@ export const siteConfig = {
 } as const;
 
 export const assetBase = "/site/ab-digital-premium/assets";
+
+/**
+ * Portfolio screenshots with the studio watermark baked into the pixels.
+ *
+ * Generated from the originals in `assetBase` by `npm run watermark`. Project
+ * imagery must be served from here so the branding survives being saved and
+ * reposted; `tests/project-watermark.test.mjs` enforces that.
+ */
+export const watermarkedAssetBase = `${assetBase}/watermarked`;

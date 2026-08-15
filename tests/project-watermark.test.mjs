@@ -1,23 +1,218 @@
+// Regression guards for the portfolio watermark system.
+//
+// These go past "the file exists": they decode the pixels and assert the
+// watermark is genuinely burnt into the bottom band of every portfolio image,
+// that the originals are left clean, and that regeneration is deterministic.
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
+import sharp from "sharp";
 
-const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
+import {
+  WATERMARK_DOMAIN,
+  WATERMARK_VERSION,
+  WATERMARK_WORDMARK,
+  buildWatermarkSvg,
+  listPortfolioSources,
+  watermarkImage,
+} from "../scripts/watermark-projects.mjs";
 
-test("shared project artwork adds a non-interactive AB Web Studio watermark", async () => {
-  const [artwork, styles] = await Promise.all([
-    read("../app/project-artwork.tsx"),
-    read("../app/project-artwork.css").catch(() => ""),
+const projectRoot = fileURLToPath(new URL("../", import.meta.url));
+const sourceDir = path.join(projectRoot, "public/site/ab-digital-premium/assets");
+const watermarkedDir = path.join(sourceDir, "watermarked");
+
+const sourcePath = (name) => path.join(sourceDir, name);
+const watermarkedPath = (name) => path.join(watermarkedDir, name);
+
+/** Raw greyscale pixels for a horizontal band of an image. */
+async function bandLuma(filePath, top, bandHeight) {
+  const { data } = await sharp(filePath)
+    .extract({ left: 0, top, width: (await sharp(filePath).metadata()).width, height: bandHeight })
+    .greyscale()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  return data;
+}
+
+/**
+ * Mean absolute per-pixel difference between the same band of two images.
+ *
+ * Comparing the watermark band against a control band from the middle of the
+ * image separates the watermark from ordinary JPEG re-encode noise, and works
+ * in both directions — some screenshots have near-black footers that the scrim
+ * cannot darken further, but the gold wordmark still changes them.
+ */
+async function bandDelta(originalPath, markedPath, top, bandHeight) {
+  const [a, b] = await Promise.all([
+    bandLuma(originalPath, top, bandHeight),
+    bandLuma(markedPath, top, bandHeight),
   ]);
 
-  assert.match(artwork, /className="project-artwork"/);
-  assert.match(artwork, /className="project-artwork-watermark"/);
-  assert.match(artwork, /ab-logo-mark\.png/);
-  assert.match(artwork, /AB Web Studio/);
-  assert.match(artwork, /abwebstudio\.com\.au/);
-  assert.match(artwork, /aria-hidden="true"/);
-  assert.match(artwork, /import "\.\/project-artwork\.css"/);
-  assert.match(styles, /\.project-artwork-watermark\s*\{[\s\S]*?pointer-events: none;[\s\S]*?opacity: 0\.62;/);
-  assert.match(styles, /@media \(max-width: 720px\)[\s\S]*?\.project-artwork-watermark\s*\{/);
-  assert.match(styles, /\.project-artwork-watermark-logo\s*\{[\s\S]*?transition: none !important;[\s\S]*?transform: none !important;/);
+  let total = 0;
+  const length = Math.min(a.length, b.length);
+  for (let i = 0; i < length; i += 1) total += Math.abs(a[i] - b[i]);
+  return total / length;
+}
+
+test("every portfolio source has a watermarked derivative", async () => {
+  const sources = await listPortfolioSources();
+  assert.equal(sources.length, 7, "expected seven portfolio screenshots");
+
+  for (const name of sources) {
+    const info = await stat(watermarkedPath(name));
+    assert.ok(info.size > 0, `watermarked/${name} is missing or empty`);
+  }
+});
+
+test("watermarking preserves the original dimensions", async () => {
+  for (const name of await listPortfolioSources()) {
+    const original = await sharp(sourcePath(name)).metadata();
+    const marked = await sharp(watermarkedPath(name)).metadata();
+
+    assert.equal(marked.width, original.width, `${name} width changed`);
+    assert.equal(marked.height, original.height, `${name} height changed`);
+  }
+});
+
+test("the watermark is burnt into the pixels, not just overlaid in the DOM", async () => {
+  for (const name of await listPortfolioSources()) {
+    const { height } = await sharp(sourcePath(name)).metadata();
+    const bandHeight = Math.max(2, Math.round(height * 0.06));
+
+    const watermarkBand = await bandDelta(
+      sourcePath(name),
+      watermarkedPath(name),
+      height - bandHeight,
+      bandHeight,
+    );
+    // Control: the same-sized band from the middle, which carries only
+    // re-encode noise.
+    const controlBand = await bandDelta(
+      sourcePath(name),
+      watermarkedPath(name),
+      Math.round(height / 2),
+      bandHeight,
+    );
+
+    assert.ok(
+      watermarkBand > controlBand * 3 && watermarkBand > 5,
+      `${name}: bottom band changed by ${watermarkBand.toFixed(2)} vs control ${controlBand.toFixed(2)} — watermark not detected in pixels`,
+    );
+  }
+});
+
+test("the watermark band carries brand gold", async () => {
+  for (const name of await listPortfolioSources()) {
+    const image = sharp(watermarkedPath(name));
+    const { width, height } = await image.metadata();
+    const bandHeight = Math.max(2, Math.round(height * 0.06));
+
+    const { data, info } = await image
+      .extract({ left: 0, top: height - bandHeight, width, height: bandHeight })
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+
+    // Count pixels close to --gold (#d4a32f): warm, red>green>blue, mid-bright.
+    let goldPixels = 0;
+    for (let i = 0; i < data.length; i += info.channels) {
+      const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
+      if (r > 140 && r < 245 && g > 100 && g < 200 && b < 110 && r - b > 70 && g - b > 40) {
+        goldPixels += 1;
+      }
+    }
+
+    assert.ok(goldPixels > 200, `${name}: found only ${goldPixels} gold watermark pixels`);
+  }
+});
+
+test("original screenshots are left unwatermarked so the mark can be restyled", async () => {
+  for (const name of await listPortfolioSources()) {
+    const originalBytes = await readFile(sourcePath(name));
+    const markedBytes = await readFile(watermarkedPath(name));
+    assert.notEqual(
+      originalBytes.equals(markedBytes),
+      true,
+      `${name}: source and watermarked copies are identical`,
+    );
+  }
+});
+
+test("regeneration is deterministic, so the checked-in files are reproducible", async () => {
+  // Covers every image: this is also what catches a derivative that was hand
+  // edited or replaced with the clean original.
+  for (const name of await listPortfolioSources()) {
+    const regenerated = await watermarkImage(sourcePath(name));
+    const committed = await readFile(watermarkedPath(name));
+
+    assert.ok(
+      regenerated.equals(committed),
+      `${name}: regenerating produced different bytes. Run: npm run watermark`,
+    );
+  }
+});
+
+test("watermark overlay scales with the image and stays inside it", () => {
+  for (const [width, height] of [[1347, 922], [800, 600], [2400, 1600]]) {
+    const svg = buildWatermarkSvg(width, height).toString("utf8");
+
+    assert.match(svg, new RegExp(`width="${width}"`));
+    assert.match(svg, new RegExp(`height="${height}"`));
+    assert.ok(svg.includes(WATERMARK_WORDMARK), "wordmark missing");
+    assert.ok(svg.includes(WATERMARK_DOMAIN), "domain missing");
+    assert.ok(svg.includes("#d4a32f"), "brand gold missing");
+    // The public brand is the domain name, not the organisation name.
+    assert.equal(WATERMARK_WORDMARK, "AB WEB STUDIO");
+    assert.ok(!svg.includes("AB DIGITAL SOLUTIONS"), "watermark should use the public brand");
+
+    // Nothing may be positioned beyond the canvas.
+    for (const [, value] of svg.matchAll(/\sy="(\d+(?:\.\d+)?)"/g)) {
+      assert.ok(Number(value) <= height, `y=${value} exceeds height ${height}`);
+    }
+    for (const [, value] of svg.matchAll(/\sx="(\d+(?:\.\d+)?)"/g)) {
+      assert.ok(Number(value) <= width, `x=${value} exceeds width ${width}`);
+    }
+  }
+});
+
+test("the app serves watermarked imagery, never the clean originals", async () => {
+  const [projectData, siteConfig] = await Promise.all([
+    readFile(new URL("../app/project-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/site-config.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(siteConfig, /watermarkedAssetBase/);
+  assert.match(siteConfig, /\$\{assetBase\}\/watermarked/);
+
+  const imageLines = [...projectData.matchAll(/^\s*image: `([^`]+)`/gm)].map(([, value]) => value);
+  assert.equal(imageLines.length, 7);
+  for (const line of imageLines) {
+    assert.match(line, /^\$\{watermarkedAssetBase\}\//, `project image bypasses the watermark: ${line}`);
+  }
+  // The unwatermarked base must not be used for project screenshots.
+  assert.doesNotMatch(projectData, /\$\{assetBase\}\/ab-portfolio-/);
+});
+
+test("there is exactly one watermark system, baked into the pixels", async () => {
+  const artwork = await readFile(new URL("../app/project-artwork.tsx", import.meta.url), "utf8");
+
+  // A DOM/CSS overlay watermark previously existed alongside this one. Two
+  // systems double-brand every card and the overlay offers no protection on a
+  // direct image URL, so the baked mark is the single source of truth.
+  assert.doesNotMatch(artwork, /project-artwork-watermark/);
+  assert.doesNotMatch(artwork, /project-artwork\.css/);
+  assert.doesNotMatch(artwork, /AB Web Studio<|<strong>/);
+
+  const { existsSync } = await import("node:fs");
+  assert.equal(
+    existsSync(new URL("../app/project-artwork.css", import.meta.url)),
+    false,
+    "the overlay stylesheet should not return",
+  );
+});
+
+test("watermark version is recorded so derivatives can be invalidated", () => {
+  assert.equal(typeof WATERMARK_VERSION, "number");
+  assert.ok(WATERMARK_VERSION >= 1);
 });

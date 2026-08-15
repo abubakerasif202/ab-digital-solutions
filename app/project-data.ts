@@ -1,4 +1,4 @@
-import { assetBase } from "./site-config";
+import { watermarkedAssetBase } from "./site-config";
 
 export type Project = {
   slug: string;
@@ -28,7 +28,7 @@ export const projects = [
       "We built a structured web experience highlighting rental terms, vehicle tiers, and application requirements, connected directly to enquiry and application pathways.",
     url: "https://www.maplerentals.com.au/",
     displayUrl: "maplerentals.com.au",
-    image: `${assetBase}/ab-portfolio-maple-rentals.jpg`,
+    image: `${watermarkedAssetBase}/ab-portfolio-maple-rentals.jpg`,
     alt: "Maple Rentals website homepage preview",
     tags: ["UX Design", "Booking Journey", "Mobile Optimised"],
     keyFeatures: [
@@ -50,7 +50,7 @@ export const projects = [
       "We designed an accessible, mobile-first website that simplifies vehicle selection, highlights weekly rates, and provides a clear contact and enquiry system.",
     url: "https://www.galarentals.com.au/",
     displayUrl: "galarentals.com.au",
-    image: `${assetBase}/ab-portfolio-gala-rentals.jpg`,
+    image: `${watermarkedAssetBase}/ab-portfolio-gala-rentals.jpg`,
     alt: "Gala Rentals website homepage preview",
     tags: ["Web Architecture", "Vehicle Showcase", "Local SEO"],
     keyFeatures: [
@@ -72,7 +72,7 @@ export const projects = [
       "We engineered a conversion-focused local service layout with clear service categories, coverage maps, and a fast multi-step quote request form.",
     url: "https://zqremovals.au/",
     displayUrl: "zqremovals.au",
-    image: `${assetBase}/ab-portfolio-zq-removals.jpg`,
+    image: `${watermarkedAssetBase}/ab-portfolio-zq-removals.jpg`,
     alt: "ZQ Removals website homepage preview",
     tags: ["Lead Conversion", "Local Service SEO", "Fast Touch-UI"],
     keyFeatures: [
@@ -94,7 +94,7 @@ export const projects = [
       "We crafted a dark, sophisticated portfolio site emphasizing project photography, architectural specifications, and direct consultation booking.",
     url: "https://www.decentdevelopment.com.au/",
     displayUrl: "decentdevelopment.com.au",
-    image: `${assetBase}/ab-portfolio-decent-development.jpg`,
+    image: `${watermarkedAssetBase}/ab-portfolio-decent-development.jpg`,
     alt: "DECENT Development website homepage preview",
     tags: ["Brand Direction", "Portfolio Gallery", "Performance"],
     keyFeatures: [
@@ -116,7 +116,7 @@ export const projects = [
       "We built a project-centric digital platform with structured capability decks, completed project archives, and clear stakeholder contact paths.",
     url: "https://milestonedevelopment.com.au/",
     displayUrl: "milestonedevelopment.com.au",
-    image: `${assetBase}/ab-portfolio-milestone-development.jpg`,
+    image: `${watermarkedAssetBase}/ab-portfolio-milestone-development.jpg`,
     alt: "Milestone Development website homepage preview",
     tags: ["Project Showcase", "Responsive Design", "SEO Structure"],
     keyFeatures: [
@@ -138,7 +138,7 @@ export const projects = [
       "We created a capability-focused digital presentation detailing concrete specification options, equipment resources, and direct estimator enquiry channels.",
     url: "https://4-point-concrete-design.vercel.app/",
     displayUrl: "4-point-concrete-design.vercel.app",
-    image: `${assetBase}/ab-portfolio-four-point-concrete.jpg`,
+    image: `${watermarkedAssetBase}/ab-portfolio-four-point-concrete.jpg`,
     alt: "4 Point Concrete website homepage preview",
     tags: ["Capability Deck", "Civil Services", "Mobile UX"],
     keyFeatures: [
@@ -161,7 +161,7 @@ export const projects = [
       "We designed an interstate logistics platform featuring freight service breakdowns, fleet asset specifications, and an easy quote enquiry system.",
     url: "https://www.1stclassexpress.com.au/",
     displayUrl: "1stclassexpress.com.au",
-    image: `${assetBase}/ab-portfolio-1st-class-express.jpg`,
+    image: `${watermarkedAssetBase}/ab-portfolio-1st-class-express.jpg`,
     alt: "1st Class Express transport and logistics website homepage preview",
     tags: ["Freight Positioning", "Fleet Showcase", "Quote Engine"],
     keyFeatures: [

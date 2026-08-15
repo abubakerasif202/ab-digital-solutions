@@ -10,7 +10,9 @@
   --paper-warm: #e8e6e1;  /* warm off-white for section backgrounds */
   --white: #fff;
   --muted: #aaa9a6;
-  --muted-dark: #737376;
+  /* Lightened from #737376, which measured 4.31:1 on --ink at 12px and failed
+     WCAG AA for normal text. This clears 4.5:1 while staying visibly subdued. */
+  --muted-dark: #7e7e82;
   --red: #b5121b;
   --red-bright: #c1121f;
   --red-dark: #7f0b12;
@@ -2227,6 +2229,43 @@ h1 em {
   animation-delay: 260ms;
 }
 
+/*
+ * Laptop-height refinement.
+ *
+ * The hero is composed for tall displays: a 10ch headline at up to 8.2rem over
+ * generous top padding. On a short-but-wide laptop that pushed the primary CTA
+ * well below the fold (measured 244px under at 1366x768, 150px at 1440x900),
+ * so the main conversion action was invisible without scrolling.
+ *
+ * Keyed on viewport HEIGHT, not width, because that is the actual constraint —
+ * large and tall monitors keep the original composition byte-for-byte. The
+ * headline stays the dominant element and keeps its line breaks; only the
+ * oversized vertical rhythm tightens.
+ */
+@media (min-width: 961px) and (max-height: 950px) {
+  .hero { padding-top: calc(var(--header-height) + clamp(28px, 3.2vh, 56px)); }
+  .hero-layout { padding-bottom: clamp(48px, 6vh, 96px); }
+  h1 { font-size: clamp(3rem, 4.9vw, 4.9rem); }
+  .hero-intro { margin-top: 22px; font-size: clamp(0.98rem, 1.15vw, 1.08rem); line-height: 1.68; }
+  .hero-actions { margin-top: 26px; }
+  .client-proof { margin-top: 30px; padding-top: 20px; }
+}
+
+/*
+ * Middle tier for 1080p-class monitors, the most common desktop size. A lighter
+ * touch than the laptop tier above: the headline stays large and cinematic,
+ * only the vertical padding and gaps come in enough to lift the CTA above the
+ * fold. Displays taller than 1100px keep the original composition untouched.
+ */
+@media (min-width: 961px) and (min-height: 951px) and (max-height: 1100px) {
+  .hero { padding-top: calc(var(--header-height) + clamp(40px, 4vh, 68px)); }
+  .hero-layout { padding-bottom: clamp(60px, 7vh, 110px); }
+  h1 { font-size: clamp(3.4rem, 5.6vw, 6.4rem); }
+  .hero-intro { margin-top: 26px; }
+  .hero-actions { margin-top: 30px; }
+  .client-proof { margin-top: 32px; }
+}
+
 @media (max-width: 1180px) {
   :root { --container: min(100% - 48px, 1440px); }
   .hero-layout { grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1.14fr); gap: 46px; }
@@ -2294,7 +2333,10 @@ h1 em {
   :root { --container: min(100% - 32px, 1440px); }
   .section { padding: 90px 0; }
   .hero { padding-top: calc(var(--header-height) + 42px); }
-  .hero-3d-bg-wrap { opacity: 0.52; }
+  /* Raised from 0.52. The portrait camera fit now keeps the sculpture inside
+     the frame instead of cropping it across the headline, so the backdrop can
+     carry more presence without competing with the copy. */
+  .hero-3d-bg-wrap { opacity: 0.62; }
   .hero-layout { gap: 42px; padding-bottom: 58px; }
   h1 { max-width: 10.5ch; font-size: clamp(2.8rem, 12.2vw, 4.5rem); }
   .hero-intro { max-width: 36rem; margin-top: 24px; font-size: 1rem; line-height: 1.68; }

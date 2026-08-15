@@ -17,6 +17,10 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = findProject((await params).slug);
   if (!project) return {};
+
+  // Omitting `images` lets Next attach this route's own opengraph-image.tsx,
+  // so each case study gets a card naming that project rather than one shared
+  // studio-level image.
   return {
     title: `${project.name} Case Study | ${siteConfig.name}`,
     description: project.description,
@@ -26,22 +30,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: project.description,
       url: `/work/${project.slug}`,
       siteName: siteConfig.name,
-      type: "website",
+      type: "article",
       locale: "en_AU",
-      images: [
-        {
-          url: "/opengraph-image",
-          width: 1200,
-          height: 630,
-          alt: `${project.name} website case study by ${siteConfig.name}`,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: `${project.name} Case Study | ${siteConfig.name}`,
       description: project.description,
-      images: ["/opengraph-image"],
     },
   };
 }
