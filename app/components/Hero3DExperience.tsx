@@ -30,11 +30,14 @@ export function Hero3DExperience() {
     let ready = false;
 
     const updateMode = () => {
-      if (!ready || motionQuery.matches) {
+      if (!ready) {
         setMode("fallback");
         return;
       }
 
+      // prefers-reduced-motion does NOT drop to the flat gradient. Hero3DCanvas
+      // renders a single static frame and never starts its animation loop, so
+      // the sculpture still reads as premium while staying completely still.
       const constrainedDevice = connection?.saveData
         || (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4);
 

@@ -52,10 +52,11 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: `${assetBase}/ab-logo-mark.png`, type: "image/png" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
     ],
     shortcut: "/favicon.svg",
-    apple: `${assetBase}/ab-logo-mark.png`,
+    // Apple touch icons must be square; the old logo mark was 400x340.
+    apple: { url: "/icons/icon-192.png", sizes: "180x180" },
   },
   manifest: "/manifest.webmanifest",
 };

@@ -21,6 +21,17 @@
 - [Website Maintenance & Support](https://www.abwebstudio.com.au/services/website-maintenance): Ongoing support, technical health checks, and performance updates.
 - [Privacy Policy](https://www.abwebstudio.com.au/privacy): Information handling and privacy guidelines under Australian law.
 
+## Case Studies (on this site)
+
+- [Work & Case Studies Index](https://www.abwebstudio.com.au/work): All seven client case studies with project scope, capabilities and live links.
+- [Maple Rentals Case Study](https://www.abwebstudio.com.au/work/maple-rentals)
+- [Gala Rentals Case Study](https://www.abwebstudio.com.au/work/gala-rentals)
+- [ZQ Removals Case Study](https://www.abwebstudio.com.au/work/zq-removals)
+- [DECENT Development Case Study](https://www.abwebstudio.com.au/work/decent-development)
+- [Milestone Development Case Study](https://www.abwebstudio.com.au/work/milestone-development)
+- [4 Point Concrete Case Study](https://www.abwebstudio.com.au/work/4-point-concrete)
+- [1st Class Express Case Study](https://www.abwebstudio.com.au/work/1st-class-express)
+
 ## Selected Portfolio (live websites)
 
 - [Maple Rentals](https://www.maplerentals.com.au/): Mobility / car rentals — premium driver rentals and streamlined online applications.

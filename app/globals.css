@@ -10,7 +10,9 @@
   --paper-warm: #e8e6e1;  /* warm off-white for section backgrounds */
   --white: #fff;
   --muted: #aaa9a6;
-  --muted-dark: #737376;
+  /* Lightened from #737376, which measured 4.31:1 on --ink at 12px and failed
+     WCAG AA for normal text. This clears 4.5:1 while staying visibly subdued. */
+  --muted-dark: #7e7e82;
   --red: #b5121b;
   --red-bright: #c1121f;
   --red-dark: #7f0b12;

@@ -229,18 +229,27 @@ test("brand theme balances premium red and gold accents", async () => {
 });
 
 test("contact form posts to the protected server endpoint", async () => {
-  const [contactForm, route] = await Promise.all([
+  const [contactForm, route, schema, service] = await Promise.all([
     read("../app/components/ContactForm.tsx"),
     read("../app/api/contact/route.ts"),
+    read("../lib/contact/schema.ts"),
+    read("../lib/contact/service.ts"),
   ]);
   assert.match(contactForm, /fetch\("\/api\/contact"/);
   assert.doesNotMatch(contactForm, /window\.location\.assign/);
-  assert.match(route, /RESEND_API_KEY/);
-  assert.match(route, /allowedOrigin/);
+
+  // The route stays a thin transport shell; the rules live in lib/contact.
+  assert.match(route, /isSameOriginRequest/);
   assert.match(route, /withinRateLimit/);
-  assert.match(route, /company/);
-  assert.match(route, /readPayload/);
+  assert.match(route, /readContactPayload/);
+  assert.match(route, /validateContactPayload/);
   assert.match(route, /MAX_BODY_BYTES/);
+  assert.match(schema, /company/);
+  assert.match(service, /RESEND_API_KEY/);
+
+  // The API key must never reach a client component or the route module.
+  assert.doesNotMatch(contactForm, /RESEND_API_KEY/);
+  assert.doesNotMatch(route, /RESEND_API_KEY/);
 });
 
 test("Vercel configuration uses the Next.js production build", async () => {
