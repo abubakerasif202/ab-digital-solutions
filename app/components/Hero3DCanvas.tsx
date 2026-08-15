@@ -87,7 +87,13 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       renderer = new WebGLRenderer({
         antialias: !isTablet && !isMobile,
         alpha: true,
-        powerPreference: "high-performance",
+        // "high-performance" asks the OS for the discrete/high-power GPU. That
+        // is right for a desktop showpiece and wrong for a phone, where it
+        // costs battery for a backdrop the user barely inspects.
+        powerPreference: isMobile || isTablet ? "default" : "high-performance",
+        // Fragment precision dominates cost on mobile GPUs; mediump is ample
+        // for a dark metallic backdrop and measurably cheaper per pixel.
+        precision: isMobile ? "mediump" : "highp",
       });
     } catch {
       const failureTimer = window.setTimeout(() => setRendererFailed(true), 0);
@@ -118,9 +124,17 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     redAccentLight.position.set(-4, -3, 2);
     scene.add(redAccentLight);
 
-    const cyanHighlightLight = new PointLight(0x38bdf8, 2.0, 12); // Crisp Cyan accent
-    cyanHighlightLight.position.set(3, 4, 3);
-    scene.add(cyanHighlightLight);
+    // Every extra light costs per-fragment work. The gold key and red accent
+    // are the brand and are never dropped; the cyan rim light is a non-brand
+    // highlight, so phones skip it and gain a light's worth of shading back.
+    // The red accent is boosted slightly there so the ruby glow does not weaken.
+    const cyanHighlightLight = isMobile ? null : new PointLight(0x38bdf8, 2.0, 12);
+    if (cyanHighlightLight) {
+      cyanHighlightLight.position.set(3, 4, 3);
+      scene.add(cyanHighlightLight);
+    } else {
+      redAccentLight.intensity = 4.1;
+    }
 
     // Group for 3D objects
     const heroGroup = new Group();
@@ -130,14 +144,21 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     const tubularSegments = isMobile ? 60 : isTablet ? 72 : 120;
     const radialSegments = isMobile ? 9 : isTablet ? 10 : 16;
     const mainGeometry = new TorusKnotGeometry(1.15, 0.3, tubularSegments, radialSegments, 2, 3);
-    const mainMaterial = new MeshPhysicalMaterial({
-      color: 0x08090a,
-      metalness: 0.88,
-      roughness: 0.12,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.08,
-      reflectivity: 0.95,
-    });
+    // Clearcoat is a second specular lobe evaluated per fragment. It earns its
+    // cost on a full-size desktop showpiece; on a phone the sculpture renders
+    // small and dimmed, where the standard metallic lobe is indistinguishable
+    // for a fraction of the shader work. Metalness and roughness are identical
+    // in both, so the material still reads as polished dark metal.
+    const mainMaterial = isMobile
+      ? new MeshStandardMaterial({ color: 0x08090a, metalness: 0.88, roughness: 0.12 })
+      : new MeshPhysicalMaterial({
+        color: 0x08090a,
+        metalness: 0.88,
+        roughness: 0.12,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.08,
+        reflectivity: 0.95,
+      });
     const mainMesh = new Mesh(mainGeometry, mainMaterial);
     heroGroup.add(mainMesh);
 
@@ -384,31 +405,53 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     renderStaticFrame();
 
     // Resize Handler
+    //
+    // setSize reallocates the WebGL drawing buffer, which is one of the most
+    // expensive things this component can do. ResizeObserver fires for every
+    // incidental layout change, so coalesce to one resize per frame and ignore
+    // sub-pixel jitter — otherwise a phone reallocates the buffer repeatedly
+    // while the URL bar animates.
+    let appliedWidth = width;
+    let appliedHeight = height;
+    let resizeFrameId = 0;
+
+    const currentPixelRatio = () => (isMobile
+      ? Math.min(window.devicePixelRatio, 1.25)
+      : isTablet
+        ? 1
+        : Math.min(window.devicePixelRatio, 1.5));
+
     const handleResize = () => {
+      resizeFrameId = 0;
       if (!container) return;
       const newWidth = container.clientWidth || window.innerWidth;
       const newHeight = container.clientHeight || 500;
+      if (newWidth <= 0 || newHeight <= 0) return;
+      if (Math.abs(newWidth - appliedWidth) < 2 && Math.abs(newHeight - appliedHeight) < 2) return;
+
+      appliedWidth = newWidth;
+      appliedHeight = newHeight;
 
       fitCameraToViewport(camera, newWidth, newHeight);
-
-      renderer.setPixelRatio(isMobile
-        ? Math.min(window.devicePixelRatio, 1.25)
-        : isTablet
-          ? 1
-          : Math.min(window.devicePixelRatio, 1.5));
+      renderer.setPixelRatio(currentPixelRatio());
       renderer.setSize(newWidth, newHeight);
       if (isVisible || prefersReducedMotion) renderStaticFrame();
     };
 
-    const resizeObserver = new ResizeObserver(() => {
-      handleResize();
-    });
+    const scheduleResize = () => {
+      if (resizeFrameId) return;
+      resizeFrameId = requestAnimationFrame(handleResize);
+    };
+
+    const resizeObserver = new ResizeObserver(scheduleResize);
     resizeObserver.observe(container);
 
     // Cleanup
     return () => {
       stopLoop();
       detachInputListeners();
+      // A queued resize would otherwise run against a disposed renderer.
+      if (resizeFrameId) cancelAnimationFrame(resizeFrameId);
       reducedMotionQuery.removeEventListener("change", handleMotionChange);
       resizeObserver.disconnect();
       visibilityObserver.disconnect();

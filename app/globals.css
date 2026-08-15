@@ -2289,7 +2289,10 @@ h1 em {
   :root { --container: min(100% - 32px, 1440px); }
   .section { padding: 90px 0; }
   .hero { padding-top: calc(var(--header-height) + 42px); }
-  .hero-3d-bg-wrap { opacity: 0.52; }
+  /* Raised from 0.52. The portrait camera fit now keeps the sculpture inside
+     the frame instead of cropping it across the headline, so the backdrop can
+     carry more presence without competing with the copy. */
+  .hero-3d-bg-wrap { opacity: 0.62; }
   .hero-layout { gap: 42px; padding-bottom: 58px; }
   h1 { max-width: 10.5ch; font-size: clamp(2.8rem, 12.2vw, 4.5rem); }
   .hero-intro { max-width: 36rem; margin-top: 24px; font-size: 1rem; line-height: 1.68; }

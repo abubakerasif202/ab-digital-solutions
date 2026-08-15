@@ -76,6 +76,41 @@ test("three is imported by name so unused modules stay droppable", async () => {
   assert.match(code, /import \{[\s\S]*WebGLRenderer,?[\s\S]*\} from "three";/);
 });
 
+test("hero 3D scales GPU cost down on phones without dropping brand effects", async () => {
+  const canvas = await read("../app/components/Hero3DCanvas.tsx");
+
+  // Cheaper renderer context on phones.
+  assert.match(canvas, /powerPreference: isMobile \|\| isTablet \? "default" : "high-performance"/);
+  assert.match(canvas, /precision: isMobile \? "mediump" : "highp"/);
+
+  // Clearcoat is a second specular lobe; phones use the standard metallic one.
+  assert.match(canvas, /isMobile\s*\?\s*new MeshStandardMaterial\(\{ color: 0x08090a, metalness: 0\.88, roughness: 0\.12 \}\)/);
+  assert.match(canvas, /new MeshPhysicalMaterial\(\{[\s\S]*clearcoat: 1\.0/);
+
+  // The brand lights must survive: gold key, red accent. Only the non-brand
+  // cyan rim light may be dropped, and the red is compensated when it is.
+  assert.match(canvas, /new DirectionalLight\(0xd4a32f/);
+  assert.match(canvas, /new PointLight\(0xb5121b/);
+  assert.match(canvas, /const cyanHighlightLight = isMobile \? null : new PointLight\(0x38bdf8/);
+  assert.match(canvas, /redAccentLight\.intensity = 4\.1/);
+
+  // Gold wireframe halo and the particle field are never removed.
+  assert.match(canvas, /wireframe: true/);
+  assert.match(canvas, /color: 0xd4a32f/);
+  assert.match(canvas, /const particleCount = isMobile \? 88/);
+});
+
+test("resize coalesces to one drawing-buffer reallocation per frame", async () => {
+  const canvas = await read("../app/components/Hero3DCanvas.tsx");
+
+  assert.match(canvas, /const resizeObserver = new ResizeObserver\(scheduleResize\)/);
+  assert.match(canvas, /resizeFrameId = requestAnimationFrame\(handleResize\)/);
+  // Sub-pixel jitter must not trigger a setSize.
+  assert.match(canvas, /Math\.abs\(newWidth - appliedWidth\) < 2 && Math\.abs\(newHeight - appliedHeight\) < 2/);
+  // A queued resize must not outlive the renderer.
+  assert.match(canvas, /if \(resizeFrameId\) cancelAnimationFrame\(resizeFrameId\)/);
+});
+
 test("hero 3D still tears down every GPU resource it creates", async () => {
   const canvas = await read("../app/components/Hero3DCanvas.tsx");
 

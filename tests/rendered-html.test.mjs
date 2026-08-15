@@ -44,14 +44,20 @@ test("every project ships a real preview image and routes visitors through a cas
     read("../app/work/[slug]/page.tsx"),
   ]);
 
-  const imageNames = [...projects.matchAll(/\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
+  // Project imagery is served from the watermarked derivatives; see
+  // tests/project-watermark.test.mjs for the watermark itself.
+  const imageNames = [...projects.matchAll(/\$\{watermarkedAssetBase\}\/([\w.-]+)/g)]
+    .map(([, name]) => name);
   assert.equal(imageNames.length, 7);
   assert.ok(imageNames.includes("ab-portfolio-1st-class-express.jpg"));
   assert.doesNotMatch(projects, /image: null/);
 
   const { statSync } = await import("node:fs");
   for (const name of imageNames) {
-    const asset = new URL(`../public/site/ab-digital-premium/assets/${name}`, import.meta.url);
+    const asset = new URL(
+      `../public/site/ab-digital-premium/assets/watermarked/${name}`,
+      import.meta.url,
+    );
     assert.ok(statSync(asset).size > 0, `${name} is missing`);
   }
 
@@ -266,8 +272,60 @@ test("Vercel configuration uses the Next.js production build", async () => {
   assert.equal(vercelConfig.buildCommand, "npm run build");
   assert.match(packageJson.scripts.build, /next build$/);
   assert.equal(packageJson.scripts.verify, "npm run lint && npm run typecheck && npm test");
-  assert.equal(packageJson.scripts.typecheck, "bash scripts/sites-env.sh -- tsc --noEmit");
+  assert.equal(packageJson.scripts.typecheck, "tsc --noEmit");
   for (const generatedDirectory of [".sites-runtime", ".agents", ".codex", ".claude"]) {
     assert.ok(eslintConfig.includes(`"${generatedDirectory}/**"`));
   }
+});
+
+test("Vercel is the only deployment target; the Cloudflare starter is gone", async () => {
+  const rawPackage = await read("../package.json");
+  const packageJson = JSON.parse(rawPackage);
+  const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
+
+  // The D1/Drizzle/vinext stack was scaffolding: an empty schema, zero
+  // migrations and `d1: null`. Keeping it meant maintaining a second
+  // architecture that never ran.
+  for (const removed of [
+    "drizzle-orm",
+    "drizzle-kit",
+    "wrangler",
+    "vinext",
+    "vite",
+    "@cloudflare/vite-plugin",
+    "@vitejs/plugin-react",
+    "@vitejs/plugin-rsc",
+    "react-server-dom-webpack",
+  ]) {
+    assert.ok(!(removed in dependencies), `${removed} should have been removed`);
+  }
+
+  for (const script of ["build:sites", "validate:artifact", "db:generate", "install:ci"]) {
+    assert.ok(!(script in packageJson.scripts), `script ${script} should have been removed`);
+  }
+
+  const { existsSync } = await import("node:fs");
+  for (const removedPath of [
+    "../worker",
+    "../db",
+    "../drizzle",
+    "../examples",
+    "../build",
+    "../.openai",
+    "../vite.config.ts",
+    "../drizzle.config.ts",
+    "../app/chatgpt-auth.ts",
+    "../scripts/sites-env.sh",
+    "../scripts/install-ci.sh",
+  ]) {
+    assert.equal(
+      existsSync(new URL(removedPath, import.meta.url)),
+      false,
+      `${removedPath} should have been removed`,
+    );
+  }
+
+  // Next.js must remain the single build path.
+  assert.ok("next" in packageJson.dependencies);
+  assert.ok("three" in packageJson.dependencies);
 });
