@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { assetBase, siteConfig } from "./site-config";
+import { WebVitals } from "./web-vitals";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -52,11 +53,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: `${assetBase}/ab-logo-mark.png`, type: "image/png" },
     ],
     shortcut: "/favicon.svg",
-    // Apple touch icons must be square; the old logo mark was 400x340.
-    apple: { url: "/icons/icon-192.png", sizes: "180x180" },
+    apple: `${assetBase}/ab-logo-mark.png`,
   },
   manifest: "/manifest.webmanifest",
 };
@@ -140,6 +140,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en-AU">
       <body>
+        <WebVitals />
         {children}
         <script
           type="application/ld+json"

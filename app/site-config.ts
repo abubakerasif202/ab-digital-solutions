@@ -15,18 +15,3 @@ export const siteConfig = {
 } as const;
 
 export const assetBase = "/site/ab-digital-premium/assets";
-
-/**
- * Portfolio screenshots with the studio watermark baked into the pixels.
- *
- * Generated from the originals in `assetBase` by `npm run watermark`. Project
- * imagery must be served from here so the branding survives being saved and
- * reposted; `tests/project-watermark.test.mjs` enforces that.
- *
- * The version is part of the path because these assets are served
- * `immutable, max-age=31536000`. Restyling the mark therefore has to produce a
- * new URL, or caches would keep serving the old watermark. Bump this together
- * with WATERMARK_VERSION in scripts/watermark-projects.mjs.
- */
-export const WATERMARK_VERSION = 2;
-export const watermarkedAssetBase = `${assetBase}/watermarked/v${WATERMARK_VERSION}`;

@@ -1,57 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-// Named imports (rather than `import * as THREE`) so the bundler can drop the
-// large parts of three we never touch — loaders, controls, curves, audio.
-import {
-  ACESFilmicToneMapping,
-  AdditiveBlending,
-  AmbientLight,
-  BufferAttribute,
-  BufferGeometry,
-  DirectionalLight,
-  DodecahedronGeometry,
-  Group,
-  IcosahedronGeometry,
-  Mesh,
-  MeshBasicMaterial,
-  MeshPhysicalMaterial,
-  MeshStandardMaterial,
-  OctahedronGeometry,
-  PerspectiveCamera,
-  PointLight,
-  Points,
-  PointsMaterial,
-  Scene,
-  TorusKnotGeometry,
-  WebGLRenderer,
-} from "three";
+import * as THREE from "three";
 
 interface Hero3DCanvasProps {
   className?: string;
   quality?: "mobile" | "tablet" | "desktop";
-}
-
-/**
- * Distance that keeps the sculpture framed on narrow portrait viewports.
- *
- * The camera sits at a fixed z on wide screens, but a phone-shaped container has
- * an aspect ratio well below 1, so the horizontal field of view collapses and
- * the geometry is cropped into stray diagonal lines. Pulling the camera back
- * until `framedRadius` fits horizontally keeps a composed object on portrait
- * screens while leaving desktop framing byte-for-byte unchanged.
- */
-const DESKTOP_CAMERA_Z = 7.5;
-const FRAMED_RADIUS = 1.7;
-
-function fitCameraToViewport(camera: PerspectiveCamera, width: number, height: number) {
-  const aspect = width / Math.max(height, 1);
-  camera.aspect = aspect;
-  const verticalFov = (camera.fov * Math.PI) / 180;
-  const halfHorizontalTan = Math.tan(verticalFov / 2) * aspect;
-  const distanceToFrame = halfHorizontalTan > 0 ? FRAMED_RADIUS / halfHorizontalTan : DESKTOP_CAMERA_Z;
-  camera.position.z = Math.max(DESKTOP_CAMERA_Z, distanceToFrame);
-  camera.updateProjectionMatrix();
 }
 
 export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanvasProps) {
@@ -69,31 +23,24 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     let prefersReducedMotion = reducedMotionQuery.matches;
 
     // Scene Setup
-    const scene = new Scene();
+    const scene = new THREE.Scene();
 
     // Camera Setup
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || 500;
-    const camera = new PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.set(0, 0, DESKTOP_CAMERA_Z);
-    fitCameraToViewport(camera, width, height);
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    camera.position.set(0, 0, 7.5);
 
     // Renderer Setup
     const isMobile = quality === "mobile";
     const isTablet = quality === "tablet";
-    let renderer: WebGLRenderer;
+    let renderer: THREE.WebGLRenderer;
 
     try {
-      renderer = new WebGLRenderer({
+      renderer = new THREE.WebGLRenderer({
         antialias: !isTablet && !isMobile,
         alpha: true,
-        // "high-performance" asks the OS for the discrete/high-power GPU. That
-        // is right for a desktop showpiece and wrong for a phone, where it
-        // costs battery for a backdrop the user barely inspects.
-        powerPreference: isMobile || isTablet ? "default" : "high-performance",
-        // Fragment precision dominates cost on mobile GPUs; mediump is ample
-        // for a dark metallic backdrop and measurably cheaper per pixel.
-        precision: isMobile ? "mediump" : "highp",
+        powerPreference: "high-performance",
       });
     } catch {
       const failureTimer = window.setTimeout(() => setRendererFailed(true), 0);
@@ -107,103 +54,88 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
         : Math.min(window.devicePixelRatio, 1.5);
     renderer.setPixelRatio(dpr);
     renderer.setSize(width, height);
-    renderer.toneMapping = ACESFilmicToneMapping;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
 
     container.appendChild(renderer.domElement);
 
     // Lighting aligned with brand palette (Gold #d4a32f, Red #b5121b, Cyan #38bdf8)
-    const ambientLight = new AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
-    const mainLight = new DirectionalLight(0xd4a32f, 2.2); // Warm Gold directional light
+    const mainLight = new THREE.DirectionalLight(0xd4a32f, 2.2); // Warm Gold directional light
     mainLight.position.set(5, 5, 5);
     scene.add(mainLight);
 
-    const redAccentLight = new PointLight(0xb5121b, 3.5, 15); // Brand Red accent
+    const redAccentLight = new THREE.PointLight(0xb5121b, 3.5, 15); // Brand Red accent
     redAccentLight.position.set(-4, -3, 2);
     scene.add(redAccentLight);
 
-    // Every extra light costs per-fragment work. The gold key and red accent
-    // are the brand and are never dropped; the cyan rim light is a non-brand
-    // highlight, so phones skip it and gain a light's worth of shading back.
-    // The red accent is boosted slightly there so the ruby glow does not weaken.
-    const cyanHighlightLight = isMobile ? null : new PointLight(0x38bdf8, 2.0, 12);
-    if (cyanHighlightLight) {
-      cyanHighlightLight.position.set(3, 4, 3);
-      scene.add(cyanHighlightLight);
-    } else {
-      redAccentLight.intensity = 4.1;
-    }
+    const cyanHighlightLight = new THREE.PointLight(0x38bdf8, 2.0, 12); // Crisp Cyan accent
+    cyanHighlightLight.position.set(3, 4, 3);
+    scene.add(cyanHighlightLight);
 
     // Group for 3D objects
-    const heroGroup = new Group();
+    const heroGroup = new THREE.Group();
     scene.add(heroGroup);
 
     // 1. Central Complex Sculptural Geometry
     const tubularSegments = isMobile ? 60 : isTablet ? 72 : 120;
     const radialSegments = isMobile ? 9 : isTablet ? 10 : 16;
-    const mainGeometry = new TorusKnotGeometry(1.15, 0.3, tubularSegments, radialSegments, 2, 3);
-    // Clearcoat is a second specular lobe evaluated per fragment. It earns its
-    // cost on a full-size desktop showpiece; on a phone the sculpture renders
-    // small and dimmed, where the standard metallic lobe is indistinguishable
-    // for a fraction of the shader work. Metalness and roughness are identical
-    // in both, so the material still reads as polished dark metal.
-    const mainMaterial = isMobile
-      ? new MeshStandardMaterial({ color: 0x08090a, metalness: 0.88, roughness: 0.12 })
-      : new MeshPhysicalMaterial({
-        color: 0x08090a,
-        metalness: 0.88,
-        roughness: 0.12,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.08,
-        reflectivity: 0.95,
-      });
-    const mainMesh = new Mesh(mainGeometry, mainMaterial);
+    const mainGeometry = new THREE.TorusKnotGeometry(1.15, 0.3, tubularSegments, radialSegments, 2, 3);
+    const mainMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0x08090a,
+      metalness: 0.88,
+      roughness: 0.12,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.08,
+      reflectivity: 0.95,
+    });
+    const mainMesh = new THREE.Mesh(mainGeometry, mainMaterial);
     heroGroup.add(mainMesh);
 
     // 2. Outer Gold Wireframe Ring
-    const ringGeometry = new IcosahedronGeometry(2.15, isMobile || isTablet ? 1 : 2);
-    const ringMaterial = new MeshBasicMaterial({
+    const ringGeometry = new THREE.IcosahedronGeometry(2.15, isMobile || isTablet ? 1 : 2);
+    const ringMaterial = new THREE.MeshBasicMaterial({
       color: 0xd4a32f,
       wireframe: true,
       transparent: true,
       opacity: 0.22,
     });
-    const ringMesh = new Mesh(ringGeometry, ringMaterial);
+    const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
     heroGroup.add(ringMesh);
 
     // 3. Orbiting Geometric Satellites
-    const satelliteGroup = new Group();
+    const satelliteGroup = new THREE.Group();
     heroGroup.add(satelliteGroup);
 
-    const satGeom1 = new OctahedronGeometry(0.32, 0);
-    const satMat1 = new MeshStandardMaterial({
+    const satGeom1 = new THREE.OctahedronGeometry(0.32, 0);
+    const satMat1 = new THREE.MeshStandardMaterial({
       color: 0xd4a32f,
       metalness: 0.9,
       roughness: 0.1,
       emissive: 0xb45309,
       emissiveIntensity: 0.4,
     });
-    const sat1 = new Mesh(satGeom1, satMat1);
+    const sat1 = new THREE.Mesh(satGeom1, satMat1);
     sat1.position.set(2.4, 1.2, 0.5);
     satelliteGroup.add(sat1);
 
-    const satGeom2 = new DodecahedronGeometry(0.26, 0);
-    const satMat2 = new MeshStandardMaterial({
+    const satGeom2 = new THREE.DodecahedronGeometry(0.26, 0);
+    const satMat2 = new THREE.MeshStandardMaterial({
       color: 0xb5121b,
       metalness: 0.9,
       roughness: 0.15,
       emissive: 0x7f1d1d,
       emissiveIntensity: 0.5,
     });
-    const sat2 = new Mesh(satGeom2, satMat2);
+    const sat2 = new THREE.Mesh(satGeom2, satMat2);
     sat2.position.set(-2.2, -1.4, 0.8);
     satelliteGroup.add(sat2);
 
     // 4. Interactive Particle Field
     const particleCount = isMobile ? 88 : isTablet ? 100 : 240;
-    const particleGeometry = new BufferGeometry();
+    const particleGeometry = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
 
     for (let i = 0; i < particleCount; i++) {
@@ -214,18 +146,18 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     particleGeometry.setAttribute(
       "position",
-      new BufferAttribute(particlePositions, 3)
+      new THREE.BufferAttribute(particlePositions, 3)
     );
 
-    const particleMaterial = new PointsMaterial({
+    const particleMaterial = new THREE.PointsMaterial({
       color: 0xfef08a,
       size: isMobile || isTablet ? 0.04 : 0.045,
       transparent: true,
       opacity: 0.55,
-      blending: AdditiveBlending,
+      blending: THREE.AdditiveBlending,
     });
 
-    const particleSystem = new Points(particleGeometry, particleMaterial);
+    const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
     scene.add(particleSystem);
 
     // Animation & Smooth Control State
@@ -257,9 +189,6 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     const attachInputListeners = () => {
       if (inputListenersAttached) return;
-      // Under reduced motion the loop never runs, so parallax input would only
-      // accumulate values nothing reads. Skip the listeners entirely.
-      if (prefersReducedMotion) return;
       if (!isTablet) window.addEventListener("mousemove", handleMouseMove, { passive: true });
       window.addEventListener("scroll", handleScroll, { passive: true });
       inputListenersAttached = true;
@@ -352,12 +281,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       prefersReducedMotion = event.matches;
       if (prefersReducedMotion) {
         stopLoop();
-        detachInputListeners();
         renderStaticFrame();
       } else {
-        // Listeners are skipped while reduced motion is on, so (re)attach them
-        // before restarting the loop or parallax would stay frozen.
-        if (isVisible) attachInputListeners();
         startLoop();
       }
     };
@@ -405,53 +330,32 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     renderStaticFrame();
 
     // Resize Handler
-    //
-    // setSize reallocates the WebGL drawing buffer, which is one of the most
-    // expensive things this component can do. ResizeObserver fires for every
-    // incidental layout change, so coalesce to one resize per frame and ignore
-    // sub-pixel jitter — otherwise a phone reallocates the buffer repeatedly
-    // while the URL bar animates.
-    let appliedWidth = width;
-    let appliedHeight = height;
-    let resizeFrameId = 0;
-
-    const currentPixelRatio = () => (isMobile
-      ? Math.min(window.devicePixelRatio, 1.25)
-      : isTablet
-        ? 1
-        : Math.min(window.devicePixelRatio, 1.5));
-
     const handleResize = () => {
-      resizeFrameId = 0;
       if (!container) return;
       const newWidth = container.clientWidth || window.innerWidth;
       const newHeight = container.clientHeight || 500;
-      if (newWidth <= 0 || newHeight <= 0) return;
-      if (Math.abs(newWidth - appliedWidth) < 2 && Math.abs(newHeight - appliedHeight) < 2) return;
 
-      appliedWidth = newWidth;
-      appliedHeight = newHeight;
+      camera.aspect = newWidth / newHeight;
+      camera.updateProjectionMatrix();
 
-      fitCameraToViewport(camera, newWidth, newHeight);
-      renderer.setPixelRatio(currentPixelRatio());
+      renderer.setPixelRatio(isMobile
+        ? Math.min(window.devicePixelRatio, 1.25)
+        : isTablet
+          ? 1
+          : Math.min(window.devicePixelRatio, 1.5));
       renderer.setSize(newWidth, newHeight);
       if (isVisible || prefersReducedMotion) renderStaticFrame();
     };
 
-    const scheduleResize = () => {
-      if (resizeFrameId) return;
-      resizeFrameId = requestAnimationFrame(handleResize);
-    };
-
-    const resizeObserver = new ResizeObserver(scheduleResize);
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize();
+    });
     resizeObserver.observe(container);
 
     // Cleanup
     return () => {
       stopLoop();
       detachInputListeners();
-      // A queued resize would otherwise run against a disposed renderer.
-      if (resizeFrameId) cancelAnimationFrame(resizeFrameId);
       reducedMotionQuery.removeEventListener("change", handleMotionChange);
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
