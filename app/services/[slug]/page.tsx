@@ -148,7 +148,7 @@ export default async function ServicePage({ params }: Props) {
             <div>
               <h2 id="service-context-heading">{service.detailTitle}</h2>
               <p>{service.detail}</p>
-              <Link className="text-link" href="/">Meet the Sydney studio <span aria-hidden="true">↗</span></Link>
+              <Link className="text-link" href="/#about">Meet the Sydney studio <span aria-hidden="true">↗</span></Link>
             </div>
           </section>
 
@@ -164,7 +164,7 @@ export default async function ServicePage({ params }: Props) {
               aria-label={`${featuredProject.name} — View Case Study`}
             >
               <div className="service-project-image">
-                <ProjectArtwork project={featuredProject} sizes="(max-width: 900px) 94vw, 48vw" />
+                <ProjectArtwork project={featuredProject} sizes="(max-width: 900px) 92vw, (max-width: 1440px) 52vw, 700px" />
                 <span>View Case Study →</span>
               </div>
               <div>
@@ -223,8 +223,10 @@ export default async function ServicePage({ params }: Props) {
             <p className="eyebrow">Ready when you are</p>
             <h2 id="service-cta-heading">Let&apos;s turn the next digital decision into useful progress.</h2>
             <p>Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
-            <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
-            <Link className="button button-ghost" href="/work">View Our Work</Link>
+            <div className="content-actions">
+              <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
+              <Link className="button button-ghost" href="/work">View Our Work</Link>
+            </div>
           </section>
         </div>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />

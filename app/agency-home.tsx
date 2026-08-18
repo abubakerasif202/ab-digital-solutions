@@ -93,7 +93,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 </a>
                 <a className="button button-ghost" href="#work">View Our Work</a>
               </div>
-              <div className="client-proof" aria-label="Selected client work">
+              <div className="client-proof" role="group" aria-label="Selected client work">
                 <span>Live client work</span>
                 <ul>
                   <li>Maple Rentals</li>
@@ -107,7 +107,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             <ProjectShowcase />
           </div>
 
-          <div className="hero-marquee" aria-label="Core capabilities">
+          <div className="hero-marquee" aria-hidden="true">
             <div className="hero-marquee-track">
               <div className="hero-marquee-group">
                 <span>Strategy</span><i>✦</i><span>Design</span><i>✦</i><span>Development</span><i>✦</i><span>SEO</span><i>✦</i><span>Growth</span><i>✦</i>
@@ -130,7 +130,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             </div>
             <div className="services-grid">
               {services.map((service) => (
-                <a className="service-card" data-reveal key={service.number} href={`/services/${service.slug}`}>
+                <Link className="service-card" data-reveal key={service.number} href={`/services/${service.slug}`}>
                   <div className="service-card-top">
                     <span>{service.number}</span>
                     <span aria-hidden="true">↘</span>
@@ -141,7 +141,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                     {service.details.map((detail) => <li key={detail}>{detail}</li>)}
                   </ul>
                   <span className="service-link">Explore service <ArrowIcon /></span>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -171,7 +171,12 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <p className="eyebrow">02 / Selected work</p>
                 <h2 id="work-heading">Built for real businesses. Live in the real world.</h2>
               </div>
-              <p>Seven responsive digital experiences across mobility, logistics, local services, construction and property.</p>
+              <div className="section-heading-aside">
+                <p>Seven responsive digital experiences across mobility, logistics, local services, construction and property.</p>
+                <Link className="section-heading-link" href="/work">
+                  View all case studies <ArrowIcon />
+                </Link>
+              </div>
             </div>
             <div className="work-grid">
               {projects.map((project, index) => (
@@ -185,15 +190,18 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <div className="project-image">
                     <ProjectArtwork
                       project={project}
-                      sizes="(max-width: 720px) 94vw, (max-width: 1100px) 47vw, 31vw"
+                      sizes="(max-width: 720px) 92vw, (max-width: 1440px) 46vw, (max-width: 1800px) 700px, 810px"
                     />
                     <span className="live-label"><i /> Live website</span>
                     <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
                   </div>
                   <div className="project-details">
-                    <p>{project.category}</p>
-                    <div><h3>{project.name}</h3><ArrowIcon /></div>
-                    <span>{project.description}</span>
+                    <p className="project-category-tag">{project.category}</p>
+                    <div className="project-title-row">
+                      <h3>{project.name}</h3>
+                      <span className="project-arrow" aria-hidden="true">↗</span>
+                    </div>
+                    <p className="project-description-text">{project.description}</p>
                     <div className="project-tags">
                       {project.tags.map((tag) => (
                         <span key={tag} className="project-tag-pill">{tag}</span>
@@ -258,7 +266,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <p className="eyebrow">04 / About AB</p>
               <h2 id="about-heading">Your digital presence should work as hard as you do.</h2>
               <p>AB Digital Solutions is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
-              <div className="studio-trust" aria-label="Studio details">
+              <div className="studio-trust" role="group" aria-label="Studio details">
                 <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
                 <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>
                 <p><strong>Real project portfolio</strong><span>Seven live website case studies</span></p>

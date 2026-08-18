@@ -10,13 +10,18 @@
   --paper-warm: #e8e6e1;  /* warm off-white for section backgrounds */
   --white: #fff;
   --muted: #aaa9a6;
-  --muted-dark: #737376;
+  --muted-dark: #86868a;
   --red: #b5121b;
   --red-bright: #c1121f;
   --red-dark: #7f0b12;
+  /* Same ruby hue, lifted far enough to clear WCAG AA as small text on the
+     near-black surfaces. --red-bright stays for fills and large display type. */
+  --red-ink: #e5484d;
   --gold: #d4a32f;
   --gold-bright: #efc96a;
-  --gold-dark: #8a6116;
+  /* Gold reserved for text on light surfaces. Dark enough to clear WCAG AA
+     at 12px against --paper and --paper-warm. */
+  --gold-dark: #74500e;
   --brand-red: #b5121b;
   --brand-red-bright: #c1121f;
   --brand-red-dark: #7f0b12;
@@ -100,16 +105,25 @@ select {
   cursor: pointer;
 }
 
-:target,
+/* Anchor targets need the scroll offset, but must not inherit the focus ring:
+   jumping to #contact used to outline the whole section in gold. */
+:target {
+  scroll-margin-top: calc(var(--header-height) + 24px);
+}
+
 :focus-visible {
   scroll-margin-top: calc(var(--header-height) + 24px);
   outline: 3px solid var(--gold-bright);
   outline-offset: 4px;
 }
 
+/* Tailwind emits its own `.container` utility because the markup uses that
+   class name, and its breakpoint max-widths (1536px at the top step) would
+   otherwise clamp the studio container. Width comes from --container only. */
 .container {
   position: relative;
   width: var(--container);
+  max-width: none;
   margin-inline: auto;
 }
 
@@ -181,6 +195,9 @@ select {
 
 .site-nav a {
   position: relative;
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
   color: var(--paper-dim);
   font-size: var(--type-action);
   font-weight: 700;
@@ -192,7 +209,7 @@ select {
 .site-nav a:not(.nav-cta)::after {
   position: absolute;
   right: 0;
-  bottom: -8px;
+  bottom: -5px;
   left: 0;
   height: 1px;
   background: var(--brand-red);
@@ -312,6 +329,7 @@ select {
   border: 1px solid rgba(212, 163, 47, 0.2);
   border-radius: 50%;
   box-shadow: 0 0 160px rgba(212, 163, 47, 0.1), inset 0 0 140px rgba(212, 163, 47, 0.06);
+  will-change: transform, opacity;
   animation: orbit-pulse 8s ease-in-out infinite alternate;
 }
 
@@ -332,7 +350,7 @@ select {
 
 .hero-layout {
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(460px, 1.08fr);
+  grid-template-columns: minmax(0, 1fr) minmax(440px, 1.04fr);
   align-items: center;
   gap: clamp(56px, 6vw, 112px);
   padding-bottom: clamp(84px, 10vw, 144px);
@@ -393,11 +411,12 @@ h3 {
   font-weight: 500;
   line-height: 0.98;
   letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 
 h1 {
-  max-width: 10ch;
-  font-size: clamp(4.1rem, 7.25vw, 8.2rem);
+  max-width: 22ch;
+  font-size: clamp(2.55rem, 5.2vw, 5.25rem);
 }
 
 h1 em {
@@ -552,6 +571,9 @@ h1 em {
 }
 
 .content-breadcrumb a {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
   text-decoration: underline;
   text-decoration-color: transparent;
   text-underline-offset: 5px;
@@ -631,7 +653,7 @@ h1 em {
 }
 
 .service-inclusions li > span {
-  color: var(--red-bright);
+  color: var(--red-ink);
   font-family: var(--mono);
   font-size: var(--type-micro);
 }
@@ -714,7 +736,7 @@ h1 em {
 
 .service-project > div:last-child > p {
   margin: 0 0 12px;
-  color: var(--red-bright);
+  color: var(--red-ink);
   font-family: var(--mono);
   font-size: var(--type-micro);
   font-weight: 800;
@@ -752,7 +774,7 @@ h1 em {
 }
 
 .service-process li > span {
-  color: var(--red-bright);
+  color: var(--red-ink);
   font-family: var(--mono);
   font-size: var(--type-micro);
 }
@@ -792,7 +814,7 @@ h1 em {
 }
 
 .service-faq summary span {
-  color: var(--red-bright);
+  color: var(--red-ink);
   font-size: 1.5rem;
   transition: transform 180ms ease;
 }
@@ -834,7 +856,7 @@ h1 em {
 }
 
 .related-services a span:last-child {
-  color: var(--red-bright);
+  color: var(--red-ink);
 }
 
 .service-page .service-cta {
@@ -858,8 +880,14 @@ h1 em {
 
 .service-cta > p:not(.eyebrow) {
   max-width: 700px;
-  margin: 26px 0 34px;
+  margin: 26px 0 0;
   color: rgba(255, 255, 255, 0.86);
+}
+
+/* The paragraph above already carries the gap before this row, so the
+   shared .content-actions top margin would double it up. */
+.service-cta .content-actions {
+  margin-top: 34px;
 }
 
 .service-cta .button-primary {
@@ -1099,9 +1127,9 @@ h1 em {
   min-height: 44px;
   padding: 0;
   border: 0;
-  border-top: 2px solid #333337;
+  border-top: 2px solid #47474c;
   background: transparent;
-  color: #66666a;
+  color: var(--muted-dark);
   font-family: var(--mono);
   font-size: var(--type-action);
   text-align: left;
@@ -1192,11 +1220,12 @@ h1 em {
 .standard-statement h2,
 .about-copy h2,
 .contact-copy h2 {
-  max-width: 12ch;
-  font-size: clamp(3rem, 5.6vw, 6.4rem);
+  max-width: 13ch;
+  font-size: clamp(2.6rem, 4.9vw, 5.4rem);
 }
 
 .section-heading > p,
+.section-heading-aside > p,
 .process-intro > p:not(.eyebrow),
 .about-copy > p,
 .contact-copy > p:not(.eyebrow) {
@@ -1204,6 +1233,32 @@ h1 em {
   color: var(--muted);
   font-size: 1rem;
   line-height: 1.8;
+}
+
+.section-heading-aside {
+  display: grid;
+  gap: 20px;
+  justify-items: start;
+}
+
+.section-heading-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid currentcolor;
+  color: var(--gold-dark);
+  font-family: var(--mono);
+  font-size: var(--type-action);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 180ms ease, gap 180ms ease;
+}
+
+.section-heading-link:hover {
+  gap: 18px;
+  color: var(--ink);
 }
 
 .services-section {
@@ -1224,8 +1279,10 @@ h1 em {
 }
 
 .services-section .section-heading > p,
-.work-section .section-heading > p {
-  color: #5f5f61;
+.work-section .section-heading > p,
+.services-section .section-heading-aside > p,
+.work-section .section-heading-aside > p {
+  color: #56565a;
 }
 
 .services-grid {
@@ -1273,10 +1330,10 @@ h1 em {
 }
 
 .service-card h3 {
-  max-width: 10ch;
-  margin-top: 62px;
-  font-size: clamp(1.65rem, 2.1vw, 2.4rem);
-  line-height: 1.04;
+  max-width: 16ch;
+  margin-top: clamp(34px, 4vw, 54px);
+  font-size: clamp(1.5rem, 1.85vw, 2.1rem);
+  line-height: 1.06;
 }
 
 .service-card:hover h3,
@@ -1285,10 +1342,10 @@ h1 em {
 }
 
 .service-card > p {
-  margin: 24px 0 0;
-  color: #5f5f61;
-  font-size: 0.9rem;
-  line-height: 1.75;
+  margin: 22px 0 0;
+  color: #56565a;
+  font-size: 0.95rem;
+  line-height: 1.72;
 }
 
 .service-card:hover > p,
@@ -1337,16 +1394,18 @@ h1 em {
   display: block;
 }
 
-.project-card:nth-child(even) {
+.work-section .work-grid .project-card:nth-child(even) {
   margin-top: clamp(50px, 8vw, 120px);
 }
 
 .project-image {
+  --shot-border: rgba(0, 0, 0, 0.15);
+  --shot-bg: #c8c6c1;
   position: relative;
   aspect-ratio: 1.46 / 1;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  background: #c8c6c1;
+  border: 1px solid var(--shot-border);
+  background: var(--shot-bg);
 }
 
 .project-image::after {
@@ -1406,13 +1465,27 @@ h1 em {
   padding: 8px 10px;
 }
 
+/* Project cards appear on the light homepage grid and on the dark work index.
+   Surface-dependent colours come through tokens so one component serves both. */
 .project-details {
+  --card-eyebrow: var(--gold-bright);
+  --card-body: var(--muted);
+  --card-rule: var(--line-strong);
   padding-top: 22px;
 }
 
-.project-details > p {
+.work-section .project-details {
+  --card-eyebrow: var(--gold-dark);
+  --card-body: #56565a;
+  --card-rule: rgba(0, 0, 0, 0.25);
+}
+
+/* Every part of a project card carries its own class. Positional selectors
+   (.project-details > p, > div > span) used to leak onto the work index page,
+   where the same wrapper holds a different set of children. */
+.project-category-tag {
   margin: 0 0 10px;
-  color: var(--gold-dark);
+  color: var(--card-eyebrow);
   font-family: var(--mono);
   font-size: var(--type-micro);
   font-weight: 700;
@@ -1420,7 +1493,7 @@ h1 em {
   text-transform: uppercase;
 }
 
-.project-details > div {
+.project-title-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1428,36 +1501,41 @@ h1 em {
 }
 
 .project-details h3 {
-  font-size: clamp(2rem, 3.2vw, 3.8rem);
+  font-size: clamp(1.75rem, 2.7vw, 3rem);
 }
 
-.project-details > div > span {
+.project-arrow {
   display: grid;
   width: 44px;
   height: 44px;
   flex: 0 0 auto;
   place-items: center;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  color: var(--gold-dark);
+  border: 1px solid var(--card-rule);
+  color: var(--card-eyebrow);
   font-size: 1.1rem;
   transition: background 180ms ease, color 180ms ease, transform 180ms ease;
 }
 
-.project-card:hover .project-details > div > span {
+.project-card:hover .project-arrow,
+.project-card:focus-visible .project-arrow {
   background: var(--gold);
-  color: var(--white);
+  color: var(--ink);
   transform: rotate(45deg);
 }
 
-.project-details > span {
+.project-description-text {
   display: block;
   max-width: 580px;
-  margin-top: 12px;
-  color: #626264;
-  font-size: 0.88rem;
+  margin: 12px 0 0;
+  color: var(--card-body);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  text-transform: none;
+  letter-spacing: normal;
+  font-family: var(--sans);
 }
 
-.project-details > span.project-cta {
+.project-cta {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
@@ -1477,33 +1555,45 @@ h1 em {
 .project-tags {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
   gap: 8px;
   margin-top: 14px;
 }
 
+/* Pill colours come from tokens so the same component reads correctly on the
+   light work grid and on the dark work index / case-study surfaces. */
 .project-tag-pill {
+  --pill-bg: rgba(255, 255, 255, 0.05);
+  --pill-border: var(--line-strong);
+  --pill-ink: var(--paper-dim);
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 3px;
-  background: rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  color: #3b3b3d;
-  font-family: var(--mono);
-  font-size: var(--type-micro);
-  letter-spacing: 0.04em;
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
-}
-
-.project-details > .project-tags > .project-tag-pill {
   width: auto;
   height: auto;
   flex: 0 1 auto;
+  padding: 5px 11px;
+  border: 1px solid var(--pill-border);
+  border-radius: 3px;
+  background: var(--pill-bg);
+  color: var(--pill-ink);
+  font-family: var(--mono);
+  font-size: var(--type-micro);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
-.project-card:hover .project-tag-pill {
-  border-color: rgba(212, 163, 47, 0.4);
-  background: rgba(212, 163, 47, 0.08);
-  color: var(--ink);
+.work-section .project-tag-pill {
+  --pill-bg: rgba(0, 0, 0, 0.04);
+  --pill-border: rgba(0, 0, 0, 0.16);
+  --pill-ink: #4a4a4c;
+}
+
+.work-section .project-card:hover .project-tag-pill,
+.work-section .project-card:focus-visible .project-tag-pill {
+  --pill-bg: rgba(212, 163, 47, 0.1);
+  --pill-border: rgba(138, 97, 22, 0.45);
+  --pill-ink: var(--ink);
 }
 
 .conversion-banner {
@@ -1565,26 +1655,11 @@ h1 em {
   }
 }
 
-.project-details > span.project-cta svg {
-  transition: transform 200ms ease;
-}
-
 .project-card:hover .project-cta,
 .project-card:focus-visible .project-cta {
   border-color: var(--ink);
   background: var(--ink);
   color: var(--white);
-}
-
-.project-card:hover .project-cta svg {
-  transform: translateX(3px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project-details > span.project-cta,
-  .project-details > span.project-cta svg {
-    transition: none;
-  }
 }
 
 .process-section {
@@ -1610,6 +1685,7 @@ h1 em {
 
 .text-link {
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   gap: 16px;
   margin-top: 32px;
@@ -1666,7 +1742,8 @@ h1 em {
   max-width: 590px;
   margin: 14px 0 0;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.95rem;
+  line-height: 1.72;
 }
 
 .standard-section {
@@ -1735,8 +1812,9 @@ h1 em {
 
 .standard-points p {
   margin: 14px 0 0;
-  color: rgba(5, 5, 5, 0.82);
-  font-size: 0.9rem;
+  color: rgba(5, 5, 5, 0.84);
+  font-size: 0.95rem;
+  line-height: 1.7;
 }
 
 .about-section {
@@ -1835,8 +1913,8 @@ h1 em {
   background: var(--ink-soft);
 }
 
-.studio-trust strong { color: var(--paper); font-size: 0.86rem; }
-.studio-trust span { color: var(--muted); font-size: var(--type-micro); line-height: 1.5; }
+.studio-trust strong { color: var(--paper); font-size: 0.925rem; }
+.studio-trust span { color: var(--muted); font-size: 0.8125rem; line-height: 1.55; }
 
 .about-values {
   margin: 40px 0 0;
@@ -1853,14 +1931,15 @@ h1 em {
 
 .about-values dt {
   color: var(--white);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 
 .about-values dd {
   margin: 0;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
+  line-height: 1.65;
 }
 
 .contact-section {
@@ -2094,7 +2173,8 @@ h1 em {
   max-width: 340px;
   margin: 30px 0 18px;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
 }
 
 .footer-intro > span {
@@ -2129,7 +2209,7 @@ h1 em {
   min-height: 44px;
   align-items: center;
   color: var(--paper-dim);
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   font-weight: 700;
 }
 
@@ -2143,7 +2223,8 @@ h1 em {
   max-width: 330px;
   margin: 0 0 22px;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
 }
 
 .footer-contact > a.footer-contact-cta {
@@ -2227,12 +2308,32 @@ h1 em {
   animation-delay: 260ms;
 }
 
+@media (min-width: 1800px) {
+  :root {
+    --container: min(100% - 96px, 1660px);
+    --header-height: 100px;
+  }
+}
+
 @media (max-width: 1180px) {
   :root { --container: min(100% - 48px, 1440px); }
-  .hero-layout { grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1.14fr); gap: 46px; }
-  h1 { font-size: clamp(3.8rem, 6.9vw, 6.8rem); }
+  .hero-layout { grid-template-columns: minmax(0, 0.95fr) minmax(400px, 1.05fr); gap: 48px; }
   .services-grid { grid-template-columns: repeat(2, 1fr); }
   .contact-layout { gap: 70px; }
+}
+
+/* Below this the two-column hero squeezes the headline into a ~390px column,
+   which forced five or six words-per-line breaks. Stack it instead. */
+@media (max-width: 1080px) {
+  .hero-layout { grid-template-columns: 1fr; gap: 60px; }
+  .hero-copy { max-width: 800px; }
+  .project-showcase {
+    width: min(100%, 760px);
+    justify-self: center;
+    transform: none;
+  }
+  .project-showcase:hover,
+  .project-showcase:focus-within { transform: translateY(-4px); }
 }
 
 @media (max-width: 1100px) {
@@ -2274,11 +2375,9 @@ h1 em {
   .site-nav a:not(.nav-cta)::after { display: none; }
   .site-nav .nav-cta { justify-content: space-between; margin-top: 14px; padding: 0 18px; }
   .hero { min-height: auto; }
-  .hero-layout { grid-template-columns: 1fr; gap: 72px; }
+  .hero-layout { gap: 64px; }
   .hero-copy { max-width: 830px; }
-  h1 { font-size: clamp(4.3rem, 11vw, 7.2rem); }
-  .project-showcase { width: min(100%, 780px); justify-self: center; transform: none; }
-  .project-showcase:hover, .project-showcase:focus-within { transform: translateY(-4px); }
+  h1 { font-size: clamp(2.6rem, 7.6vw, 4.75rem); }
   .hero-glow { top: 42%; right: -18%; width: 82vw; height: 82vw; }
   .process-layout, .standard-layout, .about-layout, .contact-layout { grid-template-columns: 1fr; }
   .process-intro { position: static; }
@@ -2294,9 +2393,17 @@ h1 em {
   :root { --container: min(100% - 32px, 1440px); }
   .section { padding: 90px 0; }
   .hero { padding-top: calc(var(--header-height) + 42px); }
-  .hero-3d-bg-wrap { opacity: 0.52; }
+  /* The stacked mobile hero is ~1400px tall. Painting the WebGL backdrop over
+     all of it doubles the fill cost for pixels nobody reads as "3D", so the
+     canvas is capped to the headline area and faded out below it. */
+  .hero-3d-bg-wrap {
+    inset: 0 0 auto;
+    height: min(74vh, 680px);
+    opacity: 0.52;
+    mask-image: linear-gradient(to bottom, black 62%, transparent);
+  }
   .hero-layout { gap: 42px; padding-bottom: 58px; }
-  h1 { max-width: 10.5ch; font-size: clamp(2.8rem, 12.2vw, 4.5rem); }
+  h1 { max-width: 100%; font-size: clamp(2.35rem, 10.4vw, 3.6rem); }
   .hero-intro { max-width: 36rem; margin-top: 24px; font-size: 1rem; line-height: 1.68; }
   .hero-actions { align-items: stretch; flex-direction: column; }
   .hero-actions { gap: 10px; margin-top: 30px; }
@@ -2401,7 +2508,7 @@ h1 em {
   :root { --header-height: 70px; --container: min(100% - 40px, 1440px); }
   .hero { padding-top: calc(var(--header-height) + 28px); }
   .hero-layout { grid-template-columns: minmax(0, 0.95fr) minmax(300px, 1.05fr); gap: 32px; padding-bottom: 42px; }
-  h1 { font-size: clamp(2.8rem, 7vw, 4.8rem); }
+  h1 { font-size: clamp(2.4rem, 6vw, 3.6rem); }
   .hero-intro { margin-top: 20px; }
   .hero-actions { margin-top: 24px; }
   .hero-actions .button { min-height: 48px; }
@@ -2437,6 +2544,68 @@ h1 em {
   .project-showcase:focus-within,
   .service-card:hover,
   .button:hover { transform: none; }
+}
+
+/* Work index page ---------------------------------------------------------- */
+
+.work-index-page .content-shell {
+  max-width: 1280px;
+}
+
+.work-index-page .work-grid {
+  margin-top: clamp(30px, 4vw, 52px);
+}
+
+.work-page-card {
+  display: grid;
+  align-content: start;
+}
+
+.work-page-card .project-image {
+  --shot-border: transparent;
+  --shot-bg: var(--panel-light);
+  border: 0;
+}
+
+.work-page-card .project-image::after {
+  border-color: var(--gold);
+}
+
+.work-page-card:hover .project-image img,
+.work-page-card:focus-within .project-image img {
+  filter: none;
+  transform: scale(1.02);
+}
+
+.work-page-card:hover .project-image::after,
+.work-page-card:focus-within .project-image::after {
+  border-width: 3px;
+}
+
+.work-page-card .browser-frame {
+  border-color: var(--line-strong);
+  transition: border-color 220ms ease;
+}
+
+.work-page-card:hover .browser-frame,
+.work-page-card:focus-within .browser-frame {
+  border-color: rgba(212, 163, 47, 0.45);
+}
+
+.work-page-card .project-details h3 {
+  margin-top: 4px;
+}
+
+.work-page-card .project-actions-group {
+  margin-top: 24px;
+}
+
+.work-page-banner {
+  margin-top: clamp(64px, 8vw, 110px);
+}
+
+.case-study-page .conversion-banner {
+  margin-top: clamp(56px, 7vw, 96px);
 }
 
 /* Work & Case Study Layout */
@@ -2549,6 +2718,15 @@ h1 em {
   color: var(--paper);
 }
 
+.metadata-list dd a {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  color: var(--gold-bright);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .sidebar-tags,
 .sidebar-tech {
   display: flex;
@@ -2605,8 +2783,8 @@ h1 em {
   border-radius: 28px;
 }
 
-.mobile-device .device-image { aspect-ratio: 0.56 / 1; border-radius: 16px; }
-.mobile-device .device-image img { width: 260%; max-width: none; object-position: top left; }
+.mobile-device .device-image { aspect-ratio: 0.62 / 1; border-radius: 16px; }
+.mobile-device .device-image img { object-position: top center; }
 .mobile-speaker {
   position: absolute;
   z-index: 2;
@@ -2745,3 +2923,45 @@ h1 em {
   .device-showcase { grid-template-columns: minmax(0, 1fr) minmax(112px, 0.32fr); gap: 12px; }
   .mobile-device { border-width: 4px; border-radius: 18px; padding: 10px 5px 5px; }
 }
+
+/* 404 -------------------------------------------------------------------- */
+
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.not-found-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  justify-content: center;
+  margin-top: 44px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.not-found-nav a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--paper-dim);
+  font-family: var(--mono);
+  font-size: var(--type-micro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 180ms ease;
+}
+
+.not-found-nav a:hover {
+  color: var(--gold-bright);
+}
+
+@media (max-width: 430px) {
+  .not-found-actions { flex-direction: column; align-items: stretch; }
+  .not-found-actions .button { width: 100%; }
+}
+

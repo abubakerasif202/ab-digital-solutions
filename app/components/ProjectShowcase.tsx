@@ -120,7 +120,7 @@ export function ProjectShowcase() {
                 <ProjectArtwork
                   project={project}
                   priority={isActive && index === 0}
-                  sizes="(max-width: 900px) 94vw, 52vw"
+                  sizes="(max-width: 1080px) 92vw, (max-width: 1440px) 46vw, (max-width: 1800px) 660px, 800px"
                 />
               </Link>
             );

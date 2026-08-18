@@ -8,7 +8,7 @@ import { siteConfig } from "../site-config";
 import { ArrowIcon } from "../icons";
 
 export const metadata: Metadata = {
-  title: "Our Work & Case Studies | AB Digital Solutions",
+  title: "Our Work & Case Studies",
   description:
     "Explore our portfolio of strategy-led, high-converting websites built for Australian mobility, logistics, construction and local service businesses.",
   alternates: { canonical: "/work" },
@@ -95,7 +95,7 @@ export default function WorkPage() {
                       <ProjectArtwork
                         project={project}
                         priority={index === 0}
-                        sizes="(max-width: 720px) 94vw, (max-width: 1100px) 47vw, 42vw"
+                        sizes="(max-width: 720px) 92vw, (max-width: 1400px) 45vw, 630px"
                       />
                       <span className="live-label"><i /> Live website</span>
                       <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
@@ -111,7 +111,7 @@ export default function WorkPage() {
                       ))}
                     </div>
                     <div className="project-actions-group">
-                      <Link className="button button-primary case-study-btn" href={`/work/${project.slug}`}>
+                      <Link className="button button-primary" href={`/work/${project.slug}`}>
                         View Case Study <ArrowIcon />
                       </Link>
                     </div>
@@ -120,24 +120,24 @@ export default function WorkPage() {
               ))}
             </div>
           </section>
-
-          <aside className="conversion-banner work-page-banner" data-reveal aria-label="Start a project">
-            <div className="container conversion-banner-layout">
-              <div className="conversion-banner-copy">
-                <p className="eyebrow">Strategy & Execution</p>
-                <h3>Have a project in mind? Let&apos;s build something impossible to ignore.</h3>
-              </div>
-              <div className="conversion-banner-actions">
-                <Link className="button button-primary" href="/#contact">
-                  Start a Project <ArrowIcon />
-                </Link>
-                <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
-                  Call {siteConfig.phoneDisplay}
-                </a>
-              </div>
-            </div>
-          </aside>
         </div>
+
+        <aside className="conversion-banner work-page-banner" data-reveal aria-label="Start a project">
+          <div className="container conversion-banner-layout">
+            <div className="conversion-banner-copy">
+              <p className="eyebrow">Strategy &amp; Execution</p>
+              <h3>Have a project in mind? Let&apos;s build something impossible to ignore.</h3>
+            </div>
+            <div className="conversion-banner-actions">
+              <Link className="button button-primary" href="/#contact">
+                Start a Project <ArrowIcon />
+              </Link>
+              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
+                Call {siteConfig.phoneDisplay}
+              </a>
+            </div>
+          </div>
+        </aside>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}

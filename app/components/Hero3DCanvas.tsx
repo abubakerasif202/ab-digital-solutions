@@ -40,7 +40,9 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       renderer = new THREE.WebGLRenderer({
         antialias: !isTablet && !isMobile,
         alpha: true,
-        powerPreference: "high-performance",
+        // Mobile/tablet favour the integrated GPU: it keeps the fan quiet and
+        // the battery drain reasonable for a decorative background.
+        powerPreference: isMobile || isTablet ? "low-power" : "high-performance",
       });
     } catch {
       const failureTimer = window.setTimeout(() => setRendererFailed(true), 0);
@@ -83,14 +85,24 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     const tubularSegments = isMobile ? 60 : isTablet ? 72 : 120;
     const radialSegments = isMobile ? 9 : isTablet ? 10 : 16;
     const mainGeometry = new THREE.TorusKnotGeometry(1.15, 0.3, tubularSegments, radialSegments, 2, 3);
-    const mainMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x08090a,
-      metalness: 0.88,
-      roughness: 0.12,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.08,
-      reflectivity: 0.95,
-    });
+    // Clearcoat adds a second normal/roughness evaluation per fragment. Worth
+    // it on desktop where the mesh fills more of the frame; on mobile/tablet
+    // a plain metallic standard material reads almost identically at a
+    // fraction of the shader cost.
+    const mainMaterial = (isMobile || isTablet)
+      ? new THREE.MeshStandardMaterial({
+        color: 0x08090a,
+        metalness: 0.88,
+        roughness: 0.16,
+      })
+      : new THREE.MeshPhysicalMaterial({
+        color: 0x08090a,
+        metalness: 0.88,
+        roughness: 0.12,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.08,
+        reflectivity: 0.95,
+      });
     const mainMesh = new THREE.Mesh(mainGeometry, mainMaterial);
     heroGroup.add(mainMesh);
 
@@ -187,9 +199,12 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       targetScrollY = window.scrollY;
     };
 
+    const hasHoverPointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const wantsPointerParallax = hasHoverPointer && !isTablet && !isMobile;
+
     const attachInputListeners = () => {
       if (inputListenersAttached) return;
-      if (!isTablet) window.addEventListener("mousemove", handleMouseMove, { passive: true });
+      if (wantsPointerParallax) window.addEventListener("mousemove", handleMouseMove, { passive: true });
       window.addEventListener("scroll", handleScroll, { passive: true });
       inputListenersAttached = true;
     };
@@ -330,26 +345,42 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     renderStaticFrame();
 
     // Resize Handler
+    const currentPixelRatio = () => (isMobile
+      ? Math.min(window.devicePixelRatio, 1.25)
+      : isTablet
+        ? 1
+        : Math.min(window.devicePixelRatio, 1.5));
+
+    let renderedWidth = width;
+    let renderedHeight = height;
+    let renderedPixelRatio = dpr;
+
     const handleResize = () => {
-      if (!container) return;
       const newWidth = container.clientWidth || window.innerWidth;
       const newHeight = container.clientHeight || 500;
+      const newPixelRatio = currentPixelRatio();
+
+      // A ResizeObserver fires for sub-pixel and no-op changes too. Skipping
+      // those avoids reallocating the drawing buffer on every scroll-driven
+      // layout nudge.
+      if (
+        newWidth === renderedWidth
+        && newHeight === renderedHeight
+        && newPixelRatio === renderedPixelRatio
+      ) return;
+
+      renderedWidth = newWidth;
+      renderedHeight = newHeight;
+      renderedPixelRatio = newPixelRatio;
 
       camera.aspect = newWidth / newHeight;
       camera.updateProjectionMatrix();
-
-      renderer.setPixelRatio(isMobile
-        ? Math.min(window.devicePixelRatio, 1.25)
-        : isTablet
-          ? 1
-          : Math.min(window.devicePixelRatio, 1.5));
+      renderer.setPixelRatio(newPixelRatio);
       renderer.setSize(newWidth, newHeight);
       if (isVisible || prefersReducedMotion) renderStaticFrame();
     };
 
-    const resizeObserver = new ResizeObserver(() => {
-      handleResize();
-    });
+    const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
 
     // Cleanup

@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = findProject((await params).slug);
   if (!project) return {};
   return {
-    title: `${project.name} Case Study | ${siteConfig.name}`,
+    title: `${project.name} Case Study`,
     description: project.description,
     alternates: { canonical: `/work/${project.slug}` },
     openGraph: {
@@ -120,7 +120,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 <span>{project.displayUrl}</span>
               </div>
               <div className="case-study-hero-image">
-                <ProjectArtwork project={project} priority sizes="(max-width: 1200px) 94vw, 80vw" />
+                <ProjectArtwork project={project} priority sizes="(max-width: 1040px) 92vw, 980px" />
               </div>
             </div>
           </div>
@@ -196,16 +196,16 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             <div className="case-study-visuals-heading">
               <p className="eyebrow">Visual showcase</p>
               <h2 id="visual-showcase-heading">The live project, presented across viewports.</h2>
-              <p>Real project imagery from the published website, shown in desktop and focused mobile compositions.</p>
+              <p>Real project imagery from the published website, shown full-width and as a focused detail crop.</p>
             </div>
             <div className="device-showcase">
               <div className="desktop-device">
                 <div className="browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
-                <div className="device-image"><ProjectArtwork project={project} sizes="(max-width: 900px) 94vw, 65vw" /></div>
+                <div className="device-image"><ProjectArtwork project={project} sizes="(max-width: 1040px) 70vw, 730px" /></div>
               </div>
-              <div className="mobile-device" aria-label={`${project.name} mobile viewport detail`}>
+              <div className="mobile-device">
                 <span className="mobile-speaker" aria-hidden="true" />
-                <div className="device-image"><ProjectArtwork project={project} sizes="(max-width: 720px) 48vw, 20vw" /></div>
+                <div className="device-image"><ProjectArtwork project={project} sizes="(max-width: 720px) 32vw, 210px" /></div>
               </div>
             </div>
           </section>
@@ -240,23 +240,24 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             </Link>
           </nav>
 
-          <aside className="conversion-banner" data-reveal aria-label="Start your project">
-            <div className="container conversion-banner-layout">
-              <div className="conversion-banner-copy">
-                <p className="eyebrow">Have a project in mind?</p>
-                <h3>Let&apos;s create a digital experience with a clear commercial purpose.</h3>
-              </div>
-              <div className="conversion-banner-actions">
-                <Link className="button button-primary" href="/#contact">
-                  Start a Project <ArrowIcon />
-                </Link>
-                <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
-                  Call {siteConfig.phoneDisplay}
-                </a>
-              </div>
-            </div>
-          </aside>
         </div>
+
+        <aside className="conversion-banner" data-reveal aria-label="Start your project">
+          <div className="container conversion-banner-layout">
+            <div className="conversion-banner-copy">
+              <p className="eyebrow">Have a project in mind?</p>
+              <h3>Let&apos;s create a digital experience with a clear commercial purpose.</h3>
+            </div>
+            <div className="conversion-banner-actions">
+              <Link className="button button-primary" href="/#contact">
+                Start a Project <ArrowIcon />
+              </Link>
+              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
+                Call {siteConfig.phoneDisplay}
+              </a>
+            </div>
+          </div>
+        </aside>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}

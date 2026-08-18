@@ -23,6 +23,7 @@ export function Hero3DExperience() {
     const connection = (navigator as Navigator & {
       connection?: EventTarget & { saveData?: boolean };
     }).connection;
+    const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
     const idleWindow = window as typeof window & {
       requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
       cancelIdleCallback?: (id: number) => void;
@@ -36,7 +37,8 @@ export function Hero3DExperience() {
       }
 
       const constrainedDevice = connection?.saveData
-        || (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4);
+        || (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4)
+        || (typeof deviceMemory === "number" && deviceMemory > 0 && deviceMemory <= 4);
 
       if (mobileQuery.matches) {
         setMode("mobile");
