@@ -74,7 +74,7 @@ export default async function ServicePage({ params }: Props) {
       answer: "We start with a focused conversation about your business, audience, priorities and existing materials. You receive a clear recommended scope before committing to delivery.",
     },
     {
-      question: `How is ${service.title.toLowerCase()} priced?`,
+      question: `How is ${service.title} priced?`,
       answer: "Pricing is based on the agreed scope, complexity and delivery requirements. We provide a written proposal with inclusions, review points and costs before work starts.",
     },
     {

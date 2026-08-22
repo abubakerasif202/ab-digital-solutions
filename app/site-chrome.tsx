@@ -45,12 +45,23 @@ export function SiteHeader() {
       }
     };
 
+    const backgroundRegions = [
+      document.getElementById("main-content"),
+      document.querySelector(".site-footer"),
+    ].filter((element): element is HTMLElement => element !== null);
+
     document.addEventListener("keydown", onKeyDown);
     document.body.classList.toggle("nav-open", menuOpen);
+    backgroundRegions.forEach((region) => {
+      region.inert = menuOpen;
+    });
     if (menuOpen) navRef.current?.querySelector<HTMLElement>("a")?.focus();
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.body.classList.remove("nav-open");
+      backgroundRegions.forEach((region) => {
+        region.inert = false;
+      });
     };
   }, [menuOpen]);
 
