@@ -65,7 +65,7 @@ Business details and the canonical URL fallback live in `app/site-config.ts`. Ho
 
 1. Capture a homepage screenshot of the live site at **1348 × 926** (aspect ratio 1.46:1 — every card and hero slide assumes it) and save it as `public/site/ab-digital-premium/assets/ab-portfolio-<slug>.jpg`.
 2. Add an entry to `projects` in `app/project-data.ts` with `name`, `category`, `description`, `url`, `displayUrl`, `image` and a descriptive `alt`. Every field is required — `image` has no fallback.
-3. Update the project count copy in `app/agency-home.tsx` (`View all seven projects`, `Seven responsive digital experiences`) and the list in `public/llms.txt`.
+3. Update the project count copy in `app/agency-home.tsx` (`Explore eight live websites`, `Eight responsive digital experiences`) and the list in `public/llms.txt`.
 4. Run `npm run verify`. `tests/rendered-html.test.mjs` asserts each project URL is present and that every referenced image file exists on disk.
 
 External project links always render with `target="_blank"` and `rel="noopener noreferrer"`, and the accessible name announces that the link opens in a new tab.

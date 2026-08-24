@@ -77,7 +77,7 @@ export default function WorkPage() {
             <p className="eyebrow">Portfolio / Selected Work</p>
             <h1>Real websites. Real commercial impact.</h1>
             <p className="content-lead">
-              Seven responsive digital experiences across mobility, logistics, local services, construction and property—built with sharp positioning, fast performance and clear paths to enquiry.
+              Eight responsive digital experiences across mobility, logistics, local services, construction and property—built with sharp positioning, fast performance and clear paths to enquiry.
             </p>
           </header>
 

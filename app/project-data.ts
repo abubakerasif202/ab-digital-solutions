@@ -172,6 +172,29 @@ export const projects = [
     ],
     techStack: ["Next.js", "TypeScript", "Vanilla CSS", "JSON-LD"],
   },
+  {
+    slug: "hf-removals-adelaide",
+    name: "HF Removals Adelaide",
+    category: "Services / Removals",
+    description:
+      "Published reference rates, an instant quote request and round-the-clock enquiry capture.",
+    overview:
+      "HF Removals Adelaide handles residential, apartment, office and interstate moves from an Elizabeth Vale base, needing pricing transparency and a quote path that converts around the clock.",
+    solution:
+      "We built a rate-transparent removals platform pairing published local and per-cubic-metre interstate pricing with an above-the-fold instant quote form, suburb and route landing pages, and review-backed trust signals.",
+    url: "https://www.hfremovalsadelaide.com/",
+    displayUrl: "hfremovalsadelaide.com",
+    image: `${assetBase}/ab-portfolio-hf-removals.jpg`,
+    alt: "HF Removals Adelaide website homepage preview",
+    tags: ["Quote Conversion", "Local Service SEO", "Rate Transparency"],
+    keyFeatures: [
+      "Above-the-fold instant quote request form",
+      "Published local rates and per-cubic-metre interstate routes",
+      "Adelaide suburb and interstate route landing pages",
+      "Google review and insurance trust signals throughout",
+    ],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "JSON-LD"],
+  },
 ] as const satisfies readonly Project[];
 
 export function findProject(slug: string): Project | undefined {

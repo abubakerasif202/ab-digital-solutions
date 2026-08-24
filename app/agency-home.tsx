@@ -100,7 +100,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <li>DECENT Development</li>
                   <li>ZQ Removals</li>
                 </ul>
-                <a href="#work">Explore seven live websites <ArrowIcon /></a>
+                <a href="#work">Explore eight live websites <ArrowIcon /></a>
               </div>
             </div>
 
@@ -172,7 +172,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <h2 id="work-heading">Built for real businesses. Live in the real world.</h2>
               </div>
               <div className="section-heading-aside">
-                <p>Seven responsive digital experiences across mobility, logistics, local services, construction and property.</p>
+                <p>Eight responsive digital experiences across mobility, logistics, local services, construction and property.</p>
                 <Link className="section-heading-link" href="/work">
                   View all case studies <ArrowIcon />
                 </Link>
@@ -269,7 +269,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <div className="studio-trust" role="group" aria-label="Studio details">
                 <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
                 <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>
-                <p><strong>Real project portfolio</strong><span>Seven live website case studies</span></p>
+                <p><strong>Real project portfolio</strong><span>Eight live website case studies</span></p>
               </div>
               <p>We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</p>
               <p>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</p>
