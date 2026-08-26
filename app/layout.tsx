@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { assetBase, siteConfig } from "./site-config";
 import { WebVitals } from "./web-vitals";
 import "./globals.css";
@@ -142,6 +143,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <WebVitals />
         {children}
+        <SpeedInsights />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
