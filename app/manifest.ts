@@ -12,8 +12,14 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#050505",
     icons: [
       {
-        src: `${assetBase}/ab-logo-mark.png`,
-        sizes: "400x340",
+        src: `${assetBase}/ab-logo-mark-192.png`,
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: `${assetBase}/ab-logo-mark-512.png`,
+        sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },

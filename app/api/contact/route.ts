@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { siteConfig } from "../../site-config";
+import { withinRateLimit } from "./rate-limit";
 
 export const runtime = "nodejs";
 
 type ContactPayload = Record<string, unknown>;
-const requests = new Map<string, { count: number; resetAt: number }>();
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_REQUESTS = 5;
 const MAX_BODY_BYTES = 12_000;
 const allowedServices = new Set([
   "Website design & development", "SEO & local visibility", "Branding & content",
@@ -35,21 +33,6 @@ function allowedOrigin(request: NextRequest) {
   try { return new URL(origin).origin === `${protocol}://${host}`; } catch { return false; }
 }
 
-function withinRateLimit(request: NextRequest) {
-  const now = Date.now();
-  if (requests.size > 500) {
-    for (const [key, entry] of requests) if (entry.resetAt <= now) requests.delete(key);
-  }
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const current = requests.get(ip);
-  if (!current || current.resetAt <= now) {
-    requests.set(ip, { count: 1, resetAt: now + WINDOW_MS });
-    return true;
-  }
-  current.count += 1;
-  return current.count <= MAX_REQUESTS;
-}
-
 async function readPayload(request: NextRequest): Promise<ContactPayload> {
   if (!request.body) throw new Error("missing-body");
   const reader = request.body.getReader();
@@ -76,7 +59,10 @@ async function readPayload(request: NextRequest): Promise<ContactPayload> {
 
 export async function POST(request: NextRequest) {
   if (!allowedOrigin(request)) return NextResponse.json({ error: "This request could not be verified." }, { status: 403 });
-  if (!withinRateLimit(request)) return NextResponse.json({ error: "Too many enquiries. Please wait a few minutes or contact us directly." }, { status: 429 });
+  const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    || request.headers.get("x-real-ip")?.trim()
+    || "unknown";
+  if (!await withinRateLimit(clientIp)) return NextResponse.json({ error: "Too many enquiries. Please wait a few minutes or contact us directly." }, { status: 429 });
   const contentLength = Number(request.headers.get("content-length") || 0);
   if (!Number.isFinite(contentLength) || contentLength < 0 || contentLength > MAX_BODY_BYTES) {
     return NextResponse.json({ error: "This enquiry is too large." }, { status: 413 });

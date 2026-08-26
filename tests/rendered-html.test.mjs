@@ -30,6 +30,7 @@ test("portfolio contains every required live project", async () => {
     "https://milestonedevelopment.com.au/",
     "https://4-point-concrete-design.vercel.app/",
     "https://www.1stclassexpress.com.au/",
+    "https://www.hfremovalsadelaide.com/",
   ];
 
   for (const project of requiredProjects) assert.match(projects, new RegExp(project.replaceAll(".", "\\.")));
@@ -45,8 +46,9 @@ test("every project ships a real preview image and routes visitors through a cas
   ]);
 
   const imageNames = [...projects.matchAll(/\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
-  assert.equal(imageNames.length, 7);
+  assert.equal(imageNames.length, 8);
   assert.ok(imageNames.includes("ab-portfolio-1st-class-express.jpg"));
+  assert.ok(imageNames.includes("ab-portfolio-hf-removals.jpg"));
   assert.doesNotMatch(projects, /image: null/);
 
   const { statSync } = await import("node:fs");
@@ -116,10 +118,10 @@ test("homepage interactive work is isolated and pauses when hidden", async () =>
   assert.match(contact, /fetch\("\/api\/contact"/);
 });
 
-test("homepage project count reflects the seven live projects", async () => {
+test("homepage project count reflects the eight live projects", async () => {
   const homepage = await read("../app/agency-home.tsx");
-  assert.match(homepage, /Explore seven live websites/);
-  assert.match(homepage, /Seven responsive digital experiences/);
+  assert.match(homepage, /Explore eight live websites/);
+  assert.match(homepage, /Eight responsive digital experiences/);
   assert.doesNotMatch(await read("../app/globals.css"), /grid-template-columns: repeat\(6, 1fr\)/);
 });
 
@@ -257,7 +259,8 @@ test("Vercel configuration uses the Next.js production build", async () => {
   assert.equal(vercelConfig.buildCommand, "npm run build");
   assert.match(packageJson.scripts.build, /next build$/);
   assert.equal(packageJson.scripts.verify, "npm run lint && npm run typecheck && npm test");
-  assert.equal(packageJson.scripts.typecheck, "bash scripts/sites-env.sh -- tsc --noEmit");
+  assert.equal(packageJson.scripts.typecheck, "bash scripts/typecheck.sh");
+  assert.match(await read("../scripts/typecheck.sh"), /next" typegen/);
   for (const generatedDirectory of [".sites-runtime", ".agents", ".codex", ".claude"]) {
     assert.ok(eslintConfig.includes(`"${generatedDirectory}/**"`));
   }
