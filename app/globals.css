@@ -1411,9 +1411,10 @@ h1 em {
 .project-image::after {
   position: absolute;
   inset: 0;
-  border: 0 solid var(--gold);
+  border: 5px solid transparent;
   content: "";
-  transition: border-width 240ms ease;
+  pointer-events: none;
+  transition: border-color 240ms ease, opacity 240ms ease;
 }
 
 .project-image img {
@@ -1428,7 +1429,7 @@ h1 em {
 }
 
 .project-card:hover .project-image::after {
-  border-width: 5px;
+  border-color: var(--gold);
 }
 
 .live-label,
@@ -1715,12 +1716,12 @@ h1 em {
   align-items: start;
   padding: 40px 0;
   border-bottom: 1px solid var(--line-strong);
-  transition: padding 200ms ease, background 200ms ease;
+  transition: background-color 200ms ease, transform 200ms ease;
 }
 
 .process-list li:hover {
-  padding-inline: 18px;
   background: rgba(255, 255, 255, 0.025);
+  transform: translate3d(12px, 0, 0);
 }
 
 .process-list li > span:first-child {
@@ -1993,12 +1994,12 @@ h1 em {
   align-items: center;
   padding: 19px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  transition: padding 180ms ease, color 180ms ease;
+  transition: color 180ms ease, transform 180ms ease;
 }
 
 .contact-options a:hover {
-  padding-inline: 10px;
   color: var(--gold-dark);
+  transform: translate3d(10px, 0, 0);
 }
 
 .contact-options span {
@@ -2524,12 +2525,39 @@ h1 em {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
   }
-  [data-reveal], .hero [data-reveal] { opacity: 1; transform: none; animation: none; }
+  [data-reveal], .hero [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
   .hero-marquee-track { width: 100%; transform: none; animation: none !important; }
   .hero-marquee-group { width: 100%; flex-wrap: wrap; justify-content: center; gap: 8px 20px; padding-right: 0; }
   .hero-marquee-group[aria-hidden="true"] { display: none; }
+  .project-showcase,
+  .project-showcase:hover,
+  .project-showcase:focus-within,
+  .service-card,
+  .service-card:hover,
+  .service-card:focus-visible,
+  .button,
+  .button:hover,
+  .project-card:hover .project-image img,
+  .work-page-card:hover .project-image img,
+  .work-page-card:focus-within .project-image img,
+  .process-list li:hover,
+  .contact-options a:hover {
+    transform: none;
+  }
+  .project-showcase,
+  .service-card,
+  .button,
+  .project-image img,
+  .process-list li,
+  .contact-options a {
+    transition-property: color, background-color, border-color, box-shadow, opacity;
+    transition-duration: 120ms;
+  }
 }
 
 @media (prefers-contrast: more) {
@@ -2568,7 +2596,7 @@ h1 em {
 }
 
 .work-page-card .project-image::after {
-  border-color: var(--gold);
+  border-color: transparent;
 }
 
 .work-page-card:hover .project-image img,
@@ -2579,7 +2607,7 @@ h1 em {
 
 .work-page-card:hover .project-image::after,
 .work-page-card:focus-within .project-image::after {
-  border-width: 3px;
+  border-color: var(--gold);
 }
 
 .work-page-card .browser-frame {
@@ -2964,4 +2992,3 @@ h1 em {
   .not-found-actions { flex-direction: column; align-items: stretch; }
   .not-found-actions .button { width: 100%; }
 }
-

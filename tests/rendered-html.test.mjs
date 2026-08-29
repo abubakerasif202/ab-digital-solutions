@@ -118,10 +118,16 @@ test("homepage interactive work is isolated and pauses when hidden", async () =>
   assert.match(contact, /fetch\("\/api\/contact"/);
 });
 
-test("homepage project count reflects the eight live projects", async () => {
-  const homepage = await read("../app/agency-home.tsx");
-  assert.match(homepage, /Explore eight live websites/);
-  assert.match(homepage, /Eight responsive digital experiences/);
+test("project count copy is derived from the canonical registry", async () => {
+  const [homepage, workPage] = await Promise.all([
+    read("../app/agency-home.tsx"),
+    read("../app/work/page.tsx"),
+  ]);
+  assert.match(homepage, /Explore \{projects\.length\} live websites/);
+  assert.match(homepage, /\{projects\.length\} responsive digital experiences/);
+  assert.match(homepage, /\{projects\.length\} live website case studies/);
+  assert.match(workPage, /\{projects\.length\} responsive digital experiences/);
+  assert.doesNotMatch(homepage, /\b(?:seven|eight)\b/i);
   assert.doesNotMatch(await read("../app/globals.css"), /grid-template-columns: repeat\(6, 1fr\)/);
 });
 
@@ -246,10 +252,11 @@ test("contact form posts to the protected server endpoint", async () => {
 });
 
 test("Vercel configuration uses the Next.js production build", async () => {
-  const [rawVercelConfig, rawPackage, eslintConfig] = await Promise.all([
+  const [rawVercelConfig, rawPackage, eslintConfig, nextConfig] = await Promise.all([
     read("../vercel.json"),
     read("../package.json"),
     read("../eslint.config.mjs"),
+    read("../next.config.ts"),
   ]);
   const vercelConfig = JSON.parse(rawVercelConfig);
   const packageJson = JSON.parse(rawPackage);
@@ -261,6 +268,13 @@ test("Vercel configuration uses the Next.js production build", async () => {
   assert.equal(packageJson.scripts.verify, "npm run lint && npm run typecheck && npm test");
   assert.equal(packageJson.scripts.typecheck, "bash scripts/typecheck.sh");
   assert.match(await read("../scripts/typecheck.sh"), /next" typegen/);
+  assert.match(nextConfig, /const isDevelopment = process\.env\.NODE_ENV === "development"/);
+  assert.match(nextConfig, /script-src 'self' 'unsafe-inline'.*isDevelopment.*'unsafe-eval'/);
+  assert.doesNotMatch(nextConfig, /script-src 'self' 'unsafe-inline' 'unsafe-eval'/);
+  assert.match(nextConfig, /"object-src 'none'"/);
+  assert.match(nextConfig, /"base-uri 'self'"/);
+  assert.match(nextConfig, /"form-action 'self'"/);
+  assert.match(nextConfig, /"frame-ancestors 'self'"/);
   for (const generatedDirectory of [".sites-runtime", ".agents", ".codex", ".claude"]) {
     assert.ok(eslintConfig.includes(`"${generatedDirectory}/**"`));
   }
