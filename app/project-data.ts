@@ -18,6 +18,29 @@ export type Project = {
 
 export const projects = [
   {
+    slug: "247-truck-tyre-services",
+    name: "24/7 Truck Tyre Services",
+    category: "Automotive / Roadside Assistance / Truck Tyre Services",
+    description:
+      "A responsive roadside assistance website built to generate emergency service enquiries and present truck tyre support for commercial operators.",
+    overview:
+      "24/7 Truck Tyre Services needed a clear digital presence for Adelaide truck drivers, commercial operators and fleets looking for urgent roadside support, tyre supply and fitting services.",
+    solution:
+      "We developed a mobile-first automotive website with an emergency-led information architecture, service enquiry pathways, local search structure and prominent call-to-action elements for roadside assistance and fleet support.",
+    url: "https://www.247trucktyreservices.com.au/",
+    displayUrl: "247trucktyreservices.com.au",
+    image: `${assetBase}/ab-portfolio-247-truck-tyre-services.jpg`,
+    alt: "24/7 Truck Tyre Services website designed by AB Web Studio",
+    tags: ["Emergency UX", "Automotive SEO", "Commercial Services"],
+    keyFeatures: [
+      "Emergency roadside assistance call-to-action pathways",
+      "Truck tyre supply, fitting and service presentation",
+      "National Roadside Assistance Program registration path",
+      "Commercial fleet support and service enquiry structure",
+    ],
+    techStack: ["Next.js", "TypeScript", "Responsive UI", "SEO Structure"],
+  },
+  {
     slug: "maple-rentals",
     name: "Maple Rentals",
     category: "Mobility / Car rentals",
