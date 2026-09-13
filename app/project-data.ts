@@ -18,6 +18,29 @@ export type Project = {
 
 export const projects = [
   {
+    slug: "adelaide-wholesale-tyres",
+    name: "Adelaide Wholesale Tyres",
+    category: "E-Commerce / Wholesale Platform",
+    description:
+      "A modern wholesale tyre platform built for Adelaide workshops, fleets, transport operators and trade buyers to browse live stock and order or request a quote.",
+    overview:
+      "Adelaide Wholesale Tyres supplies truck, commercial, 4WD and passenger tyres from a Regency Park warehouse and needed a digital storefront that made wholesale stock easy for workshops, fleet managers and trade customers to discover and purchase.",
+    solution:
+      "We built a wholesale e-commerce platform with a searchable tyre catalogue filtered by size, application and stock availability, cart-based bulk ordering, a wholesale quote workflow for fleet and recurring supply, and clear Adelaide delivery tiers and warehouse pickup information.",
+    url: "https://adelaidewholesaletyres.com.au/",
+    displayUrl: "adelaidewholesaletyres.com.au",
+    image: `${assetBase}/ab-portfolio-adelaide-wholesale-tyres.webp`,
+    alt: "Adelaide Wholesale Tyres wholesale tyre e-commerce website homepage designed by AB Web Studio",
+    tags: ["Wholesale E-Commerce", "Tyre Catalogue", "Fleet Purchasing"],
+    keyFeatures: [
+      "Searchable wholesale tyre catalogue with live stock availability",
+      "Tyre size, application and in-stock filtering",
+      "Cart-based bulk ordering with wholesale quote workflow",
+      "Adelaide delivery tiers and Regency Park warehouse pickup",
+    ],
+    techStack: ["Next.js", "TypeScript", "Responsive UI", "SEO Structure"],
+  },
+  {
     slug: "247-truck-tyre-services",
     name: "24/7 Truck Tyre Services",
     category: "Automotive / Roadside Assistance / Truck Tyre Services",

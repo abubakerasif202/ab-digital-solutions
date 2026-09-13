@@ -23,6 +23,7 @@ test("homepage exposes content directly instead of using an iframe", async () =>
 test("portfolio contains every required live project", async () => {
   const projects = await read("../app/project-data.ts");
   const requiredProjects = [
+    "https://adelaidewholesaletyres.com.au/",
     "https://www.247trucktyreservices.com.au/",
     "https://www.maplerentals.com.au/",
     "https://www.galarentals.com.au/",
@@ -47,11 +48,11 @@ test("every project ships a real preview image and routes visitors through a cas
   ]);
 
   const imageNames = [...projects.matchAll(/\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
-  assert.equal(imageNames.length, 9);
+  assert.equal(imageNames.length, 10);
+  assert.ok(imageNames.includes("ab-portfolio-adelaide-wholesale-tyres.webp"));
   assert.ok(imageNames.includes("ab-portfolio-1st-class-express.jpg"));
   assert.ok(imageNames.includes("ab-portfolio-hf-removals.jpg"));
   assert.ok(imageNames.includes("ab-portfolio-247-truck-tyre-services.jpg"));
-  assert.ok(imageNames.includes("ab-portfolio-hf-removals.jpg"));
   assert.doesNotMatch(projects, /image: null/);
 
   const { statSync } = await import("node:fs");
