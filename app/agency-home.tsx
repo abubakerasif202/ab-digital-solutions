@@ -77,6 +77,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <Hero3DExperience />
           <div className="hero-grid-lines" aria-hidden="true" />
           <div className="hero-glow" aria-hidden="true" />
+          <div className="hero-watermark" aria-hidden="true">AB</div>
           <div className="container hero-layout">
             <div className="hero-copy" data-reveal>
               <p className="eyebrow"><span className="eyebrow-mark" /> Sydney studio · Australia-wide</p>
@@ -103,7 +104,12 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               </div>
             </div>
 
-            <ProjectShowcase />
+            <div className="hero-showcase-stack">
+              <p className="hero-status-chip" aria-hidden="true">
+                <span className="hero-status-dot" />{projects.length} projects live
+              </p>
+              <ProjectShowcase />
+            </div>
           </div>
 
           <div className="hero-marquee" aria-hidden="true">

@@ -348,6 +348,21 @@ select {
   to { transform: scale(1.07) rotate(8deg); opacity: 0.78; }
 }
 
+.hero-watermark {
+  position: absolute;
+  z-index: 1;
+  top: 4%;
+  left: -3%;
+  color: rgba(255, 255, 255, 0.035);
+  font-family: var(--display);
+  font-size: clamp(13rem, 30vw, 32rem);
+  font-weight: 400;
+  line-height: 0.78;
+  letter-spacing: -0.02em;
+  pointer-events: none;
+  user-select: none;
+}
+
 .hero-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(440px, 1.04fr);
@@ -971,6 +986,72 @@ h1 em {
   transform: perspective(1400px) rotateY(0) rotateX(0) translateY(-5px);
 }
 
+.hero-showcase-stack {
+  position: relative;
+  z-index: 3;
+  align-self: center;
+}
+
+.hero-showcase-stack::before,
+.hero-showcase-stack::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border: 1px solid var(--line);
+  content: "";
+  pointer-events: none;
+}
+
+.hero-showcase-stack::before {
+  background: var(--panel);
+  opacity: 0.45;
+  transform: translate(16px, 20px) rotate(2deg);
+}
+
+.hero-showcase-stack::after {
+  background: var(--panel-light);
+  opacity: 0.65;
+  transform: translate(8px, 10px) rotate(1deg);
+}
+
+.hero-status-chip {
+  position: absolute;
+  z-index: 4;
+  top: -16px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 9px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: var(--ink);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  color: var(--paper-dim);
+  font-family: var(--mono);
+  font-size: var(--type-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-status-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand-red-bright);
+}
+
+.hero-status-dot::after {
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  background: rgba(193, 18, 31, 0.18);
+  content: "";
+  animation: status-pulse 2.4s ease-out infinite;
+}
+
 .showcase-topline,
 .showcase-meta {
   display: flex;
@@ -1394,8 +1475,44 @@ h1 em {
   display: block;
 }
 
-.work-section .work-grid .project-card:nth-child(even) {
-  margin-top: clamp(50px, 8vw, 120px);
+/* Homepage showcase: one alternating column of oversized, editorial project
+   panels instead of a repeating card grid — this is the signature portfolio
+   surface, so it gets its own layout scoped under .work-section. The plain
+   .work-grid / .project-card rules above remain the /work index page's grid. */
+.work-section .work-grid {
+  grid-template-columns: 1fr;
+  gap: clamp(64px, 9vw, 132px);
+}
+
+.work-section .project-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.9fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 54px);
+}
+
+.work-section .project-card:nth-child(even) {
+  grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.3fr);
+}
+
+.work-section .project-card:nth-child(even) .project-image {
+  order: 2;
+}
+
+.work-section .project-card:nth-child(even) .project-details {
+  order: 1;
+}
+
+.work-section .project-card:first-child {
+  grid-template-columns: 1fr;
+}
+
+.work-section .project-card:first-child .project-image {
+  aspect-ratio: 2.1 / 1;
+}
+
+.work-section .project-card:first-child .project-details h3 {
+  font-size: clamp(2.3rem, 3.6vw, 3.6rem);
 }
 
 .project-image {
@@ -2409,9 +2526,12 @@ h1 em {
 @media (max-width: 1080px) {
   .hero-layout { grid-template-columns: 1fr; gap: 60px; }
   .hero-copy { max-width: 800px; }
-  .project-showcase {
+  .hero-showcase-stack {
     width: min(100%, 760px);
     justify-self: center;
+  }
+  .project-showcase {
+    width: 100%;
     transform: none;
   }
   .project-showcase:hover,
@@ -2469,6 +2589,15 @@ h1 em {
   .service-project { grid-template-columns: 1fr; }
   .service-project > div:last-child { max-width: 700px; }
   .footer-intro { grid-column: 1 / -1; }
+  .work-section .project-card,
+  .work-section .project-card:nth-child(even) {
+    grid-template-columns: 1fr;
+  }
+  .work-section .project-card:nth-child(even) .project-image,
+  .work-section .project-card:nth-child(even) .project-details {
+    order: initial;
+  }
+  .work-section .project-card:first-child .project-image { aspect-ratio: 1.46 / 1; }
 }
 
 @media (max-width: 720px) {
@@ -2485,6 +2614,8 @@ h1 em {
     mask-image: linear-gradient(to bottom, black 62%, transparent);
   }
   .hero-layout { gap: 42px; padding-bottom: 58px; }
+  .hero-watermark { display: none; }
+  .hero-status-chip { top: -14px; left: 14px; padding: 7px 11px; }
   h1 { max-width: 100%; font-size: clamp(2.35rem, 10.4vw, 3.6rem); }
   .hero-intro { max-width: 36rem; margin-top: 24px; font-size: 1rem; line-height: 1.68; }
   .hero-actions { align-items: stretch; flex-direction: column; }
