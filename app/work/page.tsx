@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProjectArtwork } from "../project-artwork";
-import { projects } from "../project-data";
+import { isSoftwareProject, projects } from "../project-data";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { siteConfig } from "../site-config";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Our Work & Case Studies | ${siteConfig.name}`,
     description:
-      "Explore selected live websites engineered by AB Digital Solutions for Australian businesses.",
+      "Explore selected websites and custom software engineered by AB Digital Solutions for Australian businesses.",
     url: "/work",
     siteName: siteConfig.name,
     type: "website",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `Our Work & Case Studies | ${siteConfig.name}`,
     description:
-      "Explore selected live websites engineered by AB Digital Solutions for Australian businesses.",
+      "Explore selected websites and custom software engineered by AB Digital Solutions for Australian businesses.",
     images: ["/opengraph-image"],
   },
 };
@@ -75,9 +75,9 @@ export default function WorkPage() {
 
           <header className="work-hero" data-reveal>
             <p className="eyebrow">Portfolio / Selected Work</p>
-            <h1>Real websites. Real commercial impact.</h1>
+            <h1>Real digital projects. Real commercial impact.</h1>
             <p className="content-lead">
-              {projects.length} responsive digital experiences across mobility, logistics, local services, construction and property—built with sharp positioning, fast performance and clear paths to enquiry.
+              {projects.length} responsive websites and custom software projects across mobility, logistics, local services, construction and property—built for clear, efficient digital experiences.
             </p>
           </header>
 
@@ -97,7 +97,7 @@ export default function WorkPage() {
                         priority={index === 0}
                         sizes="(max-width: 720px) 92vw, (max-width: 1400px) 45vw, 630px"
                       />
-                      <span className="live-label"><i /> Live website</span>
+                      <span className="live-label"><i /> {isSoftwareProject(project) ? "Live system" : "Live website"}</span>
                       <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
                     </div>
                   </div>

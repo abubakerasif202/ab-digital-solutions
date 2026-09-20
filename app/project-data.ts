@@ -14,9 +14,59 @@ export type Project = {
   tags: readonly string[];
   keyFeatures: readonly string[];
   techStack: readonly string[];
+  kind?: "software";
+  ctaLabel?: string;
 };
 
 export const projects = [
+  {
+    slug: "aftab-sons-transport",
+    name: "Aftab & Sons Transport",
+    category: "Transport / Logistics Website",
+    description:
+      "Premium transport and logistics website for an Australian heavy-vehicle transport company, with an industrial identity, responsive interface and conversion-focused presentation.",
+    overview:
+      "Aftab & Sons Transport needed a strong digital presence for its Australian truck transport, B-double freight, local delivery and interstate transport services.",
+    solution:
+      "We created a responsive industrial website with clear service and capability paths, motion-led storytelling, accessible reduced-motion behaviour and prominent quote enquiries across screen sizes.",
+    url: "https://www.aftabandsons.com.au/",
+    displayUrl: "aftabandsons.com.au",
+    image: `${assetBase}/ab-portfolio-aftab-sons-transport.webp`,
+    alt: "Aftab & Sons Transport website homepage with a branded B-double truck convoy",
+    tags: ["Responsive Web Design", "Motion Design", "Transport & Logistics"],
+    keyFeatures: [
+      "Truck transport and B-double freight service presentation",
+      "Local delivery and interstate capability pathways",
+      "Responsive quote-focused interface",
+      "Reduced-motion-aware animation system",
+    ],
+    techStack: ["React", "Tailwind CSS", "Framer Motion", "Responsive UI"],
+  },
+  {
+    slug: "247-inventory-system",
+    name: "247 Inventory System",
+    category: "Custom Business Software / Inventory Management",
+    description:
+      "Custom inventory and business management platform for 24/7 Truck Tyre Services, centralising tyre stock, operational workflows, sales and business records.",
+    overview:
+      "24/7 Truck Tyre Services needed a secure internal platform to manage inventory and purchasing alongside day-to-day sales, customer, job and finance workflows.",
+    solution:
+      "We built a role-protected business system covering stock control, transfers, purchasing, point of sale, quotes, invoices, receivables, customers, jobs and operational analytics in one interface.",
+    url: "https://247trucktyreservices.store/",
+    displayUrl: "247trucktyreservices.store",
+    image: `${assetBase}/ab-portfolio-247-inventory-system.webp`,
+    alt: "247 Inventory System secure staff sign-in screen for inventory and purchasing operations",
+    tags: ["Inventory Management", "Sales & Invoicing", "Business Software"],
+    keyFeatures: [
+      "Tyre inventory, stock movement and transfer workflows",
+      "Purchasing, suppliers and purchase order management",
+      "Point of sale, quotes, invoices and receivables",
+      "Secure staff access with operational dashboards",
+    ],
+    techStack: ["Next.js", "TypeScript", "Supabase", "PostgreSQL"],
+    kind: "software",
+    ctaLabel: "View System",
+  },
   {
     slug: "adelaide-wholesale-tyres",
     name: "Adelaide Wholesale Tyres",
@@ -245,4 +295,8 @@ export const projects = [
 
 export function findProject(slug: string): Project | undefined {
   return projects.find((project) => project.slug === slug);
+}
+
+export function isSoftwareProject(project: Project): boolean {
+  return project.kind === "software";
 }

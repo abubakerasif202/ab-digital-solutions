@@ -4,7 +4,7 @@ import { ContactForm } from "./components/ContactForm";
 import { Hero3DExperience } from "./components/Hero3DExperience";
 import { ProjectShowcase } from "./components/ProjectShowcase";
 import { ProjectArtwork } from "./project-artwork";
-import { projects } from "./project-data";
+import { isSoftwareProject, projects } from "./project-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { assetBase, siteConfig } from "./site-config";
@@ -100,7 +100,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <li>DECENT Development</li>
                   <li>ZQ Removals</li>
                 </ul>
-                <a href="#work">Explore {projects.length} live websites <ArrowIcon /></a>
+                <a href="#work">Explore {projects.length} live digital projects <ArrowIcon /></a>
               </div>
             </div>
 
@@ -172,7 +172,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <h2 id="work-heading">Built for real businesses. Live in the real world.</h2>
               </div>
               <div className="section-heading-aside">
-                <p>{projects.length} responsive digital experiences across mobility, logistics, local services, construction and property.</p>
+                <p>{projects.length} responsive websites and custom software projects across mobility, logistics, local services, construction and property.</p>
                 <Link className="section-heading-link" href="/work">
                   View all case studies <ArrowIcon />
                 </Link>
@@ -192,7 +192,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                       project={project}
                       sizes="(max-width: 720px) 92vw, (max-width: 1440px) 46vw, (max-width: 1800px) 700px, 810px"
                     />
-                    <span className="live-label"><i /> Live website</span>
+                    <span className="live-label"><i /> {isSoftwareProject(project) ? "Live system" : "Live website"}</span>
                     <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
                   </div>
                   <div className="project-details">
@@ -269,7 +269,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <div className="studio-trust" role="group" aria-label="Studio details">
                 <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
                 <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>
-                <p><strong>Real project portfolio</strong><span>{projects.length} live website case studies</span></p>
+                <p><strong>Real project portfolio</strong><span>{projects.length} live digital project case studies</span></p>
               </div>
               <p>We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</p>
               <p>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</p>

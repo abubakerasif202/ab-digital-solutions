@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProjectArtwork } from "../../project-artwork";
-import { findProject, projects } from "../../project-data";
+import { findProject, isSoftwareProject, projects } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
 import { siteConfig } from "../../site-config";
@@ -17,6 +17,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = findProject((await params).slug);
   if (!project) return {};
+  const projectType = isSoftwareProject(project) ? "software" : "website";
   return {
     title: `${project.name} Case Study`,
     description: project.description,
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: "/opengraph-image",
           width: 1200,
           height: 630,
-          alt: `${project.name} website case study by ${siteConfig.name}`,
+          alt: `${project.name} ${projectType} case study by ${siteConfig.name}`,
         },
       ],
     },
@@ -49,6 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProjectCaseStudyPage({ params }: Props) {
   const project = findProject((await params).slug);
   if (!project) notFound();
+  const softwareProject = isSoftwareProject(project);
 
   const currentIndex = projects.findIndex((p) => p.slug === project.slug);
   const nextProject = projects[(currentIndex + 1) % projects.length];
@@ -59,7 +61,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
     "@graph": [
       {
         "@type": "CreativeWork",
-        name: `${project.name} Website Case Study`,
+        name: `${project.name} ${softwareProject ? "Software" : "Website"} Case Study`,
         description: project.description,
         url: `${siteConfig.url}/work/${project.slug}`,
         author: { "@id": `${siteConfig.url}/#organization` },
@@ -106,9 +108,9 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Visit ${project.name} live website (opens in a new tab)`}
+                aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}
               >
-                View Live Website <ArrowIcon />
+                {project.ctaLabel ?? "View Live Website"} <ArrowIcon />
               </a>
             </div>
           </header>
@@ -166,9 +168,9 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                     <dd>{project.category}</dd>
                   </div>
                   <div>
-                    <dt>Live Domain</dt>
+                    <dt>{softwareProject ? "Production URL" : "Live Domain"}</dt>
                     <dd>
-                      <a href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.name} live website (opens in a new tab)`}>
+                      <a href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}>
                         {project.displayUrl} ↗
                       </a>
                     </dd>
@@ -215,16 +217,20 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
               <div>
                 <p className="eyebrow">Live Digital Experience</p>
                 <h2 id="live-proof-heading">See {project.name} in action.</h2>
-                <p>Continue to the client website when you are ready to explore the published experience.</p>
+                <p>
+                  {softwareProject
+                    ? "Continue to the secure production system to view its public staff access experience."
+                    : "Continue to the client website when you are ready to explore the published experience."}
+                </p>
               </div>
               <a
                 className="button button-primary"
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Visit ${project.name} live website (opens in a new tab)`}
+                aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}
               >
-                Visit Live Website <ArrowIcon />
+                {project.ctaLabel ?? "Visit Live Website"} <ArrowIcon />
               </a>
             </div>
           </section>
