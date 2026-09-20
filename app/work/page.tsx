@@ -110,6 +110,9 @@ export default function WorkPage() {
                         <span key={tag} className="project-tag-pill">{tag}</span>
                       ))}
                     </div>
+                    <p className="project-stack">
+                      <span aria-hidden="true">stack:</span> {project.techStack.join(" · ")}
+                    </p>
                     <div className="project-actions-group">
                       <Link className="button button-primary" href={`/work/${project.slug}`}>
                         View Case Study <ArrowIcon />

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { assetBase } from "./site-config";
 
 export default function NotFound() {
@@ -7,12 +6,13 @@ export default function NotFound() {
     <main className="not-found">
       <div className="not-found-grid" aria-hidden="true" />
       <div className="not-found-content">
-        <Image
-          src={`${assetBase}/ab-logo-lockup.png`}
+        {/* eslint-disable-next-line @next/next/no-img-element -- next/image blocks SVG optimization by default; this is a trusted, self-authored decorative asset */}
+        <img
+          src={`${assetBase}/ab-web-studio-lockup.svg`}
           alt="AB Web Studio"
           width={1020}
           height={500}
-          sizes="190px"
+          loading="lazy"
         />
         <p className="eyebrow">404 / Page not found</p>
         <h1>This page has moved off the map.</h1>

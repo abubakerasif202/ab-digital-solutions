@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 500" role="img" aria-labelledby="ab-lockup-title">
+  <title id="ab-lockup-title">AB Web Studio — Sydney digital studio</title>
+  <g transform="translate(425, 90) scale(2.65625)" fill="#fff">
+    <path d="M13 47 27 15h7l14 32h-8l-3-8H23l-3 8h-7Zm13-15h8l-4-10-4 10Z" />
+    <path d="M37 15h8.5c8 0 12.5 3.5 12.5 9 0 3.3-1.8 5.8-5.1 7.2 4.3 1.2 6.4 3.8 6.4 7.5 0 5.5-4.6 8.3-13.6 8.3H37v-7h8.5c3.9 0 5.8-.9 5.8-3 0-2.2-2-3.2-6-3.2H41v-6.5h4.2c3.3 0 5-1 5-2.9 0-1.8-1.7-2.7-5.1-2.7H37V15Z" />
+    <path d="m9 52 46-40" stroke="#fff" stroke-width="2.2" fill="none" />
+  </g>
+  <text x="510" y="335" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="52" letter-spacing="6" fill="#fff">AB WEB STUDIO</text>
+  <text x="510" y="378" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="600" font-size="21" letter-spacing="6" fill="#fff" opacity="0.55">SYDNEY DIGITAL STUDIO</text>
+</svg>

@@ -10,16 +10,7 @@
 
 ## Build, Test, and Development
 
-Use Node.js 22.x and npm. Install from the lockfile with `npm ci`.
-
-```powershell
-npm run dev          # Start the local Next.js server
-npm run lint         # Run ESLint
-npm run typecheck    # Run TypeScript without emitting files
-npm test             # Run tests through scripts/run-tests.mjs
-npm run verify       # Lint, typecheck, and tests
-npm run build        # Verify, then create the production Next.js build
-```
+Install from the lockfile with `npm ci` (see `package.json` for the Node version and available scripts).
 
 For a focused check, run `npx eslint app/path/to/file.tsx` or `npx tsc --noEmit`; use `npm run verify` before submitting broader changes.
 
@@ -42,3 +33,13 @@ Use imperative, scoped Conventional Commit subjects such as `fix(ui): correct mo
 ## Commit Attribution
 
 AI-authored commits must include a `Co-Authored-By` trailer identifying the agent model.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

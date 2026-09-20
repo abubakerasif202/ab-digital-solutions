@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ContactForm } from "./components/ContactForm";
 import { Hero3DExperience } from "./components/Hero3DExperience";
@@ -132,7 +131,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               {services.map((service) => (
                 <Link className="service-card" data-reveal key={service.number} href={`/services/${service.slug}`}>
                   <div className="service-card-top">
-                    <span>{service.number}</span>
+                    <span>{`// ${service.number}`}</span>
                     <span aria-hidden="true">↘</span>
                   </div>
                   <h3>{service.title}</h3>
@@ -207,6 +206,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                         <span key={tag} className="project-tag-pill">{tag}</span>
                       ))}
                     </div>
+                    <p className="project-stack">
+                      <span aria-hidden="true">stack:</span> {project.techStack.join(" · ")}
+                    </p>
                     <span className="project-cta">View Case Study <ArrowIcon /></span>
                   </div>
                 </Link>
@@ -222,6 +224,12 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <h2 id="process-heading">A clear path from ambition to launch.</h2>
               <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
               <a className="text-link" href="#contact">Start a Project <ArrowIcon /></a>
+              <div className="process-pipeline" aria-hidden="true">
+                <span className="process-pipeline-prompt">studio --pipeline</span>
+                <ol className="process-pipeline-steps">
+                  {processSteps.map(([number, title]) => <li key={number}>{title.toLowerCase().split(" ")[0]}</li>)}
+                </ol>
+              </div>
             </div>
             <ol className="process-list">
               {processSteps.map(([number, title, description]) => (
@@ -253,12 +261,13 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <div className="container about-layout">
             <div className="about-logo" data-reveal>
               <div className="about-logo-ring" aria-hidden="true" />
-              <Image
-                src={`${assetBase}/ab-logo-lockup.png`}
-                alt="AB Web Studio — We build your online success"
+              {/* eslint-disable-next-line @next/next/no-img-element -- next/image blocks SVG optimization by default; this is a trusted, self-authored decorative asset */}
+              <img
+                src={`${assetBase}/ab-web-studio-lockup.svg`}
+                alt="AB Web Studio — Sydney digital studio"
                 width={1020}
                 height={500}
-                sizes="(max-width: 960px) 70vw, 28vw"
+                loading="lazy"
               />
               <span>Sydney / Australia</span>
             </div>
