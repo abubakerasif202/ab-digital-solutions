@@ -79,7 +79,14 @@ export function ContactForm() {
         {formState === "sending" ? "Sending…" : "Send project enquiry"} <ArrowIcon />
       </button>
       <p className="form-note">Your details are used only to respond to this enquiry. No mailing lists. No spam.</p>
-      <p className={`form-status ${formState}`} role="status" aria-live="polite">{formStatus}</p>
+      <p className={`form-status ${formState}`} role="status" aria-live="polite">
+        {(formState === "success" || formState === "error") && (
+          <strong className="form-status-label">
+            {formState === "success" ? "Enquiry received" : "Enquiry not sent"}
+          </strong>
+        )}
+        {formStatus}
+      </p>
     </form>
   );
 }

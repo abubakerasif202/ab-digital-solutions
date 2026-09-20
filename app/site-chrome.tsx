@@ -11,6 +11,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileCtaVisible, setMobileCtaVisible] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
@@ -143,7 +144,30 @@ export function SiteHeader() {
     };
   }, [pathname]);
 
+  useEffect(() => {
+    if (pathname !== "/") return;
+    const sections = ["services", "work", "process", "about", "contact"]
+      .map((id) => document.getElementById(id))
+      .filter((element): element is HTMLElement => element !== null);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.find((entry) => entry.isIntersecting);
+        if (visible) setActiveSection(visible.target.id);
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => {
+      observer.disconnect();
+      setActiveSection(null);
+    };
+  }, [pathname]);
+
   const closeMenu = () => setMenuOpen(false);
+  const navLinkClass = (id: string) => (activeSection === id ? "is-active" : undefined);
+  const navLinkCurrent = (id: string) => (activeSection === id ? "true" : undefined);
 
   return (
     <>
@@ -182,10 +206,10 @@ export function SiteHeader() {
             className={`site-nav${menuOpen ? " is-open" : ""}`}
             aria-label="Primary navigation"
           >
-            <Link href="/#services" onClick={closeMenu}>Services</Link>
-            <Link href="/#work" onClick={closeMenu}>Work</Link>
-            <Link href="/#process" onClick={closeMenu}>Process</Link>
-            <Link href="/#about" onClick={closeMenu}>About</Link>
+            <Link href="/#services" onClick={closeMenu} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
+            <Link href="/#work" onClick={closeMenu} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
+            <Link href="/#process" onClick={closeMenu} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
+            <Link href="/#about" onClick={closeMenu} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
             <Link className="nav-cta" href="/#contact" onClick={closeMenu}>
               Start a project <ArrowIcon />
             </Link>
