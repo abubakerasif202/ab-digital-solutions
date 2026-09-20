@@ -268,6 +268,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         </section>
 
         <section className="section about-section" id="about" aria-labelledby="about-heading">
+          <div className="section-mega-number" aria-hidden="true">04</div>
           <div className="container about-layout">
             <div className="about-logo" data-reveal>
               <div className="about-logo-ring" aria-hidden="true" />
