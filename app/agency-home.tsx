@@ -133,19 +133,23 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               </div>
               <p>From the first strategic decision to post-launch support, every recommendation is tied to a clear business goal.</p>
             </div>
-            <div className="services-grid">
+            <div className="services-list">
               {services.map((service) => (
                 <Link className="service-card" data-reveal key={service.number} href={`/services/${service.slug}`}>
                   <div className="service-card-top">
                     <span>{`// ${service.number}`}</span>
-                    <span aria-hidden="true">↘</span>
+                    <h3>{service.title}</h3>
+                    <span className="service-card-arrow" aria-hidden="true">↘</span>
                   </div>
-                  <h3>{service.title}</h3>
-                  <p>{service.description}</p>
-                  <ul>
-                    {service.details.map((detail) => <li key={detail}>{detail}</li>)}
-                  </ul>
-                  <span className="service-link">Explore service <ArrowIcon /></span>
+                  <div className="service-card-reveal">
+                    <div>
+                      <p>{service.description}</p>
+                      <ul>
+                        {service.details.map((detail) => <li key={detail}>{detail}</li>)}
+                      </ul>
+                      <span className="service-link">Explore service <ArrowIcon /></span>
+                    </div>
+                  </div>
                 </Link>
               ))}
             </div>
