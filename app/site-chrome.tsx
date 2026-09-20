@@ -150,7 +150,7 @@ export function SiteHeader() {
       <a className="skip-link" href="#main-content">Skip to content</a>
       <header className="site-header" id="top">
         <div className="container nav-wrap">
-          <Link className="brand" href="/" aria-label="AB Digital Solutions home">
+          <Link className="brand" href="/" aria-label="AB Web Studio home">
             <Image
               src={`${assetBase}/ab-logo-mark.png`}
               alt=""
@@ -159,7 +159,7 @@ export function SiteHeader() {
               sizes="48px"
               priority
             />
-            <span className="brand-name">AB Digital Solutions</span>
+            <span className="brand-name">AB Web Studio</span>
           </Link>
 
           <button

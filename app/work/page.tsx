@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Our Work & Case Studies | ${siteConfig.name}`,
     description:
-      "Explore selected websites and custom software engineered by AB Digital Solutions for Australian businesses.",
+      "Explore selected websites and custom software engineered by AB Web Studio for Australian businesses.",
     url: "/work",
     siteName: siteConfig.name,
     type: "website",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "AB Digital Solutions client portfolio and case studies",
+        alt: "AB Web Studio client portfolio and case studies",
       },
     ],
   },
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `Our Work & Case Studies | ${siteConfig.name}`,
     description:
-      "Explore selected websites and custom software engineered by AB Digital Solutions for Australian businesses.",
+      "Explore selected websites and custom software engineered by AB Web Studio for Australian businesses.",
     images: ["/opengraph-image"],
   },
 };
@@ -45,7 +45,7 @@ const schema = {
       "@type": "CollectionPage",
       name: "Our Work & Case Studies",
       description:
-        "Selected client websites designed and developed by AB Digital Solutions.",
+        "Selected client websites designed and developed by AB Web Studio.",
       url: `${siteConfig.url}/work`,
       publisher: { "@id": `${siteConfig.url}/#organization` },
     },

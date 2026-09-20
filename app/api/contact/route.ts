@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: process.env.CONTACT_FROM_EMAIL || "AB Digital Solutions <onboarding@resend.dev>",
+        from: process.env.CONTACT_FROM_EMAIL || "AB Web Studio <admin@abwebstudio.com.au>",
         to: [process.env.CONTACT_TO_EMAIL?.trim() || siteConfig.email],
         reply_to: email,
         subject: `Website enquiry from ${fullName}`,

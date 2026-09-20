@@ -9,7 +9,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
     <footer className="site-footer">
       <div className="container footer-main">
         <div className="footer-intro">
-          <Link className="brand" href="/" aria-label="AB Digital Solutions home">
+          <Link className="brand" href="/" aria-label="AB Web Studio home">
             <Image
               src={`${assetBase}/ab-logo-mark.png`}
               alt=""
@@ -17,7 +17,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
               height={340}
               sizes="48px"
             />
-            <span className="brand-name">AB Digital Solutions</span>
+            <span className="brand-name">AB Web Studio</span>
           </Link>
           <p>Premium websites, digital marketing and online growth solutions for Australian businesses.</p>
           <span>{siteConfig.location} · Australia-wide</span>
@@ -51,7 +51,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
         </div>
       </div>
       <div className="container footer-bottom">
-        <small>© {currentYear} AB Digital Solutions. All rights reserved.</small>
+        <small>© {currentYear} AB Web Studio. All rights reserved.</small>
         <span>{siteConfig.location} · Australia-wide</span>
         <a href="#top">Back to top ↑</a>
       </div>

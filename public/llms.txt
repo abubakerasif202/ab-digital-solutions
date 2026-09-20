@@ -1,4 +1,4 @@
-# AB Digital Solutions
+# AB Web Studio
 
 > Sydney web design and digital growth studio creating premium, fast and search-ready websites for ambitious Australian businesses.
 
@@ -34,8 +34,8 @@
 
 ## Contact & Authority Information
 
-- Studio Name: AB Digital Solutions
+- Studio Name: AB Web Studio
 - Founder: Abubakar Asif
-- Email: abubakerasif202@yahoo.com
+- Email: admin@abwebstudio.com.au
 - Phone: +61 423 332 037 (0423 332 037)
 - Location: Sydney, NSW, Australia

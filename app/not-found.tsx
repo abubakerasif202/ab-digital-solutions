@@ -9,7 +9,7 @@ export default function NotFound() {
       <div className="not-found-content">
         <Image
           src={`${assetBase}/ab-logo-lockup.png`}
-          alt="AB Digital Solutions"
+          alt="AB Web Studio"
           width={1020}
           height={500}
           sizes="190px"

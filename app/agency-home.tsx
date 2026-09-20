@@ -255,7 +255,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <div className="about-logo-ring" aria-hidden="true" />
               <Image
                 src={`${assetBase}/ab-logo-lockup.png`}
-                alt="AB Digital Solutions — We build your online success"
+                alt="AB Web Studio — We build your online success"
                 width={1020}
                 height={500}
                 sizes="(max-width: 960px) 70vw, 28vw"
@@ -265,7 +265,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             <div className="about-copy" data-reveal>
               <p className="eyebrow">04 / About AB</p>
               <h2 id="about-heading">Your digital presence should work as hard as you do.</h2>
-              <p>AB Digital Solutions is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
+              <p>AB Web Studio is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
               <div className="studio-trust" role="group" aria-label="Studio details">
                 <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
                 <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>

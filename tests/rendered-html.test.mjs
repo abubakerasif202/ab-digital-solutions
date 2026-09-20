@@ -158,7 +158,7 @@ test("reviewed design issues remain remediated", async () => {
   assert.match(showcase, /setSliderPauseOverride\(true\)/);
   assert.match(homepage, /<a[\s\S]*className="service-card"/);
   assert.match(chrome, /ab-logo-mark\.png/);
-  assert.match(chrome, /AB Digital Solutions/);
+  assert.match(chrome, /AB Web Studio/);
   assert.match(servicePage, /<SiteHeader/);
   assert.match(servicePage, /<SiteFooter/);
   assert.match(servicePage, /Frequently asked questions/);
@@ -216,7 +216,7 @@ test("SEO routes and metadata are configured", async () => {
   assert.match(sitemap, /servicePages/);
   assert.match(sitemap, /\/privacy/);
   assert.doesNotMatch(sitemap, /new Date\(\)/);
-  assert.match(llms, /^# AB Digital Solutions/m);
+  assert.match(llms, /^# AB Web Studio/m);
   assert.match(llms, /https:\/\/www\.abwebstudio\.com\.au/);
   assert.doesNotMatch(llms, /Typical Pricing|Vercel Edge|Proven Portfolio/);
   assert.doesNotMatch(layout, /codex-preview|preconnect.*api\.resend/);
