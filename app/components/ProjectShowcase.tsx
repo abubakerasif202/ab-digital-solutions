@@ -116,6 +116,7 @@ export function ProjectShowcase() {
                 aria-hidden={!isActive}
                 tabIndex={isActive ? 0 : -1}
                 aria-label={`${project.name} — View Case Study`}
+                data-cursor="VIEW"
               >
                 <ProjectArtwork
                   project={project}
@@ -169,7 +170,7 @@ export function ProjectShowcase() {
           </button>
         ))}
       </div>
-      <Link className="showcase-case-study" href={`/work/${activeProject.slug}`}>
+      <Link className="showcase-case-study" href={`/work/${activeProject.slug}`} data-cursor="VIEW">
         View Case Study <ArrowIcon />
       </Link>
     </div>

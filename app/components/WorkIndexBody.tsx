@@ -94,7 +94,7 @@ function WorkIndexCard({ project, index }: { project: Project; index: number }) 
 
   return (
     <article className={cardClassName} data-reveal style={cardStyle}>
-      <Link className="work-index-card-link" href={`/work/${project.slug}`}>
+      <Link className="work-index-card-link" href={`/work/${project.slug}`} data-cursor="VIEW">
         <div className="work-index-media">
           <ProjectArtwork
             project={project}

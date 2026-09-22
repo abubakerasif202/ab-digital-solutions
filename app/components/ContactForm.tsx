@@ -75,7 +75,7 @@ export function ContactForm() {
         <label htmlFor="message">Project details <span aria-hidden="true">*</span></label>
         <textarea id="message" name="message" rows={5} required aria-required="true" />
       </div>
-      <button className="button button-primary" type="submit" disabled={formState === "sending"}>
+      <button className="button button-primary" type="submit" disabled={formState === "sending"} data-magnetic>
         {formState === "sending" ? "Sending…" : "Send project enquiry"} <ArrowIcon />
       </button>
       <p className="form-note">Your details are used only to respond to this enquiry. No mailing lists. No spam.</p>

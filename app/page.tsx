@@ -1,5 +1,11 @@
+import { IntroReveal } from "./components/IntroReveal";
 import AgencyHome from "./agency-home";
 
 export default function Home() {
-  return <AgencyHome currentYear={new Date().getUTCFullYear()} />;
+  return (
+    <>
+      <IntroReveal />
+      <AgencyHome currentYear={new Date().getUTCFullYear()} />
+    </>
+  );
 }

@@ -16,7 +16,10 @@ test("homepage exposes content directly instead of using an iframe", async () =>
   ]);
 
   assert.doesNotMatch(page, /<iframe\b/i);
-  assert.match(homepage, /Websites that make your business/);
+  assert.match(homepage, /className="hero-title"/);
+  assert.match(homepage, /Websites that make/);
+  assert.match(homepage, /your business/);
+  assert.match(homepage, /impossible to ignore\./);
   assert.match(homepage, /id="contact"/);
   assert.match(showcase, /aria-roledescription="carousel"/);
   assert.match(heroExperience, /prefers-reduced-motion/);
@@ -86,7 +89,9 @@ test("Three.js is delayed, constrained on smaller devices and paused off screen"
     read("../app/components/Hero3DCanvas.tsx"),
   ]);
   assert.match(experience, /requestIdleCallback/);
-  assert.match(experience, /max-width: 540px/);
+  assert.match(experience, /max-width: 720px/);
+  assert.match(experience, /mobileQuery\.matches/);
+  assert.match(experience, /setMode\("fallback"\)/);
   assert.match(experience, /connection\?\.saveData/);
   assert.match(canvas, /IntersectionObserver/);
   assert.match(canvas, /visibilitychange/);
@@ -110,7 +115,7 @@ test("premium motion remains present while mobile rendering is constrained", asy
   assert.match(homepage, /className="hero-marquee-group" aria-hidden="true"/);
   assert.match(styles, /\.hero-marquee-track\s*\{[\s\S]*?width: max-content;[\s\S]*?animation: hero-marquee-scroll 24s linear infinite;/);
   assert.match(styles, /@keyframes hero-marquee-scroll[\s\S]*?translate3d\(-50%, 0, 0\)/);
-  assert.match(experience, /setMode\("mobile"\)/);
+  assert.match(experience, /tabletQuery\.matches \|\| constrainedDevice/);
   assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.25\)/);
   assert.match(canvas, /const particleCount = isMobile \? 88/);
   assert.match(styles, /\.service-card\s*\{\s*min-height: 0;/);
@@ -232,6 +237,48 @@ test("SEO routes and metadata are configured", async () => {
   assert.doesNotMatch(services, /WCAG accessibility compliance|high-converting|profitable, predictable|maintain search engine rankings|rapid technical issue resolution/);
   assert.match(footer, /servicePages\.map/);
   assert.match(footer, /footer-contact-cta/);
+});
+
+test("premium interaction layer is wired without heavy dependencies", async () => {
+  const [homepage, styles, intro, pointerFx, chrome, caseStudy, rawPackage] = await Promise.all([
+    read("../app/agency-home.tsx"),
+    read("../app/globals.css"),
+    read("../app/components/IntroReveal.tsx"),
+    read("../app/components/PointerFX.tsx"),
+    read("../app/site-chrome.tsx"),
+    read("../app/work/[slug]/page.tsx"),
+    read("../package.json"),
+  ]);
+
+  assert.match(homepage, /hero-title-accent/);
+  assert.match(homepage, /hero-scroll-cue/);
+  assert.match(homepage, /process-rail-fill/);
+  assert.match(homepage, /project-ghost-index/);
+  assert.match(homepage, /data-cursor="VIEW"/);
+  assert.match(homepage, /data-magnetic/);
+
+  assert.match(intro, /sessionStorage/);
+  assert.match(intro, /prefers-reduced-motion/);
+  assert.match(styles, /\.intro-reveal \{ display: none; \}/);
+
+  assert.match(pointerFx, /pointer: fine/);
+  assert.match(pointerFx, /data-cursor/);
+  assert.match(pointerFx, /data-magnetic/);
+  assert.match(pointerFx, /visibilitychange/);
+  assert.doesNotMatch(styles, /cursor:\s*none/);
+
+  assert.match(chrome, /is-scrolled/);
+  assert.match(styles, /\.site-header\.is-scrolled/);
+
+  assert.match(caseStudy, /case-study-meta/);
+  assert.match(caseStudy, /01 \/ Overview/);
+  assert.match(caseStudy, /data-cursor="VISIT"/);
+  assert.match(styles, /\.services-index-row/);
+
+  const pkg = JSON.parse(rawPackage);
+  for (const name of Object.keys({ ...pkg.dependencies, ...pkg.devDependencies })) {
+    assert.doesNotMatch(name, /gsap|framer-motion|locomotive-scroll|lenis/i);
+  }
 });
 
 test("brand theme balances premium red and gold accents", async () => {

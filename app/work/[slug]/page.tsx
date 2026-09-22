@@ -100,7 +100,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             <h1>{project.name}</h1>
             <p className="content-lead">{project.overview}</p>
             <div className="content-actions">
-              <Link className="button button-primary" href="/#contact">
+              <Link className="button button-primary" href="/#contact" data-magnetic>
                 Start a Project <ArrowIcon />
               </Link>
               <a
@@ -108,9 +108,25 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-cursor="VISIT"
+                data-magnetic
                 aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}
               >
                 {project.ctaLabel ?? "View Live Website"} <ArrowIcon />
+              </a>
+            </div>
+            <div className="case-study-meta" data-reveal>
+              <span>{String(currentIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
+              <span>{project.sector}</span>
+              <span>{project.category}</span>
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="VISIT"
+                aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}
+              >
+                {project.displayUrl} ↗
               </a>
             </div>
           </header>
@@ -129,20 +145,20 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
 
           <div className="case-study-grid">
             <section className="case-study-main" aria-label="Case study overview and solution">
-              <div className="case-study-block">
-                <p className="eyebrow">Overview</p>
+              <div className="case-study-block" data-reveal>
+                <p className="eyebrow">01 / Overview</p>
                 <h2>A digital experience built around the project.</h2>
                 <p className="case-study-body-text">{project.overview}</p>
               </div>
 
-              <div className="case-study-block">
-                <p className="eyebrow">Solution</p>
+              <div className="case-study-block" data-reveal>
+                <p className="eyebrow">02 / Approach</p>
                 <h2>Clear structure, responsive delivery and an obvious next step.</h2>
                 <p className="case-study-body-text">{project.solution}</p>
               </div>
 
-              <div className="case-study-block">
-                <p className="eyebrow">Key functionality</p>
+              <div className="case-study-block" data-reveal>
+                <p className="eyebrow">03 / Key features</p>
                 <h2>What the experience delivers.</h2>
                 <ul className="key-features-list">
                   {project.keyFeatures.map((feature, idx) => (
@@ -156,7 +172,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             </section>
 
             <aside className="case-study-sidebar" aria-label="Project details">
-              <div className="sidebar-card">
+              <div className="sidebar-card" data-reveal>
                 <h3>Project details</h3>
                 <dl className="metadata-list">
                   <div>
@@ -200,7 +216,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
               <h2 id="visual-showcase-heading">The live project, presented across viewports.</h2>
               <p>Real project imagery from the published website, shown full-width and as a focused detail crop.</p>
             </div>
-            <div className="device-showcase">
+            <div className="device-showcase" data-reveal>
               <div className="desktop-device">
                 <div className="browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
                 <div className="device-image"><ProjectArtwork project={project} sizes="(max-width: 1040px) 70vw, 730px" /></div>
@@ -213,7 +229,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           </section>
 
           <section className="case-study-live-cta" aria-labelledby="live-proof-heading">
-            <div className="live-cta-card">
+            <div className="live-cta-card" data-reveal>
               <div>
                 <p className="eyebrow">Live Digital Experience</p>
                 <h2 id="live-proof-heading">See {project.name} in action.</h2>
@@ -228,6 +244,8 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-cursor="VISIT"
+                data-magnetic
                 aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}
               >
                 {project.ctaLabel ?? "Visit Live Website"} <ArrowIcon />
@@ -237,7 +255,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
 
           <nav className="next-project-nav" aria-label="Next Project">
             <span>Next Case Study</span>
-            <Link className="next-project-card" href={`/work/${nextProject.slug}`}>
+            <Link className="next-project-card" href={`/work/${nextProject.slug}`} data-cursor="VIEW">
               <div>
                 <p>{nextProject.category}</p>
                 <h3>{nextProject.name}</h3>

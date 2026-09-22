@@ -12,8 +12,26 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileCtaVisible, setMobileCtaVisible] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    let frameId = 0;
+    const onScroll = () => {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(() => {
+        frameId = 0;
+        setScrolled(window.scrollY > 24);
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frameId) window.cancelAnimationFrame(frameId);
+    };
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -192,7 +210,7 @@ export function SiteHeader() {
   return (
     <>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <header className="site-header" id="top">
+      <header className={`site-header${scrolled ? " is-scrolled" : ""}`} id="top">
         <div className="container nav-wrap">
           <Link className="brand" href="/" aria-label="AB Web Studio home">
             <Image
@@ -230,7 +248,7 @@ export function SiteHeader() {
             <Link href="/#work" onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
             <Link href="/#process" onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
             <Link href="/#about" onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
-            <Link className="nav-cta" href="/#contact" onClick={handleNavLinkClick}>
+            <Link className="nav-cta" href="/#contact" onClick={handleNavLinkClick} data-magnetic>
               Start a project <ArrowIcon />
             </Link>
           </nav>

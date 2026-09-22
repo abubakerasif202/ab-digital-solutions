@@ -88,10 +88,15 @@ export default function ServicesPage() {
               <h2 id="services-index-heading">Explore each service</h2>
               <p>Every service below links to a detailed page covering inclusions, approach, relevant live work and common questions.</p>
             </div>
-            <div>
-              {servicePages.map((service) => (
-                <Link href={`/services/${service.slug}`} key={service.slug} aria-label={`${service.title} — ${service.summary}`}>
-                  <span>{service.title}</span><span aria-hidden="true">↗</span>
+            <div className="services-index-list">
+              {servicePages.map((service, index) => (
+                <Link className="services-index-row" href={`/services/${service.slug}`} key={service.slug} aria-label={`${service.title} — ${service.summary}`}>
+                  <span className="services-index-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="services-index-copy">
+                    <strong>{service.title}</strong>
+                    <small>{service.summary}</small>
+                  </span>
+                  <span className="services-index-arrow" aria-hidden="true">↗</span>
                 </Link>
               ))}
             </div>

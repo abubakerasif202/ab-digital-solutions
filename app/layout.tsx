@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { PointerFX } from "./components/PointerFX";
 import { assetBase, siteConfig } from "./site-config";
 import { WebVitals } from "./web-vitals";
 import "./globals.css";
@@ -142,6 +143,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en-AU">
       <body>
         <WebVitals />
+        <PointerFX />
         {children}
         <SpeedInsights />
         <script

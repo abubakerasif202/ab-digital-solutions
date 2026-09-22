@@ -91,17 +91,19 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <div className="container hero-layout">
             <div className="hero-copy" data-reveal>
               <p className="eyebrow"><span className="eyebrow-mark" /> Sydney studio · Australia-wide</p>
-              <h1 id="hero-heading">
-                Websites that make your business <em>impossible to ignore.</em>
+              <h1 id="hero-heading" className="hero-title">
+                <span className="mask-line"><span>Websites that make{" "}</span></span>
+                <span className="mask-line hero-title-accent"><span>your business{" "}</span></span>
+                <span className="mask-line"><span>impossible to ignore.</span></span>
               </h1>
               <p className="hero-intro">
                 <Link href="/services/web-design-sydney">Strategy-led website design</Link>, clear messaging and dependable development—built into a digital presence that earns attention and creates action.
               </p>
               <div className="hero-actions">
-                <a className="button button-primary" href="#contact">
+                <a className="button button-primary" href="#contact" data-magnetic>
                   Start a Project <ArrowIcon />
                 </a>
-                <a className="button button-ghost" href="#work">View Our Work</a>
+                <a className="button button-ghost" href="#work" data-magnetic>View Our Work</a>
               </div>
               <div className="client-proof" role="group" aria-label="Selected client work">
                 <span>Live client work</span>
@@ -120,6 +122,14 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               </p>
               <ProjectShowcase />
             </div>
+          </div>
+
+          <div className="container hero-foot" data-reveal>
+            <a className="hero-scroll-cue" href="#services">
+              <span>Scroll</span>
+              <span className="hero-scroll-cue-line" aria-hidden="true" />
+            </a>
+            <p className="hero-stack-note">Next.js · React · TypeScript · Three.js</p>
           </div>
 
           <div className="hero-marquee" aria-hidden="true">
@@ -173,10 +183,10 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <h2>Ready for a website that elevates your market positioning and converts visits into enquiries?</h2>
             </div>
             <div className="conversion-banner-actions">
-              <a className="button button-primary" href="#contact">
+              <a className="button button-primary" href="#contact" data-magnetic>
                 Start a Project <ArrowIcon />
               </a>
-              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
+              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`} data-magnetic>
                 Call {siteConfig.phoneDisplay}
               </a>
             </div>
@@ -202,10 +212,12 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <Link
                   className="project-card"
                   data-reveal
+                  data-cursor="VIEW"
                   href={`/work/${project.slug}`}
                   key={project.name}
                   aria-label={`${project.name} — View Case Study`}
                 >
+                  <span className="project-ghost-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                   <div className="project-image">
                     <ProjectArtwork
                       project={project}
@@ -251,7 +263,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 </ol>
               </div>
             </div>
-            <ol className="process-list">
+            <div className="process-list-wrap" data-reveal>
+              <span className="process-rail-fill" aria-hidden="true" />
+              <ol className="process-list">
               {processSteps.map(([number, title, description]) => (
                 <li data-reveal key={number}>
                   <span>{number}</span>
@@ -259,7 +273,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <span aria-hidden="true">↘</span>
                 </li>
               ))}
-            </ol>
+              </ol>
+            </div>
           </div>
         </section>
 
@@ -294,7 +309,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             </div>
             <div className="about-copy" data-reveal>
               <p className="eyebrow">04 / About AB</p>
-              <h2 id="about-heading">Your digital presence should work as hard as you do.</h2>
+              <h2 id="about-heading">Your digital presence should <em>work as hard</em> as you do.</h2>
               <p>AB Web Studio is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
               <div className="studio-trust" role="group" aria-label="Studio details">
                 <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
@@ -317,7 +332,11 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <div className="container contact-layout">
             <div className="contact-copy" data-reveal>
               <p className="eyebrow">05 / Start a conversation</p>
-              <h2 id="contact-heading">Have a project in mind? Let&apos;s make it count.</h2>
+              <h2 id="contact-heading" className="contact-title scroll-mask">
+                <span className="mask-line"><span>Let&apos;s build</span></span>
+                <span className="mask-line"><span><em>something</em></span></span>
+                <span className="mask-line"><span>worth remembering.</span></span>
+              </h2>
               <p>Tell us what you are building and where you want the business to go. We will come back with a practical next step.</p>
               <div className="contact-options">
                 <a href={`tel:${siteConfig.phoneInternational}`}><span>Call</span><strong>{siteConfig.phoneDisplay}</strong><ArrowIcon /></a>
