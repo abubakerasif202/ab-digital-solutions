@@ -599,7 +599,8 @@ h1 em {
 
 .content-breadcrumb a {
   display: inline-flex;
-  min-height: 24px;
+  min-width: 44px;
+  min-height: 44px;
   align-items: center;
   text-decoration: underline;
   text-decoration-color: transparent;
