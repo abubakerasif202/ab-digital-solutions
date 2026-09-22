@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProjectArtwork } from "../../project-artwork";
-import { projects } from "../../project-data";
+import { findProject, projects } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
 import { findService, servicePages } from "../service-data";
@@ -48,7 +48,7 @@ export default async function ServicePage({ params }: Props) {
   const service = findService((await params).slug);
   if (!service) notFound();
 
-  const featuredProject = projects.find((project) => project.name === service.featuredProject) ?? projects[0];
+  const featuredProject = findProject(service.featuredProject) ?? projects[0];
   const relatedMap: Record<string, string[]> = {
     "web-design-sydney": ["branding-content", "seo-local-visibility", "website-maintenance"],
     "ecommerce-website-development": ["digital-marketing", "web-design-sydney", "website-maintenance"],
@@ -120,7 +120,7 @@ export default async function ServicePage({ params }: Props) {
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
             <span aria-hidden="true">/</span>
-            <Link href="/#services">Services</Link>
+            <Link href="/services">Services</Link>
             <span aria-hidden="true">/</span>
             <span aria-current="page">{service.title}</span>
           </nav>

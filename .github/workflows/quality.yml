@@ -24,6 +24,5 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - run: npm run build:sites
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high

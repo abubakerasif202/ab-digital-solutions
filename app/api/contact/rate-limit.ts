@@ -45,17 +45,38 @@ async function upstashRateLimit(key: string, url: string, token: string) {
   return count <= MAX_REQUESTS;
 }
 
+let warnedMissingConfig = false;
+
+function isProduction() {
+  return process.env.VERCEL_ENV === "production"
+    || (!process.env.VERCEL_ENV && process.env.NODE_ENV === "production");
+}
+
 export async function withinRateLimit(key: string) {
   const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
   const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
 
-  if (url && token) {
-    try {
-      return await upstashRateLimit(key, url, token);
-    } catch (error) {
-      console.error("Shared contact rate limit unavailable; using local fallback", error);
+  if (!url || !token) {
+    // The per-instance memory fallback stays available for local development, but
+    // on serverless production it multiplies the limit by instance count — say so.
+    if (isProduction() && !warnedMissingConfig) {
+      warnedMissingConfig = true;
+      console.error(
+        "Contact rate limiting is running on the per-instance fallback: "
+        + "UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN are not configured.",
+      );
     }
+    return memoryRateLimit(key);
   }
 
-  return memoryRateLimit(key);
+  try {
+    return await upstashRateLimit(key, url, token);
+  } catch (error) {
+    // Log the failure class only; never surface store details to the client.
+    console.error(
+      "Shared contact rate limit unavailable; using per-instance fallback:",
+      error instanceof Error ? error.message : "unknown error",
+    );
+    return memoryRateLimit(key);
+  }
 }

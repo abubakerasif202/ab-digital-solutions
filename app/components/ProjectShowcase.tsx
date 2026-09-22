@@ -140,13 +140,12 @@ export function ProjectShowcase() {
             className="pause-control"
             type="button"
             onClick={() => setSliderPauseOverride(!sliderPreferencePaused)}
-            aria-label={sliderPaused
-              ? carouselEngaged
-                ? "Resume project slideshow after leaving the carousel"
-                : "Play project slideshow"
+            aria-pressed={sliderPreferencePaused}
+            aria-label={sliderPreferencePaused
+              ? "Play project slideshow"
               : "Pause project slideshow"}
           >
-            {sliderPaused ? "Play" : "Pause"}
+            {sliderPreferencePaused ? "Play" : "Pause"}
           </button>
           <button type="button" onClick={showNextSlide} aria-label="Next project">
             <span aria-hidden="true">→</span>
@@ -159,7 +158,7 @@ export function ProjectShowcase() {
             type="button"
             key={project.name}
             className={index === activeSlide ? "is-active" : ""}
-            aria-current={index === activeSlide ? "true" : undefined}
+            aria-pressed={index === activeSlide}
             onClick={() => {
               setSliderPauseOverride(true);
               setActiveSlide(index);

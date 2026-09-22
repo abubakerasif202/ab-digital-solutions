@@ -424,7 +424,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
           background:
             "radial-gradient(circle at 50% 50%, rgba(212, 163, 47, 0.18), rgba(181, 18, 27, 0.1), transparent 70%)",
         }}
-        aria-label="3D background visual representation"
+        aria-hidden="true"
       />
     );
   }

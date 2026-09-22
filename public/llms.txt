@@ -8,7 +8,7 @@
 - Location: Sydney, NSW, Australia.
 - Service Area: Sydney and Australia-wide.
 - Website Stack: Next.js 16, React 19, TypeScript, CSS, and Vercel.
-- Selected Portfolio: Eight live websites across mobility, logistics, property, construction, removalists, and local services.
+- Selected Portfolio: Twelve live digital projects across transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services.
 
 ## Main Services & Pages
 
@@ -21,8 +21,12 @@
 - [Website Maintenance & Support](https://www.abwebstudio.com.au/services/website-maintenance): Ongoing support, technical health checks, and performance updates.
 - [Privacy Policy](https://www.abwebstudio.com.au/privacy): Information handling and privacy guidelines under Australian law.
 
-## Selected Portfolio (live websites)
+## Selected Portfolio (live websites and software)
 
+- [Aftab & Sons Transport](https://www.aftabandsons.com.au/): Transport & logistics — industrial identity, responsive interface and conversion-focused presentation for heavy-vehicle transport.
+- [247 Inventory System](https://247trucktyreservices.store/): Custom business software — role-protected inventory, purchasing, sales and finance platform for 24/7 Truck Tyre Services.
+- [Adelaide Wholesale Tyres](https://adelaidewholesaletyres.com.au/): E-commerce / wholesale — searchable wholesale tyre catalogue with cart-based bulk ordering and quote workflow.
+- [24/7 Truck Tyre Services](https://www.247trucktyreservices.com.au/): Automotive / roadside assistance — emergency-led service enquiries for truck tyre support.
 - [Maple Rentals](https://www.maplerentals.com.au/): Mobility / car rentals — premium driver rentals and streamlined online applications.
 - [Gala Rentals](https://www.galarentals.com.au/): Mobility / car rentals — weekly car rental booking experience in Sydney.
 - [ZQ Removals](https://zqremovals.au/): Services / removals — local-service positioning with a direct path to quote requests.

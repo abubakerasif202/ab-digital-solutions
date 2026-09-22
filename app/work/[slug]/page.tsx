@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: "en_AU",
       images: [
         {
-          url: "/opengraph-image",
+          url: `/work/${project.slug}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: `${project.name} ${projectType} case study by ${siteConfig.name}`,
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: `${project.name} Case Study | ${siteConfig.name}`,
       description: project.description,
-      images: ["/opengraph-image"],
+      images: [`/work/${project.slug}/opengraph-image`],
     },
   };
 }
@@ -252,7 +252,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           <div className="container conversion-banner-layout">
             <div className="conversion-banner-copy">
               <p className="eyebrow">Have a project in mind?</p>
-              <h3>Let&apos;s create a digital experience with a clear commercial purpose.</h3>
+              <h2>Let&apos;s create a digital experience with a clear commercial purpose.</h2>
             </div>
             <div className="conversion-banner-actions">
               <Link className="button button-primary" href="/#contact">

@@ -4,6 +4,7 @@ import { Hero3DExperience } from "./components/Hero3DExperience";
 import { ProjectShowcase } from "./components/ProjectShowcase";
 import { ProjectArtwork } from "./project-artwork";
 import { isSoftwareProject, projects } from "./project-data";
+import { findService } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { assetBase, siteConfig } from "./site-config";
@@ -59,6 +60,15 @@ const services = [
     details: ["Content updates", "Technical support", "Growth improvements"],
   },
 ] as const;
+
+// Homepage card slugs must always point at a canonical service page; fail the
+// build loudly if the two lists ever drift apart. The homepage keeps its own
+// card copy on purpose — it is marketing language, not the service-page text.
+services.forEach((service) => {
+  if (!findService(service.slug)) {
+    throw new Error(`agency-home: unknown service slug "${service.slug}"`);
+  }
+});
 
 const processSteps = [
   ["01", "Discover", "We clarify your audience, offer, goals and the actions your website needs to drive."],
@@ -160,7 +170,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <div className="container conversion-banner-layout">
             <div className="conversion-banner-copy">
               <p className="eyebrow">Strategy & Position</p>
-              <h3>Ready for a website that elevates your market positioning and converts visits into enquiries?</h3>
+              <h2>Ready for a website that elevates your market positioning and converts visits into enquiries?</h2>
             </div>
             <div className="conversion-banner-actions">
               <a className="button button-primary" href="#contact">

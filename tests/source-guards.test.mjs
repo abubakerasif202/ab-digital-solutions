@@ -1,3 +1,6 @@
+// Source-regression guards: fast assertions over source text that protect
+// previously reviewed fixes from being silently reverted. Behavioral coverage
+// of the contact endpoint lives in contact-route.test.mjs.
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -249,6 +252,43 @@ test("brand theme balances premium red and gold accents", async () => {
   assert.match(designTokens, /--ab-ink: #050505/);
   assert.match(designTokens, /--ab-gold: #c99732/);
   assert.match(designTokens, /--ab-display:/);
+});
+
+test("llms.txt stays in sync with the canonical project registry", async () => {
+  const { projects } = await import("../app/project-data.ts");
+  const llms = await read("../public/llms.txt");
+
+  assert.equal(projects.length, 12);
+  assert.match(llms, /Twelve live digital projects/);
+  for (const project of projects) {
+    assert.ok(llms.includes(project.name), `llms.txt is missing ${project.name}`);
+    assert.ok(llms.includes(project.url), `llms.txt is missing ${project.name} (${project.url})`);
+  }
+});
+
+test("service featured projects resolve to canonical project slugs", async () => {
+  const { servicePages } = await import("../app/services/service-data.ts");
+  const { findProject } = await import("../app/project-data.ts");
+
+  for (const service of servicePages) {
+    assert.ok(
+      findProject(service.featuredProject),
+      `${service.slug} references unknown project slug "${service.featuredProject}"`,
+    );
+  }
+});
+
+test("services index page exists and is wired into SEO routes", async () => {
+  const [servicesIndex, sitemap] = await Promise.all([
+    read("../app/services/page.tsx"),
+    read("../app/sitemap.ts"),
+  ]);
+
+  assert.match(servicesIndex, /canonical: "\/services"/);
+  assert.match(servicesIndex, /"@type": "CollectionPage"/);
+  assert.match(servicesIndex, /aria-label="Breadcrumb"/);
+  assert.match(servicesIndex, /servicePages\.map/);
+  assert.match(sitemap, /\/services`/);
 });
 
 test("contact form posts to the protected server endpoint", async () => {

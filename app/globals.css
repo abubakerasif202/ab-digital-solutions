@@ -117,6 +117,17 @@ select {
   outline-offset: 4px;
 }
 
+/* The gold ring is too low-contrast on the light sections (well under the 3:1
+   WCAG 2.4.13 target against --paper / --paper-warm / --gold), so keyboard
+   focus there switches to --ink, which stays on-palette and legible. */
+.services-section :focus-visible,
+.work-section :focus-visible,
+.contact-section :focus-visible,
+.standard-section :focus-visible,
+.work-index-final-cta :focus-visible {
+  outline-color: var(--ink);
+}
+
 /* Tailwind emits its own `.container` utility because the markup uses that
    class name, and its breakpoint max-widths (1536px at the top step) would
    otherwise clamp the studio container. Width comes from --container only. */
@@ -834,7 +845,6 @@ h1 em {
   color: var(--paper);
   font-size: clamp(1.05rem, 2vw, 1.35rem);
   font-weight: 700;
-  list-style: none;
   cursor: pointer;
 }
 
@@ -1804,7 +1814,7 @@ h1 em {
   z-index: 2;
 }
 
-.conversion-banner-copy h3 {
+.conversion-banner-copy h2 {
   margin-top: 8px;
   color: var(--white);
   font-size: clamp(1.6rem, 2.6vw, 2.5rem);
@@ -2883,6 +2893,7 @@ h1 em {
     transform: none;
   }
   .project-showcase,
+  .showcase-slide,
   .service-card,
   .button,
   .project-image img,

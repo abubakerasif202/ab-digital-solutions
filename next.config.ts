@@ -42,13 +42,20 @@ const nextConfig: NextConfig = {
     imageSizes: [32, 64, 96, 128, 256, 384],
   },
   async redirects() {
-    return [
-      {
-        source: "/site/ab-digital-premium/index.html",
-        destination: "/",
-        permanent: true,
-      },
+    // Retire the deleted legacy static concept. Paths are enumerated (not a
+    // :path* wildcard) so the live portfolio assets under /assets keep serving.
+    const legacySitePaths = [
+      "/site/ab-digital-premium",
+      "/site/ab-digital-premium/index.html",
+      "/site/ab-digital-premium/script.js",
+      "/site/ab-digital-premium/styles.css",
+      "/site/ab-digital-premium/README.md",
     ];
+    return legacySitePaths.map((source) => ({
+      source,
+      destination: "/",
+      permanent: true,
+    }));
   },
   async headers() {
     return [

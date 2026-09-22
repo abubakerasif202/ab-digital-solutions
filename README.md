@@ -9,7 +9,7 @@ Production website for AB Digital Solutions, a Sydney-based web design and digit
 - Tailwind CSS 4 pipeline with a custom editorial design system
 - Vercel production hosting
 
-The main route renders as native React content for accessibility, SEO and performance. The original static concept remains under `public/site/ab-digital-premium/` as a retained source artifact; requests to its legacy `index.html` redirect to the canonical homepage.
+The main route renders as native React content for accessibility, SEO and performance. `public/site/ab-digital-premium/assets/` holds the live brand and portfolio imagery; the legacy static concept has been retired and its old URLs permanently redirect to the canonical homepage.
 
 ## Local development
 

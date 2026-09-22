@@ -58,7 +58,7 @@ export function WorkIndexBody() {
                   key={sector}
                   type="button"
                   className={`work-index-filter${isActive ? " is-active" : ""}`}
-                  aria-current={isActive ? "true" : undefined}
+                  aria-pressed={isActive}
                   onClick={() => handleFilterChange(sector)}
                 >
                   {sector}

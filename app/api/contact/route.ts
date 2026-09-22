@@ -54,12 +54,20 @@ async function readPayload(request: NextRequest): Promise<ContactPayload> {
     body.set(chunk, offset);
     offset += chunk.byteLength;
   }
-  return JSON.parse(new TextDecoder().decode(body)) as ContactPayload;
+  const parsed: unknown = JSON.parse(new TextDecoder().decode(body));
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("invalid-payload");
+  return parsed as ContactPayload;
 }
 
 export async function POST(request: NextRequest) {
   if (!allowedOrigin(request)) return NextResponse.json({ error: "This request could not be verified." }, { status: 403 });
-  const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+  // Per Vercel's documented headers: x-forwarded-for is overwritten by Vercel
+  // with the public client IP (and mirrored in x-real-ip), so neither can be
+  // spoofed on Vercel. When another proxy sits in front of Vercel,
+  // x-vercel-forwarded-for carries the original client IP and is preferred.
+  // Requests with no usable IP share one "unknown" rate-limit bucket.
+  const clientIp = request.headers.get("x-vercel-forwarded-for")?.split(",")[0]?.trim()
+    || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
     || request.headers.get("x-real-ip")?.trim()
     || "unknown";
   if (!await withinRateLimit(clientIp)) return NextResponse.json({ error: "Too many enquiries. Please wait a few minutes or contact us directly." }, { status: 429 });

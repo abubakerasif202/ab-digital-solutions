@@ -22,9 +22,18 @@ if (testFiles.length === 0) {
   process.exit(1);
 }
 
-const result = spawnSync(process.execPath, ["--test", ...testFiles], {
-  stdio: "inherit",
-  cwd: fileURLToPath(new URL("../", import.meta.url)),
-});
+// Behavior tests import TypeScript sources directly. Type stripping is enabled
+// by default from Node 22.18 / 23.6; earlier 22.x releases need the flag.
+const [nodeMajor, nodeMinor] = process.versions.node.split(".").map(Number);
+const typeArgs = nodeMajor === 22 && nodeMinor >= 6 ? ["--experimental-strip-types"] : [];
+
+const result = spawnSync(
+  process.execPath,
+  [...typeArgs, "--import", "./tests/register-ts-hooks.mjs", "--test", ...testFiles],
+  {
+    stdio: "inherit",
+    cwd: fileURLToPath(new URL("../", import.meta.url)),
+  },
+);
 
 process.exit(result.status ?? 1);

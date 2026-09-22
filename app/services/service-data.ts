@@ -7,7 +7,7 @@ export const servicePages = [
     detailTitle: "A website shaped around the decision your customer needs to make.",
     detail: "We bring positioning, content hierarchy, responsive UX and dependable development into one delivery process. Each build is shaped around your audience and offer, with accessibility-conscious implementation, technical SEO foundations and clear review points—without relying on a generic template.",
     benefits: ["Custom UX and visual direction", "Responsive, accessibility-conscious development", "Conversion-focused content structure", "Launch and measurement foundations"],
-    featuredProject: "Maple Rentals",
+    featuredProject: "maple-rentals",
   },
   {
     slug: "ecommerce-website-development",
@@ -17,7 +17,7 @@ export const servicePages = [
     detailTitle: "A storefront built around how customers browse and buy.",
     detail: "We structure product catalogues, collections, navigation and checkout journeys around the way customers shop. Platform, payment and customer-management integrations are scoped to the store’s real operational needs, with performance and search foundations considered from the start.",
     benefits: ["Product and collection strategy", "Mobile commerce UX", "Checkout integration", "Performance and search foundations"],
-    featuredProject: "Gala Rentals",
+    featuredProject: "gala-rentals",
   },
   {
     slug: "seo-local-visibility",
@@ -27,7 +27,7 @@ export const servicePages = [
     detailTitle: "Search visibility starts with a clearer technical and content foundation.",
     detail: "We review architecture, page intent, content structure, schema, performance and local search signals, then turn the findings into a practical improvement plan. The focus is durable clarity and discoverability—not ranking guarantees or volume for its own sake.",
     benefits: ["Technical SEO review", "On-page optimisation", "Local search structure", "Measurement and improvement plan"],
-    featuredProject: "ZQ Removals",
+    featuredProject: "zq-removals",
   },
   {
     slug: "branding-content",
@@ -37,7 +37,7 @@ export const servicePages = [
     detailTitle: "A visual and verbal system that feels true to the business behind it.",
     detail: "We clarify positioning, value propositions, message hierarchy and visual direction before applying them across website content and campaign touchpoints. The result is a coherent foundation your team can use consistently, rather than a collection of disconnected design assets.",
     benefits: ["Brand direction", "Website messaging", "Content hierarchy", "Campaign-ready creative"],
-    featuredProject: "DECENT Development",
+    featuredProject: "decent-development",
   },
   {
     slug: "digital-marketing",
@@ -47,7 +47,7 @@ export const servicePages = [
     detailTitle: "Campaign journeys that stay aligned from first impression to enquiry.",
     detail: "We connect campaign direction, creative, landing-page structure and measurement around one commercial goal. Scope can include custom landing pages, lead-generation pathways, tracking foundations and iterative content improvements, with recommendations tied to the evidence available.",
     benefits: ["Campaign strategy", "Landing page design", "Lead-generation journeys", "Tracking foundations"],
-    featuredProject: "Milestone Development",
+    featuredProject: "milestone-development",
   },
   {
     slug: "website-maintenance",
@@ -57,7 +57,7 @@ export const servicePages = [
     detailTitle: "Practical care for the website your business already depends on.",
     detail: "Support can cover content updates, framework and dependency maintenance, technical health checks, performance work and measured feature improvements. Priorities and response expectations are agreed clearly, so ongoing work stays connected to the site’s real operational needs.",
     benefits: ["Content updates", "Technical health checks", "Performance improvements", "Priority support"],
-    featuredProject: "4 Point Concrete",
+    featuredProject: "4-point-concrete",
   },
 ] as const;
 

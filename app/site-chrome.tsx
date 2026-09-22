@@ -47,6 +47,8 @@ export function SiteHeader() {
     };
 
     const backgroundRegions = [
+      document.querySelector(".skip-link"),
+      document.querySelector(".brand"),
       document.getElementById("main-content"),
       document.querySelector(".site-footer"),
     ].filter((element): element is HTMLElement => element !== null);
@@ -165,9 +167,27 @@ export function SiteHeader() {
     };
   }, [pathname]);
 
-  const closeMenu = () => setMenuOpen(false);
+  useEffect(() => {
+    // The nav is only a modal panel up to the 960px breakpoint (see globals.css);
+    // if the viewport grows past it while open, the scroll lock and inert state
+    // must not linger on the desktop layout.
+    const mobileNavViewport = window.matchMedia("(max-width: 960px)");
+    const closeWhenDesktop = (event: MediaQueryListEvent) => {
+      if (!event.matches) setMenuOpen(false);
+    };
+    mobileNavViewport.addEventListener("change", closeWhenDesktop);
+    return () => mobileNavViewport.removeEventListener("change", closeWhenDesktop);
+  }, []);
+
+  const handleNavLinkClick = () => {
+    if (!menuOpen) return;
+    setMenuOpen(false);
+    // Focus sat inside the panel that is now hidden; return it to the toggle
+    // (same as Escape) instead of dropping it to <body>.
+    menuButtonRef.current?.focus();
+  };
   const navLinkClass = (id: string) => (activeSection === id ? "is-active" : undefined);
-  const navLinkCurrent = (id: string) => (activeSection === id ? "true" : undefined);
+  const navLinkCurrent = (id: string) => (activeSection === id ? "location" : undefined);
 
   return (
     <>
@@ -206,11 +226,11 @@ export function SiteHeader() {
             className={`site-nav${menuOpen ? " is-open" : ""}`}
             aria-label="Primary navigation"
           >
-            <Link href="/#services" onClick={closeMenu} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
-            <Link href="/#work" onClick={closeMenu} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
-            <Link href="/#process" onClick={closeMenu} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
-            <Link href="/#about" onClick={closeMenu} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
-            <Link className="nav-cta" href="/#contact" onClick={closeMenu}>
+            <Link href="/#services" onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
+            <Link href="/#work" onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
+            <Link href="/#process" onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
+            <Link href="/#about" onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
+            <Link className="nav-cta" href="/#contact" onClick={handleNavLinkClick}>
               Start a project <ArrowIcon />
             </Link>
           </nav>
