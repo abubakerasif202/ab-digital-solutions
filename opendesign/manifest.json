@@ -1,0 +1,20 @@
+{
+  "generated": "2026-08-06T04:50:56+10:00",
+  "sections": [
+    {
+      "id": "design-systems",
+      "label": "Design Systems",
+      "groups": [
+        {
+          "slug": "ab-digital",
+          "files": [
+            {
+              "label": "colors_and_type.css",
+              "path": "design-systems/ab-digital/colors_and_type.css"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "enabledPlugins": {
+    "andrej-karpathy-skills@karpathy-skills": true,
+    "claude-md-management@claude-plugins-official": true,
+    "ecc@ecc": true
+  }
+}

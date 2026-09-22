@@ -1,0 +1,11 @@
+
+> ab-digital-solutions@0.1.0 dev
+> next dev -p 3000
+
+▲ Next.js 16.2.12 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.21.0.1:3000
+✓ Ready in 3.3s
+
+ GET / 200 in 1000ms (next.js: 441ms, application-code: 559ms)
+ GET / 200 in 159ms (next.js: 4ms, application-code: 155ms)
