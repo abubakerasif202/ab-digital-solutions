@@ -293,7 +293,7 @@ select {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.62;
+  opacity: 0.3;
   transition: opacity 0.5s ease;
 }
 
@@ -2708,7 +2708,7 @@ h1 em {
   .hero-3d-bg-wrap {
     inset: 0 0 auto;
     height: min(74vh, 680px);
-    opacity: 0.52;
+    opacity: 0.2;
     mask-image: linear-gradient(to bottom, black 62%, transparent);
   }
   .hero-layout { gap: 42px; padding-bottom: 58px; }
