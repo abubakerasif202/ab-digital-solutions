@@ -41,11 +41,12 @@ test("portfolio contains every required live project", async () => {
 });
 
 test("every project ships a real preview image and routes visitors through a case study", async () => {
-  const [projects, homepage, artwork, workPage, caseStudy] = await Promise.all([
+  const [projects, homepage, artwork, workPage, workIndexBody, caseStudy] = await Promise.all([
     read("../app/project-data.ts"),
     read("../app/agency-home.tsx"),
     read("../app/project-artwork.tsx"),
     read("../app/work/page.tsx"),
+    read("../app/components/WorkIndexBody.tsx"),
     read("../app/work/[slug]/page.tsx"),
   ]);
 
@@ -69,6 +70,8 @@ test("every project ships a real preview image and routes visitors through a cas
   assert.match(homepage, /href=\{`\/work\/\$\{project\.slug\}`\}/);
   assert.doesNotMatch(homepage, /href=\{project\.url\}/);
   assert.doesNotMatch(workPage, /href=\{project\.url\}/);
+  assert.doesNotMatch(workIndexBody, /href=\{project\.url\}/);
+  assert.match(workIndexBody, /href=\{`\/work\/\$\{project\.slug\}`\}/);
   assert.match(caseStudy, /href=\{project\.url\}[\s\S]{0,120}target="_blank"[\s\S]{0,120}rel="noopener noreferrer"/);
   assert.match(caseStudy, /opens in a new tab/);
   assert.doesNotMatch(artwork, /project-cover/);
@@ -127,16 +130,16 @@ test("homepage interactive work is isolated and pauses when hidden", async () =>
 });
 
 test("project count copy is derived from the canonical registry", async () => {
-  const [homepage, workPage] = await Promise.all([
+  const [homepage, workIndexBody] = await Promise.all([
     read("../app/agency-home.tsx"),
-    read("../app/work/page.tsx"),
+    read("../app/components/WorkIndexBody.tsx"),
   ]);
   assert.match(homepage, /Explore \{projects\.length\} live digital projects/);
   assert.match(homepage, /\{projects\.length\} responsive websites and custom software projects/);
   assert.match(homepage, /isSoftwareProject\(project\) \? "Live system" : "Live website"/);
   assert.match(homepage, /\{projects\.length\} live digital project case studies/);
-  assert.match(workPage, /\{projects\.length\} responsive websites and custom software projects/);
-  assert.match(workPage, /isSoftwareProject\(project\) \? "Live system" : "Live website"/);
+  assert.match(workIndexBody, /\{projects\.length\} projects/);
+  assert.match(workIndexBody, /isSoftwareProject\(project\) \? "Live system" : "Live website"/);
   assert.match(await read("../app/project-data.ts"), /project\.kind === "software"/);
   assert.match(await read("../app/work/[slug]/page.tsx"), /project\.ctaLabel \?\? "View Live Website"/);
   assert.doesNotMatch(homepage, /\b(?:seven|eight)\b/i);

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ProjectArtwork } from "../project-artwork";
-import { isSoftwareProject, projects } from "../project-data";
+import { WorkIndexBody } from "../components/WorkIndexBody";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { siteConfig } from "../site-config";
@@ -65,82 +64,34 @@ export default function WorkPage() {
   return (
     <>
       <SiteHeader />
-      <main className="content-page work-index-page" id="main-content">
-        <div className="container content-shell">
-          <nav className="content-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">Work</span>
-          </nav>
+      <main className="work-index-page" id="main-content">
+        <WorkIndexBody />
 
-          <header className="work-hero" data-reveal>
-            <p className="eyebrow">Portfolio / Selected Work</p>
-            <h1>Real digital projects. Real commercial impact.</h1>
-            <p className="content-lead">
-              {projects.length} responsive websites and custom software projects across mobility, logistics, local services, construction and property—built for clear, efficient digital experiences.
-            </p>
-          </header>
+        <div className="work-index-transition" aria-hidden="true" />
 
-          <section className="work-showcase-section" aria-labelledby="work-heading">
-            <h2 className="sr-only" id="work-heading">Featured Client Projects</h2>
-            <div className="work-grid">
-              {projects.map((project, index) => (
-                <article className="project-card work-page-card" data-reveal key={project.slug}>
-                  <div className="browser-frame">
-                    <div className="browser-bar" aria-hidden="true">
-                      <i /><i /><i />
-                      <span>{project.displayUrl}</span>
-                    </div>
-                    <div className="project-image">
-                      <ProjectArtwork
-                        project={project}
-                        priority={index === 0}
-                        sizes="(max-width: 720px) 92vw, (max-width: 1400px) 45vw, 630px"
-                      />
-                      <span className="live-label"><i /> {isSoftwareProject(project) ? "Live system" : "Live website"}</span>
-                      <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
-                    </div>
-                  </div>
-                  <div className="project-details">
-                    <p className="project-category-tag">{project.category}</p>
-                    <h3>{project.name}</h3>
-                    <p className="project-description-text">{project.description}</p>
-                    <div className="project-tags">
-                      {project.tags.map((tag) => (
-                        <span key={tag} className="project-tag-pill">{tag}</span>
-                      ))}
-                    </div>
-                    <p className="project-stack">
-                      <span aria-hidden="true">stack:</span> {project.techStack.join(" · ")}
-                    </p>
-                    <div className="project-actions-group">
-                      <Link className="button button-primary" href={`/work/${project.slug}`}>
-                        View Case Study <ArrowIcon />
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
+        <section className="work-index-final-cta">
+          <div className="container work-index-final-cta-layout" data-reveal>
+            <div>
+              <p className="eyebrow">Next</p>
+              <h2>Your project could be the next one on this list.</h2>
             </div>
-          </section>
-        </div>
-
-        <aside className="conversion-banner work-page-banner" data-reveal aria-label="Start a project">
-          <div className="container conversion-banner-layout">
-            <div className="conversion-banner-copy">
-              <p className="eyebrow">Strategy &amp; Execution</p>
-              <h3>Have a project in mind? Let&apos;s build something impossible to ignore.</h3>
-            </div>
-            <div className="conversion-banner-actions">
-              <Link className="button button-primary" href="/#contact">
-                Start a Project <ArrowIcon />
-              </Link>
-              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
-                Call {siteConfig.phoneDisplay}
-              </a>
+            <div>
+              <p className="content-lead">
+                Tell us what you are building and where you want the business to go. We will come
+                back with a practical next step.
+              </p>
+              <div className="content-actions">
+                <Link className="button button-primary" href="/#contact">
+                  Start a Project <ArrowIcon />
+                </Link>
+                <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
+                  Call {siteConfig.phoneDisplay}
+                </a>
+              </div>
             </div>
           </div>
-        </aside>
+        </section>
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
