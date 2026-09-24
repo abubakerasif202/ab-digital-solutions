@@ -57,7 +57,7 @@ test("every project ships a real preview image and routes visitors through a cas
   ]);
 
   const imageNames = [...projects.matchAll(/\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
-  assert.equal(imageNames.length, 12);
+  assert.equal(imageNames.length, 13);
   assert.ok(imageNames.includes("ab-portfolio-adelaide-wholesale-tyres.webp"));
   assert.ok(imageNames.includes("ab-portfolio-1st-class-express.jpg"));
   assert.ok(imageNames.includes("ab-portfolio-hf-removals.jpg"));
@@ -305,8 +305,8 @@ test("llms.txt stays in sync with the canonical project registry", async () => {
   const { projects } = await import("../app/project-data.ts");
   const llms = await read("../public/llms.txt");
 
-  assert.equal(projects.length, 12);
-  assert.match(llms, /Twelve live digital projects/);
+  assert.equal(projects.length, 13);
+  assert.match(llms, /Thirteen live digital projects/);
   for (const project of projects) {
     assert.ok(llms.includes(project.name), `llms.txt is missing ${project.name}`);
     assert.ok(llms.includes(project.url), `llms.txt is missing ${project.name} (${project.url})`);

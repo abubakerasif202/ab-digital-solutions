@@ -304,6 +304,30 @@ export const projects = [
     ],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "JSON-LD"],
   },
+  {
+    slug: "cheap-adelaide-removalist",
+    name: "Cheap Adelaide Removalist",
+    category: "Services / Removals",
+    sector: "Removals",
+    description:
+      "A conversion-focused removals platform for Adelaide, built to make pricing, services and quote requests easy to understand while building a strong local-search content foundation.",
+    overview:
+      "Cheap Adelaide Removalist needed a digital presence that could compete on trust and clarity rather than just price — publishing transparent hourly rates, service coverage and a fast quote path for house, apartment, office and interstate moves across Greater Adelaide.",
+    solution:
+      "We built a rate-transparent local service platform anchored by a Bento-style pricing and logistics engine: published per-30-minute crew rates with a stated no-hidden-surcharges policy, a move-sizer and crew-allocator module, suburb-level arterial coverage content, eight dedicated service pages, a four-step process explainer, an extensive FAQ and a detailed multi-field quote request form.",
+    url: "https://www.cheapadelaideremovalist.com.au/",
+    displayUrl: "cheapadelaideremovalist.com.au",
+    image: `${assetBase}/ab-portfolio-cheap-adelaide-removalist.png`,
+    alt: "Cheap Adelaide Removalist website homepage showing published moving rates and a branded removals truck",
+    tags: ["Local SEO Architecture", "Quote Conversion", "Transparent Pricing UX"],
+    keyFeatures: [
+      "Bento-style pricing and logistics engine with a move-sizer and crew allocator",
+      "Published per-30-minute rates with a zero-hidden-surcharge policy",
+      "Eight dedicated service pages plus suburb and arterial coverage content",
+      "Multi-field quote request form with property access and inventory scoping",
+    ],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "JSON-LD"],
+  },
 ] as const satisfies readonly Project[];
 
 export const sectors: readonly string[] = Array.from(new Set(projects.map((project) => project.sector)));

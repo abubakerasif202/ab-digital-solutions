@@ -8,7 +8,7 @@
 - Location: Sydney, NSW, Australia.
 - Service Area: Sydney and Australia-wide.
 - Website Stack: Next.js 16, React 19, TypeScript, CSS, and Vercel.
-- Selected Portfolio: Twelve live digital projects across transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services.
+- Selected Portfolio: Thirteen live digital projects across transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services.
 
 ## Main Services & Pages
 
@@ -35,6 +35,7 @@
 - [4 Point Concrete](https://4-point-concrete-design.vercel.app/): Construction / civil — capability-focused concrete and structural works site.
 - [1st Class Express](https://www.1stclassexpress.com.au/): Transport & logistics — interstate freight positioning, fleet showcase and quote enquiries.
 - [HF Removals Adelaide](https://www.hfremovalsadelaide.com/): Services / removals — published reference rates with an instant quote request flow.
+- [Cheap Adelaide Removalist](https://www.cheapadelaideremovalist.com.au/): Services / removals — transparent per-30-minute rates with a Bento-style pricing and logistics engine.
 
 ## Contact & Authority Information
 
