@@ -67,7 +67,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: "#050505",
-  colorScheme: "dark light",
+  colorScheme: "dark",
 };
 
 const structuredData = {
