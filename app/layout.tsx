@@ -155,7 +155,8 @@ const displayFont = Source_Serif_4({
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-AU" className={`${sansFont.variable} ${displayFont.variable}`}>
+    // The homepage intro gate sets data-intro on <html> before hydration.
+    <html lang="en-AU" className={`${sansFont.variable} ${displayFont.variable}`} suppressHydrationWarning>
       <body>
         <WebVitals />
         <PointerFX />

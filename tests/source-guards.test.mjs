@@ -422,3 +422,49 @@ test("service heroes carry decorative real project evidence", async () => {
   }
   assert.match(servicePage, /project=\{featuredProject\}/);
 });
+
+test("hero content paints in the first frame instead of waiting on the intro", async () => {
+  const [intro, styles, layout, page] = await Promise.all([
+    read("../app/components/IntroReveal.tsx"),
+    read("../app/globals.css"),
+    read("../app/layout.tsx"),
+    read("../app/page.tsx"),
+  ]);
+  // Server-rendered and gated before first paint: never a hydration-time overlay.
+  assert.doesNotMatch(intro, /^"use client"/);
+  assert.doesNotMatch(intro, /useEffect|useState|useSyncExternalStore/);
+  assert.match(intro, /setAttribute\("data-intro","play"\)/);
+  assert.match(intro, /setAttribute\("data-intro","done"\)/);
+  assert.match(layout, /<html[^>]*suppressHydrationWarning/);
+  assert.match(page, /<IntroReveal \/>/);
+  // Overlay hidden unless the gate plays it; shorter sequence on phones.
+  assert.match(styles, /\.intro-reveal \{ display: none; \}\s*\n/);
+  assert.match(styles, /html\[data-intro="play"\] \.intro-reveal \{/);
+  assert.match(styles, /@media \(max-width: 720px\) \{\s*html\[data-intro="play"\] \{/);
+  // Hero copy arrives with motion only, never hidden by opacity.
+  const heroRule = styles.match(/\.hero \[data-reveal\] \{[^}]*\}/)[0];
+  assert.match(heroRule, /hero-copy-arrival/);
+  const heroKeyframes = styles.match(/@keyframes hero-copy-arrival \{[\s\S]*?\n\}/)[0];
+  assert.doesNotMatch(heroKeyframes, /opacity/);
+  // Headline lines start partly visible inside their masks.
+  const lineRise = styles.match(/@keyframes hero-line-rise \{[\s\S]*?\n\}/)[0];
+  assert.doesNotMatch(lineRise, /translateY\(1\d\d%\)/);
+  assert.doesNotMatch(lineRise, /opacity/);
+});
+
+test("reduced motion removes the headline rise and intro entirely", async () => {
+  const [intro, styles] = await Promise.all([
+    read("../app/components/IntroReveal.tsx"),
+    read("../app/globals.css"),
+  ]);
+  assert.match(intro, /prefers-reduced-motion: reduce\)"\)\.matches\)return/);
+  assert.match(styles, /\[data-reveal\], \.hero \[data-reveal\],\s*\.hero-title \.mask-line > span \{\s*opacity: 1 !important;\s*transform: none !important;\s*animation: none !important;/);
+});
+
+test("phones never initialise WebGL and 3D waits for idle", async () => {
+  const experience = await read("../app/components/Hero3DExperience.tsx");
+  assert.match(experience, /matchMedia\("\(max-width: 720px\)"\)/);
+  assert.match(experience, /mobileQuery\.matches \|\| connection\?\.saveData/);
+  assert.match(experience, /requestIdleCallback/);
+  assert.match(experience, /dynamic\(/);
+});

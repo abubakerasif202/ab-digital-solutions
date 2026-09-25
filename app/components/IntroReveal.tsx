@@ -1,57 +1,36 @@
-"use client";
-
-import { useEffect, useState, useSyncExternalStore } from "react";
-
 const INTRO_SEEN_KEY = "ab-intro-seen";
-const INTRO_DURATION_MS = 1650;
+// Longer than the slowest CSS sequence (desktop overlay + hero line rise).
+const INTRO_SETTLE_MS = 2400;
 
-function subscribeNoop() {
-  return () => {};
-}
-
-function shouldPlayIntro() {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
-  try {
-    return window.sessionStorage.getItem(INTRO_SEEN_KEY) !== "1";
-  } catch {
-    // Storage unavailable (private mode etc.) — let the intro play anyway.
-    return true;
-  }
-}
-
-function serverSnapshot() {
-  return false;
-}
+// Runs during HTML parsing, before first paint, so the overlay can only ever
+// appear at the very start of a visit — never on top of content the visitor
+// is already reading. Static string: no user or request data is interpolated.
+const introGate = `(function(){try{
+if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+var s=window.sessionStorage;if(s.getItem("${INTRO_SEEN_KEY}")==="1")return;
+s.setItem("${INTRO_SEEN_KEY}","1");
+var r=document.documentElement;r.setAttribute("data-intro","play");
+setTimeout(function(){r.setAttribute("data-intro","done")},${INTRO_SETTLE_MS});
+}catch(e){}})();`;
 
 /**
- * Cinematic brand reveal shown once per session on the homepage. The whole
- * sequence is CSS-driven (~1.4s); this component only decides whether to
- * mount it and removes it afterwards. Skipped entirely for reduced motion.
+ * Cinematic brand reveal shown once per session on the homepage. Server
+ * rendered and entirely CSS-driven: hidden unless the inline gate marks the
+ * document with data-intro="play", then it plays a short monogram sequence
+ * and fades away while the hero content (already painted beneath it) rises.
+ * Skipped for reduced motion and for repeat views within the session.
  */
 export function IntroReveal() {
-  const [dismissed, setDismissed] = useState(false);
-  const shouldPlay = useSyncExternalStore(subscribeNoop, shouldPlayIntro, serverSnapshot);
-
-  useEffect(() => {
-    if (!shouldPlay) return;
-    try {
-      window.sessionStorage.setItem(INTRO_SEEN_KEY, "1");
-    } catch {
-      // Storage unavailable — the intro simply plays again next load.
-    }
-    const timer = window.setTimeout(() => setDismissed(true), INTRO_DURATION_MS);
-    return () => window.clearTimeout(timer);
-  }, [shouldPlay]);
-
-  if (!shouldPlay || dismissed) return null;
-
   return (
-    <div className="intro-reveal" aria-hidden="true">
-      <div className="intro-reveal-inner">
-        <span className="intro-monogram">AB</span>
-        <span className="intro-line" />
-        <p className="intro-word">AB Web Studio</p>
+    <>
+      <script dangerouslySetInnerHTML={{ __html: introGate }} />
+      <div className="intro-reveal" aria-hidden="true">
+        <div className="intro-reveal-inner">
+          <span className="intro-monogram">AB</span>
+          <span className="intro-line" />
+          <p className="intro-word">AB Web Studio</p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

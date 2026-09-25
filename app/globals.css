@@ -332,7 +332,7 @@ select {
     radial-gradient(circle at 58% 64%, rgba(181, 18, 27, 0.13), transparent 38%);
 }
 
-/* Slow orbital rings keep the static visual alive without any WebGL cost. */
+/* Orbital rings give the static visual depth without any WebGL cost. */
 .hero-3d-fallback::before,
 .hero-3d-fallback::after {
   position: absolute;
@@ -344,9 +344,9 @@ select {
   content: "";
 }
 
+/* A uniform ring looks identical at every rotation, so it stays static. */
 .hero-3d-fallback::before {
   border: 1px solid rgba(212, 163, 47, 0.3);
-  animation: slow-spin 30s linear infinite;
 }
 
 .hero-3d-fallback::after {
@@ -504,11 +504,18 @@ h1 em {
 }
 
 .hero-title .mask-line > span {
-  animation: line-rise 880ms var(--ease-out) both;
+  animation: hero-line-rise 820ms var(--ease-out) var(--intro-offset, 0ms) both;
 }
 
-.hero-title .mask-line:nth-child(2) > span { animation-delay: 140ms; }
-.hero-title .mask-line:nth-child(3) > span { animation-delay: 280ms; }
+.hero-title .mask-line:nth-child(2) > span { animation-delay: calc(var(--intro-offset, 0ms) + 110ms); }
+.hero-title .mask-line:nth-child(3) > span { animation-delay: calc(var(--intro-offset, 0ms) + 220ms); }
+
+/* Starts partly inside its mask rather than fully hidden: the headline is
+   readable (and paints) in the very first frame, then settles into place. */
+@keyframes hero-line-rise {
+  from { transform: translateY(44%); }
+  to { transform: translateY(0); }
+}
 
 .hero-title-accent {
   color: var(--gold-bright);
@@ -2849,12 +2856,17 @@ section.related-services > .services-index-list > .services-index-row:focus-visi
 }
 
 .hero [data-reveal] {
-  animation: hero-arrival 850ms 120ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+  animation: hero-copy-arrival 850ms calc(var(--intro-offset, 0ms) + 80ms) cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+
+@keyframes hero-copy-arrival {
+  from { transform: translateY(18px); }
+  to { transform: translateY(0); }
 }
 
 .hero .project-showcase[data-reveal] {
   animation-name: showcase-arrival;
-  animation-delay: 260ms;
+  animation-delay: calc(var(--intro-offset, 0ms) + 200ms);
 }
 
 .work-index-hero [data-reveal] {
@@ -3124,7 +3136,8 @@ section.related-services > .services-index-list > .services-index-row:focus-visi
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
-  [data-reveal], .hero [data-reveal] {
+  [data-reveal], .hero [data-reveal],
+  .hero-title .mask-line > span {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
@@ -3942,14 +3955,25 @@ section.related-services > .services-index-list > .services-index-row:focus-visi
 
 /* Opening brand reveal ------------------------------------------------------ */
 
-.intro-reveal {
+.intro-reveal { display: none; }
+
+/* Played only when the inline gate marks the first view of a session. The
+   hero is already painted underneath and rises as the curtain lifts. */
+html[data-intro="play"] {
+  --intro-offset: 620ms;
+  --intro-exit-at: 560ms;
+  --intro-exit: 380ms;
+}
+
+html[data-intro="play"] .intro-reveal {
   position: fixed;
   z-index: 300;
   inset: 0;
   display: grid;
   place-items: center;
   background: var(--ink);
-  animation: intro-exit 460ms var(--ease-out) 980ms both;
+  pointer-events: none;
+  animation: intro-exit var(--intro-exit) var(--ease-out) var(--intro-exit-at) both;
 }
 
 .intro-reveal-inner {
@@ -3963,7 +3987,7 @@ section.related-services > .services-index-list > .services-index-row:focus-visi
   font-family: var(--display);
   font-size: clamp(3.6rem, 9vw, 6rem);
   line-height: 1;
-  animation: intro-mark 520ms var(--ease-out) 60ms both;
+  animation: intro-mark 420ms var(--ease-out) 40ms both;
 }
 
 .intro-line {
@@ -3971,7 +3995,7 @@ section.related-services > .services-index-list > .services-index-row:focus-visi
   height: 1px;
   background: var(--gold);
   transform-origin: center;
-  animation: intro-line 560ms var(--ease-out) 300ms both;
+  animation: intro-line 420ms var(--ease-out) 200ms both;
 }
 
 .intro-word {
@@ -3982,7 +4006,19 @@ section.related-services > .services-index-list > .services-index-row:focus-visi
   font-weight: 700;
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  animation: intro-mark 460ms ease 520ms both;
+  animation: intro-mark 360ms ease 320ms both;
+}
+
+/* Phones get a tighter sequence: speed is the premium signal there. */
+@media (max-width: 720px) {
+  html[data-intro="play"] {
+    --intro-offset: 440ms;
+    --intro-exit-at: 380ms;
+    --intro-exit: 320ms;
+  }
+  .intro-monogram { animation-duration: 320ms; animation-delay: 0ms; }
+  .intro-line { animation-duration: 320ms; animation-delay: 120ms; }
+  .intro-word { animation-duration: 280ms; animation-delay: 200ms; }
 }
 
 @keyframes intro-mark {
