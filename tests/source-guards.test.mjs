@@ -468,3 +468,9 @@ test("phones never initialise WebGL and 3D waits for idle", async () => {
   assert.match(experience, /requestIdleCallback/);
   assert.match(experience, /dynamic\(/);
 });
+
+test("production builds do not reuse a Turbopack filesystem cache", async () => {
+  // A restored build cache once deployed new HTML with a stale stylesheet.
+  const nextConfig = await read("../next.config.ts");
+  assert.match(nextConfig, /turbopackFileSystemCacheForBuild: false/);
+});

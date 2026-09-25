@@ -36,6 +36,12 @@ const nextConfig: NextConfig = {
   // Pin the workspace root so an unrelated lockfile in a parent directory
   // cannot be inferred as the build root.
   turbopack: { root: import.meta.dirname },
+  experimental: {
+    // A restored Turbopack build cache on Vercel shipped stale CSS under a
+    // content-hashed name (new HTML, old stylesheet). This small site builds
+    // quickly from scratch, so correctness wins over warm-cache build speed.
+    turbopackFileSystemCacheForBuild: false,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920],
