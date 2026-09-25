@@ -148,6 +148,16 @@ test("oversized enquiry is rejected with 413", async () => {
   assert.equal(fetchCalls.length, 0);
 });
 
+test("overlong fields are rejected instead of silently truncated", async () => {
+  for (const field of ["fullName", "email", "phone", "message"]) {
+    const max = { fullName: 160, email: 254, phone: 50, message: 4000 }[field];
+    const response = await POST(contactRequest(validPayload({ [field]: "x".repeat(max + 1) }), { "x-real-ip": nextIp() }));
+    assert.equal(response.status, 400, field);
+    assert.match((await response.json()).error, /shorten/);
+  }
+  assert.equal(fetchCalls.length, 0);
+});
+
 test("honeypot submissions are silently accepted without sending email", async () => {
   const payload = validPayload({ company: "Spammy SEO Services" });
   const response = await POST(contactRequest(payload, { "x-real-ip": nextIp() }));

@@ -13,7 +13,7 @@ export function ProjectArtwork({ project, sizes, priority = false }: Props) {
       src={project.image}
       alt={project.alt}
       fill
-      priority={priority}
+      preload={priority}
       loading={priority ? undefined : "lazy"}
       sizes={sizes}
     />

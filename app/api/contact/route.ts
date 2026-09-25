@@ -18,6 +18,10 @@ function value(payload: ContactPayload, key: string, max: number) {
   return typeof item === "string" ? item.trim().slice(0, max) : "";
 }
 
+function tooLong(payload: ContactPayload, key: string, max: number) {
+  return typeof payload[key] === "string" && (payload[key] as string).trim().length > max;
+}
+
 function singleLine(payload: ContactPayload, key: string, max: number) {
   return value(payload, key, max).replace(/[\r\n\t]+/g, " ");
 }
@@ -85,6 +89,14 @@ export async function POST(request: NextRequest) {
   }
 
   if (singleLine(payload, "company", 100)) return NextResponse.json({ ok: true });
+
+  if (tooLong(payload, "fullName", 160) || tooLong(payload, "firstName", 80)
+    || tooLong(payload, "lastName", 80) || tooLong(payload, "email", 254)
+    || tooLong(payload, "phone", 50) || tooLong(payload, "service", 100)
+    || tooLong(payload, "budget", 100) || tooLong(payload, "timeline", 100)
+    || tooLong(payload, "message", 4000)) {
+    return NextResponse.json({ error: "Please shorten your enquiry and try again." }, { status: 400 });
+  }
 
   const fullName = singleLine(payload, "fullName", 160)
     || [singleLine(payload, "firstName", 80), singleLine(payload, "lastName", 80)].filter(Boolean).join(" ");

@@ -253,7 +253,7 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   assert.match(homepage, /hero-title-accent/);
   assert.match(homepage, /hero-scroll-cue/);
   assert.match(homepage, /process-rail-fill/);
-  assert.match(homepage, /project-ghost-index/);
+  assert.doesNotMatch(homepage, /project-ghost-index/);
   assert.match(homepage, /data-cursor="VIEW"/);
   assert.match(homepage, /data-magnetic/);
 
@@ -344,6 +344,10 @@ test("contact form posts to the protected server endpoint", async () => {
     read("../app/api/contact/route.ts"),
   ]);
   assert.match(contactForm, /fetch\("\/api\/contact"/);
+  assert.match(contactForm, /method="post" action="\/api\/contact"/);
+  assert.match(contactForm, /<noscript>/);
+  assert.match(contactForm, /\.contact-form \.form-grid/);
+  assert.match(contactForm, /mailto:\$\{siteConfig\.email\}/);
   assert.doesNotMatch(contactForm, /window\.location\.assign/);
   assert.match(route, /RESEND_API_KEY/);
   assert.match(route, /allowedOrigin/);
@@ -368,8 +372,9 @@ test("Vercel configuration uses the Next.js production build", async () => {
   assert.equal(vercelConfig.buildCommand, "npm run build");
   assert.match(packageJson.scripts.build, /next build$/);
   assert.equal(packageJson.scripts.verify, "npm run lint && npm run typecheck && npm test");
-  assert.equal(packageJson.scripts.typecheck, "bash scripts/typecheck.sh");
-  assert.match(await read("../scripts/typecheck.sh"), /next" typegen/);
+  assert.equal(packageJson.scripts.lint, "eslint . --ignore-pattern dist --ignore-pattern .next");
+  assert.equal(packageJson.scripts.typecheck, "node scripts/typecheck.mjs");
+  assert.match(await read("../scripts/typecheck.mjs"), /next[\\/]dist[\\/]bin[\\/]next/);
   assert.match(nextConfig, /const isDevelopment = process\.env\.NODE_ENV === "development"/);
   assert.match(nextConfig, /script-src 'self' 'unsafe-inline'.*isDevelopment.*'unsafe-eval'/);
   assert.doesNotMatch(nextConfig, /script-src 'self' 'unsafe-inline' 'unsafe-eval'/);
@@ -380,4 +385,40 @@ test("Vercel configuration uses the Next.js production build", async () => {
   for (const generatedDirectory of [".sites-runtime", ".agents", ".codex", ".claude"]) {
     assert.ok(eslintConfig.includes(`"${generatedDirectory}/**"`));
   }
+});
+
+test("typography is self-hosted so every platform gets the intended pairing", async () => {
+  const [layout, styles, nextConfig] = await Promise.all([
+    read("../app/layout.tsx"),
+    read("../app/globals.css"),
+    read("../next.config.ts"),
+  ]);
+  assert.match(layout, /from "next\/font\/google"/);
+  assert.match(layout, /variable: "--font-sans"/);
+  assert.match(layout, /variable: "--font-display"/);
+  assert.match(layout, /className=\{`\$\{sansFont\.variable\} \$\{displayFont\.variable\}`\}/);
+  assert.match(styles, /--sans: var\(--font-sans\),/);
+  assert.match(styles, /--display: var\(--font-display\),/);
+  // next/font serves files same-origin, which the CSP must continue to allow.
+  assert.match(nextConfig, /"font-src 'self'/);
+});
+
+test("portfolio screenshots keep their left-aligned headlines in frame", async () => {
+  const styles = await read("../app/globals.css");
+  assert.doesNotMatch(styles, /object-position: top center/);
+  assert.match(styles, /scale: 1\.1;\s*transform-origin: left center;/);
+  assert.match(styles, /\.showcase-slides \{\s*position: relative;\s*aspect-ratio: 1\.456 \/ 1;/);
+  assert.match(styles, /\.case-study-hero-image \{\s*position: relative;\s*aspect-ratio: 1\.456 \/ 1;/);
+});
+
+test("service heroes carry decorative real project evidence", async () => {
+  const [servicePage, servicesIndex] = await Promise.all([
+    read("../app/services/[slug]/page.tsx"),
+    read("../app/services/page.tsx"),
+  ]);
+  for (const source of [servicePage, servicesIndex]) {
+    assert.match(source, /className="service-hero-copy"/);
+    assert.match(source, /<figure className="service-hero-visual" aria-hidden="true">/);
+  }
+  assert.match(servicePage, /project=\{featuredProject\}/);
 });

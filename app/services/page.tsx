@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ProjectArtwork } from "../project-artwork";
+import { projects } from "../project-data";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { servicePages } from "./service-data";
@@ -70,16 +72,28 @@ export default function ServicesPage() {
           </nav>
 
           <header className="service-hero">
-            <p className="eyebrow">Digital services / Sydney</p>
-            <h1>Digital services</h1>
-            <p className="content-lead">
-              One studio covering the full digital journey — from the first strategic decision to
-              post-launch support, with every recommendation tied to a clear business goal.
-            </p>
-            <div className="content-actions">
-              <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
-              <Link className="button button-ghost" href="/work">View Our Work</Link>
+            <div className="service-hero-copy">
+              <p className="eyebrow">Digital services / Sydney</p>
+              <h1>Digital services</h1>
+              <p className="content-lead">
+                One studio covering the full digital journey — from the first strategic decision to
+                post-launch support, with every recommendation tied to a clear business goal.
+              </p>
+              <div className="content-actions">
+                <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
+                <Link className="button button-ghost" href="/work">View Our Work</Link>
+              </div>
             </div>
+            {/* Decorative detail crop of the lead portfolio project. */}
+            <figure className="service-hero-visual" aria-hidden="true">
+              <div className="service-hero-visual-frame">
+                <ProjectArtwork project={projects[0]} sizes="440px" />
+              </div>
+              <figcaption>
+                <span>Live work</span>
+                {projects[0].name}
+              </figcaption>
+            </figure>
           </header>
 
           <section className="related-services" aria-labelledby="services-index-heading">

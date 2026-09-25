@@ -77,6 +77,16 @@ const processSteps = [
   ["04", "Launch & support", "We complete launch checks, publish with confidence and stay available as you grow."],
 ] as const;
 
+const featuredProjectSlugs = new Set([
+  "aftab-sons-transport",
+  "247-inventory-system",
+  "adelaide-wholesale-tyres",
+  "maple-rentals",
+  "zq-removals",
+  "decent-development",
+]);
+const featuredProjects = projects.filter((project) => featuredProjectSlugs.has(project.slug));
+
 export default function AgencyHome({ currentYear }: { currentYear: number }) {
   return (
     <>
@@ -85,9 +95,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
       <main id="main-content">
         <section className="hero" aria-labelledby="hero-heading">
           <Hero3DExperience />
-          <div className="hero-grid-lines" aria-hidden="true" />
-          <div className="hero-glow" aria-hidden="true" />
-          <div className="hero-watermark" aria-hidden="true">AB</div>
           <div className="container hero-layout">
             <div className="hero-copy" data-reveal>
               <p className="eyebrow"><span className="eyebrow-mark" /> Sydney studio · Australia-wide</p>
@@ -117,9 +124,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             </div>
 
             <div className="hero-showcase-stack">
-              <p className="hero-status-chip" aria-hidden="true">
-                <span className="hero-status-dot" />{projects.length} projects live
-              </p>
               <ProjectShowcase />
             </div>
           </div>
@@ -129,7 +133,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <span>Scroll</span>
               <span className="hero-scroll-cue-line" aria-hidden="true" />
             </a>
-            <p className="hero-stack-note">Next.js · React · TypeScript · Three.js</p>
+            <p className="hero-stack-note">Independent digital studio · Sydney, Australia</p>
           </div>
 
           <div className="hero-marquee" aria-hidden="true">
@@ -208,7 +212,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               </div>
             </div>
             <div className="work-grid">
-              {projects.map((project, index) => (
+              {featuredProjects.map((project, index) => (
                 <Link
                   className="project-card"
                   data-reveal
@@ -217,7 +221,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   key={project.name}
                   aria-label={`${project.name} — View Case Study`}
                 >
-                  <span className="project-ghost-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                   <div className="project-image">
                     <ProjectArtwork
                       project={project}
@@ -256,12 +259,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <h2 id="process-heading">A clear path from ambition to launch.</h2>
               <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
               <a className="text-link" href="#contact">Start a Project <ArrowIcon /></a>
-              <div className="process-pipeline" aria-hidden="true">
-                <span className="process-pipeline-prompt">studio --pipeline</span>
-                <ol className="process-pipeline-steps">
-                  {processSteps.map(([number, title]) => <li key={number}>{title.toLowerCase().split(" ")[0]}</li>)}
-                </ol>
-              </div>
             </div>
             <div className="process-list-wrap" data-reveal>
               <span className="process-rail-fill" aria-hidden="true" />
@@ -293,7 +290,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         </section>
 
         <section className="section about-section" id="about" aria-labelledby="about-heading">
-          <div className="section-mega-number" aria-hidden="true">04</div>
           <div className="container about-layout">
             <div className="about-logo" data-reveal>
               <div className="about-logo-ring" aria-hidden="true" />

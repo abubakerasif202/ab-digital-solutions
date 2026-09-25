@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, type CSSProperties } from "react";
+import { flushSync } from "react-dom";
 import { ProjectArtwork } from "../project-artwork";
 import { isSoftwareProject, projects, sectors, type Project } from "../project-data";
 
@@ -23,9 +24,11 @@ export function WorkIndexBody() {
     : projects.filter((project) => project.sector === filter);
 
   const handleFilterChange = (nextFilter: string) => {
+    if (nextFilter === filter) return;
     const doc = document as ViewTransitionDocument;
-    if (typeof doc.startViewTransition === "function") {
-      doc.startViewTransition(() => setFilter(nextFilter));
+    if (typeof doc.startViewTransition === "function"
+      && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      doc.startViewTransition(() => flushSync(() => setFilter(nextFilter)));
     } else {
       setFilter(nextFilter);
     }

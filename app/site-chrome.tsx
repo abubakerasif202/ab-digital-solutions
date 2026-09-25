@@ -219,7 +219,7 @@ export function SiteHeader() {
               width={400}
               height={340}
               sizes="48px"
-              priority
+              loading="eager"
             />
             <span className="brand-name">AB Web Studio</span>
           </Link>

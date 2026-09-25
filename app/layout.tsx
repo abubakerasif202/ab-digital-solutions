@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Nunito_Sans, Source_Serif_4 } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { PointerFX } from "./components/PointerFX";
 import { assetBase, siteConfig } from "./site-config";
@@ -138,9 +139,23 @@ const structuredData = {
   ],
 };
 
+// Self-hosted at build time so every platform gets the intended pairing:
+// a humanist sans for interface and headings, an old-style serif for accents.
+const sansFont = Nunito_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sans",
+});
+
+const displayFont = Source_Serif_4({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+});
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-AU">
+    <html lang="en-AU" className={`${sansFont.variable} ${displayFont.variable}`}>
       <body>
         <WebVitals />
         <PointerFX />

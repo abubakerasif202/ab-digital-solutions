@@ -126,13 +126,25 @@ export default async function ServicePage({ params }: Props) {
           </nav>
 
           <header className="service-hero">
-            <p className="eyebrow">Digital services / Sydney</p>
-            <h1>{service.title}</h1>
-            <p className="content-lead">{service.intro}</p>
-            <div className="content-actions">
-              <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
-              <Link className="button button-ghost" href="/work">View Our Work</Link>
+            <div className="service-hero-copy">
+              <p className="eyebrow">Digital services / Sydney</p>
+              <h1>{service.title}</h1>
+              <p className="content-lead">{service.intro}</p>
+              <div className="content-actions">
+                <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
+                <Link className="button button-ghost" href="/work">View Our Work</Link>
+              </div>
             </div>
+            {/* Decorative detail crop; the same project is linked in full below. */}
+            <figure className="service-hero-visual" aria-hidden="true">
+              <div className="service-hero-visual-frame">
+                <ProjectArtwork project={featuredProject} sizes="440px" />
+              </div>
+              <figcaption>
+                <span>Live work</span>
+                {featuredProject.name}
+              </figcaption>
+            </figure>
           </header>
 
           <section className="service-inclusions" aria-labelledby="included-heading">

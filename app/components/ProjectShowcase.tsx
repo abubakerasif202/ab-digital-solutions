@@ -95,14 +95,10 @@ export function ProjectShowcase() {
       }}
     >
       <div className="showcase-topline">
-        <span>Selected work / 2026</span>
-        <span>{String(activeSlide + 1).padStart(2, "0")} — {String(projects.length).padStart(2, "0")}</span>
+        <span>Selected live work</span>
+        <span>{String(activeSlide + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
       </div>
-      <div className="browser-frame">
-        <div className="browser-bar" aria-hidden="true">
-          <i /><i /><i />
-          <span>{activeProject.displayUrl}</span>
-        </div>
+      <div className="showcase-stage">
         <div className="showcase-slides" aria-live={sliderPaused ? "polite" : "off"}>
           {[activeSlide, nextSlide].map((index) => {
             const project = projects[index];
@@ -132,6 +128,7 @@ export function ProjectShowcase() {
         <div>
           <span>{activeProject.category}</span>
           <strong>{activeProject.name}</strong>
+          <small className="showcase-url">{activeProject.displayUrl}</small>
         </div>
         <div className="slider-controls">
           <button type="button" onClick={showPreviousSlide} aria-label="Previous project">

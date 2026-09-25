@@ -11,8 +11,8 @@
     "start": "next start",
     "test": "node scripts/run-tests.mjs",
     "verify": "npm run lint && npm run typecheck && npm test",
-    "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next",
-    "typecheck": "bash scripts/typecheck.sh"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "typecheck": "node scripts/typecheck.mjs"
   },
   "dependencies": {
     "@vercel/speed-insights": "^2.0.0",

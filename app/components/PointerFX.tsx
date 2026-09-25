@@ -46,6 +46,17 @@ export function PointerFX() {
     let ringY = -100;
     let rafId = 0;
     let running = false;
+    const settling = new Map<HTMLElement, {
+      frameId: number;
+      cx: number;
+      cy: number;
+    }>();
+
+    const start = () => {
+      if (running || document.hidden) return;
+      running = true;
+      rafId = requestAnimationFrame(animate);
+    };
 
     const onPointerMove = (event: PointerEvent) => {
       targetX = event.clientX;
@@ -59,6 +70,7 @@ export function PointerFX() {
         state.tx = clamp(event.clientX - (rect.left + rect.width / 2));
         state.ty = clamp(event.clientY - (rect.top + rect.height / 2));
       }
+      start();
     };
 
     const animate = () => {
@@ -73,12 +85,13 @@ export function PointerFX() {
         state.cy += (state.ty - state.cy) * LERP_MAGNETIC;
         state.el.style.translate = `${state.cx.toFixed(2)}px ${state.cy.toFixed(2)}px`;
       }
-      rafId = requestAnimationFrame(animate);
-    };
-
-    const start = () => {
-      if (running || document.hidden) return;
-      running = true;
+      if (Math.abs(targetX - ringX) < 0.1
+        && Math.abs(targetY - ringY) < 0.1
+        && (!state || (Math.abs(state.tx - state.cx) < 0.1
+          && Math.abs(state.ty - state.cy) < 0.1))) {
+        running = false;
+        return;
+      }
       rafId = requestAnimationFrame(animate);
     };
 
@@ -89,7 +102,6 @@ export function PointerFX() {
 
     const onVisibilityChange = () => {
       if (document.hidden) stop();
-      else start();
     };
 
     const releaseMagnetic = () => {
@@ -99,18 +111,27 @@ export function PointerFX() {
       state.ty = 0;
       const released = state;
       magnetic.current = null;
+      const settleState = { frameId: 0, cx: released.cx, cy: released.cy };
+      settling.set(released.el, settleState);
       // Keep easing back to rest, then clean the inline style.
+      const scheduleSettle = () => {
+        settleState.frameId = requestAnimationFrame(() => {
+          if (settling.get(released.el) !== settleState) return;
+          settle();
+        });
+      };
       const settle = () => {
-        released.cx += (0 - released.cx) * LERP_MAGNETIC;
-        released.cy += (0 - released.cy) * LERP_MAGNETIC;
-        if (Math.abs(released.cx) < 0.1 && Math.abs(released.cy) < 0.1) {
+        settleState.cx += (0 - settleState.cx) * LERP_MAGNETIC;
+        settleState.cy += (0 - settleState.cy) * LERP_MAGNETIC;
+        if (Math.abs(settleState.cx) < 0.1 && Math.abs(settleState.cy) < 0.1) {
           released.el.style.removeProperty("translate");
+          settling.delete(released.el);
           return;
         }
-        released.el.style.translate = `${released.cx.toFixed(2)}px ${released.cy.toFixed(2)}px`;
-        requestAnimationFrame(settle);
+        released.el.style.translate = `${settleState.cx.toFixed(2)}px ${settleState.cy.toFixed(2)}px`;
+        scheduleSettle();
       };
-      requestAnimationFrame(settle);
+      scheduleSettle();
     };
 
     const onPointerOver = (event: PointerEvent) => {
@@ -124,7 +145,19 @@ export function PointerFX() {
       const magneticTarget = target?.closest("[data-magnetic]");
       if (magneticTarget instanceof HTMLElement && magnetic.current?.el !== magneticTarget) {
         releaseMagnetic();
-        magnetic.current = { el: magneticTarget, tx: 0, ty: 0, cx: 0, cy: 0 };
+        const previousSettle = settling.get(magneticTarget);
+        if (previousSettle) {
+          cancelAnimationFrame(previousSettle.frameId);
+          settling.delete(magneticTarget);
+        }
+        magnetic.current = {
+          el: magneticTarget,
+          tx: 0,
+          ty: 0,
+          cx: previousSettle?.cx ?? 0,
+          cy: previousSettle?.cy ?? 0,
+        };
+        start();
       }
     };
 
@@ -140,10 +173,14 @@ export function PointerFX() {
     document.addEventListener("pointerover", onPointerOver, { passive: true });
     document.addEventListener("pointerout", onPointerOut, { passive: true });
     document.addEventListener("visibilitychange", onVisibilityChange);
-    start();
 
     return () => {
       stop();
+      settling.forEach((state, element) => {
+        cancelAnimationFrame(state.frameId);
+        element.style.removeProperty("translate");
+      });
+      settling.clear();
       window.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("pointerover", onPointerOver);
       document.removeEventListener("pointerout", onPointerOut);

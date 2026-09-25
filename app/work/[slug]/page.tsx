@@ -117,7 +117,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             </div>
             <div className="case-study-meta" data-reveal>
               <span>{String(currentIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
-              <span>{project.sector}</span>
+              {!project.category.toLowerCase().startsWith(project.sector.toLowerCase()) && <span>{project.sector}</span>}
               <span>{project.category}</span>
               <a
                 href={project.url}
