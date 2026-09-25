@@ -132,7 +132,9 @@ test("homepage interactive work is isolated and pauses when hidden", async () =>
   assert.doesNotMatch(homepage, /useState|useEffect|setInterval/);
   assert.match(showcase, /IntersectionObserver/);
   assert.match(showcase, /document\.visibilityState/);
-  assert.match(showcase, /\[activeSlide, nextSlide\]\.map/);
+  // At most two slides mount; the upcoming one waits for idle.
+  assert.match(showcase, /\(nextSlideReady \? \[activeSlide, nextSlide\] : \[activeSlide\]\)\.map/);
+  assert.match(showcase, /requestIdleCallback\(ready/);
   assert.match(showcase, /window\.clearInterval/);
   assert.match(contact, /fetch\("\/api\/contact"/);
 });
@@ -473,4 +475,27 @@ test("production builds do not reuse a Turbopack filesystem cache", async () => 
   // A restored build cache once deployed new HTML with a stale stylesheet.
   const nextConfig = await read("../next.config.ts");
   assert.match(nextConfig, /turbopackFileSystemCacheForBuild: false/);
+});
+
+test("below-fold homepage sections skip offscreen layout with sized placeholders", async () => {
+  const styles = await read("../app/globals.css");
+  const start = styles.indexOf("Offscreen rendering");
+  const block = start < 0 ? null
+    : [styles.slice(start, styles.indexOf("}", styles.indexOf("content-visibility: auto;", start)) + 1)];
+  assert.ok(block, "content-visibility rule for below-fold sections");
+  assert.match(block[0], /contain-intrinsic-block-size: auto var\(--cv-size/);
+  // The hero is the first viewport and must always render immediately.
+  assert.doesNotMatch(block[0], /\.hero\b/);
+  for (const section of ["services-section", "work-section", "contact-section", "site-footer"]) {
+    assert.match(styles, new RegExp(String.raw`\.${section} \{ --cv-size: \d+px; \}`));
+  }
+  // Every breakpoint tier provides its own measured sizes.
+  assert.equal((styles.match(/\.work-section \{ --cv-size: \d+px; \}/g) ?? []).length, 3);
+});
+
+test("the display serif loads only the weight it renders", async () => {
+  const layout = await read("../app/layout.tsx");
+  const serif = layout.match(/Source_Serif_4\(\{[\s\S]*?\}\)/)[0];
+  assert.match(serif, /weight: "400"/);
+  assert.doesNotMatch(serif, /italic/);
 });

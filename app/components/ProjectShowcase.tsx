@@ -29,6 +29,10 @@ export function ProjectShowcase() {
   const [carouselEngaged, setCarouselEngaged] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isPageVisible, setIsPageVisible] = useState(true);
+  // The upcoming slide is only needed for the crossfade (first advance is
+  // 6.5s away), so it mounts once the browser is idle instead of competing
+  // with the first paint for bandwidth.
+  const [nextSlideReady, setNextSlideReady] = useState(false);
   const prefersReducedMotion = useSyncExternalStore(
     subscribeToReducedMotion,
     getReducedMotionSnapshot,
@@ -49,6 +53,20 @@ export function ProjectShowcase() {
     );
     observer.observe(root);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const idleWindow = window as typeof window & {
+      requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    const ready = () => setNextSlideReady(true);
+    if (idleWindow.requestIdleCallback) {
+      const id = idleWindow.requestIdleCallback(ready, { timeout: 2500 });
+      return () => idleWindow.cancelIdleCallback?.(id);
+    }
+    const timer = window.setTimeout(ready, 1200);
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -100,7 +118,7 @@ export function ProjectShowcase() {
       </div>
       <div className="showcase-stage">
         <div className="showcase-slides" aria-live={sliderPaused ? "polite" : "off"}>
-          {[activeSlide, nextSlide].map((index) => {
+          {(nextSlideReady ? [activeSlide, nextSlide] : [activeSlide]).map((index) => {
             const project = projects[index];
             const isActive = index === activeSlide;
 

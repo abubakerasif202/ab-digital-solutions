@@ -147,8 +147,11 @@ const sansFont = Nunito_Sans({
   variable: "--font-sans",
 });
 
+// The serif only ever renders at 400 (accents, project names), so a single
+// static weight replaces the variable-weight file on the critical path.
 const displayFont = Source_Serif_4({
   subsets: ["latin"],
+  weight: "400",
   display: "swap",
   variable: "--font-display",
 });

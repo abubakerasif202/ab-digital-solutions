@@ -4113,3 +4113,52 @@ html[data-intro="play"] .intro-reveal {
 }
 
 .not-found-nav a { min-width: 44px; justify-content: center; }
+
+/* Offscreen rendering ------------------------------------------------------
+   Everything after the homepage hero starts below the first viewport at every
+   breakpoint. Skipping its layout until it approaches the viewport halves the
+   layout work before first paint. Heights are measured per breakpoint; `auto`
+   makes the browser remember each section's real size once it has rendered,
+   so anchors and the scrollbar stay stable. */
+.services-section,
+.conversion-banner,
+.work-section,
+.process-section,
+.standard-section,
+.about-section,
+.contact-section,
+.site-footer {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto var(--cv-size, 1000px);
+}
+
+.services-section { --cv-size: 2180px; }
+.conversion-banner { --cv-size: 325px; }
+.work-section { --cv-size: 5400px; }
+.process-section { --cv-size: 1030px; }
+.standard-section { --cv-size: 945px; }
+.about-section { --cv-size: 1350px; }
+.contact-section { --cv-size: 1100px; }
+.site-footer { --cv-size: 565px; }
+
+@media (max-width: 1100px) {
+  .services-section { --cv-size: 2100px; }
+  .conversion-banner { --cv-size: 300px; }
+  .work-section { --cv-size: 4700px; }
+  .process-section { --cv-size: 1080px; }
+  .standard-section { --cv-size: 930px; }
+  .about-section { --cv-size: 1400px; }
+  .contact-section { --cv-size: 1230px; }
+  .site-footer { --cv-size: 950px; }
+}
+
+@media (max-width: 720px) {
+  .services-section { --cv-size: 2970px; }
+  .conversion-banner { --cv-size: 390px; }
+  .work-section { --cv-size: 5000px; }
+  .process-section { --cv-size: 1240px; }
+  .standard-section { --cv-size: 1100px; }
+  .about-section { --cv-size: 1920px; }
+  .contact-section { --cv-size: 1900px; }
+  .site-footer { --cv-size: 1420px; }
+}
