@@ -1,4 +1,8 @@
-@import "tailwindcss";
+/* Scan only the app source for class candidates. Automatic detection also
+   read tracked docs and reports and emitted ~450 unused utilities into the
+   render-blocking stylesheet. */
+@import "tailwindcss" source(none);
+@source "./";
 
 :root {
   --ink: #050505;

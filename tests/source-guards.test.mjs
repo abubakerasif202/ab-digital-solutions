@@ -499,3 +499,8 @@ test("the display serif loads only the weight it renders", async () => {
   assert.match(serif, /weight: "400"/);
   assert.doesNotMatch(serif, /italic/);
 });
+
+test("Tailwind only scans app source, keeping unused utilities out of critical CSS", async () => {
+  const styles = await read("../app/globals.css");
+  assert.match(styles, /@import "tailwindcss" source\(none\);\s*\n@source "\.\/";/);
+});
