@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { HeroFallback } from "./HeroFallback";
 
 interface Hero3DCanvasProps {
   className?: string;
@@ -61,116 +62,64 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     container.appendChild(renderer.domElement);
 
-    // Lighting aligned with brand palette (Gold #d4a32f, Red #b5121b, Cyan #38bdf8)
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
+    // A compact extruded A / B sculpture. Flat front faces and bevelled edges
+    // keep the brand legible; ruby is structural rather than a particle effect.
+    scene.add(new THREE.AmbientLight(0xf4f1ea, 1.2));
+    const keyLight = new THREE.DirectionalLight(0xf4f1ea, 4);
+    keyLight.position.set(2, 4, 5);
+    scene.add(keyLight);
+    const rubyLight = new THREE.PointLight(0xd21736, 14, 12);
+    rubyLight.position.set(-3, -1, 3);
+    scene.add(rubyLight);
+    const edgeLight = new THREE.DirectionalLight(0xd1a64c, 1.4);
+    edgeLight.position.set(-4, 3, -1);
+    scene.add(edgeLight);
 
-    const mainLight = new THREE.DirectionalLight(0xd4a32f, 2.2); // Warm Gold directional light
-    mainLight.position.set(5, 5, 5);
-    scene.add(mainLight);
-
-    const redAccentLight = new THREE.PointLight(0xb5121b, 3.5, 15); // Brand Red accent
-    redAccentLight.position.set(-4, -3, 2);
-    scene.add(redAccentLight);
-
-    const cyanHighlightLight = new THREE.PointLight(0x38bdf8, 2.0, 12); // Crisp Cyan accent
-    cyanHighlightLight.position.set(3, 4, 3);
-    scene.add(cyanHighlightLight);
-
-    // Group for 3D objects
     const heroGroup = new THREE.Group();
+    heroGroup.rotation.set(-0.12, -0.22, -0.06);
     scene.add(heroGroup);
-
-    // 1. Central Complex Sculptural Geometry
-    const tubularSegments = isMobile ? 60 : isTablet ? 72 : 120;
-    const radialSegments = isMobile ? 9 : isTablet ? 10 : 16;
-    const mainGeometry = new THREE.TorusKnotGeometry(1.15, 0.3, tubularSegments, radialSegments, 2, 3);
-    // Clearcoat adds a second normal/roughness evaluation per fragment. Worth
-    // it on desktop where the mesh fills more of the frame; on mobile/tablet
-    // a plain metallic standard material reads almost identically at a
-    // fraction of the shader cost.
-    const mainMaterial = (isMobile || isTablet)
-      ? new THREE.MeshStandardMaterial({
-        color: 0x08090a,
-        metalness: 0.88,
-        roughness: 0.16,
-      })
-      : new THREE.MeshPhysicalMaterial({
-        color: 0x08090a,
-        metalness: 0.88,
-        roughness: 0.12,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.08,
-        reflectivity: 0.95,
+    const chromeMaterial = new THREE.MeshStandardMaterial({
+      color: 0x151519, metalness: 0.72, roughness: 0.24,
+    });
+    const rubyMaterial = new THREE.MeshStandardMaterial({
+      color: 0xd21736, metalness: 0.45, roughness: 0.26,
+      emissive: 0x760d21, emissiveIntensity: 0.35,
+    });
+    const geometries: THREE.ExtrudeGeometry[] = [];
+    const polygon = (points: [number, number][]) => {
+      const shape = new THREE.Shape();
+      points.forEach(([x, y], index) => index === 0 ? shape.moveTo(x, y) : shape.lineTo(x, y));
+      shape.closePath();
+      return shape;
+    };
+    const addShape = (shape: THREE.Shape, material: THREE.MeshStandardMaterial) => {
+      const geometry = new THREE.ExtrudeGeometry(shape, {
+        depth: 0.28, bevelEnabled: true, bevelSegments: 2,
+        steps: 1, bevelSize: 0.035, bevelThickness: 0.035, curveSegments: 8,
       });
-    const mainMesh = new THREE.Mesh(mainGeometry, mainMaterial);
-    heroGroup.add(mainMesh);
-
-    // 2. Outer Gold Wireframe Ring
-    const ringGeometry = new THREE.IcosahedronGeometry(2.15, isMobile || isTablet ? 1 : 2);
-    const ringMaterial = new THREE.MeshBasicMaterial({
-      color: 0xd4a32f,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.22,
-    });
-    const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
-    heroGroup.add(ringMesh);
-
-    // 3. Orbiting Geometric Satellites
-    const satelliteGroup = new THREE.Group();
-    heroGroup.add(satelliteGroup);
-
-    const satGeom1 = new THREE.OctahedronGeometry(0.32, 0);
-    const satMat1 = new THREE.MeshStandardMaterial({
-      color: 0xd4a32f,
-      metalness: 0.9,
-      roughness: 0.1,
-      emissive: 0xb45309,
-      emissiveIntensity: 0.4,
-    });
-    const sat1 = new THREE.Mesh(satGeom1, satMat1);
-    sat1.position.set(2.4, 1.2, 0.5);
-    satelliteGroup.add(sat1);
-
-    const satGeom2 = new THREE.DodecahedronGeometry(0.26, 0);
-    const satMat2 = new THREE.MeshStandardMaterial({
-      color: 0xb5121b,
-      metalness: 0.9,
-      roughness: 0.15,
-      emissive: 0x7f1d1d,
-      emissiveIntensity: 0.5,
-    });
-    const sat2 = new THREE.Mesh(satGeom2, satMat2);
-    sat2.position.set(-2.2, -1.4, 0.8);
-    satelliteGroup.add(sat2);
-
-    // 4. Interactive Particle Field
-    const particleCount = isMobile ? 88 : isTablet ? 100 : 240;
-    const particleGeometry = new THREE.BufferGeometry();
-    const particlePositions = new Float32Array(particleCount * 3);
-
-    for (let i = 0; i < particleCount; i++) {
-      particlePositions[i * 3] = (Math.random() - 0.5) * 16;
-      particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 12;
-      particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      geometries.push(geometry);
+      heroGroup.add(new THREE.Mesh(geometry, material));
+    };
+    const aShape = polygon([[-2.15, -1.2], [-1.22, 1.2], [-0.72, 1.2], [0.05, -1.2], [-0.5, -1.2], [-0.67, -0.63], [-1.43, -0.63], [-1.62, -1.2]]);
+    const aCounter = new THREE.Path();
+    aCounter.moveTo(-1.29, -0.12);
+    aCounter.lineTo(-0.83, -0.12);
+    aCounter.lineTo(-1.04, 0.64);
+    aCounter.closePath();
+    aShape.holes.push(aCounter);
+    addShape(aShape, chromeMaterial);
+    const bShape = polygon([[0.55, -1.2], [0.55, 1.2], [1.44, 1.2], [1.94, 0.94], [2.04, 0.48], [1.8, 0.1], [2.09, -0.19], [2.1, -0.73], [1.76, -1.2]]);
+    for (const [bottom, top] of [[0.3, 0.77], [-0.73, -0.22]]) {
+      const hole = new THREE.Path();
+      hole.moveTo(1.07, bottom);
+      hole.lineTo(1.54, bottom);
+      hole.lineTo(1.54, top);
+      hole.lineTo(1.07, top);
+      hole.closePath();
+      bShape.holes.push(hole);
     }
-
-    particleGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(particlePositions, 3)
-    );
-
-    const particleMaterial = new THREE.PointsMaterial({
-      color: 0xfef08a,
-      size: isMobile || isTablet ? 0.04 : 0.045,
-      transparent: true,
-      opacity: 0.55,
-      blending: THREE.AdditiveBlending,
-    });
-
-    const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-    scene.add(particleSystem);
+    addShape(bShape, chromeMaterial);
+    addShape(polygon([[-0.36, -1.43], [-0.03, -1.43], [0.7, 1.43], [0.37, 1.43]]), rubyMaterial);
 
     // Animation & Smooth Control State
     let animationFrameId = 0;
@@ -250,30 +199,11 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       scrollY += (targetScrollY - scrollY) * 0.05;
       const scrollFactor = Math.min(scrollY / 1000, 2);
 
-      if (!prefersReducedMotion) {
-        // Main Mesh rotations
-        mainMesh.rotation.x = elapsedTime * 0.25 + mouseY * 0.5 + scrollFactor * 0.8;
-        mainMesh.rotation.y = elapsedTime * 0.35 + mouseX * 0.5 + scrollFactor * 1.2;
-
-        // Wireframe ring counter-rotation
-        ringMesh.rotation.x = -elapsedTime * 0.15 - mouseY * 0.3;
-        ringMesh.rotation.y = -elapsedTime * 0.2 + mouseX * 0.3;
-
-        // Satellites orbit
-        satelliteGroup.rotation.y = elapsedTime * 0.4 + mouseX * 0.4;
-        satelliteGroup.rotation.z = elapsedTime * 0.2;
-
-        sat1.rotation.x = elapsedTime * 0.6;
-        sat2.rotation.y = elapsedTime * 0.9;
-
-        // Particle field floating effect
-        particleSystem.rotation.y = elapsedTime * 0.03 + mouseX * 0.1;
-        particleSystem.rotation.x = elapsedTime * 0.02 + mouseY * 0.1;
-      }
-
-      // Parallax camera movement
-      camera.position.x = mouseX * 0.6;
-      camera.position.y = -mouseY * 0.6 - scrollFactor * 0.5;
+      heroGroup.rotation.x = -0.12 + Math.sin(elapsedTime * 0.24) * 0.045 + mouseY * 0.08;
+      heroGroup.rotation.y = -0.22 + Math.sin(elapsedTime * 0.18) * 0.08 + mouseX * 0.12;
+      heroGroup.position.y = Math.sin(elapsedTime * 0.32) * 0.07 - scrollFactor * 0.12;
+      camera.position.x = mouseX * 0.12;
+      camera.position.y = -mouseY * 0.12;
       camera.lookAt(scene.position);
 
       renderer.render(scene, camera);
@@ -393,17 +323,9 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       renderer.domElement.removeEventListener("webglcontextlost", handleContextLost);
 
-      // Dispose Geometries & Materials
-      mainGeometry.dispose();
-      mainMaterial.dispose();
-      ringGeometry.dispose();
-      ringMaterial.dispose();
-      satGeom1.dispose();
-      satMat1.dispose();
-      satGeom2.dispose();
-      satMat2.dispose();
-      particleGeometry.dispose();
-      particleMaterial.dispose();
+      geometries.forEach((geometry) => geometry.dispose());
+      chromeMaterial.dispose();
+      rubyMaterial.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
 
@@ -414,19 +336,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
   }, [quality, rendererFailed]);
 
   if (rendererFailed) {
-    return (
-      <div
-        className={`hero-3d-fallback ${className}`}
-        style={{
-          width: "100%",
-          height: "100%",
-          minHeight: "450px",
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(212, 163, 47, 0.18), rgba(181, 18, 27, 0.1), transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
-    );
+    return <HeroFallback />;
   }
 
   return (

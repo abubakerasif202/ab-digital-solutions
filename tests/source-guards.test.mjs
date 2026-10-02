@@ -5,7 +5,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
+const read = async (path) => {
+  const source = await readFile(new URL(path, import.meta.url), "utf8");
+  return path === "../app/agency-home.tsx"
+    ? source + await readFile(new URL("../app/components/PortfolioSection.tsx", import.meta.url), "utf8")
+    : source;
+};
 
 test("homepage exposes content directly instead of using an iframe", async () => {
   const [page, homepage, showcase, heroExperience] = await Promise.all([
@@ -17,9 +22,9 @@ test("homepage exposes content directly instead of using an iframe", async () =>
 
   assert.doesNotMatch(page, /<iframe\b/i);
   assert.match(homepage, /className="hero-title"/);
-  assert.match(homepage, /Websites that make/);
-  assert.match(homepage, /your business/);
-  assert.match(homepage, /impossible to ignore\./);
+  assert.match(homepage, /Digital experiences/);
+  assert.match(homepage, /that do the selling/);
+  assert.match(homepage, /before you say a word\./);
   assert.match(homepage, /id="contact"/);
   assert.match(showcase, /aria-roledescription="carousel"/);
   assert.match(heroExperience, /prefers-reduced-motion/);
@@ -117,7 +122,8 @@ test("premium motion remains present while mobile rendering is constrained", asy
   assert.match(styles, /@keyframes hero-marquee-scroll[\s\S]*?translate3d\(-50%, 0, 0\)/);
   assert.match(experience, /tabletQuery\.matches \|\| constrainedDevice/);
   assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.25\)/);
-  assert.match(canvas, /const particleCount = isMobile \? 88/);
+  assert.doesNotMatch(canvas, /TorusKnotGeometry|particleCount|PointsMaterial/);
+  assert.match(canvas, /ExtrudeGeometry/);
   assert.match(styles, /\.service-card\s*\{\s*min-height: 0;/);
   assert.match(styles, /@media \(max-width: 960px\) and \(orientation: landscape\)/);
 });
@@ -170,7 +176,7 @@ test("reviewed design issues remain remediated", async () => {
   assert.match(showcase, /setCarouselEngaged\(true\)/);
   assert.match(showcase, /setSliderPauseOverride\(true\)/);
   assert.match(homepage, /<a[\s\S]*className="service-card"/);
-  assert.match(chrome, /ab-logo-mark\.png/);
+  assert.match(chrome, /<ABLogo decorative/);
   assert.match(chrome, /AB Web Studio/);
   assert.match(servicePage, /<SiteHeader/);
   assert.match(servicePage, /<SiteFooter/);
@@ -199,7 +205,8 @@ test("mobile navigation keeps keyboard focus within its open menu", async () => 
   assert.match(chrome, /const focusableItems = \[menuButtonRef\.current, \.\.\.navItems\]\.filter/);
   assert.match(chrome, /event\.preventDefault\(\);\s*lastItem\.focus\(\)/);
   assert.match(chrome, /event\.preventDefault\(\);\s*firstItem\.focus\(\)/);
-  assert.match(chrome, /if \(menuOpen\) navRef\.current\?\.querySelector<HTMLElement>\("a"\)\?\.focus\(\)/);
+  assert.match(chrome, /const focusFrame = menuOpen \? window\.requestAnimationFrame/);
+  assert.match(chrome, /navRef\.current\?\.querySelector<HTMLElement>\("a"\)\?\.focus\(\)/);
   assert.match(chrome, /ref=\{navRef\}/);
   assert.match(chrome, /className="mobile-project-cta"/);
   assert.match(chrome, /window\.scrollY > window\.innerHeight \* 0\.72/);
@@ -289,9 +296,9 @@ test("brand theme balances premium red and gold accents", async () => {
     read("../opendesign/design-systems/ab-digital/colors_and_type.css"),
   ]);
 
-  assert.match(styles, /--red: #b5121b/);
-  assert.match(styles, /--brand-red: #b5121b/);
-  assert.match(styles, /--gold: #d4a32f/);
+  assert.match(styles, /--red: #d21736/);
+  assert.match(styles, /--brand-red: #d21736/);
+  assert.match(styles, /--gold: #d1a64c/);
   assert.match(styles, /box-shadow: inset 0 2px 0 var\(--brand-red\)/);
   assert.match(styles, /\.button-primary[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
   assert.match(styles, /\.hero-marquee[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
@@ -425,33 +432,11 @@ test("service heroes carry decorative real project evidence", async () => {
   assert.match(servicePage, /project=\{featuredProject\}/);
 });
 
-test("hero content paints in the first frame instead of waiting on the intro", async () => {
-  const [intro, styles, layout, page] = await Promise.all([
-    read("../app/components/IntroReveal.tsx"),
-    read("../app/globals.css"),
-    read("../app/layout.tsx"),
-    read("../app/page.tsx"),
-  ]);
-  // Server-rendered and gated before first paint: never a hydration-time overlay.
-  assert.doesNotMatch(intro, /^"use client"/);
-  assert.doesNotMatch(intro, /useEffect|useState|useSyncExternalStore/);
-  assert.match(intro, /setAttribute\("data-intro","play"\)/);
-  assert.match(intro, /setAttribute\("data-intro","done"\)/);
-  assert.match(layout, /<html[^>]*suppressHydrationWarning/);
-  assert.match(page, /<IntroReveal \/>/);
-  // Overlay hidden unless the gate plays it; shorter sequence on phones.
-  assert.match(styles, /\.intro-reveal \{ display: none; \}\s*\n/);
-  assert.match(styles, /html\[data-intro="play"\] \.intro-reveal \{/);
-  assert.match(styles, /@media \(max-width: 720px\) \{\s*html\[data-intro="play"\] \{/);
-  // Hero copy arrives with motion only, never hidden by opacity.
-  const heroRule = styles.match(/\.hero \[data-reveal\] \{[^}]*\}/)[0];
-  assert.match(heroRule, /hero-copy-arrival/);
-  const heroKeyframes = styles.match(/@keyframes hero-copy-arrival \{[\s\S]*?\n\}/)[0];
-  assert.doesNotMatch(heroKeyframes, /opacity/);
-  // Headline lines start partly visible inside their masks.
-  const lineRise = styles.match(/@keyframes hero-line-rise \{[\s\S]*?\n\}/)[0];
-  assert.doesNotMatch(lineRise, /translateY\(1\d\d%\)/);
-  assert.doesNotMatch(lineRise, /opacity/);
+test("hero content paints immediately without an intro overlay or hydration suppression", async () => {
+  const [page, layout] = await Promise.all([read("../app/page.tsx"), read("../app/layout.tsx")]);
+  assert.doesNotMatch(page, /IntroReveal|setTimeout/);
+  assert.doesNotMatch(layout, /suppressHydrationWarning/);
+  assert.match(page, /AgencyHome/);
 });
 
 test("reduced motion removes the headline rise and intro entirely", async () => {
@@ -497,6 +482,7 @@ test("the display serif loads only the weight it renders", async () => {
   const layout = await read("../app/layout.tsx");
   const serif = layout.match(/Source_Serif_4\(\{[\s\S]*?\}\)/)[0];
   assert.match(serif, /weight: "400"/);
+  assert.match(serif, /preload: false/);
   assert.doesNotMatch(serif, /italic/);
 });
 

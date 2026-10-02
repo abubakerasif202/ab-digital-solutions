@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ArrowIcon } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
 import { projects } from "../project-data";
+import { motionTokens } from "./motion/tokens";
 
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
 
@@ -80,7 +81,7 @@ export function ProjectShowcase() {
     if (sliderPaused) return;
     const timer = window.setInterval(
       () => setActiveSlide((current) => (current + 1) % projects.length),
-      6500,
+      motionTokens.duration.carousel,
     );
     return () => window.clearInterval(timer);
   }, [sliderPaused]);
@@ -100,6 +101,7 @@ export function ProjectShowcase() {
       ref={rootRef}
       className="project-showcase"
       data-reveal
+      data-tilt
       role="region"
       aria-roledescription="carousel"
       aria-label="Featured website projects"
@@ -115,6 +117,11 @@ export function ProjectShowcase() {
       <div className="showcase-topline">
         <span>Selected live work</span>
         <span>{String(activeSlide + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
+      </div>
+      <div className="showcase-browser-bar" aria-hidden="true">
+        <span className="showcase-browser-dots"><i /><i /><i /></span>
+        <span>{activeProject.displayUrl}</span>
+        <span className="showcase-browser-status">Live project</span>
       </div>
       <div className="showcase-stage">
         <div className="showcase-slides" aria-live={sliderPaused ? "polite" : "off"}>

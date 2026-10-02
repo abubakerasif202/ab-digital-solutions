@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Nunito_Sans, Source_Serif_4 } from "next/font/google";
+import { Instrument_Sans, Source_Serif_4 } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { PointerFX } from "./components/PointerFX";
 import { assetBase, siteConfig } from "./site-config";
 import { WebVitals } from "./web-vitals";
 import "./globals.css";
+import "./studio.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -55,11 +56,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/brand/ab-mark.svg", type: "image/svg+xml" },
       { url: `${assetBase}/ab-logo-mark.png`, type: "image/png" },
     ],
     shortcut: "/favicon.svg",
-    apple: `${assetBase}/ab-logo-mark.png`,
+    apple: "/apple-touch-icon.png",
   },
   manifest: "/manifest.webmanifest",
 };
@@ -67,7 +68,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#050505",
+  themeColor: "#070708",
   colorScheme: "dark",
 };
 
@@ -79,7 +80,7 @@ const structuredData = {
       "@id": `${siteConfig.url}/#organization`,
       name: siteConfig.name,
       url: siteConfig.url,
-      logo: `${siteConfig.url}${assetBase}/ab-logo-mark.png`,
+      logo: `${siteConfig.url}/brand/ab-logo-horizontal.svg`,
       image: `${siteConfig.url}/opengraph-image`,
       description: siteConfig.description,
       telephone: siteConfig.phoneInternational,
@@ -141,7 +142,7 @@ const structuredData = {
 
 // Self-hosted at build time so every platform gets the intended pairing:
 // a humanist sans for interface and headings, an old-style serif for accents.
-const sansFont = Nunito_Sans({
+const sansFont = Instrument_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
@@ -152,14 +153,14 @@ const sansFont = Nunito_Sans({
 const displayFont = Source_Serif_4({
   subsets: ["latin"],
   weight: "400",
+  preload: false,
   display: "swap",
   variable: "--font-display",
 });
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    // The homepage intro gate sets data-intro on <html> before hydration.
-    <html lang="en-AU" className={`${sansFont.variable} ${displayFont.variable}`} suppressHydrationWarning>
+    <html lang="en-AU" className={`${sansFont.variable} ${displayFont.variable}`}>
       <body>
         <WebVitals />
         <PointerFX />

@@ -5,30 +5,30 @@
 @source "./";
 
 :root {
-  --ink: #050505;
-  --ink-soft: #0c0c0d;
-  --panel: #111113;
+  --ink: #070708;
+  --ink-soft: #0f0f12;
+  --panel: #151519;
   --panel-light: #171719;
-  --paper: #f2f0ec;
+  --paper: #f4f1ea;
   --paper-dim: #c9c8c5;   /* subdued paper tone for nav links, eyebrows */
-  --paper-warm: #e8e6e1;  /* warm off-white for section backgrounds */
+  --paper-warm: #ede8de;  /* warm off-white for section backgrounds */
   --white: #fff;
-  --muted: #aaa9a6;
+  --muted: #a7a29a;
   --muted-dark: #86868a;
-  --red: #b5121b;
-  --red-bright: #c1121f;
-  --red-dark: #7f0b12;
+  --red: #d21736;
+  --red-bright: #d21736;
+  --red-dark: #760d21;
   /* Same ruby hue, lifted far enough to clear WCAG AA as small text on the
      near-black surfaces. --red-bright stays for fills and large display type. */
   --red-ink: #e5484d;
-  --gold: #d4a32f;
+  --gold: #d1a64c;
   --gold-bright: #efc96a;
   /* Gold reserved for text on light surfaces. Dark enough to clear WCAG AA
      at 12px against --paper and --paper-warm. */
   --gold-dark: #74500e;
-  --brand-red: #b5121b;
-  --brand-red-bright: #c1121f;
-  --brand-red-dark: #7f0b12;
+  --brand-red: #d21736;
+  --brand-red-bright: #d21736;
+  --brand-red-dark: #760d21;
   --line: rgba(255, 255, 255, 0.13);
   --line-strong: rgba(255, 255, 255, 0.24);
   --container: min(100% - 64px, 1440px);

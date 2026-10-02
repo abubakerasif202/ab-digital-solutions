@@ -2,12 +2,13 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { HeroFallback } from "./HeroFallback";
 
 const Hero3DCanvas = dynamic(
   () => import("./Hero3DCanvas").then((mod) => mod.Hero3DCanvas),
   {
     ssr: false,
-    loading: () => <div className="hero-3d-fallback" aria-hidden="true" />,
+    loading: () => <HeroFallback />,
   },
 );
 
@@ -78,7 +79,7 @@ export function Hero3DExperience() {
 
   return (
     <div className="hero-3d-bg-wrap" aria-hidden="true">
-      {mode === "fallback" ? <div className="hero-3d-fallback" /> : <Hero3DCanvas quality={mode} />}
+      {mode === "fallback" ? <HeroFallback /> : <Hero3DCanvas quality={mode} />}
     </div>
   );
 }

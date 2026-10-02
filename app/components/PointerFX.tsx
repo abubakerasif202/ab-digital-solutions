@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const LERP_RING = 0.16;
-const LERP_MAGNETIC = 0.14;
-const MAGNETIC_STRENGTH = 0.18;
-const MAGNETIC_MAX = 8;
+import { motionTokens } from "./motion/tokens";
+
+const LERP_RING = motionTokens.pointer.ringLerp;
+const LERP_MAGNETIC = motionTokens.pointer.magneticLerp;
+const MAGNETIC_STRENGTH = motionTokens.pointer.strength;
+const MAGNETIC_MAX = motionTokens.pointer.max;
 
 /**
  * Desktop-only pointer layer: a lerped gold ring + dot that follow the system
@@ -21,7 +23,7 @@ export function PointerFX() {
   const magnetic = useRef<{ el: HTMLElement; tx: number; ty: number; cx: number; cy: number } | null>(null);
 
   useEffect(() => {
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const finePointer = window.matchMedia("(min-width: 721px) and (hover: hover) and (pointer: fine)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setEnabled(finePointer.matches && !reducedMotion.matches);
     update();
@@ -58,7 +60,28 @@ export function PointerFX() {
       rafId = requestAnimationFrame(animate);
     };
 
+    let tiltElement: HTMLElement | null = null;
+    const resetTilt = () => {
+      tiltElement?.style.removeProperty("--tilt-x");
+      tiltElement?.style.removeProperty("--tilt-y");
+      tiltElement?.style.removeProperty("--pointer-x");
+      tiltElement?.style.removeProperty("--pointer-y");
+      tiltElement = null;
+    };
+
     const onPointerMove = (event: PointerEvent) => {
+      const target = event.target instanceof Element ? event.target.closest("[data-tilt]") : null;
+      if (target !== tiltElement) resetTilt();
+      if (target instanceof HTMLElement) {
+        tiltElement = target;
+        const bounds = target.getBoundingClientRect();
+        const x = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width - 0.5) * 2));
+        const y = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height - 0.5) * 2));
+        target.style.setProperty("--tilt-x", `${-y * motionTokens.tilt.maxDegrees}deg`);
+        target.style.setProperty("--tilt-y", `${x * motionTokens.tilt.maxDegrees}deg`);
+        target.style.setProperty("--pointer-x", `${(x + 1) * 50}%`);
+        target.style.setProperty("--pointer-y", `${(y + 1) * 50}%`);
+      }
       targetX = event.clientX;
       targetY = event.clientY;
       dot.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
@@ -101,7 +124,7 @@ export function PointerFX() {
     };
 
     const onVisibilityChange = () => {
-      if (document.hidden) stop();
+      if (document.hidden) { stop(); resetTilt(); }
     };
 
     const releaseMagnetic = () => {
@@ -162,6 +185,7 @@ export function PointerFX() {
     };
 
     const onPointerOut = (event: PointerEvent) => {
+      if (tiltElement && (!(event.relatedTarget instanceof Node) || !tiltElement.contains(event.relatedTarget))) resetTilt();
       const state = magnetic.current;
       if (!state || !(event.target instanceof Node) || !state.el.contains(event.target)) return;
       if (!(event.relatedTarget instanceof Node) || !state.el.contains(event.relatedTarget)) {
@@ -176,6 +200,7 @@ export function PointerFX() {
 
     return () => {
       stop();
+      resetTilt();
       settling.forEach((state, element) => {
         cancelAnimationFrame(state.frameId);
         element.style.removeProperty("translate");

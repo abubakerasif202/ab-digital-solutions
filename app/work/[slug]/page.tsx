@@ -213,17 +213,13 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           <section className="case-study-visuals" aria-labelledby="visual-showcase-heading">
             <div className="case-study-visuals-heading">
               <p className="eyebrow">Visual showcase</p>
-              <h2 id="visual-showcase-heading">The live project, presented across viewports.</h2>
-              <p>Real project imagery from the published website, shown full-width and as a focused detail crop.</p>
+              <h2 id="visual-showcase-heading">A closer look at the experience.</h2>
+              <p>Real project imagery from the published experience.</p>
             </div>
             <div className="device-showcase" data-reveal>
               <div className="desktop-device">
                 <div className="browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
                 <div className="device-image"><ProjectArtwork project={project} sizes="(max-width: 1040px) 70vw, 730px" /></div>
-              </div>
-              <div className="mobile-device">
-                <span className="mobile-speaker" aria-hidden="true" />
-                <div className="device-image"><ProjectArtwork project={project} sizes="(max-width: 720px) 32vw, 210px" /></div>
               </div>
             </div>
           </section>

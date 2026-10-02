@@ -2,13 +2,15 @@ import Link from "next/link";
 import { ContactForm } from "./components/ContactForm";
 import { Hero3DExperience } from "./components/Hero3DExperience";
 import { ProjectShowcase } from "./components/ProjectShowcase";
-import { ProjectArtwork } from "./project-artwork";
-import { isSoftwareProject, projects } from "./project-data";
+import { projects } from "./project-data";
 import { findService } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
-import { assetBase, siteConfig } from "./site-config";
+import { siteConfig } from "./site-config";
 import { ArrowIcon } from "./icons";
+import { PortfolioSection } from "./components/PortfolioSection";
+import { StudioCapabilities } from "./components/StudioCapabilities";
+import { ABLogo } from "./components/brand/ABLogo";
 
 const services = [
   {
@@ -72,39 +74,29 @@ services.forEach((service) => {
 
 const processSteps = [
   ["01", "Discover", "We clarify your audience, offer, goals and the actions your website needs to drive."],
-  ["02", "Plan", "We map the content, page structure and customer journey before visual design begins."],
-  ["03", "Design & build", "We create, refine and develop the experience responsively, with clear review points."],
-  ["04", "Launch & support", "We complete launch checks, publish with confidence and stay available as you grow."],
+  ["02", "Design", "We map the content, page structure and customer journey before visual design begins."],
+  ["03", "Build", "We create, refine and develop the experience responsively, with clear review points."],
+  ["04", "Launch", "We complete launch checks, publish with confidence and stay available as you grow."],
 ] as const;
-
-const featuredProjectSlugs = new Set([
-  "aftab-sons-transport",
-  "247-inventory-system",
-  "adelaide-wholesale-tyres",
-  "maple-rentals",
-  "zq-removals",
-  "decent-development",
-]);
-const featuredProjects = projects.filter((project) => featuredProjectSlugs.has(project.slug));
 
 export default function AgencyHome({ currentYear }: { currentYear: number }) {
   return (
     <>
       <SiteHeader />
 
-      <main id="main-content">
+      <main id="main-content" className="cinematic-home">
         <section className="hero" aria-labelledby="hero-heading">
           <Hero3DExperience />
           <div className="container hero-layout">
             <div className="hero-copy" data-reveal>
               <p className="eyebrow"><span className="eyebrow-mark" /> Sydney studio · Australia-wide</p>
               <h1 id="hero-heading" className="hero-title">
-                <span className="mask-line"><span>Websites that make{" "}</span></span>
-                <span className="mask-line hero-title-accent"><span>your business{" "}</span></span>
-                <span className="mask-line"><span>impossible to ignore.</span></span>
+                <span className="mask-line"><span>Digital experiences{" "}</span></span>
+                <span className="mask-line hero-title-accent"><span>that do the selling{" "}</span></span>
+                <span className="mask-line"><span>before you say a word.</span></span>
               </h1>
               <p className="hero-intro">
-                <Link href="/services/web-design-sydney">Strategy-led website design</Link>, clear messaging and dependable development—built into a digital presence that earns attention and creates action.
+                Premium <Link href="/services/web-design-sydney">websites</Link>, web applications and business systems. Thoughtfully designed. Dependably built. Made to move your business forward.
               </p>
               <div className="hero-actions">
                 <a className="button button-primary" href="#contact" data-magnetic>
@@ -129,34 +121,38 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           </div>
 
           <div className="container hero-foot" data-reveal>
-            <a className="hero-scroll-cue" href="#services">
-              <span>Scroll</span>
+            <a className="hero-scroll-cue" href="#work">
+              <span>Explore</span>
               <span className="hero-scroll-cue-line" aria-hidden="true" />
             </a>
             <p className="hero-stack-note">Independent digital studio · Sydney, Australia</p>
           </div>
 
-          <div className="hero-marquee" aria-hidden="true">
+          <div className="hero-marquee" aria-label="Capabilities">
             <div className="hero-marquee-track">
               <div className="hero-marquee-group">
-                <span>Strategy</span><i>✦</i><span>Design</span><i>✦</i><span>Development</span><i>✦</i><span>SEO</span><i>✦</i><span>Growth</span><i>✦</i>
+                <span>Web design</span><i>/</i><span>Development</span><i>/</i><span>Business systems</span><i>/</i><span>AI + automation</span><i>/</i><span>Performance</span><i>/</i>
               </div>
               <div className="hero-marquee-group" aria-hidden="true">
-                <span>Strategy</span><i>✦</i><span>Design</span><i>✦</i><span>Development</span><i>✦</i><span>SEO</span><i>✦</i><span>Growth</span><i>✦</i>
+                <span>Web design</span><i>/</i><span>Development</span><i>/</i><span>Business systems</span><i>/</i><span>AI + automation</span><i>/</i><span>Performance</span><i>/</i>
               </div>
             </div>
           </div>
         </section>
 
+        <PortfolioSection />
+
         <section className="section services-section" id="services" aria-labelledby="services-heading">
           <div className="container">
             <div className="section-heading" data-reveal>
               <div>
-                <p className="eyebrow">01 / Capabilities</p>
-                <h2 id="services-heading">One studio. Every digital detail aligned.</h2>
+                <p className="eyebrow">02 / Capabilities</p>
+                <h2 id="services-heading">From first impression to everyday operation.</h2>
               </div>
               <p>From the first strategic decision to post-launch support, every recommendation is tied to a clear business goal.</p>
             </div>
+            <StudioCapabilities />
+            <p className="eyebrow supporting-services-label">The details that bring it together</p>
             <div className="services-list">
               {services.map((service) => (
                 <Link className="service-card" data-reveal key={service.number} href={`/services/${service.slug}`}>
@@ -173,78 +169,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                       </ul>
                       <span className="service-link">Explore service <ArrowIcon /></span>
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <aside className="conversion-banner" data-reveal aria-label="Book a consultation">
-          <div className="container conversion-banner-layout">
-            <div className="conversion-banner-copy">
-              <p className="eyebrow">Strategy & Position</p>
-              <h2>Ready for a website that elevates your market positioning and converts visits into enquiries?</h2>
-            </div>
-            <div className="conversion-banner-actions">
-              <a className="button button-primary" href="#contact" data-magnetic>
-                Start a Project <ArrowIcon />
-              </a>
-              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`} data-magnetic>
-                Call {siteConfig.phoneDisplay}
-              </a>
-            </div>
-          </div>
-        </aside>
-
-        <section className="section work-section" id="work" aria-labelledby="work-heading">
-          <div className="container">
-            <div className="section-heading" data-reveal>
-              <div>
-                <p className="eyebrow">02 / Selected work</p>
-                <h2 id="work-heading">Built for real businesses. Live in the real world.</h2>
-              </div>
-              <div className="section-heading-aside">
-                <p>{projects.length} responsive websites and custom software projects across mobility, logistics, local services, construction and property.</p>
-                <Link className="section-heading-link" href="/work">
-                  View all case studies <ArrowIcon />
-                </Link>
-              </div>
-            </div>
-            <div className="work-grid">
-              {featuredProjects.map((project, index) => (
-                <Link
-                  className="project-card"
-                  data-reveal
-                  data-cursor="VIEW"
-                  href={`/work/${project.slug}`}
-                  key={project.name}
-                  aria-label={`${project.name} — View Case Study`}
-                >
-                  <div className="project-image">
-                    <ProjectArtwork
-                      project={project}
-                      sizes="(max-width: 720px) 92vw, (max-width: 1440px) 46vw, (max-width: 1800px) 700px, 810px"
-                    />
-                    <span className="live-label"><i /> {isSoftwareProject(project) ? "Live system" : "Live website"}</span>
-                    <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
-                  </div>
-                  <div className="project-details">
-                    <p className="project-category-tag">{project.category}</p>
-                    <div className="project-title-row">
-                      <h3>{project.name}</h3>
-                      <span className="project-arrow" aria-hidden="true">↗</span>
-                    </div>
-                    <p className="project-description-text">{project.description}</p>
-                    <div className="project-tags">
-                      {project.tags.map((tag) => (
-                        <span key={tag} className="project-tag-pill">{tag}</span>
-                      ))}
-                    </div>
-                    <p className="project-stack">
-                      <span aria-hidden="true">stack:</span> {project.techStack.join(" · ")}
-                    </p>
-                    <span className="project-cta">View Case Study <ArrowIcon /></span>
                   </div>
                 </Link>
               ))}
@@ -279,12 +203,12 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <div className="container standard-layout">
             <div className="standard-statement" data-reveal>
               <p className="eyebrow">The AB standard</p>
-              <h2 id="standard-heading">Premium is not decoration. It is how the entire experience performs.</h2>
+              <h2 id="standard-heading">Feel the quality. Then see the thinking.</h2>
             </div>
             <div className="standard-points">
-              <article data-reveal><span>Position</span><h3>Say the right thing clearly.</h3><p>Visitors understand who you help, what you offer and why your business is worth choosing.</p></article>
-              <article data-reveal><span>Guide</span><h3>Make every next step obvious.</h3><p>Information hierarchy and calls to action work together to turn attention into genuine enquiries.</p></article>
-              <article data-reveal><span>Perform</span><h3>Launch on strong foundations.</h3><p>Responsive, accessible, <Link href="/services/seo-local-visibility">search-ready website foundations</Link> engineered to feel fast on the devices customers actually use.</p></article>
+              <article data-reveal><span>01 / Show</span><h3>Show the work first.</h3><p>Visitors understand who you help, what you offer and why your business is worth choosing.</p></article>
+              <article data-reveal><span>02 / Explain</span><h3>Explain the business value.</h3><p>Information hierarchy and calls to action work together to turn attention into genuine enquiries.</p></article>
+              <article data-reveal><span>03 / Guide</span><h3>Keep the next step obvious.</h3><p>Responsive, accessible, <Link href="/services/seo-local-visibility">search-ready website foundations</Link> engineered to feel fast on the devices customers actually use.</p></article>
             </div>
           </div>
         </section>
@@ -293,14 +217,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <div className="container about-layout">
             <div className="about-logo" data-reveal>
               <div className="about-logo-ring" aria-hidden="true" />
-              {/* eslint-disable-next-line @next/next/no-img-element -- next/image blocks SVG optimization by default; this is a trusted, self-authored decorative asset */}
-              <img
-                src={`${assetBase}/ab-web-studio-lockup.svg`}
-                alt="AB Web Studio — Sydney digital studio"
-                width={1020}
-                height={500}
-                loading="lazy"
-              />
+              <ABLogo />
               <span>Sydney / Australia</span>
             </div>
             <div className="about-copy" data-reveal>
@@ -329,9 +246,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             <div className="contact-copy" data-reveal>
               <p className="eyebrow">05 / Start a conversation</p>
               <h2 id="contact-heading" className="contact-title scroll-mask">
-                <span className="mask-line"><span>Let&apos;s build</span></span>
-                <span className="mask-line"><span><em>something</em></span></span>
-                <span className="mask-line"><span>worth remembering.</span></span>
+                <span className="mask-line"><span>Make your next website</span></span>
+                <span className="mask-line"><span>impossible to ignore.</span></span>
               </h2>
               <p>Tell us what you are building and where you want the business to go. We will come back with a practical next step.</p>
               <div className="contact-options">

@@ -1,6 +1,6 @@
-import Image from "next/image";
+import { ABLogo } from "./components/brand/ABLogo";
 import Link from "next/link";
-import { assetBase, siteConfig } from "./site-config";
+import { siteConfig } from "./site-config";
 import { servicePages } from "./services/service-data";
 import { ArrowIcon } from "./icons";
 
@@ -10,16 +10,11 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
       <div className="container footer-main">
         <div className="footer-intro">
           <Link className="brand" href="/" aria-label="AB Web Studio home">
-            <Image
-              src={`${assetBase}/ab-logo-mark.png`}
-              alt=""
-              width={400}
-              height={340}
-              sizes="48px"
-            />
+            <ABLogo decorative />
             <span className="brand-name">AB Web Studio</span>
           </Link>
-          <p>Premium websites, digital marketing and online growth solutions for Australian businesses.</p>
+          <p>Websites · Systems · Digital products.</p>
+          <a href={siteConfig.url}>abwebstudio.com.au</a>
           <span>{siteConfig.location} · Australia-wide</span>
         </div>
 

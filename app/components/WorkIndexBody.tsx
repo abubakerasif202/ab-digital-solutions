@@ -96,7 +96,7 @@ function WorkIndexCard({ project, index }: { project: Project; index: number }) 
   const cardStyle: CardMotionStyle = { viewTransitionName: `work-card-${project.slug}` };
 
   return (
-    <article className={cardClassName} data-reveal style={cardStyle}>
+    <article className={cardClassName} data-tilt data-reveal style={cardStyle}>
       <Link className="work-index-card-link" href={`/work/${project.slug}`} data-cursor="VIEW">
         <div className="work-index-media">
           <ProjectArtwork

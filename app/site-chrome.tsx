@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
+import { ABLogo } from "./components/brand/ABLogo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { assetBase } from "./site-config";
 import { ArrowIcon } from "./icons";
 
 export function SiteHeader() {
@@ -76,8 +75,12 @@ export function SiteHeader() {
     backgroundRegions.forEach((region) => {
       region.inert = menuOpen;
     });
-    if (menuOpen) navRef.current?.querySelector<HTMLElement>("a")?.focus();
+    // Wait for the opened panel's visibility style to commit before focusing it.
+    const focusFrame = menuOpen ? window.requestAnimationFrame(() => {
+      navRef.current?.querySelector<HTMLElement>("a")?.focus();
+    }) : null;
     return () => {
+      if (focusFrame !== null) window.cancelAnimationFrame(focusFrame);
       document.removeEventListener("keydown", onKeyDown);
       document.body.classList.remove("nav-open");
       backgroundRegions.forEach((region) => {
@@ -213,14 +216,7 @@ export function SiteHeader() {
       <header className={`site-header${scrolled ? " is-scrolled" : ""}`} id="top">
         <div className="container nav-wrap">
           <Link className="brand" href="/" aria-label="AB Web Studio home">
-            <Image
-              src={`${assetBase}/ab-logo-mark.png`}
-              alt=""
-              width={400}
-              height={340}
-              sizes="48px"
-              loading="eager"
-            />
+            <ABLogo decorative />
             <span className="brand-name">AB Web Studio</span>
           </Link>
 
@@ -244,8 +240,8 @@ export function SiteHeader() {
             className={`site-nav${menuOpen ? " is-open" : ""}`}
             aria-label="Primary navigation"
           >
-            <Link href="/#services" onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
             <Link href="/#work" onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
+            <Link href="/#services" onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
             <Link href="/#process" onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
             <Link href="/#about" onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
             <Link className="nav-cta" href="/#contact" onClick={handleNavLinkClick} data-magnetic>
