@@ -6,9 +6,15 @@
 }
 
 .brand svg { width: 48px; height: 48px; flex: 0 0 auto; }
+.brand-lockup { display: inline-flex; align-items: center; gap: 12px; }
+.brand .brand-monogram-image { width: 48px; height: 48px; flex: 0 0 auto; object-fit: contain; }
+.brand .brand-wordmark-image { width: 170px; height: auto; object-fit: contain; }
+.cinematic-home .about-logo .brand-artwork { width: min(100%, 360px); height: auto; object-fit: contain; filter: none; }
 .site-header { background: rgba(7, 7, 8, 0.75); backdrop-filter: blur(12px); box-shadow: none; }
 .site-header.is-scrolled { background: rgba(7, 7, 8, 0.96); }
 .site-nav a { min-height: 44px; }
+.footer-intro > a:not(.brand) { display: flex; width: fit-content; min-height: 44px; align-items: center; color: var(--paper); font-size: .875rem; font-weight: 700; }
+.footer-intro > span { display: block; }
 .site-nav .nav-cta:hover, .button-primary:hover { background: var(--red-dark); color: var(--white); }
 .cinematic-home h1, .cinematic-home h2, .cinematic-home h3 { font-family: var(--sans); font-weight: 500; }
 .cinematic-home .hero { min-height: auto; padding-top: calc(var(--header-height) + 40px); background: var(--ink); }
@@ -16,7 +22,8 @@
 .cinematic-home .hero-layout { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; padding-bottom: 60px; }
 .cinematic-home .hero-title { font-size: clamp(3rem, 5.2vw, 5.5rem); line-height: 1.04; letter-spacing: -.065em; max-width: none; }
 .cinematic-home .hero-title .mask-line { overflow: visible; }
-.cinematic-home .hero-title .mask-line > span { display: block; }
+.cinematic-home .hero-title .mask-line > span { display: block; animation-name: studio-hero-rise; }
+@keyframes studio-hero-rise { from { transform: translateY(12px); } to { transform: none; } }
 .cinematic-home .hero-title-accent { color: var(--paper); font-family: var(--sans); }
 .cinematic-home .hero-title .mask-line:last-child { color: var(--red-ink); }
 .cinematic-home .hero-intro { margin-top: 28px; max-width: 43ch; font-size: 18px; line-height: 1.65; }
@@ -140,7 +147,7 @@
 
 @media (max-width: 1100px) {
   .cinematic-home .hero-layout { gap: 32px; }
-  .cinematic-home .hero-title { font-size: clamp(3rem, 5.6vw, 4.4rem); }
+  .cinematic-home .hero-title { font-size: clamp(2.8rem, 4.9vw, 3.4rem); }
   .studio-capabilities { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 960px) {
@@ -167,6 +174,10 @@
   .cinematic-home .process-rail-fill { animation: none; transform: none; }
   .cinematic-home .project-image img { scale: 1; translate: none; }
   .brand svg { width: 40px; height: 40px; }
+  .brand-lockup { gap: 10px; }
+  .brand .brand-monogram-image { width: 40px; height: 40px; }
+  .brand .brand-wordmark-image { width: 146px; }
+  .cinematic-home .about-logo .brand-artwork { width: min(100%, 260px); }
   .cinematic-home .hero-layout { padding-bottom: 28px; }
   .cinematic-home .hero-title { font-size: clamp(2.45rem, 9.9vw, 4rem); letter-spacing: -.06em; }
   .cinematic-home .hero-intro { font-size: 16px; margin-top: 24px; }
@@ -184,6 +195,8 @@
   .cinematic-home .section-heading { margin-bottom: 32px; }
   .cinematic-home .section-heading h2 { font-size: 42px; }
   .cinematic-home .work-grid { grid-template-columns: 1fr; gap: 40px; }
+  /* Keep distant portfolio cards out of the phone's initial layout work. */
+  .cinematic-home .project-card { content-visibility: auto; contain-intrinsic-block-size: auto 700px; }
   .cinematic-home .project-card:first-child .project-details { padding: 24px 20px; }
   .cinematic-home .project-image { aspect-ratio: 1.46; }
   .cinematic-home .project-details h3 { font-size: 28px; }

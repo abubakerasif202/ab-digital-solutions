@@ -41,7 +41,7 @@ test("portfolio contains every required live project", async () => {
     "https://zqremovals.au/",
     "https://www.decentdevelopment.com.au/",
     "https://milestonedevelopment.com.au/",
-    "https://4-point-concrete-design.vercel.app/",
+    "https://4point-concrete-website.vercel.app/",
     "https://www.1stclassexpress.com.au/",
     "https://www.hfremovalsadelaide.com/",
     "https://www.aftabandsons.com.au/",
@@ -176,7 +176,7 @@ test("reviewed design issues remain remediated", async () => {
   assert.match(showcase, /setCarouselEngaged\(true\)/);
   assert.match(showcase, /setSliderPauseOverride\(true\)/);
   assert.match(homepage, /<a[\s\S]*className="service-card"/);
-  assert.match(chrome, /<ABLogo decorative/);
+  assert.match(chrome, /<ABBrandImage decorative eager/);
   assert.match(chrome, /AB Web Studio/);
   assert.match(servicePage, /<SiteHeader/);
   assert.match(servicePage, /<SiteFooter/);

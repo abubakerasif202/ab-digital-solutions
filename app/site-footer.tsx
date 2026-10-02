@@ -1,4 +1,4 @@
-import { ABLogo } from "./components/brand/ABLogo";
+import { ABBrandImage } from "./components/brand/ABBrandImage";
 import Link from "next/link";
 import { siteConfig } from "./site-config";
 import { servicePages } from "./services/service-data";
@@ -10,8 +10,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
       <div className="container footer-main">
         <div className="footer-intro">
           <Link className="brand" href="/" aria-label="AB Web Studio home">
-            <ABLogo decorative />
-            <span className="brand-name">AB Web Studio</span>
+            <ABBrandImage decorative />
           </Link>
           <p>Websites · Systems · Digital products.</p>
           <a href={siteConfig.url}>abwebstudio.com.au</a>

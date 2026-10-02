@@ -243,8 +243,8 @@ export const projects = [
       "4 Point Concrete provides specialized concrete placement and structural civil services across commercial and industrial projects.",
     solution:
       "We created a capability-focused digital presentation detailing concrete specification options, equipment resources, and direct estimator enquiry channels.",
-    url: "https://4-point-concrete-design.vercel.app/",
-    displayUrl: "4-point-concrete-design.vercel.app",
+    url: "https://4point-concrete-website.vercel.app/",
+    displayUrl: "4point-concrete-website.vercel.app",
     image: `${assetBase}/ab-portfolio-four-point-concrete.jpg`,
     alt: "4 Point Concrete website homepage preview",
     tags: ["Capability Deck", "Civil Services", "Mobile UX"],

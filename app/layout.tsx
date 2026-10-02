@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Instrument_Sans, Source_Serif_4 } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { PointerFX } from "./components/PointerFX";
-import { assetBase, siteConfig } from "./site-config";
+import { siteConfig } from "./site-config";
 import { WebVitals } from "./web-vitals";
 import "./globals.css";
 import "./studio.css";
@@ -56,11 +56,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/brand/ab-mark.svg", type: "image/svg+xml" },
-      { url: `${assetBase}/ab-logo-mark.png`, type: "image/png" },
+      { url: "/brand/ab-luxury-mark-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/brand/ab-luxury-mark-64.png", type: "image/png", sizes: "64x64" },
     ],
-    shortcut: "/favicon.svg",
-    apple: "/apple-touch-icon.png",
+    shortcut: "/brand/ab-luxury-mark-32.png",
+    apple: "/brand/ab-luxury-mark-180.png",
   },
   manifest: "/manifest.webmanifest",
 };
@@ -80,7 +80,7 @@ const structuredData = {
       "@id": `${siteConfig.url}/#organization`,
       name: siteConfig.name,
       url: siteConfig.url,
-      logo: `${siteConfig.url}/brand/ab-logo-horizontal.svg`,
+      logo: `${siteConfig.url}/brand/ab-logo-luxury-source.png`,
       image: `${siteConfig.url}/opengraph-image`,
       description: siteConfig.description,
       telephone: siteConfig.phoneInternational,

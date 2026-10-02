@@ -32,7 +32,7 @@
 - [ZQ Removals](https://zqremovals.au/): Services / removals — local-service positioning with a direct path to quote requests.
 - [DECENT Development](https://www.decentdevelopment.com.au/): Property / development — digital presence for a Sydney construction business.
 - [Milestone Development](https://milestonedevelopment.com.au/): Property / construction — project-led residential and commercial showcase.
-- [4 Point Concrete](https://4-point-concrete-design.vercel.app/): Construction / civil — capability-focused concrete and structural works site.
+- [4 Point Concrete](https://4point-concrete-website.vercel.app/): Construction / civil — capability-focused concrete and structural works site.
 - [1st Class Express](https://www.1stclassexpress.com.au/): Transport & logistics — interstate freight positioning, fleet showcase and quote enquiries.
 - [HF Removals Adelaide](https://www.hfremovalsadelaide.com/): Services / removals — published reference rates with an instant quote request flow.
 - [Cheap Adelaide Removalist](https://www.cheapadelaideremovalist.com.au/): Services / removals — transparent per-30-minute rates with a Bento-style pricing and logistics engine.

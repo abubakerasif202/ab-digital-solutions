@@ -10,7 +10,7 @@ import { siteConfig } from "./site-config";
 import { ArrowIcon } from "./icons";
 import { PortfolioSection } from "./components/PortfolioSection";
 import { StudioCapabilities } from "./components/StudioCapabilities";
-import { ABLogo } from "./components/brand/ABLogo";
+import { ABBrandImage } from "./components/brand/ABBrandImage";
 
 const services = [
   {
@@ -217,7 +217,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <div className="container about-layout">
             <div className="about-logo" data-reveal>
               <div className="about-logo-ring" aria-hidden="true" />
-              <ABLogo />
+              <ABBrandImage full />
               <span>Sydney / Australia</span>
             </div>
             <div className="about-copy" data-reveal>

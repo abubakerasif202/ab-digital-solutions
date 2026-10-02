@@ -1,6 +1,6 @@
 "use client";
 
-import { ABLogo } from "./components/brand/ABLogo";
+import { ABBrandImage } from "./components/brand/ABBrandImage";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -216,8 +216,7 @@ export function SiteHeader() {
       <header className={`site-header${scrolled ? " is-scrolled" : ""}`} id="top">
         <div className="container nav-wrap">
           <Link className="brand" href="/" aria-label="AB Web Studio home">
-            <ABLogo decorative />
-            <span className="brand-name">AB Web Studio</span>
+            <ABBrandImage decorative eager />
           </Link>
 
           <button
