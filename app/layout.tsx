@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Sans, Source_Serif_4 } from "next/font/google";
+import { IBM_Plex_Mono, Instrument_Sans, Instrument_Serif } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { BrandIntro } from "./components/intro/BrandIntro";
 import { introGateScript } from "./components/intro/intro-gate";
@@ -10,6 +10,7 @@ import "./globals.css";
 import "./studio.css";
 import "./motion.css";
 import "./intro.css";
+import "./editorial.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -144,27 +145,37 @@ const structuredData = {
   ],
 };
 
-// Self-hosted at build time so every platform gets the intended pairing:
-// a humanist sans for interface and headings, an old-style serif for accents.
+// Self-hosted at build time so every platform gets the intended three-role
+// system: a grotesk for interface and headings, an editorial serif for
+// art-directed accents, and a mono for micro labels and indices.
 const sansFont = Instrument_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
 });
 
-// The serif only ever renders at 400 (accents, project names), so a single
-// static weight replaces the variable-weight file on the critical path.
-const displayFont = Source_Serif_4({
+// The serif renders the italic accent line inside the hero h1 (the LCP
+// element), so it is preloaded. Instrument Serif ships a single 400 weight.
+const displayFont = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
-  preload: false,
+  style: ["normal", "italic"],
   display: "swap",
   variable: "--font-display",
 });
 
+// Labels only: two weights, never on the critical path.
+const monoFont = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  preload: false,
+  display: "swap",
+  variable: "--font-mono",
+});
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-AU" className={`${sansFont.variable} ${displayFont.variable}`}>
+    <html lang="en-AU" className={`${sansFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
       <body>
         <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
         <BrandIntro />

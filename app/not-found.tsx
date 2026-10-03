@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { assetBase } from "./site-config";
+import { ArrowIcon } from "./icons";
 
 export default function NotFound() {
   return (
@@ -18,7 +19,7 @@ export default function NotFound() {
         <h1>This page has moved off the map.</h1>
         <p>The address may be outdated, but the studio is right where you left it.</p>
         <div className="not-found-actions">
-          <Link className="button button-primary" href="/">Return home <span aria-hidden="true">↗</span></Link>
+          <Link className="button button-primary" href="/">Return home <ArrowIcon /></Link>
           <Link className="button button-ghost" href="/#contact">Start a project</Link>
         </div>
         <nav className="not-found-nav" aria-label="Popular pages">

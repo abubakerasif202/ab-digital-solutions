@@ -90,15 +90,7 @@
 .capability-card { background: var(--ink-soft); padding: 32px 24px; display: flex; flex-direction: column; transition: background var(--motion-fast); }
 .capability-card:hover { background: var(--panel); }
 .capability-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px; color: var(--muted); font-size: 12px; letter-spacing: .1em; }
-.capability-symbol { width: 34px; height: 34px; position: relative; display: block; color: var(--red-ink); }
-.capability-symbol i { position: absolute; inset: 3px; border: 1px solid currentColor; }
-.capability-symbol-website i:nth-child(2) { inset: 10px 3px auto; border-bottom: 0; }
-.capability-symbol-code i { inset: 8px; transform: rotate(45deg); border-top: 0; border-right: 0; }
-.capability-symbol-code i:nth-child(2) { transform: rotate(225deg); }
-.capability-symbol-system i:nth-child(2) { inset: 12px 3px; }
-.capability-symbol-system i:nth-child(3) { inset: 3px 12px; }
-.capability-symbol-automation i { inset: 10px; transform: rotate(45deg); }
-.capability-symbol-automation i:nth-child(2) { inset: 0; border-top: 0; border-bottom: 0; }
+.capability-symbol { position: relative; color: var(--red-ink); }
 .capability-card h3 { font-size: 26px; line-height: 1.12; }
 .capability-card p { color: var(--muted); font-size: 16px; line-height: 1.65; margin: 20px 0 28px; }
 .capability-link { display: flex; justify-content: space-between; margin-top: auto; font-size: 13px; color: var(--paper); min-height: 44px; align-items: center; }

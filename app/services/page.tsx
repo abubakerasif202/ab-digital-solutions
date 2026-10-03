@@ -6,6 +6,7 @@ import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { servicePages } from "./service-data";
 import { siteConfig } from "../site-config";
+import { ArrowIcon } from "../icons";
 
 export const metadata: Metadata = {
   title: "Digital Services",
@@ -80,7 +81,7 @@ export default function ServicesPage() {
                 post-launch support, with every recommendation tied to a clear business goal.
               </p>
               <div className="content-actions">
-                <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
+                <Link className="button button-primary" href="/#contact">Start a Project <ArrowIcon /></Link>
                 <Link className="button button-ghost" href="/work">View Our Work</Link>
               </div>
             </div>
@@ -110,7 +111,7 @@ export default function ServicesPage() {
                     <strong>{service.title}</strong>
                     <small>{service.summary}</small>
                   </span>
-                  <span className="services-index-arrow" aria-hidden="true">↗</span>
+                  <span className="services-index-arrow" aria-hidden="true"><ArrowIcon /></span>
                 </Link>
               ))}
             </div>
@@ -121,7 +122,7 @@ export default function ServicesPage() {
             <h2 id="services-cta-heading">Not sure which service fits? Start with a conversation.</h2>
             <p>Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
             <div className="content-actions">
-              <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
+              <Link className="button button-primary" href="/#contact">Start a Project <ArrowIcon /></Link>
               <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>Call {siteConfig.phoneDisplay}</a>
             </div>
           </section>

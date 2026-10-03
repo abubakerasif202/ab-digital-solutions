@@ -5,6 +5,7 @@ import { useState, type CSSProperties } from "react";
 import { flushSync } from "react-dom";
 import { ProjectArtwork } from "../project-artwork";
 import { isSoftwareProject, projects, sectors, type Project } from "../project-data";
+import { ArrowIcon } from "../icons";
 
 const ALL_SECTORS = "All work";
 
@@ -119,7 +120,7 @@ function WorkIndexCard({ project, index }: { project: Project; index: number }) 
           <p className="work-index-stack">{project.techStack.join("  ·  ")}</p>
           <p className="work-index-url">{project.displayUrl}</p>
           <span className="work-index-cta">
-            View case study <span aria-hidden="true">↗</span>
+            View case study <ArrowIcon />
           </span>
         </div>
       </Link>

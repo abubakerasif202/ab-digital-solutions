@@ -126,7 +126,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 data-cursor="VISIT"
                 aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}
               >
-                {project.displayUrl} ↗
+                {project.displayUrl} <ArrowIcon />
               </a>
             </div>
           </header>
@@ -187,7 +187,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                     <dt>{softwareProject ? "Production URL" : "Live Domain"}</dt>
                     <dd>
                       <a href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}>
-                        {project.displayUrl} ↗
+                        {project.displayUrl} <ArrowIcon />
                       </a>
                     </dd>
                   </div>

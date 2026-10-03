@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ArrowIcon } from "../icons";
+import { ArrowUpRight } from "lucide-react";
+import { ArrowIcon, Glyph } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
-import { isSoftwareProject, projects } from "../project-data";
+import { formatCategory, isSoftwareProject, projects } from "../project-data";
 
 export function PortfolioSection() {
   return (
@@ -9,8 +10,8 @@ export function PortfolioSection() {
           <div className="container">
             <div className="section-heading" data-reveal>
               <div>
-                <p className="eyebrow">01 / Selected work</p>
-                <h2 id="work-heading">The work speaks first.</h2>
+                <p className="eyebrow section-index"><span className="section-index-num">01</span><span className="micro-rule" aria-hidden="true" />Selected work</p>
+                <h2 id="work-heading">The work <span className="accent-serif">speaks first.</span></h2>
               </div>
               <div className="section-heading-aside">
                 <p>{projects.length} responsive websites and custom software projects across mobility, logistics, local services, construction and property.</p>
@@ -30,7 +31,7 @@ export function PortfolioSection() {
                   key={project.name}
                   aria-label={`${project.name} — View Case Study`}
                 >
-                  <div className="portfolio-browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span><span>↗</span></div>
+                  <div className="portfolio-browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span><Glyph icon={ArrowUpRight} size={12} /></div>
                   <div className="project-image">
                     <ProjectArtwork
                       project={project}
@@ -40,10 +41,10 @@ export function PortfolioSection() {
                     <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
                   </div>
                   <div className="project-details">
-                    <p className="project-category-tag">{project.category}</p>
+                    <p className="project-category-tag"><span className="project-category-index">{String(index + 1).padStart(2, "0")}</span>{formatCategory(project.category)}</p>
                     <div className="project-title-row">
                       <h3>{project.name}</h3>
-                      <span className="project-arrow" aria-hidden="true">↗</span>
+                      <span className="project-arrow" aria-hidden="true"><ArrowIcon /></span>
                     </div>
                     <p className="project-description-text">{project.description}</p>
                     <div className="project-tags">

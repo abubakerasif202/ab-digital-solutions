@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { ArrowIcon } from "../icons";
+import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { ArrowIcon, Glyph } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
-import { projects } from "../project-data";
+import { formatCategory, projects } from "../project-data";
 import { motionTokens } from "./motion/tokens";
 
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
@@ -150,17 +151,18 @@ export function ProjectShowcase() {
         </div>
       </div>
       <div className="showcase-meta">
-        <div>
-          <span>{activeProject.category}</span>
+        <div className="showcase-caption">
+          <span className="showcase-kicker">{String(activeSlide + 1).padStart(2, "0")} — Featured project</span>
           <strong>{activeProject.name}</strong>
+          <span className="showcase-category">{formatCategory(activeProject.category)}</span>
           <small className="showcase-url">{activeProject.displayUrl}</small>
         </div>
         <div className="slider-controls">
-          <button type="button" onClick={showPreviousSlide} aria-label="Previous project">
-            <span aria-hidden="true">←</span>
+          <button className="icon-control icon-control-prev" type="button" onClick={showPreviousSlide} aria-label="Previous project">
+            <Glyph icon={ArrowLeft} />
           </button>
           <button
-            className="pause-control"
+            className="pause-control icon-control"
             type="button"
             onClick={() => setSliderPauseOverride(!sliderPreferencePaused)}
             aria-pressed={sliderPreferencePaused}
@@ -168,10 +170,11 @@ export function ProjectShowcase() {
               ? "Play project slideshow"
               : "Pause project slideshow"}
           >
+            <Glyph icon={sliderPreferencePaused ? Play : Pause} size={14} />
             {sliderPreferencePaused ? "Play" : "Pause"}
           </button>
-          <button type="button" onClick={showNextSlide} aria-label="Next project">
-            <span aria-hidden="true">→</span>
+          <button className="icon-control icon-control-next" type="button" onClick={showNextSlide} aria-label="Next project">
+            <Glyph icon={ArrowRight} />
           </button>
         </div>
       </div>

@@ -38,7 +38,7 @@
   --type-action: 0.875rem;
   --display: var(--font-display), "Iowan Old Style", "Baskerville", "Times New Roman", serif;
   --sans: var(--font-sans), "Avenir Next", "Helvetica Neue", "Segoe UI", sans-serif;
-  --mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+  --mono: var(--font-mono), "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
   /* Shared motion language: one entrance curve and one smooth curve used by
      every reveal, hover and parallax on the site. */
   --ease-out: cubic-bezier(0.16, 0.84, 0.34, 1);
@@ -4049,33 +4049,33 @@ section.related-services > .services-index-list > .services-index-row:focus-visi
   contain-intrinsic-block-size: auto var(--cv-size, 1000px);
 }
 
-.services-section { --cv-size: 2180px; }
+.services-section { --cv-size: 2160px; }
 .conversion-banner { --cv-size: 325px; }
-.work-section { --cv-size: 5400px; }
-.process-section { --cv-size: 1030px; }
-.standard-section { --cv-size: 945px; }
-.about-section { --cv-size: 1350px; }
-.contact-section { --cv-size: 1100px; }
-.site-footer { --cv-size: 565px; }
+.work-section { --cv-size: 5950px; }
+.process-section { --cv-size: 925px; }
+.standard-section { --cv-size: 790px; }
+.about-section { --cv-size: 1155px; }
+.contact-section { --cv-size: 995px; }
+.site-footer { --cv-size: 1150px; }
 
 @media (max-width: 1100px) {
-  .services-section { --cv-size: 2100px; }
+  .services-section { --cv-size: 2680px; }
   .conversion-banner { --cv-size: 300px; }
-  .work-section { --cv-size: 4700px; }
-  .process-section { --cv-size: 1080px; }
-  .standard-section { --cv-size: 930px; }
-  .about-section { --cv-size: 1400px; }
-  .contact-section { --cv-size: 1230px; }
-  .site-footer { --cv-size: 950px; }
+  .work-section { --cv-size: 5650px; }
+  .process-section { --cv-size: 1160px; }
+  .standard-section { --cv-size: 875px; }
+  .about-section { --cv-size: 1540px; }
+  .contact-section { --cv-size: 1435px; }
+  .site-footer { --cv-size: 1490px; }
 }
 
 @media (max-width: 720px) {
-  .services-section { --cv-size: 2970px; }
+  .services-section { --cv-size: 4130px; }
   .conversion-banner { --cv-size: 390px; }
-  .work-section { --cv-size: 5000px; }
-  .process-section { --cv-size: 1240px; }
-  .standard-section { --cv-size: 1100px; }
-  .about-section { --cv-size: 1920px; }
-  .contact-section { --cv-size: 1900px; }
-  .site-footer { --cv-size: 1420px; }
+  .work-section { --cv-size: 9675px; }
+  .process-section { --cv-size: 1175px; }
+  .standard-section { --cv-size: 920px; }
+  .about-section { --cv-size: 1890px; }
+  .contact-section { --cv-size: 1850px; }
+  .site-footer { --cv-size: 1725px; }
 }

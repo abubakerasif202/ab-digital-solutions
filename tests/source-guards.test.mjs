@@ -404,9 +404,13 @@ test("typography is self-hosted so every platform gets the intended pairing", as
   assert.match(layout, /from "next\/font\/google"/);
   assert.match(layout, /variable: "--font-sans"/);
   assert.match(layout, /variable: "--font-display"/);
-  assert.match(layout, /className=\{`\$\{sansFont\.variable\} \$\{displayFont\.variable\}`\}/);
+  assert.match(layout, /variable: "--font-mono"/);
+  // Every font variable must sit on <html>: the role tokens are declared on
+  // :root, so a variable set lower in the tree would leave them invalid.
+  assert.match(layout, /<html[^>]*className=\{`\$\{sansFont\.variable\} \$\{displayFont\.variable\} \$\{monoFont\.variable\}`\}/);
   assert.match(styles, /--sans: var\(--font-sans\),/);
   assert.match(styles, /--display: var\(--font-display\),/);
+  assert.match(styles, /--mono: var\(--font-mono\),/);
   // next/font serves files same-origin, which the CSP must continue to allow.
   assert.match(nextConfig, /"font-src 'self'/);
 });
@@ -477,12 +481,37 @@ test("below-fold homepage sections skip offscreen layout with sized placeholders
   assert.equal((styles.match(/\.work-section \{ --cv-size: \d+px; \}/g) ?? []).length, 3);
 });
 
-test("the display serif loads only the weight it renders", async () => {
+test("display and mono fonts load only the weights and styles they render", async () => {
   const layout = await read("../app/layout.tsx");
-  const serif = layout.match(/Source_Serif_4\(\{[\s\S]*?\}\)/)[0];
+  const serif = layout.match(/Instrument_Serif\(\{[\s\S]*?\}\)/)?.[0];
+  assert.ok(serif, "Instrument Serif display font");
   assert.match(serif, /weight: "400"/);
-  assert.match(serif, /preload: false/);
-  assert.doesNotMatch(serif, /italic/);
+  // The italic accent line lives inside the hero h1 (LCP), so the serif is
+  // preloaded rather than swapped in late.
+  assert.match(serif, /style: \["normal", "italic"\]/);
+  assert.doesNotMatch(serif, /preload: false/);
+
+  const mono = layout.match(/IBM_Plex_Mono\(\{[\s\S]*?\}\)/)?.[0];
+  assert.ok(mono, "IBM Plex Mono label font");
+  assert.match(mono, /weight: \["400", "500"\]/);
+  assert.match(mono, /preload: false/);
+});
+
+test("icons come from one tree-shaken library through named imports", async () => {
+  const [rawPackage, icons, home] = await Promise.all([
+    read("../package.json"),
+    read("../app/icons.tsx"),
+    read("../app/agency-home.tsx"),
+  ]);
+  const pkg = JSON.parse(rawPackage);
+  assert.ok(pkg.dependencies["lucide-react"]);
+  for (const name of Object.keys({ ...pkg.dependencies, ...pkg.devDependencies })) {
+    assert.doesNotMatch(name, /phosphor|react-icons|heroicons|fontawesome/i);
+  }
+  assert.match(icons, /from "lucide-react"/);
+  assert.doesNotMatch(icons + home, /import \* as \w+ from "lucide-react"/);
+  // CTAs use the shared arrow, not Unicode glyphs.
+  assert.doesNotMatch(home, /[↗↘→←]/);
 });
 
 test("Tailwind only scans app source, keeping unused utilities out of critical CSS", async () => {

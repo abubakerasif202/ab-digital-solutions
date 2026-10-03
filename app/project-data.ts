@@ -339,3 +339,8 @@ export function findProject(slug: string): Project | undefined {
 export function isSoftwareProject(project: Project): boolean {
   return project.kind === "software";
 }
+
+/** Editorial label form of a category: "Mobility / Car rentals" → "Mobility · Car rentals". */
+export function formatCategory(category: string): string {
+  return category.split("/").map((part) => part.trim()).filter(Boolean).join(" · ");
+}

@@ -7,6 +7,7 @@ import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
 import { findService, servicePages } from "../service-data";
 import { siteConfig } from "../../site-config";
+import { ArrowIcon } from "../../icons";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -131,7 +132,7 @@ export default async function ServicePage({ params }: Props) {
               <h1>{service.title}</h1>
               <p className="content-lead">{service.intro}</p>
               <div className="content-actions">
-                <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
+                <Link className="button button-primary" href="/#contact">Start a Project <ArrowIcon /></Link>
                 <Link className="button button-ghost" href="/work">View Our Work</Link>
               </div>
             </div>
@@ -160,7 +161,7 @@ export default async function ServicePage({ params }: Props) {
             <div>
               <h2 id="service-context-heading">{service.detailTitle}</h2>
               <p>{service.detail}</p>
-              <Link className="text-link" href="/#about">Meet the Sydney studio <span aria-hidden="true">↗</span></Link>
+              <Link className="text-link" href="/#about">Meet the Sydney studio <ArrowIcon /></Link>
             </div>
           </section>
 
@@ -177,7 +178,7 @@ export default async function ServicePage({ params }: Props) {
             >
               <div className="service-project-image">
                 <ProjectArtwork project={featuredProject} sizes="(max-width: 900px) 92vw, (max-width: 1440px) 52vw, 700px" />
-                <span>View Case Study →</span>
+                <span>View Case Study <ArrowIcon direction="right" /></span>
               </div>
               <div>
                 <p>{featuredProject.category}</p>
@@ -225,7 +226,7 @@ export default async function ServicePage({ params }: Props) {
             <div>
               {relatedServices.map((related) => (
                 <Link href={`/services/${related.slug}`} key={related.slug}>
-                  <span>{related.title}</span><span aria-hidden="true">↗</span>
+                  <span>{related.title}</span><ArrowIcon />
                 </Link>
               ))}
             </div>
@@ -236,7 +237,7 @@ export default async function ServicePage({ params }: Props) {
             <h2 id="service-cta-heading">Let&apos;s turn the next digital decision into useful progress.</h2>
             <p>Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
             <div className="content-actions">
-              <Link className="button button-primary" href="/#contact">Start a Project <span aria-hidden="true">↗</span></Link>
+              <Link className="button button-primary" href="/#contact">Start a Project <ArrowIcon /></Link>
               <Link className="button button-ghost" href="/work">View Our Work</Link>
             </div>
           </section>
