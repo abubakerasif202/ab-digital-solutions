@@ -1,11 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Sans, Source_Serif_4 } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { BrandIntro } from "./components/intro/BrandIntro";
+import { introGateScript } from "./components/intro/intro-gate";
 import { PointerFX } from "./components/PointerFX";
 import { siteConfig } from "./site-config";
 import { WebVitals } from "./web-vitals";
 import "./globals.css";
 import "./studio.css";
+import "./motion.css";
+import "./intro.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -162,6 +166,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en-AU" className={`${sansFont.variable} ${displayFont.variable}`}>
       <body>
+        <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
+        <BrandIntro />
         <WebVitals />
         <PointerFX />
         {children}

@@ -56,3 +56,34 @@ test("static hero branding uses inline geometry rather than a late CSS image", a
   assert.match(fallback, /<ABLogo decorative/);
   assert.doesNotMatch(styles, /url\(['"]?\/brand\/ab-monogram/);
 });
+
+test("brand intro is an overlay above the live page with a safe, once-per-session gate", async () => {
+  const [gate, intro, layout, styles, config] = await Promise.all([
+    read("../app/components/intro/intro-gate.ts"),
+    read("../app/components/intro/BrandIntro.tsx"),
+    read("../app/layout.tsx"),
+    read("../app/intro.css"),
+    read("../app/components/intro/intro-config.ts"),
+  ]);
+  assert.match(config, /ab-brand-intro-seen/);
+  assert.match(gate, /sessionStorage/);
+  assert.match(gate, /prefers-reduced-motion: reduce\)"\)\.matches\)return/);
+  assert.match(layout, /<BrandIntro \/>/);
+  // Playback hygiene: muted inline autoplay, no native controls, poster, and a skip control.
+  assert.match(intro, /\bmuted\b/);
+  assert.match(intro, /playsInline/);
+  assert.doesNotMatch(intro, /\bcontrols\b/);
+  assert.match(intro, /poster=/);
+  assert.match(intro, /Skip Intro/);
+  // The white tail of the source clip must never be reached.
+  const exitAt = Number(/exitAt:\s*([\d.]+)/.exec(config)?.[1]);
+  assert.ok(exitAt >= 7 && exitAt <= 7.4);
+  assert.match(styles, /prefers-reduced-motion: reduce/);
+});
+
+test("intro media assets exist and are web-sized", async () => {
+  const video = await stat(new URL("../public/video/ab-web-studio-intro.mp4", import.meta.url));
+  const poster = await stat(new URL("../public/video/ab-web-studio-intro-poster.webp", import.meta.url));
+  assert.ok(video.size > 100_000 && video.size < 4_000_000);
+  assert.ok(poster.size > 5_000 && poster.size < 200_000);
+});

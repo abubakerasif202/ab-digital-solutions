@@ -12,7 +12,7 @@ export function StudioCapabilities() {
   return (
     <div className="studio-capabilities">
       {capabilities.map((capability) => (
-        <Link key={capability.number} href={capability.href} className="capability-card" data-reveal>
+        <Link key={capability.number} href={capability.href} className="capability-card glow-surface" data-tilt data-reveal>
           <div className="capability-top"><span>{capability.number}</span><span className={`capability-symbol capability-symbol-${capability.symbol}`} aria-hidden="true"><i /><i /><i /></span></div>
           <h3>{capability.title}</h3>
           <p>{capability.copy}</p>

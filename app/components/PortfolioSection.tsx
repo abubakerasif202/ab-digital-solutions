@@ -22,7 +22,7 @@ export function PortfolioSection() {
             <div className="work-grid">
               {projects.map((project, index) => (
                 <Link
-                  className="project-card"
+                  className="project-card glow-surface"
                   data-tilt
                   data-reveal
                   data-cursor="VIEW"

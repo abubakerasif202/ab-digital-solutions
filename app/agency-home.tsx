@@ -11,6 +11,7 @@ import { ArrowIcon } from "./icons";
 import { PortfolioSection } from "./components/PortfolioSection";
 import { StudioCapabilities } from "./components/StudioCapabilities";
 import { ABBrandImage } from "./components/brand/ABBrandImage";
+import { Reveal } from "./components/motion/Reveal";
 
 const services = [
   {
@@ -155,7 +156,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             <p className="eyebrow supporting-services-label">The details that bring it together</p>
             <div className="services-list">
               {services.map((service) => (
-                <Link className="service-card" data-reveal key={service.number} href={`/services/${service.slug}`}>
+                <Link className="service-card" data-glow data-tilt data-reveal key={service.number} href={`/services/${service.slug}`}>
                   <div className="service-card-top">
                     <span>{`// ${service.number}`}</span>
                     <h3>{service.title}</h3>
@@ -224,18 +225,18 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <p className="eyebrow">04 / About AB</p>
               <h2 id="about-heading">Your digital presence should <em>work as hard</em> as you do.</h2>
               <p>AB Web Studio is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
-              <div className="studio-trust" role="group" aria-label="Studio details">
+              <Reveal className="studio-trust" variant="blur" role="group" aria-label="Studio details">
                 <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
                 <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>
                 <p><strong>Real project portfolio</strong><span>{projects.length} live digital project case studies</span></p>
-              </div>
-              <p>We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</p>
-              <p>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</p>
-              <dl className="about-values">
+              </Reveal>
+              <Reveal as="p" variant="blur">We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</Reveal>
+              <Reveal as="p" variant="blur" delay={90}>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</Reveal>
+              <Reveal as="dl" className="about-values" variant="fade-up">
                 <div><dt>Clear communication</dt><dd>Simple advice and transparent decisions.</dd></div>
                 <div><dt>Reliable delivery</dt><dd>A professional process from brief to launch.</dd></div>
                 <div><dt>Results-focused work</dt><dd>Design choices connected to business goals.</dd></div>
-              </dl>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -250,11 +251,11 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <span className="mask-line"><span>impossible to ignore.</span></span>
               </h2>
               <p>Tell us what you are building and where you want the business to go. We will come back with a practical next step.</p>
-              <div className="contact-options">
+              <Reveal className="contact-options" variant="fade-up" delay={120}>
                 <a href={`tel:${siteConfig.phoneInternational}`}><span>Call</span><strong>{siteConfig.phoneDisplay}</strong><ArrowIcon /></a>
                 <a href={`mailto:${siteConfig.email}`}><span>Email</span><strong>{siteConfig.email}</strong><ArrowIcon /></a>
                 <a href={`https://wa.me/${siteConfig.phoneInternational.replace("+", "")}`} target="_blank" rel="noopener noreferrer"><span>WhatsApp</span><strong>Message directly</strong><ArrowIcon /><span className="sr-only"> (opens in a new tab)</span></a>
-              </div>
+              </Reveal>
             </div>
 
             <ContactForm />

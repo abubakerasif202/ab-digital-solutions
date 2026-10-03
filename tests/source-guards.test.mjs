@@ -252,7 +252,7 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   const [homepage, styles, intro, pointerFx, chrome, caseStudy, rawPackage] = await Promise.all([
     read("../app/agency-home.tsx"),
     read("../app/globals.css"),
-    read("../app/components/IntroReveal.tsx"),
+    read("../app/components/intro/intro-gate.ts"),
     read("../app/components/PointerFX.tsx"),
     read("../app/site-chrome.tsx"),
     read("../app/work/[slug]/page.tsx"),
@@ -268,7 +268,6 @@ test("premium interaction layer is wired without heavy dependencies", async () =
 
   assert.match(intro, /sessionStorage/);
   assert.match(intro, /prefers-reduced-motion/);
-  assert.match(styles, /\.intro-reveal \{ display: none; \}/);
 
   assert.match(pointerFx, /pointer: fine/);
   assert.match(pointerFx, /data-cursor/);
@@ -434,14 +433,14 @@ test("service heroes carry decorative real project evidence", async () => {
 
 test("hero content paints immediately without an intro overlay or hydration suppression", async () => {
   const [page, layout] = await Promise.all([read("../app/page.tsx"), read("../app/layout.tsx")]);
-  assert.doesNotMatch(page, /IntroReveal|setTimeout/);
+  assert.doesNotMatch(page, /IntroReveal|BrandIntro|setTimeout/);
   assert.doesNotMatch(layout, /suppressHydrationWarning/);
   assert.match(page, /AgencyHome/);
 });
 
 test("reduced motion removes the headline rise and intro entirely", async () => {
   const [intro, styles] = await Promise.all([
-    read("../app/components/IntroReveal.tsx"),
+    read("../app/components/intro/intro-gate.ts"),
     read("../app/globals.css"),
   ]);
   assert.match(intro, /prefers-reduced-motion: reduce\)"\)\.matches\)return/);

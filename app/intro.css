@@ -1,0 +1,193 @@
+/* Opening brand film ---------------------------------------------------------
+   The overlay sits above the fully rendered homepage. html[data-intro] is set by
+   the inline gate (components/intro/intro-gate.ts):
+     playing → overlay visible, hero + navbar held back
+     exit    → overlay dissolves, hero and navbar enter in sequence
+     done    → overlay unmounted; flag removed once entrances settle */
+
+:root {
+  --intro-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --intro-exit: 760ms;
+}
+
+.brand-intro { display: none; }
+
+html[data-intro] .brand-intro {
+  position: fixed;
+  z-index: 500;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  background: #050506;
+  opacity: 1;
+  transition: opacity var(--intro-exit) var(--intro-ease);
+}
+
+html[data-intro="playing"],
+html[data-intro="playing"] body { overflow: hidden; }
+
+html[data-intro="exit"] .brand-intro,
+html[data-intro="done"] .brand-intro { opacity: 0; pointer-events: none; }
+
+/* Ambient ruby / gold bloom behind the film so letterboxed areas never read as flat black. */
+.brand-intro::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 46% 38% at 50% 52%, rgba(212, 163, 47, 0.1), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 50% 60%, rgba(210, 23, 54, 0.1), transparent 72%);
+}
+
+.brand-intro-stage {
+  position: absolute;
+  inset: 0;
+  transform: scale(1);
+  transform-origin: 50% 46%;
+  transition: transform calc(var(--intro-exit) + 140ms) var(--intro-ease), filter var(--intro-exit) var(--intro-ease);
+  will-change: transform;
+}
+
+html[data-intro="exit"] .brand-intro-stage,
+html[data-intro="done"] .brand-intro-stage { transform: scale(1.05); filter: blur(6px); }
+
+/* The clip is 16:9 and its logo sits ~45% across; frame it explicitly. */
+.brand-intro-media {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: min(100vw, 177.78dvh);
+  height: auto;
+  aspect-ratio: 16 / 9;
+  max-width: none;
+  object-fit: cover;
+  background: #050506;
+  transform: translate(-50%, -50%);
+  /* Feather all four edges so the clip's dark texture melts into the black surround. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 24%, #000 76%, transparent), linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 24%, #000 76%, transparent), linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+  mask-composite: intersect;
+}
+
+.brand-intro-video.is-failed { display: none; }
+
+/* Portrait screens: enlarge the clip so the monogram and AB WEB STUDIO stay
+   legible, and centre on the logo (≈45.5% across the frame) not the frame. */
+@media (max-aspect-ratio: 1/1) {
+  .brand-intro-media {
+    width: 150vw;
+    transform: translate(-45.5%, -52%);
+  }
+}
+
+/* Short landscape phones: stay within the viewport height. */
+@media (max-height: 460px) and (min-aspect-ratio: 1/1) {
+  .brand-intro-media { width: min(100vw, 190dvh); }
+}
+
+.brand-intro-skip {
+  position: absolute;
+  z-index: 2;
+  right: max(28px, env(safe-area-inset-right));
+  bottom: max(26px, env(safe-area-inset-bottom));
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: rgba(239, 201, 106, 0.72);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: intro-skip-in 700ms var(--intro-ease) 900ms forwards;
+  transition: color 240ms ease;
+}
+
+.brand-intro-skip span {
+  position: relative;
+  padding-block: 6px;
+}
+
+.brand-intro-skip span::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  content: "";
+  background: currentColor;
+  opacity: 0.55;
+  transform: scaleX(0.35);
+  transform-origin: right;
+  transition: transform 420ms var(--intro-ease), opacity 240ms ease;
+}
+
+.brand-intro-skip:hover,
+.brand-intro-skip:focus-visible { color: var(--gold-bright); }
+
+.brand-intro-skip:hover span::after,
+.brand-intro-skip:focus-visible span::after { opacity: 1; transform: scaleX(1); }
+
+.brand-intro-skip:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 4px; }
+
+@keyframes intro-skip-in { to { opacity: 1; } }
+
+@media (max-width: 720px) {
+  .brand-intro-skip { right: 50%; transform: translateX(50%); }
+}
+
+/* Homepage entrance -----------------------------------------------------------
+   While the film plays the hero and navbar are held back; leaving "playing"
+   transitions them to their natural state in a headline → copy → CTA → details →
+   navbar order. Transitions (not keyframes) so clearing the flag later replays
+   nothing. */
+html[data-intro] :is(
+  .hero-copy .eyebrow, .hero-title .mask-line > span, .hero-intro, .hero-actions,
+  .client-proof, .hero-showcase-stack, .hero-foot, .hero-marquee, .site-header
+) {
+  transition:
+    opacity 760ms var(--intro-ease) var(--intro-delay, 0ms),
+    translate 760ms var(--intro-ease) var(--intro-delay, 0ms),
+    filter 760ms var(--intro-ease) var(--intro-delay, 0ms);
+}
+
+html[data-intro="playing"] :is(
+  .hero-copy .eyebrow, .hero-title .mask-line > span, .hero-intro, .hero-actions,
+  .client-proof, .hero-showcase-stack, .hero-foot, .hero-marquee
+) {
+  opacity: 0;
+  translate: 0 15px;
+  filter: blur(8px);
+}
+
+html[data-intro="playing"] .site-header { opacity: 0; translate: 0 -10px; }
+
+html[data-intro] .hero-copy .eyebrow { --intro-delay: 80ms; }
+html[data-intro] .hero-title .mask-line:nth-child(1) > span { --intro-delay: 120ms; }
+html[data-intro] .hero-title .mask-line:nth-child(2) > span { --intro-delay: 220ms; }
+html[data-intro] .hero-title .mask-line:nth-child(3) > span { --intro-delay: 320ms; }
+html[data-intro] .hero-intro { --intro-delay: 440ms; }
+html[data-intro] .hero-actions { --intro-delay: 540ms; }
+html[data-intro] .client-proof { --intro-delay: 640ms; }
+html[data-intro] .hero-showcase-stack { --intro-delay: 480ms; }
+html[data-intro] :is(.hero-foot, .hero-marquee) { --intro-delay: 700ms; }
+html[data-intro] .site-header { --intro-delay: 820ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-intro { display: none !important; }
+  html[data-intro] * { transition: none !important; }
+  html[data-intro="playing"] :is(
+    .hero-copy .eyebrow, .hero-title .mask-line > span, .hero-intro, .hero-actions,
+    .client-proof, .hero-showcase-stack, .hero-foot, .hero-marquee, .site-header
+  ) { opacity: 1; translate: none; filter: none; }
+  html[data-intro="playing"], html[data-intro="playing"] body { overflow: visible; }
+}

@@ -1,0 +1,128 @@
+/* Studio motion language ------------------------------------------------------
+   One easing, 250–800ms, transform/opacity first, no bounce, no scroll
+   hijacking. Reveal.tsx supplies one-shot entrances; scroll-linked effects use
+   native animation-timeline where supported. Everything here is switched off
+   for reduced motion and for coarse pointers where it is pointer-driven. */
+
+:root { --ease-lux: cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Reveal primitive ---------------------------------------------------------- */
+.reveal[data-reveal-state] {
+  transition:
+    opacity 700ms var(--ease-lux) var(--reveal-delay, 0ms),
+    translate 700ms var(--ease-lux) var(--reveal-delay, 0ms),
+    filter 700ms var(--ease-lux) var(--reveal-delay, 0ms),
+    clip-path 900ms var(--ease-lux) var(--reveal-delay, 0ms);
+}
+.reveal[data-reveal-state="armed"] { opacity: 0; }
+.reveal[data-reveal-state="armed"][data-reveal-variant="fade-up"] { translate: 0 22px; }
+.reveal[data-reveal-state="armed"][data-reveal-variant="blur"] { translate: 0 12px; filter: blur(8px); }
+.reveal[data-reveal-state="armed"][data-reveal-variant="mask"] { opacity: 1; clip-path: inset(0 0 100% 0); translate: 0 14px; }
+.reveal[data-reveal-state="in"][data-reveal-variant="mask"] { clip-path: inset(0 0 -10% 0); }
+/* Rules draw in from the left instead of fading. */
+.reveal[data-reveal-state="armed"][data-reveal-variant="line"] { opacity: 1; clip-path: inset(0 100% 0 0); }
+.reveal[data-reveal-state="in"][data-reveal-variant="line"] { clip-path: inset(0 0 0 0); }
+
+/* Navbar -------------------------------------------------------------------- */
+.site-header { background: linear-gradient(rgba(7, 7, 8, 0.7), rgba(7, 7, 8, 0)); backdrop-filter: none; transition: background 420ms var(--ease-lux), backdrop-filter 420ms var(--ease-lux), border-color 420ms var(--ease-lux); }
+.site-header.is-scrolled { background: rgba(7, 7, 8, 0.74); backdrop-filter: blur(18px) saturate(140%); }
+.site-nav a:not(.nav-cta)::after { background: linear-gradient(90deg, var(--gold-bright), var(--brand-red)); transition: transform 460ms var(--ease-lux); }
+.site-nav a:not(.nav-cta):hover, .site-nav a.is-active { color: var(--gold-bright); }
+.brand { transition: opacity 300ms var(--ease-lux); }
+.brand:hover { opacity: 0.86; }
+
+@media (max-width: 960px) {
+  /* Blur would contain the fixed menu panel; keep the mobile bar solid. */
+  .site-header, .site-header.is-scrolled { backdrop-filter: none; }
+  .site-header.is-scrolled { background: rgba(7, 7, 8, 0.96); }
+  .site-nav { transition: opacity 320ms var(--ease-lux), transform 420ms var(--ease-lux), visibility 320ms; }
+  .site-nav.is-open { transition: opacity 320ms var(--ease-lux), transform 420ms var(--ease-lux), visibility 320ms; }
+  .site-nav a { opacity: 0; translate: 0 10px; transition: color 180ms ease, opacity 420ms var(--ease-lux), translate 520ms var(--ease-lux); }
+  .site-nav.is-open a { opacity: 1; translate: none; }
+  .site-nav.is-open a:nth-child(1) { transition-delay: 0ms, 90ms, 90ms; }
+  .site-nav.is-open a:nth-child(2) { transition-delay: 0ms, 140ms, 140ms; }
+  .site-nav.is-open a:nth-child(3) { transition-delay: 0ms, 190ms, 190ms; }
+  .site-nav.is-open a:nth-child(4) { transition-delay: 0ms, 240ms, 240ms; }
+  .site-nav.is-open a:nth-child(5) { transition-delay: 0ms, 300ms, 300ms; }
+}
+
+/* CTA buttons: a controlled gold sheen crosses the button on hover. */
+.button-primary, .site-nav .nav-cta { position: relative; overflow: hidden; isolation: isolate; }
+.button-primary::before, .site-nav .nav-cta::before {
+  position: absolute; z-index: -1; inset: 0; content: ""; pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgba(239, 201, 106, 0.38) 50%, transparent 70%);
+  translate: -120% 0;
+}
+.button-primary:hover::before, .site-nav .nav-cta:hover::before { translate: 120% 0; transition: translate 900ms var(--ease-lux); }
+.button, .site-nav .nav-cta { transition-timing-function: var(--ease-lux); transition-duration: 320ms; }
+.button span, .button svg { transition: transform 360ms var(--ease-lux); }
+
+/* Hero: ruby ambience + restrained parallax --------------------------------- */
+.cinematic-home .hero::after {
+  position: absolute; inset: 0; content: ""; pointer-events: none;
+  background:
+    radial-gradient(ellipse 44% 52% at 82% 18%, rgba(210, 23, 54, 0.14), transparent 70%),
+    radial-gradient(ellipse 30% 36% at 8% 78%, rgba(212, 163, 47, 0.07), transparent 72%);
+}
+
+/* Pointer-responsive lighting (desktop only; vars set by PointerFX on [data-tilt]). */
+@media (hover: hover) and (pointer: fine) {
+  :is(.glow-surface, [data-glow]) { position: relative; }
+  :is(.glow-surface, [data-glow])::before {
+    position: absolute; z-index: 2; inset: 0; content: ""; pointer-events: none; opacity: 0;
+    background: radial-gradient(380px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(239, 201, 106, 0.1), rgba(210, 23, 54, 0.06) 45%, transparent 72%);
+    transition: opacity 500ms var(--ease-lux);
+  }
+  :is(.glow-surface, [data-glow]):hover::before { opacity: 1; }
+}
+
+/* Portfolio: title + arrow micro-motion --------------------------------------- */
+.project-details h3 { background: linear-gradient(currentColor, currentColor) left 100% / 0 1px no-repeat; transition: background-size 600ms var(--ease-lux); }
+.project-card:hover .project-details h3, .project-card:focus-visible .project-details h3 { background-size: 100% 1px; }
+.project-arrow, .service-card-arrow { transition: transform 460ms var(--ease-lux), background 300ms ease, border-color 300ms ease, color 300ms ease; }
+.project-card:hover .project-arrow, .service-card:hover .service-card-arrow, .service-card:focus-visible .service-card-arrow { transform: translate(3px, -3px); }
+
+/* Services: gold index + accent rule that draws on hover. */
+.service-card-top > span:first-child { transition: color 420ms var(--ease-lux), translate 520ms var(--ease-lux); }
+.service-card:hover .service-card-top > span:first-child, .service-card:focus-visible .service-card-top > span:first-child { color: var(--gold-bright); translate: 6px 0; }
+.service-card::after { background: linear-gradient(90deg, var(--gold-bright), var(--brand-red)); transition-timing-function: var(--ease-lux); }
+.service-card-reveal, .service-card-reveal > div, .service-card-reveal p, .service-card-reveal li { transition-timing-function: var(--ease-lux); }
+.capability-card { transition: background 420ms var(--ease-lux), translate 520ms var(--ease-lux); }
+.capability-card:hover { translate: 0 -4px; }
+.capability-card .capability-link svg, .capability-link { transition: color 300ms ease; }
+.capability-card:hover .capability-link { color: var(--gold-bright); }
+
+/* About: slow image drift + draw-in dividers. */
+.about-values > div { transition: border-color 500ms var(--ease-lux); }
+.about-values > div:hover { border-color: var(--gold); }
+@supports (animation-timeline: view()) {
+  @media (min-width: 721px) {
+    .about-logo .brand-artwork { animation: about-drift linear both; animation-range: cover 0% cover 100%; animation-timeline: view(); }
+    .cinematic-home .hero-3d-bg-wrap { animation: hero-drift linear both; animation-range: 0px 640px; animation-timeline: scroll(root); }
+  }
+}
+@keyframes about-drift { from { translate: 0 -5%; } to { translate: 0 5%; } }
+@keyframes hero-drift { to { translate: 0 90px; opacity: 0.08; } }
+
+/* Final CTA: ambient ruby glow and a single gold sweep across the headline. */
+.contact-section::before {
+  position: absolute; inset: auto -10% -35% -10%; height: 90%; content: ""; pointer-events: none;
+  background: radial-gradient(ellipse 50% 60% at 30% 100%, rgba(210, 23, 54, 0.2), transparent 70%), radial-gradient(ellipse 30% 40% at 70% 100%, rgba(212, 163, 47, 0.14), transparent 70%);
+}
+.contact-section > .container { position: relative; z-index: 1; }
+.contact-title .mask-line > span { -webkit-text-fill-color: transparent; background: linear-gradient(100deg, currentColor 42%, #b5851f 50%, currentColor 58%) 120% 0 / 250% 100% no-repeat; -webkit-background-clip: text; background-clip: text; }
+@supports (animation-timeline: view()) {
+  @media (min-width: 721px) {
+    .contact-title .mask-line > span { animation: line-rise linear both, cta-sheen linear both; animation-timeline: view(), view(); animation-range: entry 0% cover 28%, cover 20% cover 60%; }
+  }
+}
+@keyframes cta-sheen { from { background-position: 120% 0; } to { background-position: -20% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal[data-reveal-state] { transition: none; }
+  .reveal[data-reveal-state="armed"] { opacity: 1; translate: none; filter: none; clip-path: none; }
+  :is(.glow-surface, [data-glow])::before, .button-primary::before, .site-nav .nav-cta::before { display: none; }
+  .about-logo .brand-artwork, .cinematic-home .hero-3d-bg-wrap, .contact-title .mask-line > span { animation: none !important; }
+  .capability-card:hover { translate: none; }
+  .site-nav a { opacity: 1; translate: none; transition: none; }
+}
