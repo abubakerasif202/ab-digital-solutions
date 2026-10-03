@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 4_096;
 const allowedEvents = new Set(["page_view", "cta_click", "web_vital"]);
-const allowedMetrics = new Set(["CLS", "FCP", "INP", "LCP", "TTFB"]);
+const allowedMetrics = new Set(["CLS", "FCP", "FID", "INP", "LCP", "TTFB"]);
 const allowedRatings = new Set(["", "good", "needs-improvement", "poor"]);
 
 type Payload = Record<string, unknown>;
