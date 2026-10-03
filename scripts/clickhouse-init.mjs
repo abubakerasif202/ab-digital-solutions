@@ -1,3 +1,10 @@
+import { existsSync } from "node:fs";
+import { loadEnvFile } from "node:process";
+
+if (existsSync(".env.local")) {
+  loadEnvFile(".env.local");
+}
+
 const required = ["CLICKHOUSE_URL", "CLICKHOUSE_USER", "CLICKHOUSE_PASSWORD"];
 
 for (const key of required) {
