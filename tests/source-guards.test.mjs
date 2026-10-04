@@ -46,6 +46,7 @@ test("portfolio contains every required live project", async () => {
     "https://www.hfremovalsadelaide.com/",
     "https://www.aftabandsons.com.au/",
     "https://247trucktyreservices.store/",
+    "https://jufaja-homes-platform.vercel.app/",
   ];
 
   for (const project of requiredProjects) assert.match(projects, new RegExp(project.replaceAll(".", "\\.")));
@@ -62,7 +63,8 @@ test("every project ships a real preview image and routes visitors through a cas
   ]);
 
   const imageNames = [...projects.matchAll(/\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
-  assert.equal(imageNames.length, 13);
+  assert.equal(imageNames.length, [...projects.matchAll(/slug: "/g)].length);
+  assert.ok(imageNames.includes("ab-portfolio-jufaja-homes.webp"));
   assert.ok(imageNames.includes("ab-portfolio-adelaide-wholesale-tyres.webp"));
   assert.ok(imageNames.includes("ab-portfolio-1st-class-express.jpg"));
   assert.ok(imageNames.includes("ab-portfolio-hf-removals.jpg"));
@@ -313,8 +315,7 @@ test("llms.txt stays in sync with the canonical project registry", async () => {
   const { projects } = await import("../app/project-data.ts");
   const llms = await read("../public/llms.txt");
 
-  assert.equal(projects.length, 13);
-  assert.match(llms, /Thirteen live digital projects/);
+  assert.match(llms, /See the Work index for the current project count/);
   for (const project of projects) {
     assert.ok(llms.includes(project.name), `llms.txt is missing ${project.name}`);
     assert.ok(llms.includes(project.url), `llms.txt is missing ${project.name} (${project.url})`);

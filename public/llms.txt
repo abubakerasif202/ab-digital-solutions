@@ -8,7 +8,7 @@
 - Location: Sydney, NSW, Australia.
 - Service Area: Sydney and Australia-wide.
 - Website Stack: Next.js 16, React 19, TypeScript, CSS, and Vercel.
-- Selected Portfolio: Thirteen live digital projects across transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services.
+- Selected Portfolio: Live digital projects across transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services. See the Work index for the current project count.
 
 ## Main Services & Pages
 
@@ -23,6 +23,7 @@
 
 ## Selected Portfolio (live websites and software)
 
+- [Jufaja Construction / Jufaja Homes](https://jufaja-homes-platform.vercel.app/): Construction / property — premium digital platform with home design navigation and dedicated enquiry pathways.
 - [Aftab & Sons Transport](https://www.aftabandsons.com.au/): Transport & logistics — industrial identity, responsive interface and conversion-focused presentation for heavy-vehicle transport.
 - [247 Inventory System](https://247trucktyreservices.store/): Custom business software — role-protected inventory, purchasing, sales and finance platform for 24/7 Truck Tyre Services.
 - [Adelaide Wholesale Tyres](https://adelaidewholesaletyres.com.au/): E-commerce / wholesale — searchable wholesale tyre catalogue with cart-based bulk ordering and quote workflow.

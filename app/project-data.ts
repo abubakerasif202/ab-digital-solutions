@@ -17,9 +17,36 @@ export type Project = {
   techStack: readonly string[];
   kind?: "software";
   ctaLabel?: string;
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export const projects = [
+  {
+    slug: "jufaja-homes",
+    name: "Jufaja Construction / Jufaja Homes",
+    category: "Construction / Property Digital Platform",
+    sector: "Property & construction",
+    description: "Premium construction and property digital experience.",
+    overview:
+      "Premium digital platform for Jufaja, combining a polished property and construction experience with a modern, responsive interface.",
+    solution:
+      "We created a premium, responsive website presenting Jufaja's home designs and construction offering through clear catalogue navigation, design studies and dedicated enquiry pathways, with a refined forest-green and gold visual identity.",
+    url: "https://jufaja-homes-platform.vercel.app/",
+    displayUrl: "jufaja-homes-platform.vercel.app",
+    image: `${assetBase}/ab-portfolio-jufaja-homes.webp`,
+    alt: "Jufaja Constructions homepage with forest-green and gold branding, home design navigation and illustrative architecture",
+    tags: ["Website Design", "UI/UX", "Frontend Development", "Responsive Development"],
+    keyFeatures: [
+      "Home design catalogue and category navigation",
+      "Construction services and design study presentation",
+      "Dedicated home, house and land, and display home enquiry pathways",
+      "Responsive interface with reduced-motion-aware opening animation",
+    ],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    seoTitle: "Jufaja — Web Design & Development",
+    seoDescription: "Premium website and digital experience created for Jufaja by AB Web Studio.",
+  },
   {
     slug: "aftab-sons-transport",
     name: "Aftab & Sons Transport",

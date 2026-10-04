@@ -5,8 +5,8 @@ import { projects } from "./project-data";
 
 // Static content-change dates (never the current build time, which would make
 // every build differ). Bump the relevant constant when that content actually changes.
-const HOME_LAST_MODIFIED = "2026-09-23";
-const WORK_LAST_MODIFIED = "2026-09-25";
+const HOME_LAST_MODIFIED = "2026-10-05";
+const WORK_LAST_MODIFIED = "2026-10-05";
 const SERVICES_LAST_MODIFIED = "2026-09-23";
 const PRIVACY_LAST_MODIFIED = "2026-08-05";
 

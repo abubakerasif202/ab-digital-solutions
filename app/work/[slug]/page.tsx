@@ -18,13 +18,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = findProject((await params).slug);
   if (!project) return {};
   const projectType = isSoftwareProject(project) ? "software" : "website";
+  const title = project.seoTitle ?? `${project.name} Case Study`;
+  const description = project.seoDescription ?? project.description;
   return {
-    title: `${project.name} Case Study`,
-    description: project.description,
+    title,
+    description,
     alternates: { canonical: `/work/${project.slug}` },
     openGraph: {
-      title: `${project.name} Case Study | ${siteConfig.name}`,
-      description: project.description,
+      title: `${title} | ${siteConfig.name}`,
+      description,
       url: `/work/${project.slug}`,
       siteName: siteConfig.name,
       type: "website",
@@ -40,8 +42,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${project.name} Case Study | ${siteConfig.name}`,
-      description: project.description,
+      title: `${title} | ${siteConfig.name}`,
+      description,
       images: [`/work/${project.slug}/opengraph-image`],
     },
   };
