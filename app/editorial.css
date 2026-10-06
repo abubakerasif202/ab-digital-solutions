@@ -1,7 +1,7 @@
 /* Editorial layer --------------------------------------------------------
    Three typographic roles on top of the cinematic studio layer:
-   - Instrument Sans  (--sans)    interface, body and the grotesk headlines
-   - Instrument Serif (--display) italic accents, project names, signature
+   - Schibsted Grotesk (--sans)   interface and body copy
+   - Bodoni Moda       (--display) headlines, italic accents, signature
    - IBM Plex Mono    (--mono)    micro labels, indices and annotations
    Loaded after studio.css so it refines rather than rewrites the contracts
    pinned in globals.css (button and nav colours, 44px controls). */
@@ -11,7 +11,7 @@
   --dur-ui: 420ms;
   --text-micro: 0.75rem;
   --track-micro: 0.18em;
-  --track-display: -0.055em;
+  --track-display: -0.025em;
   --ruby-glow: 0 14px 36px -14px rgba(210, 23, 54, 0.75);
 }
 
@@ -382,7 +382,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 .cinematic-home .section-heading h2,
 .cinematic-home .process-intro h2,
 .cinematic-home .standard-statement h2,
-.cinematic-home .about-copy h2 { letter-spacing: -0.05em; }
+.cinematic-home .about-copy h2 { letter-spacing: -0.02em; }
 
 .cinematic-home .section-heading h2 .accent-serif,
 .cinematic-home .process-intro h2 .accent-serif,
@@ -505,10 +505,10 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
   grid-template-columns: auto auto;
   column-gap: 0.18em;
   color: var(--paper);
-  font-family: var(--sans);
+  font-family: var(--display);
   font-size: clamp(2.5rem, 0.6rem + 8vw, 8.75rem);
-  font-weight: 500;
-  letter-spacing: -0.06em;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   line-height: 0.9;
   text-transform: uppercase;
 }

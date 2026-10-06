@@ -484,11 +484,14 @@ test("below-fold homepage sections skip offscreen layout with sized placeholders
 
 test("display and mono fonts load only the weights and styles they render", async () => {
   const layout = await read("../app/layout.tsx");
-  const serif = layout.match(/Instrument_Serif\(\{[\s\S]*?\}\)/)?.[0];
-  assert.ok(serif, "Instrument Serif display font");
-  assert.match(serif, /weight: "400"/);
-  // The italic accent line lives inside the hero h1 (LCP), so the serif is
-  // preloaded rather than swapped in late.
+  const serif = layout.match(/Bodoni_Moda\(\{[\s\S]*?\}\)/)?.[0];
+  assert.ok(serif, "Bodoni Moda display font");
+  // Headlines use 400–700, so one variable file (with its optical-size axis)
+  // replaces several static weights.
+  assert.doesNotMatch(serif, /weight:/);
+  assert.match(serif, /axes: \["opsz"\]/);
+  // The whole hero h1 (LCP) is set in the display face, so it is preloaded
+  // rather than swapped in late.
   assert.match(serif, /style: \["normal", "italic"\]/);
   assert.doesNotMatch(serif, /preload: false/);
 
@@ -518,4 +521,24 @@ test("icons come from one tree-shaken library through named imports", async () =
 test("Tailwind only scans app source, keeping unused utilities out of critical CSS", async () => {
   const styles = await read("../app/globals.css");
   assert.match(styles, /@import "tailwindcss" source\(none\);\s*\n@source "\.\/";/);
+});
+
+test("Gilt & Ruby design system: didone headlines, grotesk body and The Cut", async () => {
+  const [layout, studio, layer] = await Promise.all([
+    read("../app/layout.tsx"),
+    read("../app/studio.css"),
+    read("../app/gilt-ruby.css"),
+  ]);
+
+  assert.match(layout, /Bodoni_Moda\(/);
+  assert.match(layout, /Schibsted_Grotesk\(/);
+  assert.match(layout, /variable: "--font-display"/);
+  assert.match(layout, /import "\.\/gilt-ruby\.css";/);
+  assert.ok(layout.indexOf('import "./gilt-ruby.css"') > layout.indexOf('import "./editorial.css"'), "gilt-ruby.css must load last");
+  assert.doesNotMatch(studio, /\.cinematic-home h1, \.cinematic-home h2[^{]*\{[^}]*var\(--sans\)/);
+
+  assert.match(layer, /--clip-cut-sm: polygon\(/);
+  assert.match(layer, /\.button-primary,[\s\S]*?clip-path: var\(--clip-cut-sm\)/);
+  // Clipped controls must not hide their keyboard focus ring.
+  assert.match(layer, /\.button-primary:focus-visible,[\s\S]*?\.mobile-project-cta:focus-visible\s*\{\s*clip-path: none;/);
 });

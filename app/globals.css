@@ -439,9 +439,10 @@ h2,
 h3 {
   margin: 0;
   color: var(--paper);
-  font-weight: 500;
+  font-family: var(--display);
+  font-weight: 400;
   line-height: 0.98;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 

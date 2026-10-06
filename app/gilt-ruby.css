@@ -1,0 +1,83 @@
+/* Gilt & Ruby ------------------------------------------------------------
+   The AB Web Studio design-system layer, loaded last. It refines rather than
+   rewrites the contracts pinned in globals.css (button and nav colours, 44px
+   controls, marquee timing):
+   - Type: Bodoni Moda (--display) sets every headline; Schibsted Grotesk
+     (--sans) carries interface and body copy; IBM Plex Mono labels.
+   - Colour: ruby (--red) is reserved for conversion; gilt (--gold) marks
+     detail — italic accents, indices, active states.
+   - Shape, "The Cut": a 45° chamfer taken from the blade through the AB
+     monogram. Buttons cut two opposite corners; framed media cuts one. */
+
+:root {
+  --cut-sm: 10px;
+  --cut-lg: 28px;
+  --clip-cut-sm: polygon(0 0, calc(100% - var(--cut-sm)) 0, 100% var(--cut-sm), 100% 100%, var(--cut-sm) 100%, 0 calc(100% - var(--cut-sm)));
+  --clip-cut-lg: polygon(0 0, calc(100% - var(--cut-lg)) 0, 100% var(--cut-lg), 100% 100%, 0 100%);
+}
+
+/* Display typography ------------------------------------------------------ */
+h1,
+h2,
+h3,
+.contact-word {
+  font-optical-sizing: auto;
+}
+
+/* Small headings (cards, steps, sidebar) carry a little more stroke weight
+   so the didone's hairlines hold at 20–40px. */
+h3 { font-weight: 500; letter-spacing: -0.01em; }
+
+h1 em,
+h2 em,
+h3 em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Hero: the didone runs wider than the condensed face it replaces, so the
+   column-relative size steps down to keep "before you say a word." on one
+   line from phones to wide desktops. */
+.cinematic-home .hero-title {
+  font-size: clamp(1.75rem, 9.1cqi, 5.4rem);
+  line-height: 0.96;
+}
+
+.cinematic-home .hero-title-lead,
+.cinematic-home .hero-title-close { font-weight: 400; }
+
+.cinematic-home .hero-title-accent { font-size: 1.04em; }
+
+.contact-word { font-family: var(--display); font-weight: 700; letter-spacing: -0.04em; }
+
+/* The wordmark letters follow the display face. */
+.ab-signature b {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+/* The Cut ------------------------------------------------------------------ */
+.button-primary,
+.button-ghost,
+.site-nav .nav-cta,
+.footer-contact-cta,
+.mobile-project-cta {
+  clip-path: var(--clip-cut-sm);
+}
+
+/* A clipped box would also clip its focus ring, so keyboard focus restores
+   the full rectangle and the ring around it. */
+.button-primary:focus-visible,
+.button-ghost:focus-visible,
+.site-nav .nav-cta:focus-visible,
+.footer-contact-cta:focus-visible,
+.mobile-project-cta:focus-visible {
+  clip-path: none;
+}
+
+.browser-frame { clip-path: var(--clip-cut-lg); }
+
+@media (max-width: 640px) {
+  :root { --cut-lg: 18px; }
+}

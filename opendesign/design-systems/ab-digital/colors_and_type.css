@@ -12,13 +12,17 @@
   --ab-red: #e32636;
   --ab-red-bright: #ff4a59;
 
-  --ab-display: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
-  --ab-sans: "Avenir Next", "Helvetica Neue", "Segoe UI", sans-serif;
-  --ab-mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+  --ab-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --ab-sans: "Schibsted Grotesk", "Helvetica Neue", "Segoe UI", sans-serif;
+  --ab-mono: "IBM Plex Mono", "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
 
   --ab-container: min(100% - 64px, 1440px);
   --ab-header-height: 92px;
   --ab-type-micro: 0.75rem;
   --ab-type-small: 0.875rem;
   --ab-type-action: 0.875rem;
+
+  /* The Cut: 45° chamfers taken from the blade through the AB monogram. */
+  --ab-cut-sm: 10px;
+  --ab-cut-lg: 28px;
 }

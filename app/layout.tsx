@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Instrument_Sans, Instrument_Serif } from "next/font/google";
+import { Bodoni_Moda, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { BrandIntro } from "./components/intro/BrandIntro";
 import { introGateScript } from "./components/intro/intro-gate";
@@ -11,6 +11,7 @@ import "./studio.css";
 import "./motion.css";
 import "./intro.css";
 import "./editorial.css";
+import "./gilt-ruby.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -145,21 +146,22 @@ const structuredData = {
   ],
 };
 
-// Self-hosted at build time so every platform gets the intended three-role
-// system: a grotesk for interface and headings, an editorial serif for
-// art-directed accents, and a mono for micro labels and indices.
-const sansFont = Instrument_Sans({
+// Self-hosted at build time. Gilt & Ruby type system: a didone for display
+// (it echoes the hairline/thick strokes of the AB monogram), a grotesk for
+// interface and body copy, and a mono for micro labels and indices.
+const sansFont = Schibsted_Grotesk({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
 });
 
-// The serif renders the italic accent line inside the hero h1 (the LCP
-// element), so it is preloaded. Instrument Serif ships a single 400 weight.
-const displayFont = Instrument_Serif({
+// The didone sets every headline, including the hero h1 (the LCP element), so
+// it is preloaded. Variable weight with an optical-size axis keeps hairlines
+// crisp from 32px cards to the 6rem hero.
+const displayFont = Bodoni_Moda({
   subsets: ["latin"],
-  weight: "400",
   style: ["normal", "italic"],
+  axes: ["opsz"],
   display: "swap",
   variable: "--font-display",
 });
