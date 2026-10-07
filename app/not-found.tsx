@@ -20,13 +20,13 @@ export default function NotFound() {
         <p>The address may be outdated, but the studio is right where you left it.</p>
         <div className="not-found-actions">
           <Link className="button button-primary" href="/">Return home <ArrowIcon /></Link>
-          <Link className="button button-ghost" href="/#contact">Start a project</Link>
+          <Link className="button button-ghost" href="/contact">Start a project</Link>
         </div>
         <nav className="not-found-nav" aria-label="Popular pages">
           <Link href="/work">Case studies</Link>
           <Link href="/services/web-design-sydney">Web design</Link>
           <Link href="/services/seo-local-visibility">SEO</Link>
-          <Link href="/#about">About the studio</Link>
+          <Link href="/about">About the studio</Link>
         </nav>
       </div>
     </main>

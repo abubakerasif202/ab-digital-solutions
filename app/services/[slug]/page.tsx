@@ -132,7 +132,7 @@ export default async function ServicePage({ params }: Props) {
               <h1>{service.title}</h1>
               <p className="content-lead">{service.intro}</p>
               <div className="content-actions">
-                <Link className="button button-primary" href="/#contact">Start a Project <ArrowIcon /></Link>
+                <Link className="button button-primary" href="/contact">Start a Project <ArrowIcon /></Link>
                 <Link className="button button-ghost" href="/work">View Our Work</Link>
               </div>
             </div>
@@ -161,7 +161,7 @@ export default async function ServicePage({ params }: Props) {
             <div>
               <h2 id="service-context-heading">{service.detailTitle}</h2>
               <p>{service.detail}</p>
-              <Link className="text-link" href="/#about">Meet the Sydney studio <ArrowIcon /></Link>
+              <Link className="text-link" href="/about">Meet the Sydney studio <ArrowIcon /></Link>
             </div>
           </section>
 
@@ -237,7 +237,7 @@ export default async function ServicePage({ params }: Props) {
             <h2 id="service-cta-heading">Let&apos;s turn the next digital decision into useful progress.</h2>
             <p>Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
             <div className="content-actions">
-              <Link className="button button-primary" href="/#contact">Start a Project <ArrowIcon /></Link>
+              <Link className="button button-primary" href="/contact">Start a Project <ArrowIcon /></Link>
               <Link className="button button-ghost" href="/work">View Our Work</Link>
             </div>
           </section>

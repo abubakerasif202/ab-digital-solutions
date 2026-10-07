@@ -283,7 +283,12 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   assert.match(caseStudy, /case-study-meta/);
   assert.match(caseStudy, /01 \/ Overview/);
   assert.match(caseStudy, /data-cursor="VISIT"/);
-  assert.match(styles, /\.services-index-row/);
+  const [serviceIndex, compositions] = await Promise.all([
+    read("../app/components/ServiceIndex.tsx"),
+    read("../app/compositions.css"),
+  ]);
+  assert.match(serviceIndex, /services-index-row gr-svc-row/);
+  assert.match(compositions, /\.gr-svc-row/);
 
   const pkg = JSON.parse(rawPackage);
   for (const name of Object.keys({ ...pkg.dependencies, ...pkg.devDependencies })) {
@@ -541,4 +546,46 @@ test("Gilt & Ruby design system: didone headlines, grotesk body and The Cut", as
   assert.match(layer, /\.button-primary,[\s\S]*?clip-path: var\(--clip-cut-sm\)/);
   // Clipped controls must not hide their keyboard focus ring.
   assert.match(layer, /\.button-primary:focus-visible,[\s\S]*?\.mobile-project-cta:focus-visible\s*\{\s*clip-path: none;/);
+});
+
+test("second-pass compositions: real pages, varied portfolio and case-study systems", async () => {
+  const [sitemap, chrome, about, contact, workBody, caseStudy, compositions, home] = await Promise.all([
+    read("../app/sitemap.ts"),
+    read("../app/site-chrome.tsx"),
+    read("../app/about/page.tsx"),
+    read("../app/contact/page.tsx"),
+    read("../app/components/WorkIndexBody.tsx"),
+    read("../app/work/[slug]/page.tsx"),
+    read("../app/compositions.css"),
+    read("../app/agency-home.tsx"),
+  ]);
+
+  // About and Contact are real, indexable routes reached from the primary nav.
+  for (const route of ["/about", "/contact"]) assert.match(sitemap, new RegExp(`\\$\\{siteConfig\\.url\\}${route}`));
+  assert.match(chrome, /href="\/work"/);
+  assert.match(chrome, /href="\/services"/);
+  assert.match(chrome, /href="\/about"/);
+  assert.match(chrome, /className="nav-cta" href="\/contact"/);
+  assert.match(about, /canonical: "\/about"/);
+  assert.match(contact, /canonical: "\/contact"/);
+  assert.match(contact, /<ContactForm \/>/);
+  assert.match(contact, /id="contact"/);
+
+  // The work index composes distinct presentations instead of one card.
+  for (const type of ["feature", "split", "split-reverse", "pair", "system"]) {
+    assert.match(workBody, new RegExp(`"${type}"`));
+    assert.match(compositions, new RegExp(`\\.gr-wi-block--${type}`));
+  }
+
+  // Case studies alternate between three presentations.
+  assert.match(caseStudy, /"system" : currentIndex % 2 === 0 \? "cinematic" : "split"/);
+  assert.match(compositions, /\.gr-cs--split/);
+  assert.match(compositions, /\.gr-cs--system/);
+
+  // Homepage service rows borrow each service page's real featured project.
+  assert.match(home, /findProject\(page\.featuredProject\)/);
+
+  // Scroll-linked motion is opt-in and switched off for reduced motion.
+  assert.match(compositions, /@media \(prefers-reduced-motion: no-preference\)[\s\S]*?animation-timeline: view\(\)/);
+  assert.match(compositions, /@media \(prefers-reduced-motion: reduce\)/);
 });

@@ -2,13 +2,14 @@ import Link from "next/link";
 import { ContactForm } from "./components/ContactForm";
 import { Hero3DExperience } from "./components/Hero3DExperience";
 import { ProjectShowcase } from "./components/ProjectShowcase";
-import { projects } from "./project-data";
+import { findProject, projects, type Project } from "./project-data";
+import { ProjectArtwork } from "./project-artwork";
 import { findService } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
 import { ArrowIcon, Glyph, StudioSignature } from "./icons";
-import { Mail, Megaphone, MessageCircle, Palette, PenTool, Phone, Search, ShieldCheck, ShoppingBag } from "lucide-react";
+import { Mail, MessageCircle, Phone } from "lucide-react";
 import { PortfolioSection } from "./components/PortfolioSection";
 import { StudioCapabilities } from "./components/StudioCapabilities";
 import { ABBrandImage } from "./components/brand/ABBrandImage";
@@ -18,7 +19,6 @@ const services = [
   {
     number: "01",
     slug: "web-design-sydney",
-    icon: PenTool,
     title: "Website design & development",
     description:
       "Custom service, portfolio and business websites with sharp positioning, persuasive journeys and a premium finish.",
@@ -27,7 +27,6 @@ const services = [
   {
     number: "02",
     slug: "seo-local-visibility",
-    icon: Search,
     title: "SEO & local visibility",
     description:
       "Search-ready architecture and content foundations designed to help the right customers discover your business.",
@@ -36,7 +35,6 @@ const services = [
   {
     number: "03",
     slug: "branding-content",
-    icon: Palette,
     title: "Branding & content",
     description:
       "A coherent visual direction and confident messaging that make your business easier to recognise, trust and choose.",
@@ -45,7 +43,6 @@ const services = [
   {
     number: "04",
     slug: "ecommerce-website-development",
-    icon: ShoppingBag,
     title: "E-commerce solutions",
     description:
       "Clear, friction-conscious storefronts that showcase products, simplify purchasing and leave room to scale.",
@@ -54,7 +51,6 @@ const services = [
   {
     number: "05",
     slug: "digital-marketing",
-    icon: Megaphone,
     title: "Digital marketing",
     description:
       "Focused landing pages and campaigns built to create attention, generate enquiries and support the sales process.",
@@ -63,7 +59,6 @@ const services = [
   {
     number: "06",
     slug: "website-maintenance",
-    icon: ShieldCheck,
     title: "Website care & support",
     description:
       "Practical ongoing support for updates, technical health and continuous improvement after your site goes live.",
@@ -74,10 +69,16 @@ const services = [
 // Homepage card slugs must always point at a canonical service page; fail the
 // build loudly if the two lists ever drift apart. The homepage keeps its own
 // card copy on purpose — it is marketing language, not the service-page text.
-services.forEach((service) => {
-  if (!findService(service.slug)) {
-    throw new Error(`agency-home: unknown service slug "${service.slug}"`);
-  }
+// Homepage rows must always point at a canonical service page, and each row
+// borrows that page's featured live project as its preview image; fail the
+// build loudly if either list drifts. The homepage keeps its own row copy on
+// purpose — it is marketing language, not the service-page text.
+const serviceRows = services.map((service) => {
+  const page = findService(service.slug);
+  if (!page) throw new Error(`agency-home: unknown service slug "${service.slug}"`);
+  const featured = findProject(page.featuredProject);
+  if (!featured) throw new Error(`agency-home: unknown featured project "${page.featuredProject}"`);
+  return { ...service, featured: featured as Project };
 });
 
 const processSteps = [
@@ -160,36 +161,38 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
         <PortfolioSection />
 
-        <section className="section services-section" id="services" aria-labelledby="services-heading">
+        <section className="section services-section gr-services" id="services" aria-labelledby="services-heading">
           <div className="container">
             <div className="section-heading" data-reveal>
               <div>
                 <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />Capabilities</p>
-                <h2 id="services-heading">From first impression to <span className="accent-serif">everyday operation.</span></h2>
+                <h2 id="services-heading" className="gr-display-xl">From first impression to <span className="accent-serif">everyday operation.</span></h2>
               </div>
               <p>From the first strategic decision to post-launch support, every recommendation is tied to a clear business goal.</p>
             </div>
             <StudioCapabilities />
-            <p className="eyebrow supporting-services-label">The details that bring it together</p>
-            <div className="services-list">
-              {services.map((service) => (
-                <Link className="service-card" data-glow data-tilt data-reveal key={service.number} href={`/services/${service.slug}`}>
-                  <div className="service-card-top">
-                    <span className="service-card-index">{service.number}<Glyph icon={service.icon} size={20} className="service-card-icon" /></span>
-                    <h3>{service.title}</h3>
-                    <span className="service-card-arrow" aria-hidden="true"><ArrowIcon /></span>
-                  </div>
-                  <div className="service-card-reveal">
-                    <div>
-                      <p>{service.description}</p>
-                      <ul>
-                        {service.details.map((detail) => <li key={detail}>{detail}</li>)}
-                      </ul>
-                      <span className="service-link">Explore service <ArrowIcon /></span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div className="gr-service-index">
+              <p className="eyebrow supporting-services-label">The details that bring it together</p>
+              <ol className="services-list">
+                {serviceRows.map((service) => (
+                  <li key={service.number}>
+                    <Link className="service-card" data-reveal href={`/services/${service.slug}`}>
+                      <span className="service-card-index">{service.number}</span>
+                      <h3>{service.title}</h3>
+                      <span className="gr-service-body">
+                        <span className="gr-service-desc">{service.description}</span>
+                        <span className="gr-service-tags">
+                          {service.details.map((detail) => <span key={detail}>{detail}</span>)}
+                        </span>
+                      </span>
+                      <span className="gr-service-thumb" aria-hidden="true">
+                        <ProjectArtwork project={service.featured} sizes="240px" />
+                      </span>
+                      <span className="service-card-arrow" aria-hidden="true"><ArrowIcon /></span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
         </section>
@@ -249,6 +252,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               </Reveal>
               <Reveal as="p" variant="blur">We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</Reveal>
               <Reveal as="p" variant="blur" delay={90}>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</Reveal>
+              <Link className="text-link" href="/about">Inside the studio <ArrowIcon /></Link>
               <Reveal as="dl" className="about-values" variant="fade-up">
                 <div><dt>Clear communication</dt><dd>Simple advice and transparent decisions.</dd></div>
                 <div><dt>Reliable delivery</dt><dd>A professional process from brief to launch.</dd></div>

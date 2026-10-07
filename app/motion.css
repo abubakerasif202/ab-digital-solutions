@@ -77,16 +77,14 @@
 }
 
 /* Portfolio: title + arrow micro-motion --------------------------------------- */
-.project-details h3 { background: linear-gradient(currentColor, currentColor) left 100% / 0 1px no-repeat; transition: background-size 600ms var(--ease-lux); }
-.project-card:hover .project-details h3, .project-card:focus-visible .project-details h3 { background-size: 100% 1px; }
-.project-arrow, .service-card-arrow { transition: transform 460ms var(--ease-lux), background 300ms ease, border-color 300ms ease, color 300ms ease; }
-.project-card:hover .project-arrow, .service-card:hover .service-card-arrow, .service-card:focus-visible .service-card-arrow { transform: translate(3px, -3px); }
+
+ .service-card-arrow { transition: transform 460ms var(--ease-lux), background 300ms ease, border-color 300ms ease, color 300ms ease; }
+ .service-card:hover .service-card-arrow, .service-card:focus-visible .service-card-arrow{ transform: translate(3px, -3px); }
 
 /* Services: gold index + accent rule that draws on hover. */
-.service-card-top > span:first-child { transition: color 420ms var(--ease-lux), translate 520ms var(--ease-lux); }
-.service-card:hover .service-card-top > span:first-child, .service-card:focus-visible .service-card-top > span:first-child { color: var(--gold-bright); translate: 6px 0; }
+
 .service-card::after { background: linear-gradient(90deg, var(--gold-bright), var(--brand-red)); transition-timing-function: var(--ease-lux); }
-.service-card-reveal, .service-card-reveal > div, .service-card-reveal p, .service-card-reveal li { transition-timing-function: var(--ease-lux); }
+
 .capability-card { transition: background 420ms var(--ease-lux), translate 520ms var(--ease-lux); }
 .capability-card:hover { translate: 0 -4px; }
 .capability-card .capability-link svg, .capability-link { transition: color 300ms ease; }
@@ -110,7 +108,7 @@
   background: radial-gradient(ellipse 50% 60% at 30% 100%, rgba(210, 23, 54, 0.2), transparent 70%), radial-gradient(ellipse 30% 40% at 70% 100%, rgba(212, 163, 47, 0.14), transparent 70%);
 }
 .contact-section > .container { position: relative; z-index: 1; }
-.contact-title .mask-line > span { -webkit-text-fill-color: transparent; background: linear-gradient(100deg, currentColor 42%, #b5851f 50%, currentColor 58%) 120% 0 / 250% 100% no-repeat; -webkit-background-clip: text; background-clip: text; }
+.contact-title .mask-line > span { -webkit-text-fill-color: transparent; background: linear-gradient(100deg, currentColor 42%, #b5851f 50%, currentColor 58%) 120% 0 / 250% 100% repeat-x; -webkit-background-clip: text; background-clip: text; }
 @supports (animation-timeline: view()) {
   @media (min-width: 721px) {
     .contact-title .mask-line > span { animation: line-rise linear both, cta-sheen linear both; animation-timeline: view(), view(); animation-range: entry 0% cover 28%, cover 20% cover 60%; }

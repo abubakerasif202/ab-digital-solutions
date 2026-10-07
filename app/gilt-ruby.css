@@ -7,7 +7,7 @@
    - Colour: ruby (--red) is reserved for conversion; gilt (--gold) marks
      detail — italic accents, indices, active states.
    - Shape, "The Cut": a 45° chamfer taken from the blade through the AB
-     monogram. Buttons cut two opposite corners; framed media cuts one. */
+     monogram. Filled buttons cut two opposite corners (outlined ones stay square so their border never breaks); framed media cuts one. */
 
 :root {
   --cut-sm: 10px;
@@ -59,7 +59,6 @@ h3 em {
 
 /* The Cut ------------------------------------------------------------------ */
 .button-primary,
-.button-ghost,
 .site-nav .nav-cta,
 .footer-contact-cta,
 .mobile-project-cta {
@@ -69,7 +68,6 @@ h3 em {
 /* A clipped box would also clip its focus ring, so keyboard focus restores
    the full rectangle and the ring around it. */
 .button-primary:focus-visible,
-.button-ghost:focus-visible,
 .site-nav .nav-cta:focus-visible,
 .footer-contact-cta:focus-visible,
 .mobile-project-cta:focus-visible {

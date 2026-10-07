@@ -5,6 +5,15 @@ import type { FormEvent } from "react";
 import { ArrowIcon } from "../icons";
 import { siteConfig } from "../site-config";
 
+const services = [
+  "Website design & development",
+  "SEO & local visibility",
+  "Branding & content",
+  "E-commerce solutions",
+  "Digital marketing",
+  "Website care & support",
+] as const;
+
 export function ContactForm() {
   const sendingRef = useRef(false);
   const [formStatus, setFormStatus] = useState("");
@@ -47,9 +56,9 @@ export function ContactForm() {
   };
 
   return (
-    <form className="contact-form" data-reveal method="post" action="/api/contact" onSubmit={handleSubmit} aria-busy={formState === "sending"}>
+    <form className="contact-form" data-reveal data-state={formState} method="post" action="/api/contact" onSubmit={handleSubmit} aria-busy={formState === "sending"}>
       <noscript>
-        <style>{`.contact-form .form-grid, .contact-form button[type="submit"], .contact-form .form-note, .contact-form .form-status { display: none !important; }`}</style>
+        <style>{`.contact-form .form-grid, .contact-form .form-services, .contact-form button[type="submit"], .contact-form .form-note, .contact-form .form-status { display: none !important; }`}</style>
         <p>
           To discuss your project, email <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a> or call{" "}
           <a href={`tel:${siteConfig.phoneInternational}`}>{siteConfig.phoneDisplay}</a>.
@@ -59,6 +68,17 @@ export function ContactForm() {
         <label htmlFor="company">Company website</label>
         <input id="company" name="company" type="text" tabIndex={-1} autoComplete="off" />
       </div>
+      <fieldset className="form-services">
+        <legend>What do you need?</legend>
+        <div className="form-service-options">
+          {services.map((service, index) => (
+            <label className="form-service-option" key={service}>
+              <input type="radio" name="service" value={service} defaultChecked={index === 0} />
+              <span>{service}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
       <div className="form-grid">
         <label htmlFor="full-name">Name <span aria-hidden="true">*</span></label>
         <input id="full-name" name="fullName" type="text" autoComplete="name" maxLength={160} required aria-required="true" />
@@ -66,15 +86,6 @@ export function ContactForm() {
         <input id="email" name="email" type="email" autoComplete="email" maxLength={254} required aria-required="true" />
         <label htmlFor="phone">Phone</label>
         <input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={50} />
-        <label htmlFor="service">Service</label>
-        <select id="service" name="service" defaultValue="Website design & development">
-          <option>Website design &amp; development</option>
-          <option>SEO &amp; local visibility</option>
-          <option>Branding &amp; content</option>
-          <option>E-commerce solutions</option>
-          <option>Digital marketing</option>
-          <option>Website care &amp; support</option>
-        </select>
         <label htmlFor="budget">Approx. budget</label>
         <select id="budget" name="budget" defaultValue="">
           <option value="" disabled>Select a range</option>

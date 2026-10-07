@@ -6,7 +6,7 @@ const capabilities = [
   { number: "01", title: "Premium websites", copy: "Distinctive design, clear messaging and a considered path from first impression to enquiry.", href: "/services/web-design-sydney", symbol: "website", icon: PenTool },
   { number: "02", title: "Web development", copy: "Responsive web applications and digital products built around the way your business works.", href: "/work", symbol: "code", icon: CodeXml },
   { number: "03", title: "Business systems", copy: "Inventory, purchasing, sales and invoicing workflows brought together in practical custom software.", href: "/work/247-inventory-system", symbol: "system", icon: Workflow },
-  { number: "04", title: "AI + automation", copy: "Explore where AI and connected workflows can remove repetitive work from your business.", href: "/#contact", symbol: "automation", icon: Sparkles },
+  { number: "04", title: "AI + automation", copy: "Explore where AI and connected workflows can remove repetitive work from your business.", href: "/contact", symbol: "automation", icon: Sparkles },
 ] as const;
 
 export function StudioCapabilities() {

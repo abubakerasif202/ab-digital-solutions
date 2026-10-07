@@ -67,30 +67,24 @@ export default function WorkPage() {
       <main className="work-index-page" id="main-content">
         <WorkIndexBody />
 
-        <div className="work-index-transition" aria-hidden="true" />
-
-        <section className="work-index-final-cta">
-          <div className="container work-index-final-cta-layout" data-reveal>
-            <div>
-              <p className="eyebrow">Next</p>
-              <h2>Your project could be the next one on this list.</h2>
-            </div>
-            <div>
-              <p className="content-lead">
-                Tell us what you are building and where you want the business to go. We will come
-                back with a practical next step.
-              </p>
-              <div className="content-actions">
-                <Link className="button button-primary" href="/#contact">
-                  Start a Project <ArrowIcon />
-                </Link>
-                <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
-                  Call {siteConfig.phoneDisplay}
-                </a>
-              </div>
+        <aside className="gr-final-cta gr-final-cta--work" aria-labelledby="work-cta-heading">
+          <div className="container gr-final-cta-inner" data-reveal>
+            <p className="eyebrow">Next</p>
+            <h2 id="work-cta-heading">Your project could be the next one on <span className="accent-serif">this list.</span></h2>
+            <p className="content-lead">
+              Tell us what you are building and where you want the business to go. We will come
+              back with a practical next step.
+            </p>
+            <div className="content-actions">
+              <Link className="button button-primary" href="/contact" data-magnetic>
+                Start a Project <ArrowIcon />
+              </Link>
+              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
+                Call {siteConfig.phoneDisplay}
+              </a>
             </div>
           </div>
-        </section>
+        </aside>
 
         <script
           type="application/ld+json"

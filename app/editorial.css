@@ -392,31 +392,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 .cinematic-home .contact-title-accent { color: var(--red); font-size: 1.08em; }
 
 /* Portfolio cards --------------------------------------------------------- */
-.cinematic-home .project-category-tag {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--mono);
-  font-size: var(--text-micro);
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
 
-.project-category-index { color: var(--red-ink); font-variant-numeric: tabular-nums; }
-.project-category-index::after { display: inline-block; width: 18px; height: 1px; margin-left: 12px; vertical-align: middle; background: var(--line-strong); content: ""; }
-
-.cinematic-home .project-details h3 {
-  font-family: var(--display);
-  font-size: clamp(2rem, 1.3rem + 1.8vw, 3rem);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  transition: transform var(--dur-ui) var(--ease-studio);
-}
-
-.cinematic-home .project-card:is(:hover, :focus-visible) .project-details h3 { transform: translateX(4px); }
-.portfolio-browser-bar svg { flex: none; color: var(--muted); }
 .cinematic-home .project-cta { gap: 12px; font-weight: 500; letter-spacing: 0.14em; }
 
 /* Capabilities ----------------------------------------------------------- */
@@ -456,16 +432,6 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 .capability-link { font-family: var(--mono); font-size: var(--text-micro); font-weight: 500; letter-spacing: var(--track-micro); text-transform: uppercase; }
 
 /* Service rows ----------------------------------------------------------- */
-.service-card-top > .service-card-index {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-}
-
-.service-card-icon { flex: none; color: var(--red-ink); transition: transform 560ms var(--ease-studio); }
-.service-card:is(:hover, :focus-visible) .service-card-icon { transform: rotate(-10deg) translateY(-2px) scale(1.08); }
 
 .cinematic-home .service-card:is(:hover, :focus-visible) h3 { transform: translate3d(4px, 0, 0); }
 
@@ -634,12 +600,10 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
   .hero-label .micro-rule { width: 18px; }
   .cinematic-home .showcase-meta { align-items: start; }
   .cinematic-home .showcase-meta strong { font-size: 2rem; }
-  .cinematic-home .project-details h3 { font-size: 2rem; }
-  .cinematic-home .service-card-top { grid-template-columns: 64px minmax(0, 1fr) 44px; }
+
   /* The reveal mirrors the row's grid, so match its columns instead of
      indenting it a second time. */
-  .cinematic-home .service-card-reveal { grid-template-columns: 64px minmax(0, 1fr) 0; column-gap: 12px; padding-left: 0; }
-  .service-card-top > .service-card-index { gap: 10px; }
+
   .contact-options a { grid-template-columns: minmax(0, 1fr) auto; }
   .contact-options a > span:first-child { grid-column: 1 / -1; }
   .footer-statement-accent { padding-left: 0.5em; }

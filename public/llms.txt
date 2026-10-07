@@ -19,6 +19,10 @@
 - [Branding & Website Content](https://www.abwebstudio.com.au/services/branding-content): Visual direction, brand positioning, and website copy.
 - [Digital Marketing](https://www.abwebstudio.com.au/services/digital-marketing): Landing page design, lead generation, and campaign strategy.
 - [Website Maintenance & Support](https://www.abwebstudio.com.au/services/website-maintenance): Ongoing support, technical health checks, and performance updates.
+- [Work & Case Studies](https://www.abwebstudio.com.au/work): Every live project with its own case study.
+- [Services](https://www.abwebstudio.com.au/services): Index of all six services.
+- [About](https://www.abwebstudio.com.au/about): The studio, its approach and principles.
+- [Contact](https://www.abwebstudio.com.au/contact): Start a project — enquiry form, phone, email and WhatsApp.
 - [Privacy Policy](https://www.abwebstudio.com.au/privacy): Information handling and privacy guidelines under Australian law.
 
 ## Selected Portfolio (live websites and software)

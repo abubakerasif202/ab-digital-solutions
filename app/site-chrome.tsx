@@ -207,8 +207,14 @@ export function SiteHeader() {
     // (same as Escape) instead of dropping it to <body>.
     menuButtonRef.current?.focus();
   };
-  const navLinkClass = (id: string) => (activeSection === id ? "is-active" : undefined);
-  const navLinkCurrent = (id: string) => (activeSection === id ? "location" : undefined);
+  // Real pages mark their own nav item as the current page; on the homepage
+  // the scroll-spy marks the in-page section being read instead.
+  const routeSection = pathname.startsWith("/work") ? "work"
+    : pathname.startsWith("/services") ? "services"
+    : pathname.startsWith("/about") ? "about"
+    : null;
+  const navLinkClass = (id: string) => (activeSection === id || routeSection === id ? "is-active" : undefined);
+  const navLinkCurrent = (id: string) => (routeSection === id ? "page" : activeSection === id ? "location" : undefined);
 
   return (
     <>
@@ -239,18 +245,18 @@ export function SiteHeader() {
             className={`site-nav${menuOpen ? " is-open" : ""}`}
             aria-label="Primary navigation"
           >
-            <Link href="/#work" onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
-            <Link href="/#services" onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
+            <Link href="/work" onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
+            <Link href="/services" onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
             <Link href="/#process" onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
-            <Link href="/#about" onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
-            <Link className="nav-cta" href="/#contact" onClick={handleNavLinkClick} data-magnetic>
+            <Link href="/about" onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
+            <Link className="nav-cta" href="/contact" onClick={handleNavLinkClick} data-magnetic>
               Start a project <ArrowIcon />
             </Link>
           </nav>
         </div>
       </header>
       {mobileCtaVisible && !menuOpen ? (
-        <Link className="mobile-project-cta" href="/#contact">
+        <Link className="mobile-project-cta" href={pathname === "/" ? "#contact" : "/contact"}>
           Start a project <ArrowIcon />
         </Link>
       ) : null}

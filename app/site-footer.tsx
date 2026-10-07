@@ -10,7 +10,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
     <footer className="site-footer">
       <div className="container footer-statement">
         <p className="eyebrow section-index"><span className="eyebrow-mark" />Have a project in mind?</p>
-        <Link className="footer-statement-link" href="/#contact" data-magnetic>
+        <Link className="footer-statement-link" href="/contact" data-magnetic>
           <span className="footer-statement-line">Let’s make</span>
           <span className="footer-statement-line footer-statement-accent">something</span>
           <span className="footer-statement-line">exceptional.</span>
@@ -40,9 +40,10 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
           <span>Studio</span>
           <div>
             <Link href="/work">Case studies &amp; work</Link>
-            <Link href="/#work">Featured work</Link>
+            <Link href="/services">Services</Link>
             <Link href="/#process">Process</Link>
-            <Link href="/#about">About</Link>
+            <Link href="/about">About</Link>
+            <Link href="/contact">Contact</Link>
             <Link href="/privacy">Privacy</Link>
           </div>
         </nav>
@@ -50,7 +51,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
         <div className="footer-contact">
           <span>Start a project</span>
           <p>Tell us what you are building and we will come back with a practical next step.</p>
-          <Link className="footer-contact-cta" href="/#contact">Start a Project <ArrowIcon /></Link>
+          <Link className="footer-contact-cta" href="/contact">Start a Project <ArrowIcon /></Link>
           <a className="footer-contact-line" href={`mailto:${siteConfig.email}`}><Glyph icon={Mail} size={14} />{siteConfig.email}</a>
           <a className="footer-contact-line" href={`tel:${siteConfig.phoneInternational}`}><Glyph icon={Phone} size={14} />{siteConfig.phoneDisplay}</a>
         </div>

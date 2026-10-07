@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProjectArtwork } from "../project-artwork";
-import { projects } from "../project-data";
+import { findProject, projects } from "../project-data";
+import { ServiceIndex, type ServiceIndexItem } from "../components/ServiceIndex";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { servicePages } from "./service-data";
@@ -60,35 +61,55 @@ const schema = {
   ],
 };
 
+const serviceItems: ServiceIndexItem[] = servicePages.map((service) => {
+  const project = findProject(service.featuredProject);
+  if (!project) throw new Error(`services: unknown featured project "${service.featuredProject}"`);
+  return {
+    slug: service.slug,
+    title: service.title,
+    summary: service.summary,
+    intro: service.intro,
+    benefits: service.benefits,
+    project,
+  };
+});
+
+const processSteps = [
+  ["01", "Discover", "We clarify your audience, offer, goals and the actions your website needs to drive."],
+  ["02", "Design", "We map the content, page structure and customer journey before visual design begins."],
+  ["03", "Build", "We create, refine and develop the experience responsively, with clear review points."],
+  ["04", "Launch", "We complete launch checks, publish with confidence and stay available as you grow."],
+] as const;
+
 export default function ServicesPage() {
   return (
     <>
       <SiteHeader />
-      <main className="content-page service-page" id="main-content">
-        <div className="container content-shell">
+      <main className="content-page service-page gr-svc-page" id="main-content">
+        <div className="container">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
             <span aria-hidden="true">/</span>
             <span aria-current="page">Services</span>
           </nav>
 
-          <header className="service-hero">
+          <header className="service-hero gr-svc-hero">
             <div className="service-hero-copy">
               <p className="eyebrow">Digital services / Sydney</p>
-              <h1>Digital services</h1>
+              <h1>Six services. <span className="accent-serif">One studio.</span></h1>
               <p className="content-lead">
                 One studio covering the full digital journey — from the first strategic decision to
                 post-launch support, with every recommendation tied to a clear business goal.
               </p>
               <div className="content-actions">
-                <Link className="button button-primary" href="/#contact">Start a Project <ArrowIcon /></Link>
-                <Link className="button button-ghost" href="/work">View Our Work</Link>
+                <Link className="button button-primary" href="/contact" data-magnetic>Start a Project <ArrowIcon /></Link>
+                <Link className="button button-ghost" href="/work" data-magnetic>View Our Work</Link>
               </div>
             </div>
             {/* Decorative detail crop of the lead portfolio project. */}
             <figure className="service-hero-visual" aria-hidden="true">
               <div className="service-hero-visual-frame">
-                <ProjectArtwork project={projects[0]} sizes="440px" />
+                <ProjectArtwork project={projects[0]} priority sizes="(max-width: 960px) 92vw, 520px" />
               </div>
               <figcaption>
                 <span>Live work</span>
@@ -96,37 +117,53 @@ export default function ServicesPage() {
               </figcaption>
             </figure>
           </header>
+        </div>
 
-          <section className="related-services" aria-labelledby="services-index-heading">
-            <div className="service-section-heading">
-              <p className="eyebrow">Capabilities</p>
-              <h2 id="services-index-heading">Explore each service</h2>
-              <p>Every service below links to a detailed page covering inclusions, approach, relevant live work and common questions.</p>
+        <section className="gr-svc-section" aria-labelledby="services-index-heading">
+          <div className="container">
+            <div className="gr-section-head">
+              <p className="eyebrow section-index"><span className="section-index-num">01</span><span className="micro-rule" aria-hidden="true" />Capabilities</p>
+              <h2 id="services-index-heading" className="gr-display-l">Explore each <span className="accent-serif">service.</span></h2>
+              <div className="gr-section-head-aside">
+                <p>Every service links to a detailed page covering inclusions, approach, relevant live work and common questions.</p>
+              </div>
             </div>
-            <div className="services-index-list">
-              {servicePages.map((service, index) => (
-                <Link className="services-index-row" href={`/services/${service.slug}`} key={service.slug} aria-label={`${service.title} — ${service.summary}`}>
-                  <span className="services-index-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                  <span className="services-index-copy">
-                    <strong>{service.title}</strong>
-                    <small>{service.summary}</small>
-                  </span>
-                  <span className="services-index-arrow" aria-hidden="true"><ArrowIcon /></span>
-                </Link>
+            <ServiceIndex items={serviceItems} />
+          </div>
+        </section>
+
+        <section className="gr-svc-process" aria-labelledby="services-process-heading">
+          <div className="container">
+            <div className="gr-section-head">
+              <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />How every engagement runs</p>
+              <h2 id="services-process-heading" className="gr-display-l">A clear path from ambition to <span className="accent-serif">launch.</span></h2>
+              <div className="gr-section-head-aside">
+                <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
+              </div>
+            </div>
+            <ol className="gr-steps">
+              {processSteps.map(([number, title, description]) => (
+                <li key={number} data-reveal>
+                  <span className="gr-steps-num" aria-hidden="true">{number}</span>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </li>
               ))}
-            </div>
-          </section>
+            </ol>
+          </div>
+        </section>
 
-          <section className="service-cta" aria-labelledby="services-cta-heading">
+        <aside className="gr-final-cta" aria-labelledby="services-cta-heading">
+          <div className="container gr-final-cta-inner" data-reveal>
             <p className="eyebrow">Ready when you are</p>
-            <h2 id="services-cta-heading">Not sure which service fits? Start with a conversation.</h2>
-            <p>Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
+            <h2 id="services-cta-heading">Not sure which service fits? <span className="accent-serif">Start with a conversation.</span></h2>
+            <p className="content-lead">Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
             <div className="content-actions">
-              <Link className="button button-primary" href="/#contact">Start a Project <ArrowIcon /></Link>
+              <Link className="button button-primary" href="/contact" data-magnetic>Start a Project <ArrowIcon /></Link>
               <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>Call {siteConfig.phoneDisplay}</a>
             </div>
-          </section>
-        </div>
+          </div>
+        </aside>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       </main>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />

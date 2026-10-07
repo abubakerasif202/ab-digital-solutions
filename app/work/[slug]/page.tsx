@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProjectArtwork } from "../../project-artwork";
-import { findProject, isSoftwareProject, projects } from "../../project-data";
+import { findProject, formatCategory, isSoftwareProject, projects } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
 import { siteConfig } from "../../site-config";
@@ -84,11 +84,19 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
     ],
   };
 
+  const number = String(currentIndex + 1).padStart(2, "0");
+  const total = String(projects.length).padStart(2, "0");
+  // Three presentations share one system so consecutive case studies never
+  // feel identical: live software gets a dark system frame, websites
+  // alternate between a cinematic full-width hero and an editorial split.
+  const variant = softwareProject ? "system" : currentIndex % 2 === 0 ? "cinematic" : "split";
+  const visitLabel = `Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`;
+
   return (
     <>
       <SiteHeader />
-      <main className="content-page case-study-page" id="main-content">
-        <div className="container content-shell">
+      <main className={`content-page case-study-page gr-cs gr-cs--${variant}`} id="main-content">
+        <header className="container gr-cs-hero">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
             <span aria-hidden="true">/</span>
@@ -97,181 +105,154 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             <span aria-current="page">{project.name}</span>
           </nav>
 
-          <header className="case-study-hero">
-            <p className="eyebrow">Case Study / {project.category}</p>
-            <h1>{project.name}</h1>
-            <p className="content-lead">{project.overview}</p>
-            <div className="content-actions">
-              <Link className="button button-primary" href="/#contact" data-magnetic>
-                Start a Project <ArrowIcon />
-              </Link>
-              <a
-                className="button button-ghost"
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-cursor="VISIT"
-                data-magnetic
-                aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}
-              >
-                {project.ctaLabel ?? "View Live Website"} <ArrowIcon />
-              </a>
+          <div className="gr-cs-hero-grid">
+            <div className="gr-cs-hero-copy">
+              <p className="eyebrow">Case study <span className="gr-kicker-num">{number}</span> / {total}</p>
+              <h1>{project.name}</h1>
+              <p className="content-lead">{project.description}</p>
+              <div className="content-actions">
+                <a
+                  className="button button-primary"
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-cursor="VISIT"
+                  data-magnetic
+                  aria-label={visitLabel}
+                >
+                  {project.ctaLabel ?? "View Live Website"} <ArrowIcon />
+                </a>
+                <Link className="button button-ghost" href="/contact" data-magnetic>
+                  Start a Project <ArrowIcon />
+                </Link>
+              </div>
             </div>
-            <div className="case-study-meta" data-reveal>
-              <span>{String(currentIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
-              {!project.category.toLowerCase().startsWith(project.sector.toLowerCase()) && <span>{project.sector}</span>}
-              <span>{project.category}</span>
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-cursor="VISIT"
-                aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}
-              >
+            <span className="gr-number gr-cs-number" aria-hidden="true">{number}</span>
+          </div>
+
+          <div className="case-study-meta gr-cs-meta" data-reveal>
+            <div><span>Sector</span><strong>{project.sector}</strong></div>
+            <div><span>Category</span><strong>{formatCategory(project.category)}</strong></div>
+            <div><span>Stack</span><strong>{project.techStack.join(" · ")}</strong></div>
+            <div>
+              <span>{softwareProject ? "Production URL" : "Live at"}</span>
+              <a href={project.url} target="_blank" rel="noopener noreferrer" data-cursor="VISIT" aria-label={visitLabel}>
                 {project.displayUrl} <ArrowIcon />
               </a>
             </div>
-          </header>
+          </div>
+        </header>
 
-          <div className="case-study-showcase-frame">
+        <div className="gr-cs-hero-media">
+          <div className="container">
             <div className="browser-frame">
               <div className="browser-bar" aria-hidden="true">
                 <i /><i /><i />
                 <span>{project.displayUrl}</span>
               </div>
               <div className="case-study-hero-image">
-                <ProjectArtwork project={project} priority sizes="(max-width: 1040px) 92vw, 980px" />
+                <ProjectArtwork project={project} priority sizes="(max-width: 1040px) 100vw, 1440px" />
               </div>
             </div>
           </div>
-
-          <div className="case-study-grid">
-            <section className="case-study-main" aria-label="Case study overview and solution">
-              <div className="case-study-block" data-reveal>
-                <p className="eyebrow">01 / Overview</p>
-                <h2>A digital experience built around the project.</h2>
-                <p className="case-study-body-text">{project.overview}</p>
-              </div>
-
-              <div className="case-study-block" data-reveal>
-                <p className="eyebrow">02 / Approach</p>
-                <h2>Clear structure, responsive delivery and an obvious next step.</h2>
-                <p className="case-study-body-text">{project.solution}</p>
-              </div>
-
-              <div className="case-study-block" data-reveal>
-                <p className="eyebrow">03 / Key features</p>
-                <h2>What the experience delivers.</h2>
-                <ul className="key-features-list">
-                  {project.keyFeatures.map((feature, idx) => (
-                    <li key={feature}>
-                      <span className="feature-num">{String(idx + 1).padStart(2, "0")}</span>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-
-            <aside className="case-study-sidebar" aria-label="Project details">
-              <div className="sidebar-card" data-reveal>
-                <h3>Project details</h3>
-                <dl className="metadata-list">
-                  <div>
-                    <dt>Client / Project</dt>
-                    <dd>{project.name}</dd>
-                  </div>
-                  <div>
-                    <dt>Category</dt>
-                    <dd>{project.category}</dd>
-                  </div>
-                  <div>
-                    <dt>{softwareProject ? "Production URL" : "Live Domain"}</dt>
-                    <dd>
-                      <a href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}>
-                        {project.displayUrl} <ArrowIcon />
-                      </a>
-                    </dd>
-                  </div>
-                </dl>
-
-                <h3 className="sidebar-subheading">Capabilities</h3>
-                <div className="sidebar-tags">
-                  {project.tags.map((tag) => (
-                    <span key={tag} className="project-tag-pill">{tag}</span>
-                  ))}
-                </div>
-
-                <h3 className="sidebar-subheading">Verified technology</h3>
-                <div className="sidebar-tech">
-                  {project.techStack.map((tech) => (
-                    <span key={tech} className="tech-pill">{tech}</span>
-                  ))}
-                </div>
-              </div>
-            </aside>
-          </div>
-
-          <section className="case-study-visuals" aria-labelledby="visual-showcase-heading">
-            <div className="case-study-visuals-heading">
-              <p className="eyebrow">Visual showcase</p>
-              <h2 id="visual-showcase-heading">A closer look at the experience.</h2>
-              <p>Real project imagery from the published experience.</p>
-            </div>
-            <div className="device-showcase" data-reveal>
-              <div className="desktop-device">
-                <div className="browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
-                <div className="device-image"><ProjectArtwork project={project} sizes="(max-width: 1040px) 70vw, 730px" /></div>
-              </div>
-            </div>
-          </section>
-
-          <section className="case-study-live-cta" aria-labelledby="live-proof-heading">
-            <div className="live-cta-card" data-reveal>
-              <div>
-                <p className="eyebrow">Live Digital Experience</p>
-                <h2 id="live-proof-heading">See {project.name} in action.</h2>
-                <p>
-                  {softwareProject
-                    ? "Continue to the secure production system to view its public staff access experience."
-                    : "Continue to the client website when you are ready to explore the published experience."}
-                </p>
-              </div>
-              <a
-                className="button button-primary"
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-cursor="VISIT"
-                data-magnetic
-                aria-label={`Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`}
-              >
-                {project.ctaLabel ?? "Visit Live Website"} <ArrowIcon />
-              </a>
-            </div>
-          </section>
-
-          <nav className="next-project-nav" aria-label="Next Project">
-            <span>Next Case Study</span>
-            <Link className="next-project-card" href={`/work/${nextProject.slug}`} data-cursor="VIEW">
-              <div>
-                <p>{nextProject.category}</p>
-                <h3>{nextProject.name}</h3>
-              </div>
-              <span className="next-arrow">View Case Study <ArrowIcon /></span>
-            </Link>
-          </nav>
-
         </div>
 
-        <aside className="conversion-banner" data-reveal aria-label="Start your project">
-          <div className="container conversion-banner-layout">
-            <div className="conversion-banner-copy">
-              <p className="eyebrow">Have a project in mind?</p>
-              <h2>Let&apos;s create a digital experience with a clear commercial purpose.</h2>
+        <section className="container gr-cs-story" aria-label="Case study overview and approach">
+          <div className="gr-cs-story-block" data-reveal>
+            <p className="eyebrow">01 / Overview</p>
+            <p className="gr-cs-statement">{project.overview}</p>
+          </div>
+          <div className="gr-cs-story-block gr-cs-story-block--approach" data-reveal>
+            <p className="eyebrow">02 / Approach</p>
+            <h2>Clear structure, responsive delivery and an obvious next step.</h2>
+            <p className="case-study-body-text">{project.solution}</p>
+          </div>
+        </section>
+
+        <section className="gr-cs-features" aria-labelledby="features-heading">
+          <div className="container gr-cs-features-grid">
+            <div className="gr-cs-features-head" data-reveal>
+              <p className="eyebrow">03 / Key features</p>
+              <h2 id="features-heading">What the experience <span className="accent-serif">delivers.</span></h2>
+              <div className="gr-cs-capabilities">
+                <h3>Capabilities</h3>
+                <div className="sidebar-tags">
+                  {project.tags.map((tag) => <span key={tag} className="project-tag-pill">{tag}</span>)}
+                </div>
+                <h3>Verified technology</h3>
+                <div className="sidebar-tech">
+                  {project.techStack.map((tech) => <span key={tech} className="tech-pill">{tech}</span>)}
+                </div>
+              </div>
             </div>
-            <div className="conversion-banner-actions">
-              <Link className="button button-primary" href="/#contact">
+            <ol className="gr-cs-feature-list">
+              {project.keyFeatures.map((feature, idx) => (
+                <li key={feature} data-reveal>
+                  <span className="gr-cs-feature-num" aria-hidden="true">{String(idx + 1).padStart(2, "0")}</span>
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <section className="container gr-cs-detail" aria-labelledby="visual-showcase-heading">
+          <div className="gr-cs-detail-head" data-reveal>
+            <p className="eyebrow">04 / A closer look</p>
+            <h2 id="visual-showcase-heading">Details from the published {softwareProject ? "system" : "homepage"}.</h2>
+          </div>
+          <div className="gr-cs-pan gr-cut-lg" aria-hidden="true" data-reveal>
+            <ProjectArtwork project={project} sizes="(max-width: 860px) 100vw, 1440px" />
+          </div>
+          <p className="gr-cs-pan-caption">Captured from {project.displayUrl}</p>
+        </section>
+
+        <section className="gr-cs-live" aria-labelledby="live-proof-heading">
+          <div className="container gr-cs-live-inner" data-reveal>
+            <div>
+              <p className="eyebrow">Live digital experience</p>
+              <h2 id="live-proof-heading">See {project.name} <span className="accent-serif">in action.</span></h2>
+              <p>
+                {softwareProject
+                  ? "Continue to the secure production system to view its public staff access experience."
+                  : "Continue to the client website when you are ready to explore the published experience."}
+              </p>
+            </div>
+            <a
+              className="button button-primary"
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="VISIT"
+              data-magnetic
+              aria-label={visitLabel}
+            >
+              {project.ctaLabel ?? "Visit Live Website"} <ArrowIcon />
+            </a>
+          </div>
+        </section>
+
+        <nav className="next-project-nav gr-cs-next" aria-label="Next Project">
+          <Link className="gr-cs-next-link" href={`/work/${nextProject.slug}`} data-cursor="VIEW">
+            <div className="container gr-cs-next-inner">
+              <div>
+                <span className="gr-kicker">Next case study / {String(projects.indexOf(nextProject) + 1).padStart(2, "0")}</span>
+                <h2 className="gr-cs-next-title">{nextProject.name}</h2>
+                <span className="gr-cs-next-cta">View case study <ArrowIcon /></span>
+              </div>
+              <div className="gr-cs-next-media" aria-hidden="true">
+                <ProjectArtwork project={nextProject} sizes="(max-width: 860px) 92vw, 42vw" />
+              </div>
+            </div>
+          </Link>
+        </nav>
+
+        <aside className="gr-final-cta" aria-label="Start your project">
+          <div className="container gr-final-cta-inner" data-reveal>
+            <p className="eyebrow">Have a project in mind?</p>
+            <h2>Let&apos;s create a digital experience with a clear <span className="accent-serif">commercial purpose.</span></h2>
+            <div className="content-actions">
+              <Link className="button button-primary" href="/contact" data-magnetic>
                 Start a Project <ArrowIcon />
               </Link>
               <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>

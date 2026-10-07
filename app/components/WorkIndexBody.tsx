@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, type CSSProperties } from "react";
 import { flushSync } from "react-dom";
 import { ProjectArtwork } from "../project-artwork";
-import { isSoftwareProject, projects, sectors, type Project } from "../project-data";
+import { formatCategory, isSoftwareProject, projects, sectors, type Project } from "../project-data";
 import { ArrowIcon } from "../icons";
 
 const ALL_SECTORS = "All work";
@@ -17,12 +17,46 @@ interface CardMotionStyle extends CSSProperties {
   viewTransitionName?: string;
 }
 
+type BlockType = "feature" | "split" | "split-reverse" | "pair" | "system";
+type Block = { type: BlockType; items: Project[] };
+
+/* Compose the visible projects into a rhythm of different presentations so
+   the index never repeats one card: a cinematic feature first, then
+   alternating editorial splits and staggered pairs, with live software
+   always shown full-width inside a browser frame. */
+function composeBlocks(list: readonly Project[]): Block[] {
+  if (list.length === 0) return [];
+  const blocks: Block[] = [{ type: "feature", items: [list[0]] }];
+  const rhythm: BlockType[] = ["split", "pair", "split-reverse", "pair"];
+  let step = 0;
+  for (let i = 1; i < list.length;) {
+    const project = list[i];
+    if (isSoftwareProject(project)) {
+      blocks.push({ type: "system", items: [project] });
+      i += 1;
+      continue;
+    }
+    const type = rhythm[step % rhythm.length];
+    step += 1;
+    const partner = list[i + 1];
+    if (type === "pair" && partner && !isSoftwareProject(partner)) {
+      blocks.push({ type, items: [project, partner] });
+      i += 2;
+    } else {
+      blocks.push({ type: type === "pair" ? "split" : type, items: [project] });
+      i += 1;
+    }
+  }
+  return blocks;
+}
+
 export function WorkIndexBody() {
   const [filter, setFilter] = useState<string>(ALL_SECTORS);
   const filters = [ALL_SECTORS, ...sectors];
   const visibleProjects = filter === ALL_SECTORS
     ? projects
     : projects.filter((project) => project.sector === filter);
+  const blocks = composeBlocks(visibleProjects);
 
   const handleFilterChange = (nextFilter: string) => {
     if (nextFilter === filter) return;
@@ -37,46 +71,61 @@ export function WorkIndexBody() {
 
   return (
     <>
-      <section className="work-index-hero">
-        <div className="hero-watermark" aria-hidden="true">Work</div>
-        <div className="container work-index-hero-inner">
+      <section className="work-index-hero gr-wi-hero">
+        <div className="container gr-wi-hero-inner">
           <p className="eyebrow" data-reveal>
             <span className="eyebrow-mark" /> Index / live client work
           </p>
-          <div className="work-index-hero-row">
-            <h1 data-reveal>The work, at the size it deserves.</h1>
-            <div className="work-index-hero-copy" data-reveal>
-              <p className="content-lead">
-                Every project below is in production today — websites and custom software for
-                Australian transport, logistics, mobility, removals, construction and property
-                businesses.
-              </p>
-              <p className="work-index-count">{projects.length} projects · Sydney studio</p>
+          <div className="gr-wi-hero-row">
+            <h1 data-reveal>The work, at the size it <span className="accent-serif">deserves.</span></h1>
+            <div className="gr-wi-hero-count" data-reveal aria-hidden="true">
+              <span className="gr-number">{String(projects.length).padStart(2, "0")}</span>
             </div>
           </div>
-          <div className="work-index-filters" role="group" aria-label="Filter by sector" data-reveal>
-            {filters.map((sector) => {
-              const isActive = sector === filter;
-              return (
-                <button
-                  key={sector}
-                  type="button"
-                  className={`work-index-filter${isActive ? " is-active" : ""}`}
-                  aria-pressed={isActive}
-                  onClick={() => handleFilterChange(sector)}
-                >
-                  {sector}
-                </button>
-              );
-            })}
+          <div className="gr-wi-hero-copy" data-reveal>
+            <p className="content-lead">
+              Every project below is in production today — websites and custom software for
+              Australian transport, logistics, mobility, removals, construction and property
+              businesses.
+            </p>
+            <p className="work-index-count">{projects.length} projects · Sydney studio</p>
           </div>
         </div>
       </section>
 
-      <section className="work-index-grid-section" aria-label="Project index">
-        <div className="container work-index-grid">
-          {visibleProjects.map((project) => (
-            <WorkIndexCard key={project.slug} project={project} index={projects.indexOf(project)} />
+      <div className="gr-wi-filter-bar">
+        <div className="container work-index-filters" role="group" aria-label="Filter by sector">
+          {filters.map((sector) => {
+            const isActive = sector === filter;
+            const count = sector === ALL_SECTORS
+              ? projects.length
+              : projects.filter((project) => project.sector === sector).length;
+            return (
+              <button
+                key={sector}
+                type="button"
+                className={`work-index-filter${isActive ? " is-active" : ""}`}
+                aria-pressed={isActive}
+                onClick={() => handleFilterChange(sector)}
+              >
+                {sector} <small aria-hidden="true">{count}</small>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <section className="gr-wi-list" aria-label="Project index">
+        <div className="container">
+          <p className="sr-only" aria-live="polite">
+            Showing {visibleProjects.length} of {projects.length} projects
+          </p>
+          {blocks.map((block) => (
+            <div className={`gr-wi-block gr-wi-block--${block.type}`} key={block.items.map((p) => p.slug).join("+")}>
+              {block.items.map((project) => (
+                <WorkIndexCard key={project.slug} project={project} type={block.type} />
+              ))}
+            </div>
           ))}
         </div>
       </section>
@@ -84,44 +133,43 @@ export function WorkIndexBody() {
   );
 }
 
-function WorkIndexCard({ project, index }: { project: Project; index: number }) {
-  const isBig = index % 4 === 0;
-  const imageOnRight = !isBig && index % 2 === 1;
-  const number = String(index + 1).padStart(2, "0");
-
-  const cardClassName = [
-    "work-index-card",
-    isBig ? "work-index-card--big" : "work-index-card--split",
-    imageOnRight ? "work-index-card--image-right" : "work-index-card--image-left",
-  ].join(" ");
+function WorkIndexCard({ project, type }: { project: Project; type: BlockType }) {
+  const number = String(projects.findIndex((p) => p.slug === project.slug) + 1).padStart(2, "0");
+  const framed = type === "system" || type === "pair";
   const cardStyle: CardMotionStyle = { viewTransitionName: `work-card-${project.slug}` };
+  const sizes = type === "feature" || type === "system"
+    ? "(max-width: 960px) 100vw, 1440px"
+    : type === "pair"
+      ? "(max-width: 960px) 92vw, 48vw"
+      : "(max-width: 960px) 92vw, 60vw";
 
   return (
-    <article className={cardClassName} data-tilt data-reveal style={cardStyle}>
-      <Link className="work-index-card-link" href={`/work/${project.slug}`} data-cursor="VIEW">
-        <div className="work-index-media">
-          <ProjectArtwork
-            project={project}
-            sizes={isBig
-              ? "(max-width: 960px) 92vw, 1440px"
-              : "(max-width: 960px) 92vw, (max-width: 1400px) 55vw, 820px"}
-          />
+    <article className="gr-wi-card" data-reveal style={cardStyle}>
+      <Link className="gr-wi-link" href={`/work/${project.slug}`} data-cursor="VIEW">
+        <div className={`gr-wi-media${framed ? " gr-wi-media--framed" : ""}`}>
+          {framed && (
+            <div className="gr-browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
+          )}
+          <div className="gr-wi-image">
+            <ProjectArtwork project={project} sizes={sizes} priority={type === "feature"} />
+          </div>
           <span className="live-label">
             <i /> {isSoftwareProject(project) ? "Live system" : "Live website"}
           </span>
-          <span className="work-index-rule" aria-hidden="true" />
         </div>
-        <div className="work-index-meta">
-          <p className="work-index-eyebrow">{number} — {project.category}</p>
-          <h2 className={isBig ? "work-index-title work-index-title--big" : "work-index-title"}>
-            {project.name}
-          </h2>
-          <p className="work-index-description">{project.description}</p>
-          <p className="work-index-stack">{project.techStack.join("  ·  ")}</p>
-          <p className="work-index-url">{project.displayUrl}</p>
-          <span className="work-index-cta">
-            View case study <ArrowIcon />
-          </span>
+        <div className="gr-wi-meta">
+          <span className="gr-number gr-wi-number" aria-hidden="true">{number}</span>
+          <div className="gr-wi-heading">
+            <p className="gr-kicker">{formatCategory(project.category)}</p>
+            <h2 className="gr-wi-title">{project.name}</h2>
+          </div>
+          <div className="gr-wi-detail">
+            <p className="gr-wi-description">{project.description}</p>
+            <p className="gr-wi-stack">{project.techStack.join(" · ")}</p>
+            <span className="gr-wi-cta">
+              View case study <ArrowIcon />
+            </span>
+          </div>
         </div>
       </Link>
     </article>
