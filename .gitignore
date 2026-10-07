@@ -44,3 +44,5 @@ next-env.d.ts
 /work/
 .gstack/
 /test-results/
+
+kimi-export-session_*.md
