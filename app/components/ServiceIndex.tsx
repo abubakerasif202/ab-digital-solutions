@@ -43,7 +43,7 @@ export function ServiceIndex({ items }: { items: readonly ServiceIndexItem[] }) 
         ))}
       </ol>
 
-      <aside className="gr-svc-panel" aria-label="Service preview">
+      <div className="gr-svc-panel">
         <div className="gr-svc-panel-media gr-cut-lg" aria-hidden="true">
           {items.map((item, index) => (
             <div className={`gr-svc-panel-image${index === active ? " is-active" : ""}`} key={item.slug}>
@@ -61,7 +61,7 @@ export function ServiceIndex({ items }: { items: readonly ServiceIndexItem[] }) 
             Explore {current.title} <ArrowIcon />
           </Link>
         </div>
-      </aside>
+      </div>
     </div>
   );
 }

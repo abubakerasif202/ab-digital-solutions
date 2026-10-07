@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bodoni_Moda, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { AnchorSettle } from "./components/AnchorSettle";
 import { BrandIntro } from "./components/intro/BrandIntro";
 import { introGateScript } from "./components/intro/intro-gate";
 import { PointerFX } from "./components/PointerFX";
@@ -183,6 +184,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
         <BrandIntro />
         <WebVitals />
+        <AnchorSettle />
         <PointerFX />
         {children}
         <SpeedInsights />

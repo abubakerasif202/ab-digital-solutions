@@ -484,7 +484,20 @@ test("below-fold homepage sections skip offscreen layout with sized placeholders
     assert.match(styles, new RegExp(String.raw`\.${section} \{ --cv-size: \d+px; \}`));
   }
   // Every breakpoint tier provides its own measured sizes.
-  assert.equal((styles.match(/\.work-section \{ --cv-size: \d+px; \}/g) ?? []).length, 3);
+  assert.equal((styles.match(/\.work-section \{ --cv-size: \d+px; \}/g) ?? []).length, 4);
+});
+
+test("anchor jumps re-align once offscreen sections have rendered", async () => {
+  const [layout, settle] = await Promise.all([
+    read("../app/layout.tsx"),
+    read("../app/components/AnchorSettle.tsx"),
+  ]);
+  assert.match(layout, /<AnchorSettle \/>/);
+  assert.match(settle, /scrollPaddingTop/);
+  assert.match(settle, /behavior: "instant"/);
+  // User input always wins over the automatic correction.
+  assert.match(settle, /\["wheel", "touchstart", "keydown", "pointerdown"\]/);
+  assert.match(settle, /passes >= 2/);
 });
 
 test("display and mono fonts load only the weights and styles they render", async () => {

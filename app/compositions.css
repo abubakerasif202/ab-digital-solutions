@@ -347,7 +347,7 @@
 .cinematic-home .gr-services h3 { color: var(--ink); }
 .cinematic-home .gr-services .eyebrow { color: var(--gold-dark); }
 .cinematic-home .gr-services .section-heading > p { color: #4c4b48; }
-.cinematic-home .gr-services .section-index-num { color: var(--red); }
+.cinematic-home .gr-services .section-index-num { color: var(--red-text); }
 .cinematic-home .gr-services :focus-visible { outline-color: var(--ink); }
 
 .cinematic-home .gr-services .section-heading h2 { max-width: 12ch; }
@@ -1032,7 +1032,7 @@
 .gr-svc-section h2 { color: var(--ink); }
 .gr-svc-section h2 .accent-serif { color: var(--red); }
 .gr-svc-section .eyebrow { color: var(--gold-dark); }
-.gr-svc-section .section-index-num { color: var(--red); }
+.gr-svc-section .section-index-num { color: var(--red-text); }
 .gr-svc-section .gr-section-head-aside p { color: #4c4b48; }
 
 .gr-svc-index {
@@ -1113,7 +1113,7 @@
 
 .gr-svc-panel-copy { padding-top: 26px; animation: gr-panel-in 520ms var(--ease-studio); }
 .gr-svc-panel-copy .gr-kicker { color: #4c4b48; }
-.gr-svc-panel-copy .gr-kicker-num { color: var(--red); }
+.gr-svc-panel-copy .gr-kicker-num { color: var(--red-text); }
 .gr-svc-panel-intro { margin: 16px 0 0; font-family: var(--display); font-size: clamp(1.25rem, 1.7vw, 1.6rem); line-height: 1.3; }
 .gr-svc-panel-copy ul { display: grid; gap: 8px; margin: 20px 0 8px; padding: 0; list-style: none; }
 .gr-svc-panel-copy li { display: flex; gap: 12px; font-size: 0.95rem; }
@@ -1229,7 +1229,7 @@
 .gr-about-principles h3 { color: var(--ink); }
 .gr-about-principles h2 .accent-serif { color: var(--red); }
 .gr-about-principles .eyebrow { color: var(--gold-dark); }
-.gr-about-principles .section-index-num { color: var(--red); }
+.gr-about-principles .section-index-num { color: var(--red-text); }
 .gr-about-principles-list { margin: 0; padding: 0; border-top: 1px solid var(--ink); list-style: none; }
 
 .gr-about-principles-list li {

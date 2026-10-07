@@ -18,6 +18,7 @@
   --red: #d21736;
   --red-bright: #d21736;
   --red-dark: #760d21;
+  --red-text: #b8142f;    /* ruby for small text on paper grounds (AA 5.4:1) */
   /* Same ruby hue, lifted far enough to clear WCAG AA as small text on the
      near-black surfaces. --red-bright stays for fills and large display type. */
   --red-ink: #e5484d;
@@ -1061,7 +1062,7 @@ h1 em {
 .service-cta > p:not(.eyebrow) {
   max-width: 700px;
   margin: 26px 0 0;
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(255, 255, 255, 0.94);
 }
 
 /* The paragraph above already carries the gap before this row, so the
@@ -3000,7 +3001,11 @@ h1 em {
 /* Offscreen rendering ------------------------------------------------------
    Everything after the homepage hero starts below the first viewport at every
    breakpoint. Skipping its layout until it approaches the viewport halves the
-   layout work before first paint. Heights are measured per breakpoint; `auto`
+   layout work before first paint. Each tier holds the median content-box
+   height measured across its common viewport widths (phones for the last
+   tier); the section's own padding is added on top of contain-intrinsic-size,
+   so it is excluded here. Widths inside a tier still differ a little, so
+   SiteHeader re-aligns anchor jumps once they settle. `auto`
    makes the browser remember each section's real size once it has rendered,
    so anchors and the scrollbar stay stable. */
 .services-section,
@@ -3014,33 +3019,44 @@ h1 em {
   contain-intrinsic-block-size: auto var(--cv-size, 1000px);
 }
 
-.services-section { --cv-size: 2275px; }
+.services-section { --cv-size: 2090px; }
 
-.work-section { --cv-size: 3955px; }
-.process-section { --cv-size: 960px; }
-.standard-section { --cv-size: 785px; }
-.about-section { --cv-size: 1295px; }
-.contact-section { --cv-size: 1090px; }
-.site-footer { --cv-size: 1150px; }
+.work-section { --cv-size: 3665px; }
+.process-section { --cv-size: 740px; }
+.standard-section { --cv-size: 595px; }
+.about-section { --cv-size: 1070px; }
+.contact-section { --cv-size: 860px; }
+.site-footer { --cv-size: 1020px; }
 
 @media (max-width: 1100px) {
-  .services-section { --cv-size: 2390px; }
+  .services-section { --cv-size: 2235px; }
 
-  .work-section { --cv-size: 3335px; }
-  .process-section { --cv-size: 885px; }
-  .standard-section { --cv-size: 785px; }
-  .about-section { --cv-size: 1215px; }
-  .contact-section { --cv-size: 1040px; }
-  .site-footer { --cv-size: 1320px; }
+  .work-section { --cv-size: 3150px; }
+  .process-section { --cv-size: 730px; }
+  .standard-section { --cv-size: 595px; }
+  .about-section { --cv-size: 1045px; }
+  .contact-section { --cv-size: 885px; }
+  .site-footer { --cv-size: 1240px; }
+}
+
+@media (max-width: 960px) {
+  .services-section { --cv-size: 2175px; }
+
+  .work-section { --cv-size: 4240px; }
+  .process-section { --cv-size: 1080px; }
+  .standard-section { --cv-size: 750px; }
+  .about-section { --cv-size: 1505px; }
+  .contact-section { --cv-size: 1410px; }
+  .site-footer { --cv-size: 1385px; }
 }
 
 @media (max-width: 720px) {
-  .services-section { --cv-size: 3590px; }
+  .services-section { --cv-size: 3445px; }
 
-  .work-section { --cv-size: 3725px; }
-  .process-section { --cv-size: 1215px; }
-  .standard-section { --cv-size: 965px; }
-  .about-section { --cv-size: 1960px; }
-  .contact-section { --cv-size: 2165px; }
-  .site-footer { --cv-size: 1770px; }
+  .work-section { --cv-size: 3480px; }
+  .process-section { --cv-size: 1070px; }
+  .standard-section { --cv-size: 820px; }
+  .about-section { --cv-size: 1815px; }
+  .contact-section { --cv-size: 1990px; }
+  .site-footer { --cv-size: 1690px; }
 }
