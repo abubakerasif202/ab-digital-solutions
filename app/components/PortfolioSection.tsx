@@ -35,7 +35,7 @@ export function PortfolioSection() {
           data-cursor="VIEW"
           aria-label={`${flagship.name} — View Case Study`}
         >
-          <div className="gr-flagship-media gr-cut-lg">
+          <div className="gr-flagship-media gr-cut-lg" data-tilt>
             <ProjectArtwork
               project={flagship}
               sizes="(max-width: 720px) 100vw, (max-width: 1440px) 92vw, 1440px"
@@ -65,7 +65,7 @@ export function PortfolioSection() {
               key={project.slug}
               aria-label={`${project.name} — View Case Study`}
             >
-              <div className={`gr-duo-media${isSoftwareProject(project) ? " gr-duo-media--system" : ""}`}>
+              <div data-tilt className={`gr-duo-media${isSoftwareProject(project) ? " gr-duo-media--system" : ""}`}>
                 <div className="gr-browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
                 <div className="gr-duo-image">
                   <ProjectArtwork project={project} sizes="(max-width: 860px) 92vw, 58vw" />

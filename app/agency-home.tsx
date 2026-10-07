@@ -3,7 +3,6 @@ import { ContactForm } from "./components/ContactForm";
 import { Hero3DExperience } from "./components/Hero3DExperience";
 import { ProjectShowcase } from "./components/ProjectShowcase";
 import { findProject, projects, type Project } from "./project-data";
-import { ProjectArtwork } from "./project-artwork";
 import { findService } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
@@ -13,6 +12,7 @@ import { Mail, MessageCircle, Phone } from "lucide-react";
 import { PortfolioSection } from "./components/PortfolioSection";
 import { StudioCapabilities } from "./components/StudioCapabilities";
 import { ABBrandImage } from "./components/brand/ABBrandImage";
+import { ProcessTimeline } from "./components/motion/ProcessTimeline";
 import { Reveal } from "./components/motion/Reveal";
 
 const services = [
@@ -105,12 +105,12 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <span className="hero-label-secondary">Australia-wide</span>
               </p>
               <h1 id="hero-heading" className="hero-title">
-                <span className="mask-line hero-title-lead"><span>Digital experiences{" "}</span></span>
-                <span className="mask-line hero-title-accent"><span>that do the selling{" "}</span></span>
-                <span className="mask-line hero-title-close"><span>before you say a word.</span></span>
+                <span className="mask-line hero-title-lead"><span>Websites with presence.{" "}</span></span>
+                <span className="mask-line hero-title-accent"><span>Software with purpose.{" "}</span></span>
+                <span className="mask-line hero-title-close"><span>Built for your business.</span></span>
               </h1>
               <p className="hero-intro">
-                Premium <Link href="/services/web-design-sydney">websites</Link>, web applications and business systems. Thoughtfully designed. Dependably built. Made to move your business forward.
+                Independent design and development for Australian businesses. From distinctive <Link href="/services/web-design-sydney">websites</Link> to web applications, business systems and connected workflows.
               </p>
               <div className="hero-actions">
                 <a className="button button-primary" href="#contact" data-magnetic>
@@ -125,7 +125,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <ul>
                   <li>Maple Rentals</li>
                   <li>DECENT Development</li>
-                  <li>ZQ Removals</li>
+                  <li>247 Inventory System</li>
                 </ul>
                 <a href="#work">Explore {projects.length} live digital projects <ArrowIcon direction="down-right" /></a>
               </div>
@@ -185,9 +185,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                           {service.details.map((detail) => <span key={detail}>{detail}</span>)}
                         </span>
                       </span>
-                      <span className="gr-service-thumb" aria-hidden="true">
-                        <ProjectArtwork project={service.featured} sizes="240px" />
-                      </span>
                       <span className="service-card-arrow" aria-hidden="true"><ArrowIcon /></span>
                     </Link>
                   </li>
@@ -205,18 +202,18 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
               <a className="text-link" href="#contact">Start a Project <ArrowIcon /></a>
             </div>
-            <div className="process-list-wrap" data-reveal>
+            <ProcessTimeline>
               <span className="process-rail-fill" aria-hidden="true" />
               <ol className="process-list">
               {processSteps.map(([number, title, description]) => (
-                <li data-reveal key={number}>
+                <li data-process-step key={number}>
                   <span>{number}</span>
                   <div><h3>{title}</h3><p>{description}</p></div>
                   <span aria-hidden="true"><ArrowIcon direction="down-right" /></span>
                 </li>
               ))}
               </ol>
-            </div>
+            </ProcessTimeline>
           </div>
         </section>
 
@@ -268,8 +265,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             <div className="contact-copy" data-reveal>
               <p className="eyebrow section-index"><span className="section-index-num">05</span><span className="micro-rule" aria-hidden="true" />Start a conversation</p>
               <h2 id="contact-heading" className="contact-title scroll-mask">
-                <span className="mask-line"><span>Make your next website</span></span>
-                <span className="mask-line contact-title-accent"><span>impossible to ignore.</span></span>
+                <span className="mask-line"><span>Let’s build your next</span></span>
+                <span className="mask-line contact-title-accent"><span>digital advantage.</span></span>
               </h2>
               <p>Tell us what you are building and where you want the business to go. We will come back with a practical next step.</p>
               <Reveal className="contact-options" variant="fade-up" delay={120}>

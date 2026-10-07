@@ -8,7 +8,7 @@ export const siteConfig = {
   url: "https://www.abwebstudio.com.au",
   // Keep public contact details centralised. Set NEXT_PUBLIC_CONTACT_EMAIL only
   // after the branded mailbox has been created and verified.
-  email: configuredPublicEmail || "enquiry@abwebstudio.com.au",
+  email: configuredPublicEmail || "admin@abwebstudio.com.au",
   phoneDisplay: "0423 332 037",
   phoneInternational: "+61423332037",
   location: "Sydney, Australia",

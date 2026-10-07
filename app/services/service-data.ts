@@ -17,7 +17,7 @@ export const servicePages = [
     detailTitle: "A storefront built around how customers browse and buy.",
     detail: "We structure product catalogues, collections, navigation and checkout journeys around the way customers shop. Platform, payment and customer-management integrations are scoped to the store’s real operational needs, with performance and search foundations considered from the start.",
     benefits: ["Product and collection strategy", "Mobile commerce UX", "Checkout integration", "Performance and search foundations"],
-    featuredProject: "gala-rentals",
+    featuredProject: "adelaide-wholesale-tyres",
   },
   {
     slug: "seo-local-visibility",
@@ -66,3 +66,48 @@ export type ServicePage = (typeof servicePages)[number];
 export function findService(slug: string) {
   return servicePages.find((service) => service.slug === slug);
 }
+
+// Delivery details stay beside the canonical service definitions.
+export const serviceDelivery: Record<ServicePage["slug"], {
+  steps: readonly [string, string][];
+  question: string;
+  answer: string;
+  layers: readonly [string, string, string];
+}> = {
+  "web-design-sydney": {
+    steps: [["Understand the audience", "Clarify the offer, existing content and the decisions visitors need to make."], ["Structure the experience", "Map pages, navigation and enquiry paths before refining the visual direction."], ["Develop responsively", "Build the interface across screen sizes with accessible interactions and search foundations."], ["Check and launch", "Review content, navigation and forms together before publishing."]],
+    question: "Can the website include custom application features?",
+    answer: "We can scope web application and business system requirements alongside the website. The 247 Inventory System case study shows our work with stock, purchasing and sales workflows; your own requirements determine the appropriate scope.",
+    layers: ["Content & navigation", "Responsive interface", "Enquiry journey"],
+  },
+  "ecommerce-website-development": {
+    steps: [["Map the catalogue", "Understand products, collections, stock information and the way customers buy."], ["Design product discovery", "Shape filtering, product information and mobile browsing around that catalogue."], ["Connect the purchase path", "Scope cart, checkout, payment and quote requirements around operational needs."], ["Review the full journey", "Check browsing, ordering and customer information before launch."]],
+    question: "Can an online store support wholesale enquiries?",
+    answer: "Yes, where it fits the business. Adelaide Wholesale Tyres combines a searchable catalogue, cart-based bulk ordering and a wholesale quote workflow. We agree the purchasing and enquiry paths your store needs before building.",
+    layers: ["Product catalogue", "Cart & quote journey", "Order requirements"],
+  },
+  "seo-local-visibility": {
+    steps: [["Inspect the foundations", "Review architecture, page intent, schema and technical search signals."], ["Prioritise the findings", "Create a practical plan based on the evidence and business priorities."], ["Improve the pages", "Refine content structure, on-page signals and local search clarity."], ["Review the evidence", "Use available measurement to choose the next useful improvement."]],
+    question: "Do you guarantee search rankings?",
+    answer: "No. The work focuses on technical clarity, relevant content and local search foundations. Recommendations are based on available evidence rather than ranking promises.",
+    layers: ["Page intent", "Technical structure", "Local relevance"],
+  },
+  "branding-content": {
+    steps: [["Clarify the positioning", "Understand the audience, offer and existing brand materials."], ["Define the direction", "Align visual identity and message hierarchy with the business."], ["Create the content", "Apply the direction to website words and relevant creative touchpoints."], ["Check consistency", "Review the complete experience for a coherent visual and verbal system."]],
+    question: "Can you retain our existing identity?",
+    answer: "Yes. We review existing materials first and agree which elements to preserve, refine or extend. The direction is shaped around the business rather than replacing a working identity by default.",
+    layers: ["Business positioning", "Visual direction", "Website messaging"],
+  },
+  "digital-marketing": {
+    steps: [["Define the campaign goal", "Agree the audience, offer and action the campaign should support."], ["Connect the journey", "Align creative and landing-page content with that action."], ["Build the destination", "Create the lead-generation path and scope measurement foundations."], ["Review and refine", "Use available evidence to improve the content and customer journey."]],
+    question: "Can you improve an existing campaign landing page?",
+    answer: "Yes. We can review message alignment, content hierarchy, enquiry pathways and tracking foundations, then recommend a focused scope based on the evidence available.",
+    layers: ["Audience & offer", "Landing experience", "Enquiry & measurement"],
+  },
+  "website-maintenance": {
+    steps: [["Review the existing site", "Understand the current framework, content and operational dependencies."], ["Agree priorities", "Define support scope, response expectations and the most useful improvements."], ["Make focused changes", "Deliver updates, technical care and performance improvements with review points."], ["Validate the result", "Check affected journeys and agree the next maintenance priorities."]],
+    question: "Can you maintain a site built by someone else?",
+    answer: "We start by reviewing its current framework, access and technical condition. That review determines the support we can reliably provide and whether any groundwork is needed first.",
+    layers: ["Existing website", "Focused improvements", "Technical checks"],
+  },
+};

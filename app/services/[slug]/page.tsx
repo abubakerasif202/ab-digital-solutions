@@ -5,7 +5,7 @@ import { ProjectArtwork } from "../../project-artwork";
 import { findProject, projects } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
-import { findService, servicePages } from "../service-data";
+import { findService, servicePages, serviceDelivery } from "../service-data";
 import { siteConfig } from "../../site-config";
 import { ArrowIcon } from "../../icons";
 
@@ -63,13 +63,10 @@ export default async function ServicePage({ params }: Props) {
   const relatedServices = relatedSlugs
     .map((slug) => findService(slug))
     .filter((s): s is (typeof servicePages)[number] => Boolean(s));
-  const process = [
-    ["01", "Clarify", "We define the audience, commercial goal, constraints and evidence the work needs to communicate."],
-    ["02", "Shape", "We turn that context into a clear direction, structure and practical delivery plan."],
-    ["03", "Create", "We design, build and refine the work through visible review points and direct collaboration."],
-    ["04", "Launch & improve", "We complete quality checks, launch confidently and identify the next useful improvement."],
-  ] as const;
+  const delivery = serviceDelivery[service.slug];
+  const process = delivery.steps.map(([title, copy], index) => [String(index + 1).padStart(2, "0"), title, copy]);
   const faqs = [
+    { question: delivery.question, answer: delivery.answer },
     {
       question: "What happens before work begins?",
       answer: "We start with a focused conversation about your business, audience, priorities and existing materials. You receive a clear recommended scope before committing to delivery.",
@@ -139,7 +136,7 @@ export default async function ServicePage({ params }: Props) {
             {/* Decorative detail crop; the same project is linked in full below. */}
             <figure className="service-hero-visual" aria-hidden="true">
               <div className="service-hero-visual-frame">
-                <ProjectArtwork project={featuredProject} sizes="440px" />
+                <ProjectArtwork project={featuredProject} priority sizes="(max-width: 900px) 92vw, 440px" />
               </div>
               <figcaption>
                 <span>Live work</span>
@@ -147,6 +144,11 @@ export default async function ServicePage({ params }: Props) {
               </figcaption>
             </figure>
           </header>
+
+          <section className="studio-concept" aria-labelledby="concept-heading">
+            <div><p className="eyebrow">Conceptual delivery model</p><h2 id="concept-heading">{service.title}, in layers.</h2><p>A simple view of the work to scope together. Project deliverables are agreed in your proposal.</p></div>
+            <ol className="studio-interface-layers">{delivery.layers.map((layer, index) => <li key={layer}><span aria-hidden="true">0{index + 1}</span>{layer}</li>)}</ol>
+          </section>
 
           <section className="service-inclusions" aria-labelledby="included-heading">
             <div className="service-section-heading">
@@ -168,8 +170,8 @@ export default async function ServicePage({ params }: Props) {
           <section className="service-showcase" aria-labelledby="work-proof-heading">
             <div className="service-section-heading">
               <p className="eyebrow">Relevant live work</p>
-              <h2 id="work-proof-heading">See the standard in practice.</h2>
-              <p>Explore a real client website that reflects the same focus on clarity, credibility and an obvious next step.</p>
+              <h2 id="work-proof-heading">{featuredProject.name}: the work behind the service.</h2>
+              <p>{featuredProject.overview}</p>
             </div>
             <Link
               className="service-project"
@@ -195,7 +197,7 @@ export default async function ServicePage({ params }: Props) {
             </div>
             <ol>
               {process.map(([number, title, description]) => (
-                <li key={number}>
+                <li key={number} data-reveal>
                   <span>{number}</span>
                   <div><h3>{title}</h3><p>{description}</p></div>
                 </li>

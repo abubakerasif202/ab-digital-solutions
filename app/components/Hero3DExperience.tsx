@@ -22,6 +22,7 @@ export function Hero3DExperience() {
     // Phones skip WebGL entirely: the layered CSS fallback costs nothing and
     // keeps mobile LCP/INP clean.
     const mobileQuery = window.matchMedia("(max-width: 720px)");
+    const coarseQuery = window.matchMedia("(pointer: coarse)");
     const tabletQuery = window.matchMedia("(max-width: 1024px)");
     const connection = (navigator as Navigator & {
       connection?: EventTarget & { saveData?: boolean };
@@ -34,7 +35,7 @@ export function Hero3DExperience() {
     let ready = false;
 
     const updateMode = () => {
-      if (!ready || motionQuery.matches || mobileQuery.matches || connection?.saveData) {
+      if (!ready || motionQuery.matches || mobileQuery.matches || coarseQuery.matches || connection?.saveData) {
         setMode("fallback");
         return;
       }
@@ -57,6 +58,7 @@ export function Hero3DExperience() {
     motionQuery.addEventListener("change", updateMode);
     mobileQuery.addEventListener("change", updateMode);
     tabletQuery.addEventListener("change", updateMode);
+    coarseQuery.addEventListener("change", updateMode);
     connection?.addEventListener?.("change", updateMode);
 
     let cancelDelay = () => {};
@@ -73,6 +75,7 @@ export function Hero3DExperience() {
       motionQuery.removeEventListener("change", updateMode);
       mobileQuery.removeEventListener("change", updateMode);
       tabletQuery.removeEventListener("change", updateMode);
+      coarseQuery.removeEventListener("change", updateMode);
       connection?.removeEventListener?.("change", updateMode);
     };
   }, []);

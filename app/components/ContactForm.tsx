@@ -16,6 +16,7 @@ const services = [
 
 export function ContactForm() {
   const sendingRef = useRef(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formStatus, setFormStatus] = useState("");
   const [formState, setFormState] = useState<"idle" | "sending" | "success" | "error">("idle");
 
@@ -56,7 +57,19 @@ export function ContactForm() {
   };
 
   return (
-    <form className="contact-form" data-reveal data-state={formState} method="post" action="/api/contact" onSubmit={handleSubmit} aria-busy={formState === "sending"}>
+    <form className="contact-form" data-state={formState} method="post" action="/api/contact" onSubmit={handleSubmit}
+      onInvalidCapture={(event) => {
+        const field = event.target;
+        if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
+          setFieldErrors((current) => ({ ...current, [field.id]: field.validationMessage }));
+        }
+      }}
+      onInput={(event) => {
+        const field = event.target;
+        if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
+          setFieldErrors((current) => ({ ...current, [field.id]: "" }));
+        }
+      }} aria-busy={formState === "sending"}>
       <noscript>
         <style>{`.contact-form .form-grid, .contact-form .form-services, .contact-form button[type="submit"], .contact-form .form-note, .contact-form .form-status { display: none !important; }`}</style>
         <p>
@@ -81,9 +94,11 @@ export function ContactForm() {
       </fieldset>
       <div className="form-grid">
         <label htmlFor="full-name">Name <span aria-hidden="true">*</span></label>
-        <input id="full-name" name="fullName" type="text" autoComplete="name" maxLength={160} required aria-required="true" />
+        <input id="full-name" aria-invalid={Boolean(fieldErrors["full-name"])} aria-describedby={fieldErrors["full-name"] ? "full-name-error" : undefined} name="fullName" type="text" autoComplete="name" maxLength={160} required aria-required="true" />
+        {fieldErrors["full-name"] && <span className="field-error" id="full-name-error">{fieldErrors["full-name"]}</span>}
         <label htmlFor="email">Email <span aria-hidden="true">*</span></label>
-        <input id="email" name="email" type="email" autoComplete="email" maxLength={254} required aria-required="true" />
+        <input id="email" aria-invalid={Boolean(fieldErrors["email"])} aria-describedby={fieldErrors["email"] ? "email-error" : undefined} name="email" type="email" autoComplete="email" maxLength={254} required aria-required="true" />
+        {fieldErrors["email"] && <span className="field-error" id="email-error">{fieldErrors["email"]}</span>}
         <label htmlFor="phone">Phone</label>
         <input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={50} />
         <label htmlFor="budget">Approx. budget</label>
@@ -103,9 +118,10 @@ export function ContactForm() {
           <option>Just exploring</option>
         </select>
         <label htmlFor="message">Project details <span aria-hidden="true">*</span></label>
-        <textarea id="message" name="message" rows={5} maxLength={4000} required aria-required="true" />
+        <textarea id="message" aria-invalid={Boolean(fieldErrors["message"])} aria-describedby={fieldErrors["message"] ? "message-error" : undefined} name="message" rows={5} maxLength={4000} required aria-required="true" />
+        {fieldErrors["message"] && <span className="field-error" id="message-error">{fieldErrors["message"]}</span>}
       </div>
-      <button className="button button-primary" type="submit" disabled={formState === "sending"} data-magnetic>
+      <button className="button button-primary" type="submit" disabled={formState === "sending"}>
         {formState === "sending" ? "Sending…" : "Send project enquiry"} <ArrowIcon />
       </button>
       <p className="form-note">Your details are used only to respond to this enquiry. No mailing lists. No spam.</p>

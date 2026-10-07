@@ -126,9 +126,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     let isVisible = false;
     let isRunning = false;
     let inputListenersAttached = false;
-    let lastRenderTime = 0;
     let nextRenderTime = 0;
-    let elapsedTime = 0;
+
     let mouseX = 0;
     let mouseY = 0;
     let targetMouseX = 0;
@@ -142,10 +141,12 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       const windowHalfY = window.innerHeight / 2;
       targetMouseX = (event.clientX - windowHalfX) / windowHalfX;
       targetMouseY = (event.clientY - windowHalfY) / windowHalfY;
+      startLoop();
     };
 
     const handleScroll = () => {
       targetScrollY = window.scrollY;
+      startLoop();
     };
 
     const hasHoverPointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -169,7 +170,6 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       animationFrameId = 0;
       isRunning = false;
-      lastRenderTime = 0;
       nextRenderTime = 0;
     };
 
@@ -183,10 +183,6 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       if (!nextRenderTime) nextRenderTime = timestamp;
       if (timestamp < nextRenderTime) return;
 
-      if (lastRenderTime) {
-        elapsedTime += Math.min((timestamp - lastRenderTime) / 1000, 0.1);
-      }
-      lastRenderTime = timestamp;
       do {
         nextRenderTime += frameInterval;
       } while (nextRenderTime <= timestamp);
@@ -199,20 +195,20 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       scrollY += (targetScrollY - scrollY) * 0.05;
       const scrollFactor = Math.min(scrollY / 1000, 2);
 
-      heroGroup.rotation.x = -0.12 + Math.sin(elapsedTime * 0.24) * 0.045 + mouseY * 0.08;
-      heroGroup.rotation.y = -0.22 + Math.sin(elapsedTime * 0.18) * 0.08 + mouseX * 0.12;
-      heroGroup.position.y = Math.sin(elapsedTime * 0.32) * 0.07 - scrollFactor * 0.12;
+      heroGroup.rotation.x = -0.12 + mouseY * 0.05;
+      heroGroup.rotation.y = -0.22 + mouseX * 0.05;
+      heroGroup.position.y = -scrollFactor * 0.12;
       camera.position.x = mouseX * 0.12;
       camera.position.y = -mouseY * 0.12;
       camera.lookAt(scene.position);
 
       renderer.render(scene, camera);
+      if (Math.abs(targetMouseX - mouseX) < 0.001 && Math.abs(targetMouseY - mouseY) < 0.001 && Math.abs(targetScrollY - scrollY) < 0.1) stopLoop();
     };
 
     const startLoop = () => {
       if (isRunning || !isVisible || prefersReducedMotion) return;
       isRunning = true;
-      lastRenderTime = 0;
       nextRenderTime = 0;
       animationFrameId = requestAnimationFrame(animate);
     };

@@ -82,10 +82,10 @@ export default function AboutPage() {
             <span aria-current="page">About</span>
           </nav>
           <p className="eyebrow">About AB / Sydney, Australia</p>
-          <h1>Your digital presence should <span className="accent-serif">work as hard</span> as you do.</h1>
+          <h1>Design with intent. <span className="accent-serif">Engineering with care.</span></h1>
           <div className="gr-about-intro">
             <p className="gr-about-lede">{description}</p>
-            <p>We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</p>
+            <p>Led by Abubakar Asif, Founder & Lead Developer, the studio connects considered interfaces with practical implementation — from public websites to the operational workflows behind a business.</p>
           </div>
         </header>
 
@@ -128,7 +128,7 @@ export default function AboutPage() {
           <div className="container">
             <div className="gr-about-collage-head" data-reveal>
               <p className="eyebrow">Selected live work</p>
-              <h2 id="collage-heading">The result is a distinctive website with a clear <span className="accent-serif">commercial purpose.</span></h2>
+              <h2 id="collage-heading">From a first impression to <span className="accent-serif">day-to-day operations.</span></h2>
               <Link className="text-link" href="/work">See all {projects.length} projects <ArrowIcon /></Link>
             </div>
             <div className="gr-about-collage-grid">
@@ -137,7 +137,7 @@ export default function AboutPage() {
                   <span className="gr-about-tile-media">
                     <ProjectArtwork project={project} sizes="(max-width: 860px) 92vw, 50vw" />
                   </span>
-                  <span className="gr-about-tile-caption"><span>{project.sector}</span>{project.name}</span>
+                  <span className="gr-about-tile-caption"><span>{project.sector}</span>{project.name}</span><span className="studio-project-evidence">{project.description}</span>
                 </Link>
               ))}
             </div>

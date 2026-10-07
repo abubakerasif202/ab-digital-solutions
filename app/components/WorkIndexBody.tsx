@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, type CSSProperties } from "react";
 import { flushSync } from "react-dom";
-import { ProjectArtwork } from "../project-artwork";
+import { ProjectArtwork, projectArtworkRatio } from "../project-artwork";
 import { formatCategory, isSoftwareProject, projects, sectors, type Project } from "../project-data";
 import { ArrowIcon } from "../icons";
 
@@ -84,7 +84,7 @@ export function WorkIndexBody() {
           </div>
           <div className="gr-wi-hero-copy" data-reveal>
             <p className="content-lead">
-              Every project below is in production today — websites and custom software for
+              A portfolio of websites and custom software created for
               Australian transport, logistics, mobility, removals, construction and property
               businesses.
             </p>
@@ -135,7 +135,6 @@ export function WorkIndexBody() {
 
 function WorkIndexCard({ project, type }: { project: Project; type: BlockType }) {
   const number = String(projects.findIndex((p) => p.slug === project.slug) + 1).padStart(2, "0");
-  const framed = type === "system" || type === "pair";
   const cardStyle: CardMotionStyle = { viewTransitionName: `work-card-${project.slug}` };
   const sizes = type === "feature" || type === "system"
     ? "(max-width: 960px) 100vw, 1440px"
@@ -145,12 +144,10 @@ function WorkIndexCard({ project, type }: { project: Project; type: BlockType })
 
   return (
     <article className="gr-wi-card" data-reveal style={cardStyle}>
-      <Link className="gr-wi-link" href={`/work/${project.slug}`} data-cursor="VIEW">
-        <div className={`gr-wi-media${framed ? " gr-wi-media--framed" : ""}`}>
-          {framed && (
-            <div className="gr-browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
-          )}
-          <div className="gr-wi-image">
+      <Link className="gr-wi-link" href={`/work/${project.slug}`} aria-label={`View ${project.name} case study`}>
+        <div className="gr-wi-media gr-wi-media--framed">
+          <div className="gr-browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
+          <div className="gr-wi-image" style={{ aspectRatio: projectArtworkRatio(project) }}>
             <ProjectArtwork project={project} sizes={sizes} priority={type === "feature"} />
           </div>
           <span className="live-label">

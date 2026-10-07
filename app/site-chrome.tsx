@@ -75,10 +75,18 @@ export function SiteHeader() {
     backgroundRegions.forEach((region) => {
       region.inert = menuOpen;
     });
-    // Wait for the opened panel's visibility style to commit before focusing it.
-    const focusFrame = menuOpen ? window.requestAnimationFrame(() => {
-      navRef.current?.querySelector<HTMLElement>("a")?.focus();
-    }) : null;
+    // Wait for the panel to become focusable, including visibility transitions.
+    let focusFrame: number | null = null;
+    const focusFirstLink = () => {
+      const firstLink = navRef.current?.querySelector<HTMLElement>("a");
+      if (!firstLink) return;
+      if (window.getComputedStyle(firstLink).visibility === "visible") {
+        firstLink.focus();
+        if (document.activeElement === firstLink) return;
+      }
+      focusFrame = window.requestAnimationFrame(focusFirstLink);
+    };
+    if (menuOpen) focusFrame = window.requestAnimationFrame(focusFirstLink);
     return () => {
       if (focusFrame !== null) window.cancelAnimationFrame(focusFrame);
       document.removeEventListener("keydown", onKeyDown);

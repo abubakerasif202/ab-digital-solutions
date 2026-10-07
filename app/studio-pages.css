@@ -1,0 +1,101 @@
+/* Supporting studio presentation uses CSS depth; content remains semantic and static. */
+.studio-concept,
+.studio-systems-proof {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(32px, 6vw, 100px);
+  padding-block: clamp(56px, 8vw, 112px);
+  border-top: 1px solid rgba(205, 173, 112, .2);
+}
+.studio-concept h2,
+.studio-systems-proof h2 {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: clamp(30px, 3.6vw, 52px);
+  line-height: 1.12;
+  letter-spacing: -.035em;
+  margin: 16px 0 24px;
+  text-wrap: balance;
+}
+.studio-concept p:not(.eyebrow),
+.studio-systems-proof p:not(.eyebrow) {
+  color: #b6b3ac;
+  line-height: 1.8;
+  max-width: 58ch;
+}
+.studio-systems-proof .text-link { margin-top: 24px; }
+.studio-interface-layers {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  padding: 34px 24px;
+  margin: 0;
+  perspective: 1000px;
+}
+.studio-interface-layers li {
+  padding: 22px 24px;
+  background: linear-gradient(120deg, #262521, #151515);
+  border: 1px solid #514a3e;
+  box-shadow: 7px 9px 0 #0d0d0d, 8px 10px 0 #373128;
+  transform: rotateY(-8deg) rotateX(4deg);
+  color: #f0ede5;
+  font-size: clamp(14px, 1.4vw, 18px);
+}
+.studio-interface-layers li:nth-child(2) { margin-left: 20px; }
+.studio-interface-layers li:nth-child(3) { margin-left: 40px; }
+.studio-interface-layers li span {
+  color: #c7a96d;
+  font-family: monospace;
+  margin-right: 24px;
+  font-size: 12px;
+}
+.studio-system-image {
+  display: block;
+  color: inherit;
+  border: 1px solid #514a3e;
+  background: #191919;
+  padding: 12px;
+  text-decoration: none;
+}
+.studio-system-image > span:not(.studio-system-media) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 12px 4px 0;
+  font-family: monospace;
+  font-size: 11px;
+  color: #c7a96d;
+}
+.studio-system-media { display: block; position: relative; aspect-ratio: 1.5; overflow: hidden; }
+.studio-system-media img { object-fit: contain; }
+.studio-project-evidence { display: block; color: #b6b3ac; font-size: 14px; line-height: 1.65; max-width: 65ch; padding-top: 14px; }
+.service-faq summary { min-height: 52px; }
+.legal-page .content-shell { max-width: 880px; }
+.legal-page section { padding-block: 20px; }
+.legal-page section p { max-width: 70ch; line-height: 1.85; }
+.gr-contact-form { animation: none !important; transform: none !important; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .service-hero-visual-frame {
+    transform: perspective(1100px) rotateY(-5deg) rotateX(2deg);
+    box-shadow: 12px 16px 0 #111, 13px 17px 0 #514a3e;
+    transition: transform .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .service-hero-visual:hover .service-hero-visual-frame { transform: perspective(1100px) rotateY(-2deg); }
+  .studio-system-image { transform: perspective(1100px) rotateY(-4deg); transition: transform .45s ease; }
+  .studio-system-image:hover,
+  .studio-system-image:focus-visible { transform: perspective(1100px) rotateY(0); }
+  .gr-about-mark { transform: perspective(1000px) rotateY(5deg); }
+}
+@media (max-width: 900px) {
+  .studio-concept,
+  .studio-systems-proof { grid-template-columns: 1fr; gap: 28px; }
+  .studio-interface-layers { padding: 10px 10px 20px 0; }
+  .studio-interface-layers li { transform: none; padding: 18px 16px; }
+  .studio-interface-layers li:nth-child(2) { margin-left: 12px; }
+  .studio-interface-layers li:nth-child(3) { margin-left: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-interface-layers li { transform: none; }
+}

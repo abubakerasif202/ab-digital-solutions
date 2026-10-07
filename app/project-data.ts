@@ -166,7 +166,7 @@ export const projects = [
       "Clear driver eligibility & pricing breakdown",
       "Fast mobile navigation & responsive layout",
     ],
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "SEO Schema"],
+    techStack: ["React", "TypeScript", "Vite", "Tailwind CSS"],
   },
   {
     slug: "gala-rentals",
@@ -189,7 +189,7 @@ export const projects = [
       "Local Sydney service area positioning",
       "Search-optimised page architecture",
     ],
-    techStack: ["React", "Next.js", "CSS Modules", "Schema.org"],
+    techStack: ["React", "TypeScript", "Vite", "Tailwind CSS"],
   },
   {
     slug: "zq-removals",
@@ -212,7 +212,7 @@ export const projects = [
       "Residential vs commercial service breakdown",
       "Touch-optimised mobile call & enquiry triggers",
     ],
-    techStack: ["Next.js", "TypeScript", "Vanilla CSS", "JSON-LD"],
+    techStack: ["HTML", "Vanilla CSS", "JavaScript", "JSON-LD"],
   },
   {
     slug: "decent-development",
@@ -235,7 +235,7 @@ export const projects = [
       "Dark luxury aesthetic matching brand identity",
       "Fast page load & image optimization",
     ],
-    techStack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
+    techStack: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
   },
   {
     slug: "milestone-development",
@@ -258,7 +258,7 @@ export const projects = [
       "Corporate presentation & accreditation credentials",
       "Responsive accessibility-conscious structure",
     ],
-    techStack: ["Next.js", "TypeScript", "CSS Modules", "HTML5"],
+    techStack: ["HTML", "CSS", "JavaScript", "GSAP"],
   },
   {
     slug: "4-point-concrete",
@@ -305,7 +305,7 @@ export const projects = [
       "Express freight quote request engine",
       "Mobile-optimised driver & depot contact points",
     ],
-    techStack: ["Next.js", "TypeScript", "Vanilla CSS", "JSON-LD"],
+    techStack: ["React", "TypeScript", "Vite", "Tailwind CSS"],
   },
   {
     slug: "hf-removals-adelaide",

@@ -1,0 +1,79 @@
+/* The work itself supplies the dimension: real captures, a shallow browser
+   frame and a steady editorial rhythm. Supporting motion needs no WebGL. */
+.work-index-page .gr-wi-media {
+  clip-path: none;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  box-shadow: 0 24px 56px -34px #000;
+  transform-origin: center;
+  transition: transform 420ms var(--ease-studio), border-color 420ms ease, box-shadow 420ms ease;
+}
+.work-index-page .gr-wi-image img,
+.gr-cs .case-study-hero-image img,
+.gr-cs .gr-cs-pan img {
+  object-fit: contain;
+  object-position: center;
+  scale: 1;
+  transform: none;
+  animation: none;
+}
+.work-index-page .gr-wi-link:is(:hover, :focus-visible) .gr-wi-image img { transform: none; }
+.work-index-page .gr-wi-link { perspective: 1400px; border-radius: 7px; }
+.work-index-page .gr-wi-link:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 9px; }
+.work-index-page .gr-wi-media .live-label {
+  top: auto;
+  bottom: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  background: #171717;
+  color: #fff;
+  border: 1px solid #ffffff26;
+}
+.work-index-page .gr-wi-title { line-height: 1.06; overflow-wrap: anywhere; }
+.work-index-page .work-index-filter { min-height: 44px; }
+.gr-cs .gr-cs-hero-media { perspective: 1800px; }
+.gr-cs .browser-frame {
+  border: 1px solid #c8a46a55;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 500ms var(--ease-studio), box-shadow 500ms ease;
+}
+.gr-cs .case-study-hero-image { animation: none; }
+.gr-cs .gr-cs-pan {
+  clip-path: none;
+  border-radius: 7px;
+  box-shadow: 18px 18px 0 -1px var(--ink), 18px 18px 0 0 var(--line);
+}
+.gr-cs .gr-cs-pan-caption { margin-top: 34px; line-height: 1.7; }
+.gr-cs .gr-cs-story-block--approach h2 { text-wrap: balance; line-height: 1.15; }
+.gr-cs .gr-cs-meta a { min-height: 44px; }
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .work-index-page .gr-wi-link:is(:hover, :focus-visible) .gr-wi-media {
+    transform: rotateX(2deg) rotateY(-2deg) translateY(-5px);
+    border-color: #c8a46a88;
+    box-shadow: 0 38px 70px -30px #000;
+  }
+  .gr-cs .gr-cs-hero-media .browser-frame { transform: rotateX(2deg) rotateY(-1deg); }
+  .gr-cs .gr-cs-hero-media .browser-frame:hover { transform: rotateX(0) rotateY(0); }
+  @supports (animation-timeline: view()) {
+    .gr-cs .gr-cs-pan {
+      animation: studio-case-layer linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+  }
+}
+@keyframes studio-case-layer {
+  from { transform: translateY(18px) rotateX(2deg); }
+  to { transform: translateY(0) rotateX(0); }
+}
+@media (max-width: 767px) {
+  .gr-cs .gr-cs-pan { box-shadow: 7px 7px 0 -1px var(--ink), 7px 7px 0 0 var(--line); }
+  .gr-cs .gr-cs-hero h1 { line-height: 1.03; }
+  .gr-cs .gr-cs-features-head { position: static; }
+  .work-index-page .gr-wi-stack { line-height: 1.8; }
+  .work-index-page .gr-browser-bar span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .work-index-page .gr-wi-media, .gr-cs .browser-frame, .gr-cs .gr-cs-pan { transform: none; animation: none; transition: none; }
+}

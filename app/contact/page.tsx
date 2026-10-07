@@ -66,7 +66,7 @@ export default function ContactPage() {
               <span aria-current="page">Contact</span>
             </nav>
             <p className="eyebrow">Start a conversation</p>
-            <h1 id="contact-heading">Make your next website <span className="accent-serif">impossible to ignore.</span></h1>
+            <h1 id="contact-heading">A useful conversation. <span className="accent-serif">A clear next step.</span></h1>
             <p className="content-lead">Tell us what you are building and where you want the business to go. We will come back with a practical next step.</p>
 
             <ul className="gr-contact-direct" aria-label="Contact directly">

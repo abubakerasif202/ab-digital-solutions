@@ -26,9 +26,13 @@ function getReducedMotionServerSnapshot() {
 
 export function ProjectShowcase() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const [activeSlide, setActiveSlide] = useState(0);
+  const [slides, setSlides] = useState({ active: 0, previous: 0 });
+  const activeSlide = slides.active;
+  const selectSlide = (index: number) => setSlides((current) => ({ active: index, previous: current.active }));
   const [sliderPauseOverride, setSliderPauseOverride] = useState<boolean | null>(null);
-  const [carouselEngaged, setCarouselEngaged] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [saveData, setSaveData] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isPageVisible, setIsPageVisible] = useState(true);
   // The upcoming slide is only needed for the crossfade (first advance is
@@ -40,10 +44,18 @@ export function ProjectShowcase() {
     getReducedMotionSnapshot,
     getReducedMotionServerSnapshot,
   );
-  const sliderPreferencePaused = sliderPauseOverride ?? prefersReducedMotion;
-  const sliderPaused = sliderPreferencePaused || carouselEngaged || !isVisible || !isPageVisible;
+  const sliderPreferencePaused = sliderPauseOverride ?? (prefersReducedMotion || saveData);
+  const sliderPaused = sliderPreferencePaused || hovered || focused || !isVisible || !isPageVisible;
   const activeProject = projects[activeSlide];
   const nextSlide = (activeSlide + 1) % projects.length;
+
+  useEffect(() => {
+    const connection = (navigator as Navigator & { connection?: EventTarget & { saveData?: boolean } }).connection;
+    const update = () => setSaveData(Boolean(connection?.saveData));
+    update();
+    connection?.addEventListener("change", update);
+    return () => connection?.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -81,7 +93,7 @@ export function ProjectShowcase() {
   useEffect(() => {
     if (sliderPaused) return;
     const timer = window.setInterval(
-      () => setActiveSlide((current) => (current + 1) % projects.length),
+      () => setSlides((current) => ({ active: (current.active + 1) % projects.length, previous: current.active })),
       motionTokens.duration.carousel,
     );
     return () => window.clearInterval(timer);
@@ -89,12 +101,12 @@ export function ProjectShowcase() {
 
   const showPreviousSlide = () => {
     setSliderPauseOverride(true);
-    setActiveSlide((current) => (current - 1 + projects.length) % projects.length);
+    selectSlide((activeSlide - 1 + projects.length) % projects.length);
   };
 
   const showNextSlide = () => {
     setSliderPauseOverride(true);
-    setActiveSlide((current) => (current + 1) % projects.length);
+    selectSlide((activeSlide + 1) % projects.length);
   };
 
   return (
@@ -102,16 +114,15 @@ export function ProjectShowcase() {
       ref={rootRef}
       className="project-showcase"
       data-reveal
-      data-tilt
       role="region"
       aria-roledescription="carousel"
       aria-label="Featured website projects"
-      onMouseEnter={() => setCarouselEngaged(true)}
-      onMouseLeave={() => setCarouselEngaged(false)}
-      onFocusCapture={() => setCarouselEngaged(true)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocusCapture={() => setFocused(true)}
       onBlurCapture={(event) => {
         if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) {
-          setCarouselEngaged(false);
+          setFocused(false);
         }
       }}
     >
@@ -119,6 +130,12 @@ export function ProjectShowcase() {
         <span>Selected live work</span>
         <span>{String(activeSlide + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
       </div>
+      <div className="showcase-dimensional" data-tilt>
+        <div className="showcase-blueprint" aria-hidden="true">
+          <span className="blueprint-label">Responsive layout / concept</span>
+          <div className="blueprint-layout"><i /><i /><i /><i /></div>
+        </div>
+        <div className="showcase-browser">
       <div className="showcase-browser-bar" aria-hidden="true">
         <span className="showcase-browser-dots"><i /><i /><i /></span>
         <span>{activeProject.displayUrl}</span>
@@ -126,7 +143,7 @@ export function ProjectShowcase() {
       </div>
       <div className="showcase-stage">
         <div className="showcase-slides" aria-live={sliderPaused ? "polite" : "off"}>
-          {(nextSlideReady ? [activeSlide, nextSlide] : [activeSlide]).map((index) => {
+          {[...new Set(nextSlideReady ? [slides.previous, activeSlide, nextSlide] : [activeSlide])].map((index) => {
             const project = projects[index];
             const isActive = index === activeSlide;
 
@@ -149,6 +166,9 @@ export function ProjectShowcase() {
             );
           })}
         </div>
+      </div>
+        </div>
+        <span className="showcase-depth-caption" aria-hidden="true">Design / development / detail</span>
       </div>
       <div className="showcase-meta">
         <div className="showcase-caption">
@@ -187,7 +207,7 @@ export function ProjectShowcase() {
             aria-pressed={index === activeSlide}
             onClick={() => {
               setSliderPauseOverride(true);
-              setActiveSlide(index);
+              selectSlide(index);
             }}
           >
             <span>{String(index + 1).padStart(2, "0")}</span>

@@ -35,7 +35,7 @@ test("studio motion supports static content, touch and reduced motion", async ()
 });
 
 test("brand text files remain valid UTF-8 without mojibake", async () => {
-  for (const path of ["../app/site-footer.tsx", "../app/opengraph-image.tsx", "../app/components/brand/ABLogo.tsx"]) {
+  for (const path of ["../app/site-footer.tsx", "../app/opengraph-image.tsx", "../app/components/brand/ABLogo.tsx", "../app/agency-home.tsx", "../app/about/page.tsx", "../app/services/page.tsx", "../app/work/[slug]/page.tsx"]) {
     const bytes = await readFile(new URL(path, import.meta.url));
     const source = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
     assert.doesNotMatch(source, /\u00c2[\u00a0-\u00bf]|\u00e2[\u0080-\u00bf\u2020\u20ac]/);
@@ -57,30 +57,25 @@ test("static hero branding uses inline geometry rather than a late CSS image", a
   assert.doesNotMatch(styles, /url\(['"]?\/brand\/ab-monogram/);
 });
 
-test("brand intro is an overlay above the live page with a safe, once-per-session gate", async () => {
-  const [gate, intro, layout, styles, config] = await Promise.all([
+test("brand intro is brief, non-blocking and once per session", async () => {
+  const [gate, intro, styles, config] = await Promise.all([
     read("../app/components/intro/intro-gate.ts"),
     read("../app/components/intro/BrandIntro.tsx"),
-    read("../app/layout.tsx"),
     read("../app/intro.css"),
     read("../app/components/intro/intro-config.ts"),
   ]);
   assert.match(config, /ab-brand-intro-seen/);
   assert.match(gate, /sessionStorage/);
-  assert.match(gate, /prefers-reduced-motion: reduce\)"\)\.matches\)return/);
-  assert.match(layout, /<BrandIntro \/>/);
-  // Playback hygiene: muted inline autoplay, no native controls, poster, and a skip control.
-  assert.match(intro, /\bmuted\b/);
-  assert.match(intro, /playsInline/);
-  assert.doesNotMatch(intro, /\bcontrols\b/);
-  assert.match(intro, /poster=/);
-  assert.match(intro, /Skip Intro/);
-  // The white tail of the source clip must never be reached.
-  const exitAt = Number(/exitAt:\s*([\d.]+)/.exec(config)?.[1]);
-  assert.ok(exitAt >= 7 && exitAt <= 7.4);
-  assert.match(styles, /prefers-reduced-motion: reduce/);
+  assert.match(gate, /prefers-reduced-motion/);
+  assert.match(gate, /pointer: coarse/);
+  assert.match(gate, /saveData/);
+  assert.doesNotMatch(gate, /rel="preload"/);
+  assert.match(intro, /<ABLogo decorative/);
+  assert.doesNotMatch(intro, /<video/);
+  assert.match(styles, /pointer-events: none/);
+  assert.doesNotMatch(styles, /overflow: hidden|hero-actions|site-header/);
+  assert.ok(Number(/maxMs:\s*(\d+)/.exec(config)?.[1]) <= 1500);
 });
-
 test("intro media assets exist and are web-sized", async () => {
   const video = await stat(new URL("../public/video/ab-web-studio-intro.mp4", import.meta.url));
   const poster = await stat(new URL("../public/video/ab-web-studio-intro-poster.webp", import.meta.url));

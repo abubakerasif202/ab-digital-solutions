@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ProjectArtwork } from "../../project-artwork";
+import { ProjectArtwork, projectArtworkRatio } from "../../project-artwork";
 import { findProject, formatCategory, isSoftwareProject, projects } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
@@ -86,6 +86,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
 
   const number = String(currentIndex + 1).padStart(2, "0");
   const total = String(projects.length).padStart(2, "0");
+  const approachHeading = `${project.tags[0]} for ${project.name}`;
   // Three presentations share one system so consecutive case studies never
   // feel identical: live software gets a dark system frame, websites
   // alternate between a cinematic full-width hero and an editorial split.
@@ -150,7 +151,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 <i /><i /><i />
                 <span>{project.displayUrl}</span>
               </div>
-              <div className="case-study-hero-image">
+              <div className="case-study-hero-image" style={{ aspectRatio: projectArtworkRatio(project) }}>
                 <ProjectArtwork project={project} priority sizes="(max-width: 1040px) 100vw, 1440px" />
               </div>
             </div>
@@ -164,7 +165,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           </div>
           <div className="gr-cs-story-block gr-cs-story-block--approach" data-reveal>
             <p className="eyebrow">02 / Approach</p>
-            <h2>Clear structure, responsive delivery and an obvious next step.</h2>
+            <h2>{approachHeading}</h2>
             <p className="case-study-body-text">{project.solution}</p>
           </div>
         </section>
@@ -173,13 +174,13 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           <div className="container gr-cs-features-grid">
             <div className="gr-cs-features-head" data-reveal>
               <p className="eyebrow">03 / Key features</p>
-              <h2 id="features-heading">What the experience <span className="accent-serif">delivers.</span></h2>
+              <h2 id="features-heading">{project.name}: <span className="accent-serif">in detail.</span></h2>
               <div className="gr-cs-capabilities">
                 <h3>Capabilities</h3>
                 <div className="sidebar-tags">
                   {project.tags.map((tag) => <span key={tag} className="project-tag-pill">{tag}</span>)}
                 </div>
-                <h3>Verified technology</h3>
+                <h3>Project technology</h3>
                 <div className="sidebar-tech">
                   {project.techStack.map((tech) => <span key={tech} className="tech-pill">{tech}</span>)}
                 </div>
@@ -199,12 +200,12 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
         <section className="container gr-cs-detail" aria-labelledby="visual-showcase-heading">
           <div className="gr-cs-detail-head" data-reveal>
             <p className="eyebrow">04 / A closer look</p>
-            <h2 id="visual-showcase-heading">Details from the published {softwareProject ? "system" : "homepage"}.</h2>
+            <h2 id="visual-showcase-heading">{softwareProject ? "The public staff-access experience." : `${project.name}, on screen.`}</h2>
           </div>
-          <div className="gr-cs-pan gr-cut-lg" aria-hidden="true" data-reveal>
+          <div className="gr-cs-pan gr-cut-lg" style={{ aspectRatio: projectArtworkRatio(project) }} data-reveal>
             <ProjectArtwork project={project} sizes="(max-width: 860px) 100vw, 1440px" />
           </div>
-          <p className="gr-cs-pan-caption">Captured from {project.displayUrl}</p>
+          <p className="gr-cs-pan-caption">{softwareProject ? "Public sign-in capture only. Internal records remain private." : `Desktop homepage capture · ${project.displayUrl}`}</p>
         </section>
 
         <section className="gr-cs-live" aria-labelledby="live-proof-heading">

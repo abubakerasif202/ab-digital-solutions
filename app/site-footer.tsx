@@ -1,3 +1,4 @@
+import "./studio-pages.css";
 import { ABBrandImage } from "./components/brand/ABBrandImage";
 import Link from "next/link";
 import { siteConfig } from "./site-config";
@@ -13,7 +14,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
         <Link className="footer-statement-link" href="/contact" data-magnetic>
           <span className="footer-statement-line">Let’s make</span>
           <span className="footer-statement-line footer-statement-accent">something</span>
-          <span className="footer-statement-line">exceptional.</span>
+          <span className="footer-statement-line">worth using.</span>
           <span className="footer-statement-arrow"><ArrowIcon /></span>
         </Link>
       </div>

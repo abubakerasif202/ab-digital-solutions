@@ -22,9 +22,9 @@ test("homepage exposes content directly instead of using an iframe", async () =>
 
   assert.doesNotMatch(page, /<iframe\b/i);
   assert.match(homepage, /className="hero-title"/);
-  assert.match(homepage, /Digital experiences/);
-  assert.match(homepage, /that do the selling/);
-  assert.match(homepage, /before you say a word\./);
+  assert.match(homepage, /Websites with presence\./);
+  assert.match(homepage, /Software with purpose\./);
+  assert.match(homepage, /Built for your business\./);
   assert.match(homepage, /id="contact"/);
   assert.match(showcase, /aria-roledescription="carousel"/);
   assert.match(heroExperience, /prefers-reduced-motion/);
@@ -140,8 +140,10 @@ test("homepage interactive work is isolated and pauses when hidden", async () =>
   assert.doesNotMatch(homepage, /useState|useEffect|setInterval/);
   assert.match(showcase, /IntersectionObserver/);
   assert.match(showcase, /document\.visibilityState/);
-  // At most two slides mount; the upcoming one waits for idle.
-  assert.match(showcase, /\(nextSlideReady \? \[activeSlide, nextSlide\] : \[activeSlide\]\)\.map/);
+  // At most three distinct slides support the exit crossfade and idle preload.
+  assert.match(showcase, /new Set\(nextSlideReady \? \[slides\.previous, activeSlide, nextSlide\] : \[activeSlide\]\)/);
+  assert.match(showcase, /aria-hidden=\{!isActive\}/);
+  assert.match(showcase, /tabIndex=\{isActive \? 0 : -1\}/);
   assert.match(showcase, /requestIdleCallback\(ready/);
   assert.match(showcase, /window\.clearInterval/);
   assert.match(contact, /fetch\("\/api\/contact"/);
@@ -175,9 +177,13 @@ test("reviewed design issues remain remediated", async () => {
 
   assert.doesNotMatch(homepage, /hero-brand-art/);
   assert.match(homepage, /className="client-proof"/);
-  assert.match(showcase, /setCarouselEngaged\(true\)/);
+  assert.match(showcase, /sliderPreferencePaused \|\| hovered \|\| focused \|\| !isVisible \|\| !isPageVisible/);
+  assert.match(showcase, /onMouseEnter=\{\(\) => setHovered\(true\)\}/);
+  assert.match(showcase, /onMouseLeave=\{\(\) => setHovered\(false\)\}/);
+  assert.match(showcase, /onFocusCapture=\{\(\) => setFocused\(true\)\}/);
+  assert.match(showcase, /!event\.currentTarget\.contains\(event\.relatedTarget\)[\s\S]*?setFocused\(false\)/);
   assert.match(showcase, /setSliderPauseOverride\(true\)/);
-  assert.match(homepage, /<a[\s\S]*className="service-card"/);
+  assert.match(homepage, /<Link className="service-card"[^>]*href=\{`\/services\/\$\{service\.slug\}`\}/);
   assert.match(chrome, /<ABBrandImage decorative eager/);
   assert.match(chrome, /AB Web Studio/);
   assert.match(servicePage, /<SiteHeader/);
@@ -207,8 +213,10 @@ test("mobile navigation keeps keyboard focus within its open menu", async () => 
   assert.match(chrome, /const focusableItems = \[menuButtonRef\.current, \.\.\.navItems\]\.filter/);
   assert.match(chrome, /event\.preventDefault\(\);\s*lastItem\.focus\(\)/);
   assert.match(chrome, /event\.preventDefault\(\);\s*firstItem\.focus\(\)/);
-  assert.match(chrome, /const focusFrame = menuOpen \? window\.requestAnimationFrame/);
-  assert.match(chrome, /navRef\.current\?\.querySelector<HTMLElement>\("a"\)\?\.focus\(\)/);
+  assert.match(chrome, /let focusFrame: number \| null = null/);
+  assert.match(chrome, /window\.getComputedStyle\(firstLink\)\.visibility === "visible"/);
+  assert.match(chrome, /document\.activeElement === firstLink/);
+  assert.match(chrome, /firstLink\.focus\(\)/);
   assert.match(chrome, /ref=\{navRef\}/);
   assert.match(chrome, /className="mobile-project-cta"/);
   assert.match(chrome, /window\.scrollY > window\.innerHeight \* 0\.72/);
@@ -265,15 +273,17 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   assert.match(homepage, /hero-scroll-cue/);
   assert.match(homepage, /process-rail-fill/);
   assert.doesNotMatch(homepage, /project-ghost-index/);
-  assert.match(homepage, /data-cursor="VIEW"/);
-  assert.match(homepage, /data-magnetic/);
+  assert.match(homepage, /data-tilt/);
+
 
   assert.match(intro, /sessionStorage/);
   assert.match(intro, /prefers-reduced-motion/);
 
   assert.match(pointerFx, /pointer: fine/);
-  assert.match(pointerFx, /data-cursor/);
-  assert.match(pointerFx, /data-magnetic/);
+  assert.match(pointerFx, /closest\("\[data-tilt\]"\)/);
+  assert.match(pointerFx, /Math\.min\(4, motionTokens\.tilt\.maxDegrees\)/);
+  assert.match(pointerFx, /finePointer\.matches && !reducedMotion\.matches/);
+  assert.doesNotMatch(pointerFx, /cursor-ring|cursor-dot|data-magnetic|style\.translate/);
   assert.match(pointerFx, /visibilitychange/);
   assert.doesNotMatch(styles, /cursor:\s*none/);
 
@@ -460,7 +470,8 @@ test("reduced motion removes the headline rise and intro entirely", async () => 
 test("phones never initialise WebGL and 3D waits for idle", async () => {
   const experience = await read("../app/components/Hero3DExperience.tsx");
   assert.match(experience, /matchMedia\("\(max-width: 720px\)"\)/);
-  assert.match(experience, /mobileQuery\.matches \|\| connection\?\.saveData/);
+  assert.match(experience, /mobileQuery\.matches \|\| coarseQuery\.matches \|\| connection\?\.saveData/);
+  assert.match(experience, /matchMedia\("\(pointer: coarse\)"\)/);
   assert.match(experience, /requestIdleCallback/);
   assert.match(experience, /dynamic\(/);
 });
