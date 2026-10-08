@@ -144,7 +144,7 @@ function WorkIndexCard({ project, type }: { project: Project; type: BlockType })
 
   return (
     <article className="gr-wi-card" data-reveal style={cardStyle}>
-      <Link className="gr-wi-link" href={`/work/${project.slug}`} aria-label={`View ${project.name} case study`}>
+      <Link className="gr-wi-link" href={`/work/${project.slug}`}>
         <div className="gr-wi-media gr-wi-media--framed">
           <div className="gr-browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
           <div className="gr-wi-image" style={{ aspectRatio: projectArtworkRatio(project) }}>

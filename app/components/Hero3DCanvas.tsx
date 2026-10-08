@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { HeroFallback } from "./HeroFallback";
+import { createSignalGeometry, signalPoint } from "./signal-geometry";
 
 interface Hero3DCanvasProps {
   className?: string;
@@ -62,64 +63,38 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     container.appendChild(renderer.domElement);
 
-    // A compact extruded A / B sculpture. Flat front faces and bevelled edges
-    // keep the brand legible; ruby is structural rather than a particle effect.
-    scene.add(new THREE.AmbientLight(0xf4f1ea, 1.2));
-    const keyLight = new THREE.DirectionalLight(0xf4f1ea, 4);
+    // Architectural ribbon: cobalt front, mineral reverse, fine structural seams.
+    scene.add(new THREE.AmbientLight(0xe9e9e2, 2.2));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 4.5);
     keyLight.position.set(2, 4, 5);
     scene.add(keyLight);
-    const rubyLight = new THREE.PointLight(0xd21736, 14, 12);
-    rubyLight.position.set(-3, -1, 3);
-    scene.add(rubyLight);
-    const edgeLight = new THREE.DirectionalLight(0xd1a64c, 1.4);
-    edgeLight.position.set(-4, 3, -1);
+    const edgeLight = new THREE.DirectionalLight(0xa9baff, 3);
+    edgeLight.position.set(-4, -2, 3);
     scene.add(edgeLight);
-
     const heroGroup = new THREE.Group();
-    heroGroup.rotation.set(-0.12, -0.22, -0.06);
+    heroGroup.rotation.set(-0.2, -0.38, -0.12);
     scene.add(heroGroup);
-    const chromeMaterial = new THREE.MeshStandardMaterial({
-      color: 0x151519, metalness: 0.72, roughness: 0.24,
+    const cobaltMaterial = new THREE.MeshStandardMaterial({
+      color: 0x3157ff, metalness: 0.42, roughness: 0.28, side: THREE.FrontSide,
     });
-    const rubyMaterial = new THREE.MeshStandardMaterial({
-      color: 0xd21736, metalness: 0.45, roughness: 0.26,
-      emissive: 0x760d21, emissiveIntensity: 0.35,
+    const mineralMaterial = new THREE.MeshStandardMaterial({
+      color: 0xe9e9e2, metalness: 0.64, roughness: 0.3, side: THREE.BackSide,
     });
-    const geometries: THREE.ExtrudeGeometry[] = [];
-    const polygon = (points: [number, number][]) => {
-      const shape = new THREE.Shape();
-      points.forEach(([x, y], index) => index === 0 ? shape.moveTo(x, y) : shape.lineTo(x, y));
-      shape.closePath();
-      return shape;
-    };
-    const addShape = (shape: THREE.Shape, material: THREE.MeshStandardMaterial) => {
-      const geometry = new THREE.ExtrudeGeometry(shape, {
-        depth: 0.28, bevelEnabled: true, bevelSegments: 2,
-        steps: 1, bevelSize: 0.035, bevelThickness: 0.035, curveSegments: 8,
-      });
-      geometries.push(geometry);
-      heroGroup.add(new THREE.Mesh(geometry, material));
-    };
-    const aShape = polygon([[-2.15, -1.2], [-1.22, 1.2], [-0.72, 1.2], [0.05, -1.2], [-0.5, -1.2], [-0.67, -0.63], [-1.43, -0.63], [-1.62, -1.2]]);
-    const aCounter = new THREE.Path();
-    aCounter.moveTo(-1.29, -0.12);
-    aCounter.lineTo(-0.83, -0.12);
-    aCounter.lineTo(-1.04, 0.64);
-    aCounter.closePath();
-    aShape.holes.push(aCounter);
-    addShape(aShape, chromeMaterial);
-    const bShape = polygon([[0.55, -1.2], [0.55, 1.2], [1.44, 1.2], [1.94, 0.94], [2.04, 0.48], [1.8, 0.1], [2.09, -0.19], [2.1, -0.73], [1.76, -1.2]]);
-    for (const [bottom, top] of [[0.3, 0.77], [-0.73, -0.22]]) {
-      const hole = new THREE.Path();
-      hole.moveTo(1.07, bottom);
-      hole.lineTo(1.54, bottom);
-      hole.lineTo(1.54, top);
-      hole.lineTo(1.07, top);
-      hole.closePath();
-      bShape.holes.push(hole);
+    const surface = createSignalGeometry(isTablet ? 120 : 180, 12);
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(surface.positions, 3));
+    geometry.setIndex(surface.indices);
+    geometry.computeVertexNormals();
+    const geometries: THREE.BufferGeometry[] = [geometry];
+    heroGroup.add(new THREE.Mesh(geometry, cobaltMaterial), new THREE.Mesh(geometry, mineralMaterial));
+    const contourMaterial = new THREE.LineBasicMaterial({ color: 0x101114, transparent: true, opacity: 0.35 });
+    const seamMaterial = new THREE.LineBasicMaterial({ color: 0xe9e9e2, transparent: true, opacity: 0.28 });
+    for (const across of [-1, -0.86, 0.86, 1]) {
+      const points = Array.from({ length: 241 }, (_, index) => new THREE.Vector3(...signalPoint(index / 240 * Math.PI * 2, across)));
+      const contour = new THREE.BufferGeometry().setFromPoints(points);
+      geometries.push(contour);
+      heroGroup.add(new THREE.Line(contour, Math.abs(across) === 1 ? contourMaterial : seamMaterial));
     }
-    addShape(bShape, chromeMaterial);
-    addShape(polygon([[-0.36, -1.43], [-0.03, -1.43], [0.7, 1.43], [0.37, 1.43]]), rubyMaterial);
 
     // Animation & Smooth Control State
     let animationFrameId = 0;
@@ -195,8 +170,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       scrollY += (targetScrollY - scrollY) * 0.05;
       const scrollFactor = Math.min(scrollY / 1000, 2);
 
-      heroGroup.rotation.x = -0.12 + mouseY * 0.05;
-      heroGroup.rotation.y = -0.22 + mouseX * 0.05;
+      heroGroup.rotation.x = -0.2 + mouseY * 0.09;
+      heroGroup.rotation.y = -0.38 + mouseX * 0.12;
       heroGroup.position.y = -scrollFactor * 0.12;
       camera.position.x = mouseX * 0.12;
       camera.position.y = -mouseY * 0.12;
@@ -320,8 +295,10 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       renderer.domElement.removeEventListener("webglcontextlost", handleContextLost);
 
       geometries.forEach((geometry) => geometry.dispose());
-      chromeMaterial.dispose();
-      rubyMaterial.dispose();
+      cobaltMaterial.dispose();
+      mineralMaterial.dispose();
+      contourMaterial.dispose();
+      seamMaterial.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
 

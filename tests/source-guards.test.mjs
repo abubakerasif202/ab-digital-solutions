@@ -125,7 +125,8 @@ test("premium motion remains present while mobile rendering is constrained", asy
   assert.match(experience, /tabletQuery\.matches \|\| constrainedDevice/);
   assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.25\)/);
   assert.doesNotMatch(canvas, /TorusKnotGeometry|particleCount|PointsMaterial/);
-  assert.match(canvas, /ExtrudeGeometry/);
+  assert.match(canvas, /createSignalGeometry/);
+  assert.match(canvas, /new THREE\.BufferGeometry\(\)/);
   assert.match(styles, /\.service-card\s*\{\s*min-height: 0;/);
   assert.match(styles, /@media \(max-width: 960px\) and \(orientation: landscape\)/);
 });
@@ -176,7 +177,7 @@ test("reviewed design issues remain remediated", async () => {
   ]);
 
   assert.doesNotMatch(homepage, /hero-brand-art/);
-  assert.match(homepage, /className="client-proof"/);
+  assert.match(homepage, /className="studio-trust"/);
   assert.match(showcase, /sliderPreferencePaused \|\| hovered \|\| focused \|\| !isVisible \|\| !isPageVisible/);
   assert.match(showcase, /onMouseEnter=\{\(\) => setHovered\(true\)\}/);
   assert.match(showcase, /onMouseLeave=\{\(\) => setHovered\(false\)\}/);
@@ -269,11 +270,11 @@ test("premium interaction layer is wired without heavy dependencies", async () =
     read("../package.json"),
   ]);
 
-  assert.match(homepage, /hero-title-accent/);
-  assert.match(homepage, /hero-scroll-cue/);
+  assert.match(homepage, /signal-title-outline/);
+  assert.match(homepage, /signal-explore/);
   assert.match(homepage, /process-rail-fill/);
   assert.doesNotMatch(homepage, /project-ghost-index/);
-  assert.match(homepage, /data-tilt/);
+  assert.match(homepage, /<Hero3DExperience \/>/);
 
 
   assert.match(intro, /sessionStorage/);
@@ -419,13 +420,12 @@ test("typography is self-hosted so every platform gets the intended pairing", as
   ]);
   assert.match(layout, /from "next\/font\/google"/);
   assert.match(layout, /variable: "--font-sans"/);
-  assert.match(layout, /variable: "--font-display"/);
   assert.match(layout, /variable: "--font-mono"/);
   // Every font variable must sit on <html>: the role tokens are declared on
   // :root, so a variable set lower in the tree would leave them invalid.
-  assert.match(layout, /<html[^>]*className=\{`\$\{sansFont\.variable\} \$\{displayFont\.variable\} \$\{monoFont\.variable\}`\}/);
+  assert.match(layout, /<html[^>]*className=\{`\$\{sansFont\.variable\} \$\{monoFont\.variable\}`\}/);
   assert.match(styles, /--sans: var\(--font-sans\),/);
-  assert.match(styles, /--display: var\(--font-display\),/);
+  assert.match(await read("../app/signal.css"), /--display: var\(--sans\)/);
   assert.match(styles, /--mono: var\(--font-mono\),/);
   // next/font serves files same-origin, which the CSP must continue to allow.
   assert.match(nextConfig, /"font-src 'self'/);
@@ -511,19 +511,13 @@ test("anchor jumps re-align once offscreen sections have rendered", async () => 
   assert.match(settle, /passes >= 2/);
 });
 
-test("display and mono fonts load only the weights and styles they render", async () => {
+test("display and interface share one variable font while labels avoid preloading", async () => {
   const layout = await read("../app/layout.tsx");
-  const serif = layout.match(/Bodoni_Moda\(\{[\s\S]*?\}\)/)?.[0];
-  assert.ok(serif, "Bodoni Moda display font");
-  // Headlines use 400–700, so one variable file (with its optical-size axis)
-  // replaces several static weights.
-  assert.doesNotMatch(serif, /weight:/);
-  assert.match(serif, /axes: \["opsz"\]/);
-  // The whole hero h1 (LCP) is set in the display face, so it is preloaded
-  // rather than swapped in late.
-  assert.match(serif, /style: \["normal", "italic"\]/);
-  assert.doesNotMatch(serif, /preload: false/);
-
+  const sans = layout.match(/Schibsted_Grotesk\(\{[\s\S]*?\}\)/)?.[0];
+  assert.ok(sans, "shared variable grotesk font");
+  assert.doesNotMatch(sans, /weight:|preload: false/);
+  assert.match(sans, /display: "swap"/);
+  assert.doesNotMatch(layout, /Bodoni_Moda|const displayFont/);
   const mono = layout.match(/IBM_Plex_Mono\(\{[\s\S]*?\}\)/)?.[0];
   assert.ok(mono, "IBM Plex Mono label font");
   assert.match(mono, /weight: \["400", "500"\]/);
@@ -552,24 +546,21 @@ test("Tailwind only scans app source, keeping unused utilities out of critical C
   assert.match(styles, /@import "tailwindcss" source\(none\);\s*\n@source "\.\/";/);
 });
 
-test("Gilt & Ruby design system: didone headlines, grotesk body and The Cut", async () => {
-  const [layout, studio, layer] = await Promise.all([
+test("Signal / Form defines the active palette, typography, responsive grid and focus states", async () => {
+  const [layout, signal] = await Promise.all([
     read("../app/layout.tsx"),
-    read("../app/studio.css"),
-    read("../app/gilt-ruby.css"),
+    read("../app/signal.css"),
   ]);
-
-  assert.match(layout, /Bodoni_Moda\(/);
-  assert.match(layout, /Schibsted_Grotesk\(/);
-  assert.match(layout, /variable: "--font-display"/);
-  assert.match(layout, /import "\.\/gilt-ruby\.css";/);
-  assert.ok(layout.indexOf('import "./gilt-ruby.css"') > layout.indexOf('import "./editorial.css"'), "gilt-ruby.css must load last");
-  assert.doesNotMatch(studio, /\.cinematic-home h1, \.cinematic-home h2[^{]*\{[^}]*var\(--sans\)/);
-
-  assert.match(layer, /--clip-cut-sm: polygon\(/);
-  assert.match(layer, /\.button-primary,[\s\S]*?clip-path: var\(--clip-cut-sm\)/);
-  // Clipped controls must not hide their keyboard focus ring.
-  assert.match(layer, /\.button-primary:focus-visible,[\s\S]*?\.mobile-project-cta:focus-visible\s*\{\s*clip-path: none;/);
+  assert.match(layout, /<body className="signal-studio">/);
+  assert.ok(layout.indexOf('import "./signal.css"') > layout.indexOf('import "./studio-premium.css"'));
+  assert.ok(layout.indexOf('import "./signal-pages.css"') > layout.indexOf('import "./signal.css"'));
+  assert.match(signal, /--ink: #101114/);
+  assert.match(signal, /--paper: #e9e9e2/);
+  assert.match(signal, /--signal-blue: #3157ff/);
+  assert.match(signal, /--display: var\(--sans\)/);
+  assert.match(signal, /\.signal-studio :where\(a, button, input, textarea, select, summary\):focus-visible \{ outline: 2px solid/);
+  assert.match(signal, /@media \(max-width: 720px\)[\s\S]*?\.signal-hero-grid \{ grid-template-columns: 1fr;/);
+  assert.match(signal, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?animation: none !important/);
 });
 
 test("second-pass compositions: real pages, varied portfolio and case-study systems", async () => {

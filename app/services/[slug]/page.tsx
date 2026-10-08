@@ -113,7 +113,7 @@ export default async function ServicePage({ params }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="content-page service-page" id="main-content">
+      <main className="signal-page content-page service-page" id="main-content">
         <div className="container content-shell">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -176,7 +176,6 @@ export default async function ServicePage({ params }: Props) {
             <Link
               className="service-project"
               href={`/work/${featuredProject.slug}`}
-              aria-label={`${featuredProject.name} — View Case Study`}
             >
               <div className="service-project-image">
                 <ProjectArtwork project={featuredProject} sizes="(max-width: 900px) 92vw, (max-width: 1440px) 52vw, 700px" />

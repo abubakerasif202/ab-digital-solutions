@@ -91,12 +91,12 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
   // feel identical: live software gets a dark system frame, websites
   // alternate between a cinematic full-width hero and an editorial split.
   const variant = softwareProject ? "system" : currentIndex % 2 === 0 ? "cinematic" : "split";
-  const visitLabel = `Visit ${project.name} ${softwareProject ? "system" : "live website"} (opens in a new tab)`;
+  const visitLabel = `${project.ctaLabel ?? "View Live Website"} — ${project.name} (opens in a new tab)`;
 
   return (
     <>
       <SiteHeader />
-      <main className={`content-page case-study-page gr-cs gr-cs--${variant}`} id="main-content">
+      <main className={`signal-page content-page case-study-page gr-cs gr-cs--${variant}`} id="main-content">
         <header className="container gr-cs-hero">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -137,7 +137,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             <div><span>Stack</span><strong>{project.techStack.join(" · ")}</strong></div>
             <div>
               <span>{softwareProject ? "Production URL" : "Live at"}</span>
-              <a href={project.url} target="_blank" rel="noopener noreferrer" data-cursor="VISIT" aria-label={visitLabel}>
+              <a href={project.url} target="_blank" rel="noopener noreferrer" data-cursor="VISIT" aria-label={`${project.displayUrl} (opens in a new tab)`}>
                 {project.displayUrl} <ArrowIcon />
               </a>
             </div>
@@ -226,7 +226,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
               rel="noopener noreferrer"
               data-cursor="VISIT"
               data-magnetic
-              aria-label={visitLabel}
+              aria-label={`${project.ctaLabel ?? "Visit Live Website"} — ${project.name} (opens in a new tab)`}
             >
               {project.ctaLabel ?? "Visit Live Website"} <ArrowIcon />
             </a>
