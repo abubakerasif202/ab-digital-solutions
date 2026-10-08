@@ -1,7 +1,22 @@
 import Link from "next/link";
 import { ArrowIcon } from "../icons";
 import { ProjectArtwork, projectArtworkRatio } from "../project-artwork";
-import { isSoftwareProject, projects } from "../project-data";
+import { findProject, isSoftwareProject, projects } from "../project-data";
+
+// Deliberate homepage sequence: brand, operations, commerce and local services.
+const selectedSlugs = [
+  "jufaja-homes",
+  "247-inventory-system",
+  "adelaide-wholesale-tyres",
+  "aftab-sons-transport",
+  "maple-rentals",
+  "zq-removals",
+] as const;
+const selectedProjects = selectedSlugs.map((slug) => {
+  const project = findProject(slug);
+  if (!project) throw new Error(`PortfolioSection: unknown project "${slug}"`);
+  return project;
+});
 
 export function PortfolioSection() {
   return (
@@ -16,10 +31,10 @@ export function PortfolioSection() {
           </div>
         </header>
         <div className="signal-work-grid">
-          {projects.map((project, index) => (
-            <Link className="signal-work-item" href={`/work/${project.slug}`} key={project.slug}>
+          {selectedProjects.map((project, index) => (
+            <Link className="signal-work-item" data-tilt href={`/work/${project.slug}`} key={project.slug}>
               <div className="signal-work-media">
-                <div className="signal-project-image" style={{ aspectRatio: projectArtworkRatio(project) }}><ProjectArtwork project={project} sizes={index % 5 === 0 ? "(max-width: 720px) 90vw, 75vw" : "(max-width: 720px) 90vw, 45vw"} /></div>
+                <div className="signal-project-image" style={{ aspectRatio: projectArtworkRatio(project) }}><ProjectArtwork project={project} sizes={index === 0 || index === 3 ? "(max-width: 720px) 90vw, 85vw" : "(max-width: 720px) 90vw, 45vw"} /></div>
                 <span className="live-label"><i />{isSoftwareProject(project) ? "Live system" : "Live website"}</span>
               </div>
               <div className="signal-work-meta">

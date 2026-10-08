@@ -19,6 +19,7 @@ import "./studio-pages.css";
 import "./work-premium.css";
 import "./signal.css";
 import "./signal-pages.css";
+import "./cinematic.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
