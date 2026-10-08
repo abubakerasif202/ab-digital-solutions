@@ -80,3 +80,20 @@
   .hero-showcase-stack, .showcase-slide, .showcase-slide.is-active { animation: none; transform: none; translate: none; }
   .showcase-browser, .studio-process .process-rail-fill { transition: none; transform: none; }
 }
+
+/* Hero headline rise (Gilt & Ruby motion): each line lifts out of a mask,
+   staggered 110ms on the studio expo-out curve. It starts only partly masked,
+   so the h1 (the LCP element) paints in the very first frame, and it stays
+   behind the brand intro via --intro-offset. Reduced motion keeps it static. */
+@keyframes gr-hero-line {
+  from { transform: translateY(0.38em); clip-path: inset(-0.2em -0.2em 38% -0.2em); }
+  to { transform: translateY(0); clip-path: inset(-0.2em -0.2em -0.3em -0.2em); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cinematic-home .hero-title .mask-line > span {
+    animation: gr-hero-line 1100ms var(--studio-ease) var(--intro-offset, 0ms) both;
+  }
+  .cinematic-home .hero-title .mask-line:nth-child(2) > span { animation-delay: calc(var(--intro-offset, 0ms) + 110ms); }
+  .cinematic-home .hero-title .mask-line:nth-child(3) > span { animation-delay: calc(var(--intro-offset, 0ms) + 220ms); }
+}

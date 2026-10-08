@@ -38,8 +38,8 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 }
 
 .section-index { gap: 14px; }
-.section-index-num { color: var(--red-ink); font-variant-numeric: tabular-nums; }
-.contact-section .section-index-num { color: var(--red); }
+.section-index-num { color: var(--gold-bright); font-variant-numeric: tabular-nums; }
+.contact-section .section-index-num { color: var(--gold-bright); }
 
 .accent-serif,
 .cinematic-home .about-copy h2 em {
@@ -282,7 +282,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
    and indented so the three lines read as a composed block. */
 .cinematic-home .hero-title-accent {
   padding-left: clamp(0px, 5vw, 1.15em);
-  color: var(--paper);
+  color: var(--gold-bright);
   font-family: var(--display);
   font-size: 1.1em;
   font-style: italic;
@@ -386,7 +386,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 
 .cinematic-home .section-heading h2 .accent-serif,
 .cinematic-home .process-intro h2 .accent-serif,
-.cinematic-home .standard-statement h2 .accent-serif { color: var(--paper-dim); font-size: 1.06em; }
+.cinematic-home .standard-statement h2 .accent-serif { color: var(--gold-bright); font-size: 1.06em; }
 
 .contact-title-accent { font-family: var(--display); font-style: italic; font-weight: 400; letter-spacing: -0.025em; }
 .cinematic-home .contact-title-accent { color: var(--red); font-size: 1.08em; }
