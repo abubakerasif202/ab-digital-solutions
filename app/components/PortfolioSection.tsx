@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowIcon } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
-import { formatCategory, isSoftwareProject, projects } from "../project-data";
+import { formatCategory, isSoftwareProject, projectStatusLabel, projects } from "../project-data";
 
 /* Selected work, composed in three tiers so the portfolio reads with
    hierarchy instead of fourteen identical cards:
@@ -26,6 +26,9 @@ export function PortfolioSection() {
             <Link className="section-heading-link" href="/work">
               View all case studies <ArrowIcon />
             </Link>
+            <Link className="section-heading-link" href="/industries">
+              Browse by industry <ArrowIcon />
+            </Link>
           </div>
         </header>
 
@@ -40,7 +43,7 @@ export function PortfolioSection() {
               project={flagship}
               sizes="(max-width: 720px) 100vw, (max-width: 1440px) 92vw, 1440px"
             />
-            <span className="live-label"><i /> {isSoftwareProject(flagship) ? "Live system" : "Live website"}</span>
+            <span className="live-label"><i /> {projectStatusLabel(flagship)}</span>
           </div>
           <div className="gr-flagship-meta">
             <span className="gr-number" aria-hidden="true">01</span>
@@ -70,7 +73,7 @@ export function PortfolioSection() {
                 <div className="gr-duo-image">
                   <ProjectArtwork project={project} sizes="(max-width: 860px) 92vw, 58vw" />
                 </div>
-                <span className="live-label"><i /> {isSoftwareProject(project) ? "Live system" : "Live website"}</span>
+                <span className="live-label"><i /> {projectStatusLabel(project)}</span>
               </div>
               <p className="gr-kicker"><span className="gr-kicker-num">{String(i + 1).padStart(2, "0")}</span> / {project.sector}</p>
               <h3>{project.name}</h3>
@@ -80,7 +83,7 @@ export function PortfolioSection() {
           ))}
         </div>
 
-        <ul className="gr-index" aria-label="More live projects">
+        <ul className="gr-index" aria-label="More client projects">
           {projects.map((project, i) => i < DUO_END ? null : (
             <li key={project.slug}><Link
               className="gr-index-row"
@@ -91,7 +94,7 @@ export function PortfolioSection() {
               <span className="gr-index-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
               <span className="gr-index-name">{project.name}</span>
               <span className="gr-index-sector">{project.sector}</span>
-              <span className="gr-index-kind">{isSoftwareProject(project) ? "Live system" : "Live website"}</span>
+              <span className="gr-index-kind">{projectStatusLabel(project)}</span>
               <span className="gr-index-arrow" aria-hidden="true"><ArrowIcon /></span>
               <span className="gr-index-preview" aria-hidden="true">
                 <ProjectArtwork project={project} sizes="(max-width: 860px) 30vw, 360px" />
@@ -101,7 +104,7 @@ export function PortfolioSection() {
         </ul>
 
         <div className="gr-work-foot" data-reveal>
-          <p>Explore {projects.length} live digital projects, each with its own case study.</p>
+          <p>Explore {projects.length} digital projects, each with its own case study.</p>
           <Link className="button button-ghost" href="/work" data-magnetic>
             Open the work index <ArrowIcon />
           </Link>

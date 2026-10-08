@@ -8,6 +8,9 @@ import { SiteFooter } from "../site-footer";
 import { servicePages } from "./service-data";
 import { siteConfig } from "../site-config";
 import { ArrowIcon } from "../icons";
+import { PageTransition } from "../components/motion/PageTransition";
+import { industries } from "../industries/industry-data";
+import "../industries/industries.css";
 
 export const metadata: Metadata = {
   title: "Digital Services",
@@ -85,7 +88,8 @@ export default function ServicesPage() {
   return (
     <>
       <SiteHeader />
-      <main className="content-page service-page gr-svc-page" id="main-content">
+      <PageTransition>
+        <main className="content-page service-page gr-svc-page" id="main-content">
         <div className="container">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -158,6 +162,17 @@ export default function ServicesPage() {
           </div>
         </section>
 
+        <nav className="gr-ind-others gr-svc-industries" aria-label="Industries we build for">
+          <div className="container">
+            <p className="eyebrow">See the work by industry</p>
+            <ul>
+              {industries.map((industry) => (
+                <li key={industry.slug}><Link href={`/industries/${industry.slug}`}>{industry.name} <ArrowIcon /></Link></li>
+              ))}
+            </ul>
+          </div>
+        </nav>
+
         <aside className="gr-final-cta" aria-labelledby="services-cta-heading">
           <div className="container gr-final-cta-inner" data-reveal>
             <p className="eyebrow">Ready when you are</p>
@@ -170,7 +185,8 @@ export default function ServicesPage() {
           </div>
         </aside>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
-      </main>
+        </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );

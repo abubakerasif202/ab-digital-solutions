@@ -15,6 +15,7 @@ import "./editorial.css";
 import "./gilt-ruby.css";
 import "./compositions.css";
 import "./studio-premium.css";
+import "./media-motion.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),

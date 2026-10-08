@@ -1,20 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type CSSProperties } from "react";
+import { useRef, useState, ViewTransition, type CSSProperties } from "react";
 import { flushSync } from "react-dom";
 import { ProjectArtwork, projectArtworkRatio } from "../project-artwork";
-import { formatCategory, isSoftwareProject, projects, sectors, type Project } from "../project-data";
+import { formatCategory, isSoftwareProject, projectStatusLabel, projects, sectors, type Project } from "../project-data";
 import { ArrowIcon } from "../icons";
 
 const ALL_SECTORS = "All work";
 
 type ViewTransitionDocument = Document & {
-  startViewTransition?: (callback: () => void) => void;
+  startViewTransition?: (callback: () => void) => { finished: Promise<void> };
 };
 
+/* Each card's transition name lives in a custom property and is only applied
+   while a filter change animates (.is-filtering), so route navigations are
+   not split into fourteen separately fading card groups. */
 interface CardMotionStyle extends CSSProperties {
-  viewTransitionName?: string;
+  "--vt-card"?: string;
 }
 
 type BlockType = "feature" | "split" | "split-reverse" | "pair" | "system";
@@ -57,13 +60,17 @@ export function WorkIndexBody() {
     ? projects
     : projects.filter((project) => project.sector === filter);
   const blocks = composeBlocks(visibleProjects);
+  const listRef = useRef<HTMLElement>(null);
 
   const handleFilterChange = (nextFilter: string) => {
     if (nextFilter === filter) return;
     const doc = document as ViewTransitionDocument;
     if (typeof doc.startViewTransition === "function"
       && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      doc.startViewTransition(() => flushSync(() => setFilter(nextFilter)));
+      const list = listRef.current;
+      list?.classList.add("is-filtering");
+      const transition = doc.startViewTransition(() => flushSync(() => setFilter(nextFilter)));
+      transition.finished.finally(() => list?.classList.remove("is-filtering"));
     } else {
       setFilter(nextFilter);
     }
@@ -115,7 +122,7 @@ export function WorkIndexBody() {
         </div>
       </div>
 
-      <section className="gr-wi-list" aria-label="Project index">
+      <section className="gr-wi-list" aria-label="Project index" ref={listRef}>
         <div className="container">
           <p className="sr-only" aria-live="polite">
             Showing {visibleProjects.length} of {projects.length} projects
@@ -135,7 +142,7 @@ export function WorkIndexBody() {
 
 function WorkIndexCard({ project, type }: { project: Project; type: BlockType }) {
   const number = String(projects.findIndex((p) => p.slug === project.slug) + 1).padStart(2, "0");
-  const cardStyle: CardMotionStyle = { viewTransitionName: `work-card-${project.slug}` };
+  const cardStyle: CardMotionStyle = { "--vt-card": `work-card-${project.slug}` };
   const sizes = type === "feature" || type === "system"
     ? "(max-width: 960px) 100vw, 1440px"
     : type === "pair"
@@ -147,11 +154,13 @@ function WorkIndexCard({ project, type }: { project: Project; type: BlockType })
       <Link className="gr-wi-link" href={`/work/${project.slug}`} aria-label={`View ${project.name} case study`}>
         <div className="gr-wi-media gr-wi-media--framed">
           <div className="gr-browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
-          <div className="gr-wi-image" style={{ aspectRatio: projectArtworkRatio(project) }}>
-            <ProjectArtwork project={project} sizes={sizes} priority={type === "feature"} />
-          </div>
+          <ViewTransition name={`project-${project.slug}`} share="gr-morph" default="none">
+            <div className="gr-wi-image" style={{ aspectRatio: projectArtworkRatio(project) }}>
+              <ProjectArtwork project={project} sizes={sizes} priority={type === "feature"} />
+            </div>
+          </ViewTransition>
           <span className="live-label">
-            <i /> {isSoftwareProject(project) ? "Live system" : "Live website"}
+            <i /> {projectStatusLabel(project)}
           </span>
         </div>
         <div className="gr-wi-meta">

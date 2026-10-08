@@ -62,7 +62,7 @@ test("every project ships a real preview image and routes visitors through a cas
     read("../app/work/[slug]/page.tsx"),
   ]);
 
-  const imageNames = [...projects.matchAll(/\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
+  const imageNames = [...projects.matchAll(/\n    image: `\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
   assert.equal(imageNames.length, [...projects.matchAll(/slug: "/g)].length);
   assert.ok(imageNames.includes("ab-portfolio-jufaja-homes.webp"));
   assert.ok(imageNames.includes("ab-portfolio-adelaide-wholesale-tyres.webp"));
@@ -154,13 +154,16 @@ test("project count copy is derived from the canonical registry", async () => {
     read("../app/agency-home.tsx"),
     read("../app/components/WorkIndexBody.tsx"),
   ]);
-  assert.match(homepage, /Explore \{projects\.length\} live digital projects/);
+  // Counts are "digital projects", not "live": an offline client site still has a case study.
+  assert.match(homepage, /Explore \{projects\.length\} digital projects/);
   assert.match(homepage, /\{projects\.length\} responsive websites and custom software projects/);
-  assert.match(homepage, /isSoftwareProject\(project\) \? "Live system" : "Live website"/);
-  assert.match(homepage, /\{projects\.length\} live digital project case studies/);
+  assert.match(homepage, /\{projectStatusLabel\(project\)\}/);
+  assert.match(homepage, /\{projects\.length\} digital project case studies/);
   assert.match(workIndexBody, /\{projects\.length\} projects/);
-  assert.match(workIndexBody, /isSoftwareProject\(project\) \? "Live system" : "Live website"/);
-  assert.match(await read("../app/project-data.ts"), /project\.kind === "software"/);
+  assert.match(workIndexBody, /\{projectStatusLabel\(project\)\}/);
+  const registry = await read("../app/project-data.ts");
+  assert.match(registry, /project\.kind === "software"/);
+  assert.match(registry, /isSoftwareProject\(project\) \? "Live system" : "Live website"/);
   assert.match(await read("../app/work/[slug]/page.tsx"), /project\.ctaLabel \?\? "View Live Website"/);
   assert.doesNotMatch(homepage, /\b(?:seven|eight)\b/i);
   assert.doesNotMatch(await read("../app/globals.css"), /grid-template-columns: repeat\(6, 1fr\)/);

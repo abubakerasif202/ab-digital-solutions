@@ -6,6 +6,7 @@ import { ArrowIcon, Glyph } from "../icons";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { siteConfig } from "../site-config";
+import { PageTransition } from "../components/motion/PageTransition";
 
 const description =
   "Start a project with AB Web Studio. Tell us what you are building and where you want the business to go — we will come back with a practical next step.";
@@ -57,7 +58,8 @@ export default function ContactPage() {
   return (
     <>
       <SiteHeader />
-      <main className="content-page gr-contact" id="main-content">
+      <PageTransition>
+        <main className="content-page gr-contact" id="main-content">
         <section className="container gr-contact-layout contact-section" id="contact" aria-labelledby="contact-heading">
           <div className="gr-contact-copy">
             <nav className="content-breadcrumb" aria-label="Breadcrumb">
@@ -104,7 +106,8 @@ export default function ContactPage() {
         </section>
 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
-      </main>
+        </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );

@@ -16,6 +16,11 @@ export type Project = {
   keyFeatures: readonly string[];
   techStack: readonly string[];
   kind?: "software";
+  /** Phone-size capture of the live site (390×844 @2x), when one exists. */
+  mobileImage?: string;
+  /** Set when the client's site is not currently reachable: the case study
+      stays, but nothing labels it live or links visitors to the dead URL. */
+  offline?: true;
   ctaLabel?: string;
   seoTitle?: string;
   seoDescription?: string;
@@ -35,6 +40,7 @@ export const projects = [
     url: "https://jufaja-homes-platform.vercel.app/",
     displayUrl: "jufaja-homes-platform.vercel.app",
     image: `${assetBase}/ab-portfolio-jufaja-homes.webp`,
+    mobileImage: `${assetBase}/ab-portfolio-jufaja-homes-mobile.webp`,
     alt: "Jufaja Constructions homepage with forest-green and gold branding, home design navigation and illustrative architecture",
     tags: ["Website Design", "UI/UX", "Frontend Development", "Responsive Development"],
     keyFeatures: [
@@ -61,6 +67,7 @@ export const projects = [
     url: "https://www.aftabandsons.com.au/",
     displayUrl: "aftabandsons.com.au",
     image: `${assetBase}/ab-portfolio-aftab-sons-transport.webp`,
+    mobileImage: `${assetBase}/ab-portfolio-aftab-sons-transport-mobile.webp`,
     alt: "Aftab & Sons Transport website homepage with a branded B-double truck convoy",
     tags: ["Responsive Web Design", "Motion Design", "Transport & Logistics"],
     keyFeatures: [
@@ -85,6 +92,7 @@ export const projects = [
     url: "https://247trucktyreservices.store/",
     displayUrl: "247trucktyreservices.store",
     image: `${assetBase}/ab-portfolio-247-inventory-system.webp`,
+    mobileImage: `${assetBase}/ab-portfolio-247-inventory-system-mobile.webp`,
     alt: "247 Inventory System secure staff sign-in screen for inventory and purchasing operations",
     tags: ["Inventory Management", "Sales & Invoicing", "Business Software"],
     keyFeatures: [
@@ -111,6 +119,7 @@ export const projects = [
     url: "https://adelaidewholesaletyres.com.au/",
     displayUrl: "adelaidewholesaletyres.com.au",
     image: `${assetBase}/ab-portfolio-adelaide-wholesale-tyres.webp`,
+    mobileImage: `${assetBase}/ab-portfolio-adelaide-wholesale-tyres-mobile.webp`,
     alt: "Adelaide Wholesale Tyres wholesale tyre e-commerce website homepage designed by AB Web Studio",
     tags: ["Wholesale E-Commerce", "Tyre Catalogue", "Fleet Purchasing"],
     keyFeatures: [
@@ -135,6 +144,7 @@ export const projects = [
     url: "https://www.247trucktyreservices.com.au/",
     displayUrl: "247trucktyreservices.com.au",
     image: `${assetBase}/ab-portfolio-247-truck-tyre-services.jpg`,
+    mobileImage: `${assetBase}/ab-portfolio-247-truck-tyre-services-mobile.webp`,
     alt: "24/7 Truck Tyre Services website designed by AB Web Studio",
     tags: ["Emergency UX", "Automotive SEO", "Commercial Services"],
     keyFeatures: [
@@ -158,6 +168,7 @@ export const projects = [
     url: "https://www.maplerentals.com.au/",
     displayUrl: "maplerentals.com.au",
     image: `${assetBase}/ab-portfolio-maple-rentals.jpg`,
+    mobileImage: `${assetBase}/ab-portfolio-maple-rentals-mobile.webp`,
     alt: "Maple Rentals website homepage preview",
     tags: ["UX Design", "Booking Journey", "Mobile Optimised"],
     keyFeatures: [
@@ -181,6 +192,8 @@ export const projects = [
     url: "https://www.galarentals.com.au/",
     displayUrl: "galarentals.com.au",
     image: `${assetBase}/ab-portfolio-gala-rentals.jpg`,
+    // galarentals.com.au returned "Service Suspended" on 2026-10-08.
+    offline: true,
     alt: "Gala Rentals website homepage preview",
     tags: ["Web Architecture", "Vehicle Showcase", "Local SEO"],
     keyFeatures: [
@@ -204,6 +217,7 @@ export const projects = [
     url: "https://zqremovals.au/",
     displayUrl: "zqremovals.au",
     image: `${assetBase}/ab-portfolio-zq-removals.jpg`,
+    mobileImage: `${assetBase}/ab-portfolio-zq-removals-mobile.webp`,
     alt: "ZQ Removals website homepage preview",
     tags: ["Lead Conversion", "Local Service SEO", "Fast Touch-UI"],
     keyFeatures: [
@@ -227,6 +241,7 @@ export const projects = [
     url: "https://www.decentdevelopment.com.au/",
     displayUrl: "decentdevelopment.com.au",
     image: `${assetBase}/ab-portfolio-decent-development.jpg`,
+    mobileImage: `${assetBase}/ab-portfolio-decent-development-mobile.webp`,
     alt: "DECENT Development website homepage preview",
     tags: ["Brand Direction", "Portfolio Gallery", "Performance"],
     keyFeatures: [
@@ -250,6 +265,7 @@ export const projects = [
     url: "https://milestonedevelopment.com.au/",
     displayUrl: "milestonedevelopment.com.au",
     image: `${assetBase}/ab-portfolio-milestone-development.jpg`,
+    mobileImage: `${assetBase}/ab-portfolio-milestone-development-mobile.webp`,
     alt: "Milestone Development website homepage preview",
     tags: ["Project Showcase", "Responsive Design", "SEO Structure"],
     keyFeatures: [
@@ -273,6 +289,7 @@ export const projects = [
     url: "https://4point-concrete-website.vercel.app/",
     displayUrl: "4point-concrete-website.vercel.app",
     image: `${assetBase}/ab-portfolio-four-point-concrete.jpg`,
+    mobileImage: `${assetBase}/ab-portfolio-4-point-concrete-mobile.webp`,
     alt: "4 Point Concrete website homepage preview",
     tags: ["Capability Deck", "Civil Services", "Mobile UX"],
     keyFeatures: [
@@ -297,6 +314,7 @@ export const projects = [
     url: "https://www.1stclassexpress.com.au/",
     displayUrl: "1stclassexpress.com.au",
     image: `${assetBase}/ab-portfolio-1st-class-express.jpg`,
+    mobileImage: `${assetBase}/ab-portfolio-1st-class-express-mobile.webp`,
     alt: "1st Class Express transport and logistics website homepage preview",
     tags: ["Freight Positioning", "Fleet Showcase", "Quote Engine"],
     keyFeatures: [
@@ -321,6 +339,7 @@ export const projects = [
     url: "https://www.hfremovalsadelaide.com/",
     displayUrl: "hfremovalsadelaide.com",
     image: `${assetBase}/ab-portfolio-hf-removals.jpg`,
+    mobileImage: `${assetBase}/ab-portfolio-hf-removals-adelaide-mobile.webp`,
     alt: "HF Removals Adelaide website homepage preview",
     tags: ["Quote Conversion", "Local Service SEO", "Rate Transparency"],
     keyFeatures: [
@@ -345,6 +364,7 @@ export const projects = [
     url: "https://www.cheapadelaideremovalist.com.au/",
     displayUrl: "cheapadelaideremovalist.com.au",
     image: `${assetBase}/ab-portfolio-cheap-adelaide-removalist.png`,
+    mobileImage: `${assetBase}/ab-portfolio-cheap-adelaide-removalist-mobile.webp`,
     alt: "Cheap Adelaide Removalist website homepage showing published moving rates and a branded removals truck",
     tags: ["Local SEO Architecture", "Quote Conversion", "Transparent Pricing UX"],
     keyFeatures: [
@@ -365,6 +385,16 @@ export function findProject(slug: string): Project | undefined {
 
 export function isSoftwareProject(project: Project): boolean {
   return project.kind === "software";
+}
+
+export function isLiveProject(project: Project): boolean {
+  return !project.offline;
+}
+
+/** The status label shown on cards: never "live" for an offline site. */
+export function projectStatusLabel(project: Project): string {
+  if (project.offline) return "Case study";
+  return isSoftwareProject(project) ? "Live system" : "Live website";
 }
 
 /** Editorial label form of a category: "Mobility / Car rentals" → "Mobility · Car rentals". */

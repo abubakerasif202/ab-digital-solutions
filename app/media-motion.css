@@ -1,0 +1,116 @@
+/* Media & motion layer (Gilt & Ruby) ----------------------------------------
+   Loaded last. One easing (--ease-studio, expo-out); movement 500–700ms,
+   reveals 1000–1600ms. Everything here collapses to static under
+   prefers-reduced-motion — content is never hidden behind motion. */
+
+/* Device composition: desktop + phone captures --------------------------- */
+.gr-devices {
+  position: relative;
+  padding-bottom: clamp(56px, 9vw, 140px);
+}
+
+.gr-devices-desktop {
+  position: relative;
+  overflow: hidden;
+  width: min(100%, 1180px);
+  background: var(--panel);
+  box-shadow: 0 30px 80px #0009;
+}
+
+.gr-devices-desktop img { object-fit: cover; object-position: left top; transition: scale 1400ms var(--ease-studio); }
+.gr-devices:hover .gr-devices-desktop img { scale: 1.04; }
+
+.gr-devices-phone {
+  position: absolute;
+  right: clamp(0px, 2vw, 32px);
+  bottom: 0;
+  z-index: 2;
+  width: clamp(150px, 24vw, 300px);
+  margin: 0;
+  border: 1px solid var(--line-strong);
+  background: var(--ink);
+  box-shadow: 0 34px 70px #000b, 0 0 0 1px #0006;
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+}
+
+.gr-devices-phone-bar {
+  display: flex;
+  justify-content: center;
+  padding: 7px 0 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* A hairline speaker slot — the only device detail; corners stay square. */
+.gr-devices-phone-bar i { display: block; width: 34%; height: 3px; background: var(--line-strong); }
+
+.gr-devices-phone img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 780 / 1688;
+}
+
+@media (max-width: 640px) {
+  .gr-devices { padding-bottom: 72px; }
+  .gr-devices-phone { width: 36%; right: 4px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .gr-devices-phone {
+      animation: gr-device-float linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 60%;
+    }
+  }
+}
+
+@keyframes gr-device-float {
+  from { transform: translateY(72px); }
+  to { transform: translateY(-36px); }
+}
+
+/* Route transitions ----------------------------------------------------------
+   Next.js navigations run inside React transitions, so the root
+   <ViewTransition> in layout.tsx animates every route change. The header
+   is pinned (its own name, no animation) so the chrome stays still while the
+   page underneath crossfades with a short rise. */
+.site-header { view-transition-name: site-header; }
+::view-transition-group(site-header) { animation: none; }
+::view-transition-old(site-header),
+::view-transition-new(site-header) { animation: none; }
+
+::view-transition-old(.gr-page) {
+  animation: gr-page-out 260ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+::view-transition-new(.gr-page) {
+  animation: gr-page-in 620ms var(--ease-studio) 80ms both;
+}
+
+@keyframes gr-page-out { to { opacity: 0; transform: translateY(-12px); } }
+@keyframes gr-page-in { from { opacity: 0; transform: translateY(28px); } }
+
+/* Shared-element morph: work index card → case-study hero image. */
+::view-transition-group(.gr-morph) { animation-duration: 640ms; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+::view-transition-image-pair(.gr-morph) { animation-name: gr-via-blur; }
+@keyframes gr-via-blur { 35% { filter: blur(3px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+  .gr-devices-desktop img { transition: none; }
+  .gr-devices:hover .gr-devices-desktop img { scale: none; }
+}
+
+/* Count-up figures ---------------------------------------------------------- */
+.gr-count { font-variant-numeric: tabular-nums; }
+
+/* Work index filter: card names apply only while a filter change animates. */
+.gr-wi-list.is-filtering .gr-wi-card { view-transition-name: var(--vt-card); }
+
+/* Homepage portfolio aside: two stacked links. */
+.gr-section-head-aside .section-heading-link + .section-heading-link { margin-left: 28px; }
+
+/* Services index: industry chips sit on the Noir ground before the CTA. */
+.gr-svc-industries { padding-top: clamp(72px, 8vw, 120px); background: var(--ink); }

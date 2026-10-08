@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { siteConfig } from "../site-config";
+import { PageTransition } from "../components/motion/PageTransition";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -14,7 +15,8 @@ export default function PrivacyPage() {
   return (
     <>
       <SiteHeader />
-      <main className="content-page legal-page" id="main-content">
+      <PageTransition>
+        <main className="content-page legal-page" id="main-content">
         <div className="container content-shell">
           <p className="eyebrow">Privacy / Australia</p>
           <h1>Privacy policy</h1>
@@ -25,7 +27,8 @@ export default function PrivacyPage() {
           <section><h2>Contact</h2><p>For a privacy question, email <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a> or call <a href={`tel:${siteConfig.phoneInternational}`}>{siteConfig.phoneDisplay}</a>.</p></section>
           <Link className="button button-ghost" href="/">Back to home</Link>
         </div>
-      </main>
+        </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );

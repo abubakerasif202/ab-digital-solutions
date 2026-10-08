@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ViewTransition } from "react";
+import { DeviceShowcase } from "../../components/DeviceShowcase";
+import { industryForProject } from "../../industries/industry-data";
 import { ProjectArtwork, projectArtworkRatio } from "../../project-artwork";
-import { findProject, formatCategory, isSoftwareProject, projects } from "../../project-data";
+import { findProject, formatCategory, isLiveProject, isSoftwareProject, projects } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
 import { siteConfig } from "../../site-config";
 import { ArrowIcon } from "../../icons";
+import { PageTransition } from "../../components/motion/PageTransition";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -53,6 +57,8 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
   const project = findProject((await params).slug);
   if (!project) notFound();
   const softwareProject = isSoftwareProject(project);
+  const live = isLiveProject(project);
+  const industry = industryForProject(project.slug);
 
   const currentIndex = projects.findIndex((p) => p.slug === project.slug);
   const nextProject = projects[(currentIndex + 1) % projects.length];
@@ -67,6 +73,8 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
         description: project.description,
         url: `${siteConfig.url}/work/${project.slug}`,
         author: { "@id": `${siteConfig.url}/#organization` },
+        image: `${siteConfig.url}${project.image}`,
+        ...(industry ? { isPartOf: { "@type": "CollectionPage", url: `${siteConfig.url}/industries/${industry.slug}`, name: industry.title } } : {}),
       },
       {
         "@type": "BreadcrumbList",
@@ -96,7 +104,8 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className={`content-page case-study-page gr-cs gr-cs--${variant}`} id="main-content">
+      <PageTransition>
+        <main className={`content-page case-study-page gr-cs gr-cs--${variant}`} id="main-content">
         <header className="container gr-cs-hero">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -112,34 +121,54 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
               <h1>{project.name}</h1>
               <p className="content-lead">{project.description}</p>
               <div className="content-actions">
-                <a
-                  className="button button-primary"
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-cursor="VISIT"
-                  data-magnetic
-                  aria-label={visitLabel}
-                >
-                  {project.ctaLabel ?? "View Live Website"} <ArrowIcon />
-                </a>
-                <Link className="button button-ghost" href="/contact" data-magnetic>
-                  Start a Project <ArrowIcon />
-                </Link>
+                {live ? (
+                  <>
+                    <a
+                      className="button button-primary"
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-cursor="VISIT"
+                      data-magnetic
+                      aria-label={visitLabel}
+                    >
+                      {project.ctaLabel ?? "View Live Website"} <ArrowIcon />
+                    </a>
+                    <Link className="button button-ghost" href="/contact" data-magnetic>
+                      Start a Project <ArrowIcon />
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link className="button button-primary" href="/contact" data-magnetic>
+                      Start a Project <ArrowIcon />
+                    </Link>
+                    <Link className="button button-ghost" href="/work" data-magnetic>
+                      View All Work <ArrowIcon />
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
             <span className="gr-number gr-cs-number" aria-hidden="true">{number}</span>
           </div>
 
           <div className="case-study-meta gr-cs-meta" data-reveal>
-            <div><span>Sector</span><strong>{project.sector}</strong></div>
+            <div>
+              <span>Sector</span>
+              {industry ? (
+                <Link href={`/industries/${industry.slug}`}>{project.sector} <ArrowIcon /></Link>
+              ) : <strong>{project.sector}</strong>}
+            </div>
             <div><span>Category</span><strong>{formatCategory(project.category)}</strong></div>
             <div><span>Stack</span><strong>{project.techStack.join(" · ")}</strong></div>
             <div>
-              <span>{softwareProject ? "Production URL" : "Live at"}</span>
-              <a href={project.url} target="_blank" rel="noopener noreferrer" data-cursor="VISIT" aria-label={visitLabel}>
-                {project.displayUrl} <ArrowIcon />
-              </a>
+              <span>{live ? (softwareProject ? "Production URL" : "Live at") : "Site status"}</span>
+              {live ? (
+                <a href={project.url} target="_blank" rel="noopener noreferrer" data-cursor="VISIT" aria-label={visitLabel}>
+                  {project.displayUrl} <ArrowIcon />
+                </a>
+              ) : <strong>Currently offline</strong>}
             </div>
           </div>
         </header>
@@ -151,9 +180,11 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 <i /><i /><i />
                 <span>{project.displayUrl}</span>
               </div>
-              <div className="case-study-hero-image" style={{ aspectRatio: projectArtworkRatio(project) }}>
-                <ProjectArtwork project={project} priority sizes="(max-width: 1040px) 100vw, 1440px" />
-              </div>
+              <ViewTransition name={`project-${project.slug}`} share="gr-morph" default="none">
+                <div className="case-study-hero-image" style={{ aspectRatio: projectArtworkRatio(project) }}>
+                  <ProjectArtwork project={project} priority sizes="(max-width: 1040px) 100vw, 1440px" />
+                </div>
+              </ViewTransition>
             </div>
           </div>
         </div>
@@ -202,13 +233,21 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             <p className="eyebrow">04 / A closer look</p>
             <h2 id="visual-showcase-heading">{softwareProject ? "The public staff-access experience." : `${project.name}, on screen.`}</h2>
           </div>
-          <div className="gr-cs-pan gr-cut-lg" style={{ aspectRatio: projectArtworkRatio(project) }} data-reveal>
-            <ProjectArtwork project={project} sizes="(max-width: 860px) 100vw, 1440px" />
-          </div>
-          <p className="gr-cs-pan-caption">{softwareProject ? "Public sign-in capture only. Internal records remain private." : `Desktop homepage capture · ${project.displayUrl}`}</p>
+          {project.mobileImage ? (
+            <DeviceShowcase project={project} />
+          ) : (
+            <div className="gr-cs-pan gr-cut-lg" style={{ aspectRatio: projectArtworkRatio(project) }} data-reveal>
+              <ProjectArtwork project={project} sizes="(max-width: 860px) 100vw, 1440px" />
+            </div>
+          )}
+          <p className="gr-cs-pan-caption">
+            {softwareProject
+              ? "Public sign-in captures only. Internal records remain private."
+              : `${project.mobileImage ? "Desktop and mobile homepage captures" : "Desktop homepage capture"} · ${project.displayUrl}`}
+          </p>
         </section>
 
-        <section className="gr-cs-live" aria-labelledby="live-proof-heading">
+        {live && <section className="gr-cs-live" aria-labelledby="live-proof-heading">
           <div className="container gr-cs-live-inner" data-reveal>
             <div>
               <p className="eyebrow">Live digital experience</p>
@@ -231,7 +270,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
               {project.ctaLabel ?? "Visit Live Website"} <ArrowIcon />
             </a>
           </div>
-        </section>
+        </section>}
 
         <nav className="next-project-nav gr-cs-next" aria-label="Next Project">
           <Link className="gr-cs-next-link" href={`/work/${nextProject.slug}`} data-cursor="VIEW">
@@ -266,7 +305,8 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
         />
-      </main>
+        </main>
+      </PageTransition>
       <SiteFooter currentYear={currentYear} />
     </>
   );

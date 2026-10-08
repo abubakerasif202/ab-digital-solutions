@@ -2,14 +2,16 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "./site-config";
 import { servicePages } from "./services/service-data";
 import { projects } from "./project-data";
+import { industries } from "./industries/industry-data";
 
 // Static content-change dates (never the current build time, which would make
 // every build differ). Bump the relevant constant when that content actually changes.
 const HOME_LAST_MODIFIED = "2026-10-07";
-const WORK_LAST_MODIFIED = "2026-10-07";
+const WORK_LAST_MODIFIED = "2026-10-08";
 const SERVICES_LAST_MODIFIED = "2026-09-23";
 const PRIVACY_LAST_MODIFIED = "2026-08-05";
 const STUDIO_LAST_MODIFIED = "2026-10-07";
+const INDUSTRIES_LAST_MODIFIED = "2026-10-08";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -42,6 +44,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: SERVICES_LAST_MODIFIED,
       changeFrequency: "monthly" as const,
       priority: 0.8,
+    })),
+    {
+      url: `${siteConfig.url}/industries`,
+      lastModified: INDUSTRIES_LAST_MODIFIED,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    ...industries.map(({ slug }) => ({
+      url: `${siteConfig.url}/industries/${slug}`,
+      lastModified: INDUSTRIES_LAST_MODIFIED,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
     })),
     {
       url: `${siteConfig.url}/about`,
