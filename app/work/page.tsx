@@ -5,11 +5,12 @@ import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { siteConfig } from "../site-config";
 import { ArrowIcon } from "../icons";
+import { PageTransition } from "../components/motion/PageTransition";
 
 export const metadata: Metadata = {
   title: "Our Work & Case Studies",
   description:
-    "Explore our portfolio of strategy-led, high-converting websites built for Australian mobility, logistics, construction and local service businesses.",
+    "Explore our portfolio of strategy-led websites and custom software built for Australian mobility, logistics, construction and local service businesses.",
   alternates: { canonical: "/work" },
   openGraph: {
     title: `Our Work & Case Studies | ${siteConfig.name}`,
@@ -64,7 +65,8 @@ export default function WorkPage() {
   return (
     <>
       <SiteHeader />
-      <main className="work-index-page" id="main-content">
+      <PageTransition>
+        <main className="work-index-page" id="main-content">
         <WorkIndexBody />
 
         <aside className="gr-final-cta gr-final-cta--work" aria-labelledby="work-cta-heading">
@@ -90,7 +92,8 @@ export default function WorkPage() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
         />
-      </main>
+        </main>
+      </PageTransition>
       <SiteFooter currentYear={currentYear} />
     </>
   );

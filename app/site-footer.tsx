@@ -42,6 +42,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
           <div>
             <Link href="/work">Case studies &amp; work</Link>
             <Link href="/services">Services</Link>
+            <Link href="/industries">Industries</Link>
             <Link href="/#process">Process</Link>
             <Link href="/about">About</Link>
             <Link href="/contact">Contact</Link>

@@ -7,6 +7,7 @@ import { findProject, projects, type Project } from "../project-data";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { siteConfig } from "../site-config";
+import { PageTransition } from "../components/motion/PageTransition";
 
 const description =
   "AB Web Studio is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.";
@@ -74,7 +75,8 @@ export default function AboutPage() {
   return (
     <>
       <SiteHeader />
-      <main className="content-page gr-about" id="main-content">
+      <PageTransition>
+        <main className="content-page gr-about" id="main-content">
         <header className="container gr-about-hero">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -99,7 +101,7 @@ export default function AboutPage() {
               <dl className="gr-about-facts">
                 <div><dt>Founder</dt><dd>Abubakar Asif<span>Founder &amp; Lead Developer</span></dd></div>
                 <div><dt>Based in</dt><dd>Sydney, Australia<span>Working Australia-wide</span></dd></div>
-                <div><dt>Portfolio</dt><dd>{projects.length} live projects<span>Websites, e-commerce and custom software</span></dd></div>
+                <div><dt>Portfolio</dt><dd>{projects.length} client projects<span>Websites, e-commerce and custom software</span></dd></div>
               </dl>
               <p className="gr-about-quote">
                 Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking.
@@ -179,7 +181,8 @@ export default function AboutPage() {
         </aside>
 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
-      </main>
+        </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );

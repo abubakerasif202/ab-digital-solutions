@@ -8,6 +8,7 @@ import { SiteFooter } from "../../site-footer";
 import { findService, servicePages, serviceDelivery } from "../service-data";
 import { siteConfig } from "../../site-config";
 import { ArrowIcon } from "../../icons";
+import { PageTransition } from "../../components/motion/PageTransition";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -113,7 +114,8 @@ export default async function ServicePage({ params }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="content-page service-page" id="main-content">
+      <PageTransition>
+        <main className="content-page service-page" id="main-content">
         <div className="container content-shell">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -245,7 +247,8 @@ export default async function ServicePage({ params }: Props) {
           </section>
         </div>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
-      </main>
+        </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );

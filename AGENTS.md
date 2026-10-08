@@ -4,6 +4,8 @@
 
 - `app/` is the live Next.js App Router source: routes, shared UI, metadata, API handlers, and site configuration.
 - `app/project-data.ts` is the canonical portfolio registry; `app/services/service-data.ts` drives service pages and sitemap entries.
+- `app/industries/industry-data.ts` groups every registry project into exactly one industry page. Industry copy must stay grounded in published project data — no statistics, testimonials or claims.
+- A project's `offline` flag (set when its client site is unreachable) removes every "live" label and outbound link; remove the flag once the site is back. `mobileImage` holds a real phone-size capture of the live site.
 - `public/` contains public assets and icons; `public/site/ab-digital-premium/assets/` holds the live brand and portfolio imagery (legacy concept files retired; their URLs redirect to `/`).
 - `tests/` contains Node test files; `scripts/` contains portable test, environment, and typecheck helpers.
 - The production deployment target is Vercel/Next.js; the former Cloudflare/vinext toolchain (`worker/`, `db/`, `drizzle/`, `examples/`, `build/`) has been retired.

@@ -14,6 +14,7 @@ import { StudioCapabilities } from "./components/StudioCapabilities";
 import { ABBrandImage } from "./components/brand/ABBrandImage";
 import { ProcessTimeline } from "./components/motion/ProcessTimeline";
 import { Reveal } from "./components/motion/Reveal";
+import { PageTransition } from "./components/motion/PageTransition";
 
 const services = [
   {
@@ -93,7 +94,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
     <>
       <SiteHeader />
 
-      <main id="main-content" className="cinematic-home">
+      <PageTransition>
+        <main id="main-content" className="cinematic-home">
         <section className="hero" aria-labelledby="hero-heading">
           <Hero3DExperience />
           <div className="container hero-layout">
@@ -127,7 +129,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   <li>DECENT Development</li>
                   <li>247 Inventory System</li>
                 </ul>
-                <a href="#work">Explore {projects.length} live digital projects <ArrowIcon direction="down-right" /></a>
+                <a href="#work">Explore {projects.length} digital projects <ArrowIcon direction="down-right" /></a>
               </div>
             </div>
 
@@ -245,7 +247,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <Reveal className="studio-trust" variant="blur" role="group" aria-label="Studio details">
                 <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
                 <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>
-                <p><strong>Real project portfolio</strong><span>{projects.length} live digital project case studies</span></p>
+                <p><strong>Real project portfolio</strong><span>{projects.length} digital project case studies</span></p>
               </Reveal>
               <Reveal as="p" variant="blur">We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</Reveal>
               <Reveal as="p" variant="blur" delay={90}>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</Reveal>
@@ -279,7 +281,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             <ContactForm />
           </div>
         </section>
-      </main>
+        </main>
+      </PageTransition>
 
       <SiteFooter currentYear={currentYear} />
     </>
