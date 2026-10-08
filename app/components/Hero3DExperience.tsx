@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HeroFallback } from "./HeroFallback";
 
 const Hero3DCanvas = dynamic(
@@ -15,9 +15,12 @@ const Hero3DCanvas = dynamic(
 type Hero3DMode = "fallback" | "mobile" | "tablet" | "desktop";
 
 export function Hero3DExperience() {
+  const stageRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<Hero3DMode>("fallback");
 
   useEffect(() => {
+    const stage = stageRef.current?.parentElement;
+    if (!stage) return;
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     // Phones skip WebGL entirely: the inline SVG fallback avoids a GPU context and
     // keeps mobile LCP/INP clean.
@@ -33,9 +36,12 @@ export function Hero3DExperience() {
       cancelIdleCallback?: (id: number) => void;
     };
     let ready = false;
+    let hasIntent = false;
+    let stageVisible = false;
+    let activated = false;
 
     const updateMode = () => {
-      if (!ready || motionQuery.matches || mobileQuery.matches || coarseQuery.matches || connection?.saveData) {
+      if (!ready || !hasIntent || (!activated && (!stageVisible || document.hidden)) || motionQuery.matches || mobileQuery.matches || coarseQuery.matches || connection?.saveData) {
         setMode("fallback");
         return;
       }
@@ -46,11 +52,29 @@ export function Hero3DExperience() {
       if (constrainedDevice) {
         setMode("fallback");
       } else if (tabletQuery.matches) {
+        activated = true;
         setMode("tablet");
       } else {
+        activated = true;
         setMode("desktop");
       }
     };
+
+    // Keep the first paint entirely static. Entering the installation expresses
+    // intent to explore it; the expensive GPU setup then runs after input yields.
+    const handlePointerIntent = (event: PointerEvent) => {
+      if (hasIntent || motionQuery.matches || mobileQuery.matches || coarseQuery.matches) return;
+      if (!(event.target instanceof Node) || !stage.contains(event.target)) return;
+      hasIntent = true;
+      updateMode();
+    };
+    const stageObserver = new IntersectionObserver(([entry]) => {
+      stageVisible = entry.isIntersecting;
+      updateMode();
+    }, { threshold: 0.01 });
+    stageObserver.observe(stage);
+    window.addEventListener("pointermove", handlePointerIntent, { passive: true });
+    document.addEventListener("visibilitychange", updateMode);
 
     const enable3D = () => {
       ready = true;
@@ -74,6 +98,9 @@ export function Hero3DExperience() {
 
     return () => {
       cancelDelay();
+      stageObserver.disconnect();
+      window.removeEventListener("pointermove", handlePointerIntent);
+      document.removeEventListener("visibilitychange", updateMode);
       motionQuery.removeEventListener("change", updateMode);
       mobileQuery.removeEventListener("change", updateMode);
       tabletQuery.removeEventListener("change", updateMode);
@@ -83,7 +110,7 @@ export function Hero3DExperience() {
   }, []);
 
   return (
-    <div className="hero-3d-bg-wrap" aria-hidden="true">
+    <div ref={stageRef} className="hero-3d-bg-wrap" aria-hidden="true">
       {mode === "fallback" ? <HeroFallback /> : <Hero3DCanvas quality={mode} />}
     </div>
   );

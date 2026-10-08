@@ -55,6 +55,10 @@
   background: radial-gradient(ellipse at var(--pointer-x, 55%) var(--pointer-y, 40%), #a8e8f50c, transparent 65%);
 }
 .signal-studio .signal-art-stage .hero-3d-bg-wrap { animation: none; translate: none; opacity: 1; }
+.signal-studio .hero-3d-container > canvas { position: absolute; inset: 0; opacity: 0; transition: opacity 300ms var(--ease-lux); }
+.signal-studio .hero-3d-container > .signal-fallback { transition: opacity 300ms var(--ease-lux); }
+.signal-studio .hero-3d-container[data-render-ready="true"] > canvas { opacity: 1; }
+.signal-studio .hero-3d-container[data-render-ready="true"] > .signal-fallback { opacity: 0; }
 .signal-art-coordinate, .signal-art-caption { z-index: 3; color: #c6cddd; }
 .signal-art-coordinate { top: 30px; left: 28px; }
 .signal-art-caption { right: 24px; }

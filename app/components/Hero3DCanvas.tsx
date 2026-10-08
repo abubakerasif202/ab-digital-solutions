@@ -128,6 +128,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     // Animation & Smooth Control State
     let animationFrameId = 0;
+    let revealFrame = 0;
     let isVisible = false;
     let isRunning = false;
     let inputListenersAttached = false;
@@ -224,6 +225,14 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     const renderStaticFrame = () => {
       camera.lookAt(scene.position);
       renderer.render(scene, camera);
+      if (revealFrame || container.dataset.renderReady === "true") return;
+      // Two frames establish the SVG/canvas before-state for a real crossfade.
+      revealFrame = requestAnimationFrame(() => {
+        revealFrame = requestAnimationFrame(() => {
+          container.dataset.renderReady = "true";
+          revealFrame = 0;
+        });
+      });
     };
 
     const handleMotionChange = (event: MediaQueryListEvent) => {
@@ -273,6 +282,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       isVisible = false;
       stopLoop();
       detachInputListeners();
+      cancelAnimationFrame(revealFrame);
       setRendererFailed(true);
     };
     renderer.domElement.addEventListener("webglcontextlost", handleContextLost);
@@ -319,6 +329,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     // Cleanup
     return () => {
+      cancelAnimationFrame(revealFrame);
+      delete container.dataset.renderReady;
       stopLoop();
       detachInputListeners();
       reducedMotionQuery.removeEventListener("change", handleMotionChange);
@@ -359,6 +371,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
         pointerEvents: "none", // Prevent canvas from hijacking clicks or drag gestures
       }}
       aria-hidden="true"
-    />
+    >
+      <HeroFallback />
+    </div>
   );
 }
