@@ -43,7 +43,9 @@ export function Hero3DExperience() {
       const constrainedDevice = (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4)
         || (typeof deviceMemory === "number" && deviceMemory > 0 && deviceMemory <= 4);
 
-      if (tabletQuery.matches || constrainedDevice) {
+      if (constrainedDevice) {
+        setMode("fallback");
+      } else if (tabletQuery.matches) {
         setMode("tablet");
       } else {
         setMode("desktop");

@@ -122,7 +122,8 @@ test("premium motion remains present while mobile rendering is constrained", asy
   assert.match(homepage, /className="hero-marquee-group" aria-hidden="true"/);
   assert.match(styles, /\.hero-marquee-track\s*\{[\s\S]*?width: max-content;[\s\S]*?animation: hero-marquee-scroll 24s linear infinite;/);
   assert.match(styles, /@keyframes hero-marquee-scroll[\s\S]*?translate3d\(-50%, 0, 0\)/);
-  assert.match(experience, /tabletQuery\.matches \|\| constrainedDevice/);
+  assert.match(experience, /if \(constrainedDevice\) \{\s*setMode\("fallback"\)/);
+  assert.match(experience, /else if \(tabletQuery\.matches\)/);
   assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.25\)/);
   assert.doesNotMatch(canvas, /TorusKnotGeometry|particleCount|PointsMaterial/);
   assert.match(canvas, /createSignalGeometry/);

@@ -9,7 +9,7 @@ const panels = Array.from({ length: 96 }, (_, index) => {
     index,
     depth: corners.reduce((sum, point) => sum + point.depth, 0) / 4,
     points: corners.map((point) => `${point.x.toFixed(2)},${point.y.toFixed(2)}`).join(" "),
-    colour: light > 0 ? `rgb(${Math.round(35 + light * 20)},${Math.round(66 + light * 28)},${Math.round(195 + light * 60)})` : `rgb(${Math.round(225 + light * 48)},${Math.round(226 + light * 46)},${Math.round(218 + light * 40)})`,
+    colour: light > 0 ? `rgb(${Math.round(85 + light * 55)},${Math.round(120 + light * 85)},${Math.round(225 + light * 30)})` : `rgb(${Math.round(235 + light * 40)},${Math.round(235 + light * 45)},${Math.round(240 + light * 25)})`,
   };
 }).sort((a, b) => a.depth - b.depth);
 
@@ -23,7 +23,7 @@ export function HeroFallback() {
           <polyline key={across} points={Array.from({ length: 193 }, (_, index) => {
             const point = projectSignalPoint(index / 192 * Math.PI * 2, across);
             return `${point.x.toFixed(2)},${point.y.toFixed(2)}`;
-          }).join(" ")} stroke={Math.abs(across) === 1 ? "#101114" : "#e9e9e2"} strokeOpacity="0.28" strokeWidth="0.8" />
+          }).join(" ")} stroke={Math.abs(across) === 1 ? "#b9eeff" : "#f1d4a1"} strokeOpacity="0.45" strokeWidth="0.8" />
         ))}
       </svg>
     </div>
