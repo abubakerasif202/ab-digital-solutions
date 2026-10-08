@@ -1,0 +1,276 @@
+{
+  "baselineCommit": "faea0c0",
+  "productCommit": "90ec403694fa3a06d82861aed821d826a221422b",
+  "nodeTests": {
+    "passed": 53,
+    "failed": 0
+  },
+  "browser": {
+    "cinematic": {
+      "checks": 58,
+      "passed": 58,
+      "errors": []
+    },
+    "site": {
+      "checks": 116,
+      "passed": 116,
+      "failed": 0,
+      "projects": 14,
+      "services": 6,
+      "contactRequests": 3,
+      "errors": []
+    },
+    "viewports": [
+      320,
+      390,
+      768,
+      1440,
+      1920
+    ],
+    "forms": "Three intercepted requests; no provider delivery."
+  },
+  "lighthouse": {
+    "baseline": {
+      "mobile": {
+        "scores": {
+          "performance": 75,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "lcpMs": 3132.244,
+        "tbtMs": 760.4999999999995,
+        "cls": 0,
+        "lighthouseVersion": "13.5.0",
+        "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.7977.54 Safari/537.36",
+        "fetchTime": "2026-10-08T19:33:46.777Z",
+        "settings": {
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttling": {
+            "rttMs": 150,
+            "throughputKbps": 1638.4,
+            "requestLatencyMs": 562.5,
+            "downloadThroughputKbps": 1474.5600000000002,
+            "uploadThroughputKbps": 675,
+            "cpuSlowdownMultiplier": 4
+          },
+          "throttlingMethod": "simulate"
+        },
+        "warnings": [],
+        "consoleErrors": [
+          {
+            "source": "network",
+            "description": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://localhost:3101/_vercel/speed-insights/script.js",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 0
+            }
+          },
+          {
+            "source": "security",
+            "description": "Refused to execute script from 'http://localhost:3101/_vercel/speed-insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled.",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://localhost:3101/",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 0
+            }
+          }
+        ]
+      },
+      "desktop": {
+        "scores": {
+          "performance": 80,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "lcpMs": 755.5075,
+        "tbtMs": 452,
+        "cls": 0.0001999240505309076,
+        "lighthouseVersion": "13.5.0",
+        "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.7977.54 Safari/537.36",
+        "fetchTime": "2026-10-08T19:40:28.165Z",
+        "settings": {
+          "formFactor": "desktop",
+          "screenEmulation": {
+            "mobile": false,
+            "width": 1350,
+            "height": 940,
+            "deviceScaleFactor": 1,
+            "disabled": false
+          },
+          "throttling": {
+            "rttMs": 40,
+            "throughputKbps": 10240,
+            "requestLatencyMs": 0,
+            "downloadThroughputKbps": 0,
+            "uploadThroughputKbps": 0,
+            "cpuSlowdownMultiplier": 1
+          },
+          "throttlingMethod": "simulate"
+        },
+        "warnings": [],
+        "consoleErrors": [
+          {
+            "source": "network",
+            "description": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://localhost:3101/_vercel/speed-insights/script.js",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 0
+            }
+          },
+          {
+            "source": "security",
+            "description": "Refused to execute script from 'http://localhost:3101/_vercel/speed-insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled.",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://localhost:3101/",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 0
+            }
+          }
+        ]
+      }
+    },
+    "upgrade": {
+      "mobile": {
+        "scores": {
+          "performance": 93,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "lcpMs": 3070.3495000000003,
+        "tbtMs": 95.5,
+        "cls": 1.571920323614944e-05,
+        "lighthouseVersion": "13.5.0",
+        "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.7977.54 Safari/537.36",
+        "fetchTime": "2026-10-08T20:06:09.529Z",
+        "settings": {
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttling": {
+            "rttMs": 150,
+            "throughputKbps": 1638.4,
+            "requestLatencyMs": 562.5,
+            "downloadThroughputKbps": 1474.5600000000002,
+            "uploadThroughputKbps": 675,
+            "cpuSlowdownMultiplier": 4
+          },
+          "throttlingMethod": "simulate"
+        },
+        "warnings": [],
+        "consoleErrors": [
+          {
+            "source": "network",
+            "description": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://localhost:3100/_vercel/speed-insights/script.js",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 0
+            }
+          },
+          {
+            "source": "security",
+            "description": "Refused to execute script from 'http://localhost:3100/_vercel/speed-insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled.",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://localhost:3100/",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 0
+            }
+          }
+        ]
+      },
+      "desktop": {
+        "scores": {
+          "performance": 100,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "lcpMs": 700.94,
+        "tbtMs": 9.5,
+        "cls": 0.000200152630154215,
+        "lighthouseVersion": "13.5.0",
+        "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.7977.54 Safari/537.36",
+        "fetchTime": "2026-10-08T20:00:51.805Z",
+        "settings": {
+          "formFactor": "desktop",
+          "screenEmulation": {
+            "mobile": false,
+            "width": 1350,
+            "height": 940,
+            "deviceScaleFactor": 1,
+            "disabled": false
+          },
+          "throttling": {
+            "rttMs": 40,
+            "throughputKbps": 10240,
+            "requestLatencyMs": 0,
+            "downloadThroughputKbps": 0,
+            "uploadThroughputKbps": 0,
+            "cpuSlowdownMultiplier": 1
+          },
+          "throttlingMethod": "simulate"
+        },
+        "warnings": [],
+        "consoleErrors": [
+          {
+            "source": "network",
+            "description": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://localhost:3100/_vercel/speed-insights/script.js",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 0
+            }
+          },
+          {
+            "source": "security",
+            "description": "Refused to execute script from 'http://localhost:3100/_vercel/speed-insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled.",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://localhost:3100/",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 0
+            }
+          }
+        ]
+      }
+    }
+  },
+  "limitations": [
+    "Local lab results do not establish production field Core Web Vitals.",
+    "Desktop audit measures the SVG-first page at rest; active WebGL is covered by browser QA.",
+    "Cold first-intent GPU setup and real-device INP are not field-measured.",
+    "Vercel Speed Insights is unavailable locally; stubbed in browser QA, unmodified in Lighthouse."
+  ]
+}
