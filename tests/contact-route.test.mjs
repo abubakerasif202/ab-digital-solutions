@@ -86,6 +86,42 @@ test("valid enquiry is delivered through Resend and returns ok", async () => {
   assert.match(sent.text, /I would like a new website/);
 });
 
+test("accepts enquiries about software, automation, and other projects at smaller budgets", async () => {
+  const services = [
+    "Custom web apps & business systems",
+    "AI & automation",
+    "Other / not sure yet",
+  ];
+  for (const service of services) {
+    const response = await POST(contactRequest(
+      validPayload({ service, budget: "Under $1,500" }),
+      { "x-real-ip": nextIp() },
+    ));
+    assert.equal(response.status, 200, service);
+    const delivery = fetchCalls.at(-1);
+    assert.equal(delivery.url, "https://api.resend.com/emails");
+    const sent = JSON.parse(delivery.init.body);
+    assert.ok(sent.text.includes(`Service: ${service}`), service);
+    assert.ok(sent.text.includes("Approx. budget: Under $1,500"));
+  }
+  assert.equal(fetchCalls.length, services.length);
+});
+
+test("rejects unexpected service and budget values", async () => {
+  for (const overrides of [
+    { service: "Not an offered option" },
+    { budget: "A fabricated range" },
+  ]) {
+    const response = await POST(contactRequest(
+      validPayload(overrides),
+      { "x-real-ip": nextIp() },
+    ));
+    assert.equal(response.status, 400);
+    assert.match((await response.json()).error, /choose the form options/i);
+  }
+  assert.equal(fetchCalls.length, 0);
+});
+
 test("prefers the Vercel-provided client IP header for rate limiting", async () => {
   const vercelIp = nextIp();
   const statuses = [];
