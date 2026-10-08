@@ -5,7 +5,7 @@ import path from "node:path";
 
 const base = process.env.QA_BASE_URL || "http://127.0.0.1:3100";
 if (!["127.0.0.1", "localhost"].includes(new URL(base).hostname)) throw new Error("QA requires localhost.");
-const output = path.resolve("test-results/signal");
+const output = path.resolve(process.env.QA_OUTPUT_DIR || "test-results/signal");
 await mkdir(output, { recursive: true });
 const projects = [...(await readFile("app/project-data.ts", "utf8")).matchAll(/slug: "([^"]+)"/g)].map((match) => match[1]);
 const services = [...(await readFile("app/services/service-data.ts", "utf8")).matchAll(/slug: "([^"]+)"/g)].map((match) => match[1]);
@@ -21,6 +21,11 @@ let contactStatus = 200;
 let contactDelay = 0;
 let contactRequests = 0;
 async function prepare(page) {
+  // Deterministic WebGL scenarios; separate tests cover constrained hardware.
+  await page.evaluateOnNewDocument(() => {
+    Object.defineProperty(navigator, "deviceMemory", { configurable: true, get: () => 8 });
+    Object.defineProperty(navigator, "hardwareConcurrency", { configurable: true, get: () => 8 });
+  });
   page.on("pageerror", (error) => errors.push({ url: page.url(), message: error.message }));
   page.on("console", (message) => {
     const forcedContextFailure = page.forcingWebGLFailure && /THREE\.WebGLRenderer: Error creating WebGL context/.test(message.text());
@@ -47,7 +52,7 @@ async function open(route) {
 async function reveal() {
   await page.evaluate(async () => {
     for (let y = 0; y < document.documentElement.scrollHeight; y += innerHeight * .8) {
-      scrollTo(0, y);
+      scrollTo({ top: y, behavior: "instant" });
       await new Promise((resolve) => setTimeout(resolve, 35));
     }
     for (const image of document.images) {
@@ -63,7 +68,7 @@ async function reveal() {
       Promise.all([...document.images].map((image) => image.decode().catch(() => {}))),
       new Promise((resolve) => setTimeout(resolve, 3000)),
     ]);
-    scrollTo(0, 0);
+    scrollTo({ top: 0, behavior: "instant" });
   });
   await wait(1200);
 }
@@ -124,7 +129,7 @@ try {
       })).violations.map(({ id, impact, nodes }) => ({ id, impact, nodes: nodes.map((node) => ({ target: node.target, summary: node.failureSummary })) })));
       check(`${width} ${route} axe`, !violations.length, violations);
       await page.evaluate(() => document.getElementById("qa-axe-steady-state")?.remove());
-      if (!process.env.QA_SKIP_CAPTURE && route === "/" && [390, 1440, 1920].includes(width)) await capture(width);
+      if (!process.env.QA_SKIP_CAPTURE && route === "/" && [320, 390, 768, 1440, 1920].includes(width)) await capture(width);
     }
     console.log(`Completed ${width}px`);
   }
@@ -174,6 +179,7 @@ try {
     };
   });
   await failedWebGL.goto(base, { waitUntil: "networkidle0" });
+  await failedWebGL.hover(".signal-art-stage");
   await wait(2500);
   check("WebGL creation failure preserves sculpture, headline and enquiry CTA", await failedWebGL.evaluate(() => window.qaWebGLAttempts > 0 && !!document.querySelector(".signal-fallback svg") && !document.querySelector("canvas") && !!document.querySelector("h1")?.textContent.includes("Websites") && !!document.querySelector(".hero-actions a[href='#contact']")));
   await failedWebGL.close();

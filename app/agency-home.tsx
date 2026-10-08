@@ -111,7 +111,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <a className="button button-ghost" href="#work">View Our Work <ArrowIcon direction="down-right" /></a>
               </div>
             </div>
-            <div className="signal-art-stage">
+            <div className="signal-art-stage" data-tilt>
               <span className="signal-art-coordinate" aria-hidden="true">FORM STUDY — 001</span>
               <Hero3DExperience />
               <div className="signal-art-caption" aria-hidden="true"><span>One idea. Multiple dimensions.</span><span>AB / STUDIO</span></div>
@@ -213,19 +213,19 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <p className="eyebrow section-index"><span className="section-index-num">04</span><span className="micro-rule" aria-hidden="true" />About AB</p>
               <h2 id="about-heading">Your digital presence should <em>work as hard</em> as you do.</h2>
               <p>AB Web Studio is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
-              <Reveal className="studio-trust" variant="blur" role="group" aria-label="Studio details">
+              <div className="studio-trust" role="group" aria-label="Studio details">
                 <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
                 <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>
                 <p><strong>Real project portfolio</strong><span>{projects.length} live digital project case studies</span></p>
-              </Reveal>
-              <Reveal as="p" variant="blur">We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</Reveal>
-              <Reveal as="p" variant="blur" delay={90}>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</Reveal>
+              </div>
+              <p>We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</p>
+              <p>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</p>
               <Link className="text-link" href="/about">Inside the studio <ArrowIcon /></Link>
-              <Reveal as="dl" className="about-values" variant="fade-up">
+              <dl className="about-values">
                 <div><dt>Clear communication</dt><dd>Simple advice and transparent decisions.</dd></div>
                 <div><dt>Reliable delivery</dt><dd>A professional process from brief to launch.</dd></div>
                 <div><dt>Results-focused work</dt><dd>Design choices connected to business goals.</dd></div>
-              </Reveal>
+              </dl>
             </div>
           </div>
         </section>

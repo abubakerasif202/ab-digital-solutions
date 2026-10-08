@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { HeroFallback } from "./HeroFallback";
 import { createSignalGeometry, signalPoint } from "./signal-geometry";
+import { studioRadiance } from "./studio-radiance";
 
 interface Hero3DCanvasProps {
   className?: string;
@@ -31,7 +32,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || 500;
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 7.5);
+    camera.position.set(0, 0, 6.8);
 
     // Renderer Setup
     const isMobile = quality === "mobile";
@@ -59,27 +60,56 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     renderer.setPixelRatio(dpr);
     renderer.setSize(width, height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.45;
 
     container.appendChild(renderer.domElement);
 
-    // Architectural ribbon: cobalt front, mineral reverse, fine structural seams.
-    scene.add(new THREE.AmbientLight(0xe9e9e2, 2.2));
-    const keyLight = new THREE.DirectionalLight(0xffffff, 4.5);
+    // The physical iridescence shader samples an original procedural softbox rig.
+    const radiance = new THREE.DataTexture(studioRadiance(), 256, 128);
+    radiance.mapping = THREE.EquirectangularReflectionMapping;
+    radiance.colorSpace = THREE.SRGBColorSpace;
+    radiance.needsUpdate = true;
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const environment = pmrem.fromEquirectangular(radiance);
+    scene.environment = environment.texture;
+    pmrem.dispose();
+    radiance.dispose();
+    scene.add(new THREE.AmbientLight(0xddeaff, 1.8));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 5);
     keyLight.position.set(2, 4, 5);
     scene.add(keyLight);
-    const edgeLight = new THREE.DirectionalLight(0xa9baff, 3);
+    const edgeLight = new THREE.DirectionalLight(0x8beaff, 4);
     edgeLight.position.set(-4, -2, 3);
     scene.add(edgeLight);
+    const goldLight = new THREE.DirectionalLight(0xf3d5a1, 2.5);
+    goldLight.position.set(3, -3, -2);
+    scene.add(goldLight);
     const heroGroup = new THREE.Group();
     heroGroup.rotation.set(-0.2, -0.38, -0.12);
     scene.add(heroGroup);
-    const cobaltMaterial = new THREE.MeshStandardMaterial({
-      color: 0x3157ff, metalness: 0.42, roughness: 0.28, side: THREE.FrontSide,
+    const cobaltMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0x577cff, metalness: 0.68, roughness: 0.23,
+      clearcoat: 1, clearcoatRoughness: 0.16, envMapIntensity: 2.2,
+      iridescence: 0.48, iridescenceIOR: 1.35,
+      iridescenceThicknessRange: [120, 360], side: THREE.FrontSide,
     });
-    const mineralMaterial = new THREE.MeshStandardMaterial({
-      color: 0xe9e9e2, metalness: 0.64, roughness: 0.3, side: THREE.BackSide,
+    const mineralMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xe4e9ef, metalness: 0.8, roughness: 0.22,
+      clearcoat: 1, envMapIntensity: 1.8, side: THREE.BackSide,
     });
+    // A view-dependent rim adds legible cyan/violet edges without bloom passes.
+    const chromaticShift = { value: 0.5 };
+    cobaltMaterial.onBeforeCompile = (shader) => {
+      shader.uniforms.uSignalShift = chromaticShift;
+      shader.fragmentShader = "uniform float uSignalShift;\n" + shader.fragmentShader;
+      shader.fragmentShader = shader.fragmentShader.replace("#include <opaque_fragment>", `
+        float signalFresnel = pow(1.0 - abs(dot(normal, normalize(vViewPosition))), 3.0);
+        vec3 signalRim = mix(vec3(0.16, 0.7, 1.0), vec3(0.55, 0.25, 1.0), uSignalShift);
+        outgoingLight += signalRim * signalFresnel * 0.38;
+        #include <opaque_fragment>
+      `);
+    };
+    cobaltMaterial.customProgramCacheKey = () => "signal-chromatic-rim-v1";
     const surface = createSignalGeometry(isTablet ? 120 : 180, 12);
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(surface.positions, 3));
@@ -87,8 +117,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     geometry.computeVertexNormals();
     const geometries: THREE.BufferGeometry[] = [geometry];
     heroGroup.add(new THREE.Mesh(geometry, cobaltMaterial), new THREE.Mesh(geometry, mineralMaterial));
-    const contourMaterial = new THREE.LineBasicMaterial({ color: 0x101114, transparent: true, opacity: 0.35 });
-    const seamMaterial = new THREE.LineBasicMaterial({ color: 0xe9e9e2, transparent: true, opacity: 0.28 });
+    const contourMaterial = new THREE.LineBasicMaterial({ color: 0xa8edff, transparent: true, opacity: 0.48 });
+    const seamMaterial = new THREE.LineBasicMaterial({ color: 0xf5dcb0, transparent: true, opacity: 0.4 });
     for (const across of [-1, -0.86, 0.86, 1]) {
       const points = Array.from({ length: 241 }, (_, index) => new THREE.Vector3(...signalPoint(index / 240 * Math.PI * 2, across)));
       const contour = new THREE.BufferGeometry().setFromPoints(points);
@@ -98,6 +128,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     // Animation & Smooth Control State
     let animationFrameId = 0;
+    let revealFrame = 0;
     let isVisible = false;
     let isRunning = false;
     let inputListenersAttached = false;
@@ -170,6 +201,9 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       scrollY += (targetScrollY - scrollY) * 0.05;
       const scrollFactor = Math.min(scrollY / 1000, 2);
 
+      chromaticShift.value = (mouseX + 1) * 0.5;
+      edgeLight.position.x = -4 + mouseX * 2;
+      keyLight.position.y = 4 - mouseY * 1.5;
       heroGroup.rotation.x = -0.2 + mouseY * 0.09;
       heroGroup.rotation.y = -0.38 + mouseX * 0.12;
       heroGroup.position.y = -scrollFactor * 0.12;
@@ -191,6 +225,14 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     const renderStaticFrame = () => {
       camera.lookAt(scene.position);
       renderer.render(scene, camera);
+      if (revealFrame || container.dataset.renderReady === "true") return;
+      // Two frames establish the SVG/canvas before-state for a real crossfade.
+      revealFrame = requestAnimationFrame(() => {
+        revealFrame = requestAnimationFrame(() => {
+          container.dataset.renderReady = "true";
+          revealFrame = 0;
+        });
+      });
     };
 
     const handleMotionChange = (event: MediaQueryListEvent) => {
@@ -240,6 +282,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       isVisible = false;
       stopLoop();
       detachInputListeners();
+      cancelAnimationFrame(revealFrame);
       setRendererFailed(true);
     };
     renderer.domElement.addEventListener("webglcontextlost", handleContextLost);
@@ -286,6 +329,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     // Cleanup
     return () => {
+      cancelAnimationFrame(revealFrame);
+      delete container.dataset.renderReady;
       stopLoop();
       detachInputListeners();
       reducedMotionQuery.removeEventListener("change", handleMotionChange);
@@ -299,6 +344,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       mineralMaterial.dispose();
       contourMaterial.dispose();
       seamMaterial.dispose();
+      environment.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
 
@@ -325,6 +371,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
         pointerEvents: "none", // Prevent canvas from hijacking clicks or drag gestures
       }}
       aria-hidden="true"
-    />
+    >
+      <HeroFallback />
+    </div>
   );
 }

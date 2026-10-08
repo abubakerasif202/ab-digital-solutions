@@ -1,12 +1,14 @@
 # Signal / Form — AB Web Studio
 
+The cinematic extension is documented in [cinematic-upgrade.md](cinematic-upgrade.md). Release measurements below describe the original Signal / Form baseline; use the extension report for current validation.
+
 ## Direction and audit
 
 The former homepage split attention between large serif headlines, a carousel and a background monogram. Layered theme styles created inconsistent colour inheritance, while most interior routes reused dark framed compositions. The existing canonical content, routes, contact protection, navigation accessibility and graphics lifecycle were sound foundations.
 
 Three directions were considered: a technical atlas, a sculptural gallery, and a typographic broadcast identity. Signal / Form combines the strongest parts of the gallery and atlas: ink and mineral grounds, a controlled cobalt accent, a variable grotesk, precise rules and architectural form. The supplied AB logo remains authentic.
 
-The homepage separates a clear proposition from a dedicated artwork stage. Large asymmetric project spreads show every canonical project. Capabilities become an editorial ledger, the process is a cobalt chapter, and enquiry fields sit on a quiet mineral surface. Interior work, case studies, services, about and contact share the same visual grammar.
+The homepage separates a clear proposition from a dedicated artwork stage. Large asymmetric project spreads introduce selected canonical projects; the Work index retains the complete registry. Capabilities become an editorial ledger, the process is a cobalt chapter, and enquiry fields sit on a quiet mineral surface. Interior work, case studies, services, about and contact share the same visual grammar.
 
 ## Original graphics
 
