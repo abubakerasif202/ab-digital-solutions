@@ -29,7 +29,8 @@ test("studio motion supports static content, touch and reduced motion", async ()
   const [styles, pointer, canvas, page] = await Promise.all([read("../app/studio.css"), read("../app/components/PointerFX.tsx"), read("../app/components/Hero3DCanvas.tsx"), read("../app/page.tsx")]);
   assert.match(styles, /prefers-reduced-motion: reduce/);
   assert.match(pointer, /finePointer\.matches && !reducedMotion\.matches/);
-  assert.match(canvas, /ExtrudeGeometry/);
+  assert.match(canvas, /createSignalGeometry\(isTablet \? 120 : 180, 12\)/);
+  assert.match(canvas, /geometry\.computeVertexNormals\(\)/);
   assert.doesNotMatch(canvas, /TorusKnotGeometry|PointsMaterial|Math\.random/);
   assert.doesNotMatch(page, /IntroReveal/);
 });
@@ -51,9 +52,13 @@ test("mobile header keeps fixed navigation independent of backdrop containment",
 });
 
 
-test("static hero branding uses inline geometry rather than a late CSS image", async () => {
+test("static hero sculpture uses the same geometry as WebGL without an image request", async () => {
   const [fallback, styles] = await Promise.all([read("../app/components/HeroFallback.tsx"), read("../app/studio.css")]);
-  assert.match(fallback, /<ABLogo decorative/);
+  assert.match(fallback, /import \{ projectSignalPoint \} from "\.\/signal-geometry"/);
+  assert.match(fallback, /<svg viewBox="0 0 640 620"/);
+  assert.match(fallback, /aria-hidden="true"/);
+  assert.match(fallback, /\.sort\(\(a, b\) => a\.depth - b\.depth\)/);
+  assert.doesNotMatch(fallback, /<img|<image|<canvas|useEffect/);
   assert.doesNotMatch(styles, /url\(['"]?\/brand\/ab-monogram/);
 });
 

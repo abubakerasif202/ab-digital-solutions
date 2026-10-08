@@ -85,7 +85,7 @@ export default function ServicesPage() {
   return (
     <>
       <SiteHeader />
-      <main className="content-page service-page gr-svc-page" id="main-content">
+      <main className="signal-page content-page service-page gr-svc-page" id="main-content">
         <div className="container">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -134,7 +134,7 @@ export default function ServicesPage() {
 
         <section className="container studio-systems-proof" aria-labelledby="systems-proof-heading">
           <div><p className="eyebrow">Beyond the website</p><h2 id="systems-proof-heading">Software for the way a business actually works.</h2><p>Web applications, business systems and automation begin with the workflow. The 247 Inventory System brings stock, purchasing, sales and invoicing into a role-protected interface.</p><Link className="text-link" href="/work/247-inventory-system">Explore the inventory system <ArrowIcon /></Link></div>
-          <Link className="studio-system-image" href="/work/247-inventory-system" aria-label="247 Inventory System case study"><span className="studio-system-media"><ProjectArtwork project={findProject("247-inventory-system")!} sizes="(max-width: 900px) 92vw, 600px" /></span><span>Public staff-access screen · View case study <ArrowIcon /></span></Link>
+          <Link className="studio-system-image" href="/work/247-inventory-system"><span className="studio-system-media"><ProjectArtwork project={findProject("247-inventory-system")!} sizes="(max-width: 900px) 92vw, 600px" /></span><span>Public staff-access screen · View case study <ArrowIcon /></span></Link>
         </section>
 
         <section className="gr-svc-process" aria-labelledby="services-process-heading">

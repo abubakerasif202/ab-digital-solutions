@@ -19,7 +19,7 @@ export function Hero3DExperience() {
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // Phones skip WebGL entirely: the layered CSS fallback costs nothing and
+    // Phones skip WebGL entirely: the inline SVG fallback avoids a GPU context and
     // keeps mobile LCP/INP clean.
     const mobileQuery = window.matchMedia("(max-width: 720px)");
     const coarseQuery = window.matchMedia("(pointer: coarse)");

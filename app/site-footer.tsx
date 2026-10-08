@@ -1,4 +1,3 @@
-import "./studio-pages.css";
 import { ABBrandImage } from "./components/brand/ABBrandImage";
 import Link from "next/link";
 import { siteConfig } from "./site-config";

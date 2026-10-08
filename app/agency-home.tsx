@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { ContactForm } from "./components/ContactForm";
 import { Hero3DExperience } from "./components/Hero3DExperience";
-import { ProjectShowcase } from "./components/ProjectShowcase";
 import { findProject, projects, type Project } from "./project-data";
 import { findService } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
-import { ArrowIcon, Glyph, StudioSignature } from "./icons";
+import { ArrowIcon, Glyph } from "./icons";
 import { Mail, MessageCircle, Phone } from "lucide-react";
 import { PortfolioSection } from "./components/PortfolioSection";
 import { StudioCapabilities } from "./components/StudioCapabilities";
@@ -93,68 +92,40 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
     <>
       <SiteHeader />
 
-      <main id="main-content" className="cinematic-home">
-        <section className="hero" aria-labelledby="hero-heading">
-          <Hero3DExperience />
-          <div className="container hero-layout">
-            <div className="hero-copy" data-reveal>
-              <p className="eyebrow hero-label">
-                <span className="eyebrow-mark" />
-                <span className="hero-label-primary">Sydney studio</span>
-                <span className="micro-rule" aria-hidden="true" />
-                <span className="hero-label-secondary">Australia-wide</span>
-              </p>
+      <main id="main-content" className="cinematic-home signal-home">
+        <section className="hero signal-hero" aria-labelledby="hero-heading">
+          <div className="container signal-hero-top">
+            <p className="eyebrow hero-label"><span className="eyebrow-mark" /> Sydney studio <span aria-hidden="true">/</span> Australia-wide</p>
+            <span className="signal-edition" aria-hidden="true">Independent by design.</span>
+          </div>
+          <div className="container signal-hero-grid">
+            <div className="hero-copy">
               <h1 id="hero-heading" className="hero-title">
-                <span className="mask-line hero-title-lead"><span>Websites with presence.{" "}</span></span>
-                <span className="mask-line hero-title-accent"><span>Software with purpose.{" "}</span></span>
-                <span className="mask-line hero-title-close"><span>Built for your business.</span></span>
+                <span>Websites with presence.</span>
+                <span className="signal-title-outline">Software with purpose.</span>
               </h1>
-              <p className="hero-intro">
-                Independent design and development for Australian businesses. From distinctive <Link href="/services/web-design-sydney">websites</Link> to web applications, business systems and connected workflows.
-              </p>
+              <p className="signal-hero-note">Built for your business.</p>
+              <p className="hero-intro">Independent design and development for Australian businesses. From distinctive <Link href="/services/web-design-sydney">websites</Link> to web applications, business systems and connected workflows.</p>
               <div className="hero-actions">
-                <a className="button button-primary" href="#contact" data-magnetic>
-                  Start a Project <ArrowIcon />
-                </a>
-                <a className="button button-ghost" href="#work" data-magnetic>
-                  View Our Work <ArrowIcon direction="right" />
-                </a>
-              </div>
-              <div className="client-proof" role="group" aria-label="Selected client work">
-                <span>Live client work</span>
-                <ul>
-                  <li>Maple Rentals</li>
-                  <li>DECENT Development</li>
-                  <li>247 Inventory System</li>
-                </ul>
-                <a href="#work">Explore {projects.length} live digital projects <ArrowIcon direction="down-right" /></a>
+                <a className="button button-primary" href="#contact" data-magnetic>Start a Project <ArrowIcon /></a>
+                <a className="button button-ghost" href="#work">View Our Work <ArrowIcon direction="down-right" /></a>
               </div>
             </div>
-
-            <div className="hero-showcase-stack">
-              <ProjectShowcase />
+            <div className="signal-art-stage">
+              <span className="signal-art-coordinate" aria-hidden="true">FORM STUDY — 001</span>
+              <Hero3DExperience />
+              <div className="signal-art-caption" aria-hidden="true"><span>One idea. Multiple dimensions.</span><span>AB / STUDIO</span></div>
             </div>
           </div>
-
-          <div className="container hero-foot" data-reveal>
-            <a className="hero-scroll-cue" href="#work">
-              <span>Explore</span>
-              <span className="hero-scroll-cue-line" aria-hidden="true" />
-            </a>
-            <div className="hero-foot-sign">
-              <StudioSignature />
-              <p className="hero-stack-note">Independent digital studio · Sydney, Australia</p>
-            </div>
+          <div className="container signal-hero-bottom">
+            <a href="#work" className="signal-explore"><ArrowIcon direction="down-right" /> Scroll to explore</a>
+            <p>Design-led websites.<br />Purpose-built technology.</p>
+            <Link href="/work">{projects.length} real projects <ArrowIcon /></Link>
           </div>
-
           <div className="hero-marquee" aria-label="Capabilities">
             <div className="hero-marquee-track">
-              <div className="hero-marquee-group">
-                <span>Web design</span><i>/</i><span>Development</span><i>/</i><span>Business systems</span><i>/</i><span>AI + automation</span><i>/</i><span>Performance</span><i>/</i>
-              </div>
-              <div className="hero-marquee-group" aria-hidden="true">
-                <span>Web design</span><i>/</i><span>Development</span><i>/</i><span>Business systems</span><i>/</i><span>AI + automation</span><i>/</i><span>Performance</span><i>/</i>
-              </div>
+              <div className="hero-marquee-group"><span>Web design</span><i>✳</i><span>Development</span><i>✳</i><span>Business systems</span><i>✳</i><span>AI + automation</span><i>✳</i></div>
+              <div className="hero-marquee-group" aria-hidden="true"><span>Web design</span><i>✳</i><span>Development</span><i>✳</i><span>Business systems</span><i>✳</i><span>AI + automation</span><i>✳</i></div>
             </div>
           </div>
         </section>

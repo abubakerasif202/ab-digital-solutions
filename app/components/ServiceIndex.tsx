@@ -32,7 +32,6 @@ export function ServiceIndex({ items }: { items: readonly ServiceIndexItem[] }) 
               href={`/services/${item.slug}`}
               onPointerEnter={() => setActive(index)}
               onFocus={() => setActive(index)}
-              aria-label={`${item.title} — ${item.summary}`}
             >
               <span className="gr-svc-num" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
               <span className="gr-svc-title">{item.title}</span>

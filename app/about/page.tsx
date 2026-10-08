@@ -74,7 +74,7 @@ export default function AboutPage() {
   return (
     <>
       <SiteHeader />
-      <main className="content-page gr-about" id="main-content">
+      <main className="signal-page content-page gr-about" id="main-content">
         <header className="container gr-about-hero">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
