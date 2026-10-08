@@ -12,6 +12,9 @@ const services = [
   "E-commerce solutions",
   "Digital marketing",
   "Website care & support",
+  "Custom web apps & business systems",
+  "AI & automation",
+  "Other / not sure yet",
 ] as const;
 
 export function ContactForm() {
@@ -104,6 +107,7 @@ export function ContactForm() {
         <label htmlFor="budget">Approx. budget</label>
         <select id="budget" name="budget" defaultValue="">
           <option value="" disabled>Select a range</option>
+          <option>Under $1,500</option>
           <option>$1,500–$3,000</option>
           <option>$3,000–$6,000</option>
           <option>$6,000+</option>
@@ -125,7 +129,7 @@ export function ContactForm() {
         {formState === "sending" ? "Sending…" : "Send project enquiry"} <ArrowIcon />
       </button>
       <p className="form-note">Your details are used only to respond to this enquiry. No mailing lists. No spam.</p>
-      <p className={`form-status ${formState}`} role="status" aria-live="polite">
+      <p className={`form-status ${formState}`} role={formState === "error" ? "alert" : "status"} aria-live={formState === "error" ? "assertive" : "polite"}>
         {(formState === "success" || formState === "error") && (
           <strong className="form-status-label">
             {formState === "success" ? "Enquiry received" : "Enquiry not sent"}

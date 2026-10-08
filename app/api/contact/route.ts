@@ -9,8 +9,9 @@ const MAX_BODY_BYTES = 12_000;
 const allowedServices = new Set([
   "Website design & development", "SEO & local visibility", "Branding & content",
   "E-commerce solutions", "Digital marketing", "Website care & support",
+  "Custom web apps & business systems", "AI & automation", "Other / not sure yet",
 ]);
-const allowedBudgets = new Set(["", "$1,500–$3,000", "$3,000–$6,000", "$6,000+", "Not sure yet"]);
+const allowedBudgets = new Set(["", "Under $1,500", "$1,500–$3,000", "$3,000–$6,000", "$6,000+", "Not sure yet"]);
 const allowedTimelines = new Set(["", "As soon as possible", "Within 1 month", "Within 2–3 months", "Just exploring"]);
 
 function value(payload: ContactPayload, key: string, max: number) {
