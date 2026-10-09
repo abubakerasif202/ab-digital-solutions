@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
+import { Bodoni_Moda, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnchorSettle } from "./components/AnchorSettle";
 import { BrandIntro } from "./components/intro/BrandIntro";
@@ -17,9 +17,7 @@ import "./compositions.css";
 import "./studio-premium.css";
 import "./studio-pages.css";
 import "./work-premium.css";
-import "./signal.css";
-import "./signal-pages.css";
-import "./cinematic.css";
+import "./gilt-ruby-stage.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -82,7 +80,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#101114",
+  themeColor: "#070708",
   colorScheme: "dark",
 };
 
@@ -154,11 +152,24 @@ const structuredData = {
   ],
 };
 
-// Self-hosted grotesk: one variable family for display and interface.
+// Gilt & Ruby type system: a didone for display (it echoes the hairline/thick
+// strokes of the AB monogram), a grotesk for interface and body copy, and a
+// mono for micro labels and indices.
 const sansFont = Schibsted_Grotesk({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
+});
+
+// The didone sets every headline, including the hero h1 (the LCP element), so
+// it is preloaded. The optical-size axis keeps hairlines crisp from 32px cards
+// to the 6rem hero.
+const displayFont = Bodoni_Moda({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
+  display: "swap",
+  variable: "--font-display",
 });
 
 // Labels only: two weights, never on the critical path.
@@ -172,8 +183,8 @@ const monoFont = IBM_Plex_Mono({
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-AU" className={`${sansFont.variable} ${monoFont.variable}`}>
-      <body className="signal-studio">
+    <html lang="en-AU" className={`${sansFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
+      <body>
         <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
         <BrandIntro />
         <WebVitals />

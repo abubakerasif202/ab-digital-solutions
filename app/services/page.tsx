@@ -85,7 +85,7 @@ export default function ServicesPage() {
   return (
     <>
       <SiteHeader />
-      <main className="signal-page content-page service-page gr-svc-page" id="main-content">
+      <main className="content-page service-page gr-svc-page" id="main-content">
         <div className="container">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>

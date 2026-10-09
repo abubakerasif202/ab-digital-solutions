@@ -64,7 +64,7 @@ export default function WorkPage() {
   return (
     <>
       <SiteHeader />
-      <main className="signal-page work-index-page" id="main-content">
+      <main className="work-index-page" id="main-content">
         <WorkIndexBody />
 
         <aside className="gr-final-cta gr-final-cta--work" aria-labelledby="work-cta-heading">

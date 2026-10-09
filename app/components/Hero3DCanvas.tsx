@@ -74,51 +74,51 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     scene.environment = environment.texture;
     pmrem.dispose();
     radiance.dispose();
-    scene.add(new THREE.AmbientLight(0xddeaff, 1.8));
+    scene.add(new THREE.AmbientLight(0xffe9d2, 1.5));
     const keyLight = new THREE.DirectionalLight(0xffffff, 5);
     keyLight.position.set(2, 4, 5);
     scene.add(keyLight);
-    const edgeLight = new THREE.DirectionalLight(0x8beaff, 4);
+    const edgeLight = new THREE.DirectionalLight(0xff4a63, 4);
     edgeLight.position.set(-4, -2, 3);
     scene.add(edgeLight);
-    const goldLight = new THREE.DirectionalLight(0xf3d5a1, 2.5);
+    const goldLight = new THREE.DirectionalLight(0xf6d98f, 3);
     goldLight.position.set(3, -3, -2);
     scene.add(goldLight);
     const heroGroup = new THREE.Group();
     heroGroup.rotation.set(-0.2, -0.38, -0.12);
     scene.add(heroGroup);
-    const cobaltMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x577cff, metalness: 0.68, roughness: 0.23,
-      clearcoat: 1, clearcoatRoughness: 0.16, envMapIntensity: 2.2,
-      iridescence: 0.48, iridescenceIOR: 1.35,
-      iridescenceThicknessRange: [120, 360], side: THREE.FrontSide,
+    // Gilt on the front face, ruby on the back: the twist reads as one metal
+    // object turning between the two brand colours.
+    const giltMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xd1a64c, metalness: 0.92, roughness: 0.26,
+      clearcoat: 0.8, clearcoatRoughness: 0.2, envMapIntensity: 1.9, side: THREE.FrontSide,
     });
-    const mineralMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xe4e9ef, metalness: 0.8, roughness: 0.22,
-      clearcoat: 1, envMapIntensity: 1.8, side: THREE.BackSide,
+    const rubyMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xd21736, metalness: 0.72, roughness: 0.3,
+      clearcoat: 1, clearcoatRoughness: 0.18, envMapIntensity: 1.6, side: THREE.BackSide,
     });
-    // A view-dependent rim adds legible cyan/violet edges without bloom passes.
+    // A view-dependent rim adds a champagne-to-ruby edge light without bloom passes.
     const chromaticShift = { value: 0.5 };
-    cobaltMaterial.onBeforeCompile = (shader) => {
+    giltMaterial.onBeforeCompile = (shader) => {
       shader.uniforms.uSignalShift = chromaticShift;
       shader.fragmentShader = "uniform float uSignalShift;\n" + shader.fragmentShader;
       shader.fragmentShader = shader.fragmentShader.replace("#include <opaque_fragment>", `
         float signalFresnel = pow(1.0 - abs(dot(normal, normalize(vViewPosition))), 3.0);
-        vec3 signalRim = mix(vec3(0.16, 0.7, 1.0), vec3(0.55, 0.25, 1.0), uSignalShift);
+        vec3 signalRim = mix(vec3(0.94, 0.79, 0.42), vec3(0.82, 0.09, 0.21), uSignalShift);
         outgoingLight += signalRim * signalFresnel * 0.38;
         #include <opaque_fragment>
       `);
     };
-    cobaltMaterial.customProgramCacheKey = () => "signal-chromatic-rim-v1";
+    giltMaterial.customProgramCacheKey = () => "gilt-ruby-rim-v1";
     const surface = createSignalGeometry(isTablet ? 120 : 180, 12);
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(surface.positions, 3));
     geometry.setIndex(surface.indices);
     geometry.computeVertexNormals();
     const geometries: THREE.BufferGeometry[] = [geometry];
-    heroGroup.add(new THREE.Mesh(geometry, cobaltMaterial), new THREE.Mesh(geometry, mineralMaterial));
-    const contourMaterial = new THREE.LineBasicMaterial({ color: 0xa8edff, transparent: true, opacity: 0.48 });
-    const seamMaterial = new THREE.LineBasicMaterial({ color: 0xf5dcb0, transparent: true, opacity: 0.4 });
+    heroGroup.add(new THREE.Mesh(geometry, giltMaterial), new THREE.Mesh(geometry, rubyMaterial));
+    const contourMaterial = new THREE.LineBasicMaterial({ color: 0xffeebe, transparent: true, opacity: 0.55 });
+    const seamMaterial = new THREE.LineBasicMaterial({ color: 0xe7c995, transparent: true, opacity: 0.4 });
     for (const across of [-1, -0.86, 0.86, 1]) {
       const points = Array.from({ length: 241 }, (_, index) => new THREE.Vector3(...signalPoint(index / 240 * Math.PI * 2, across)));
       const contour = new THREE.BufferGeometry().setFromPoints(points);
@@ -340,8 +340,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       renderer.domElement.removeEventListener("webglcontextlost", handleContextLost);
 
       geometries.forEach((geometry) => geometry.dispose());
-      cobaltMaterial.dispose();
-      mineralMaterial.dispose();
+      giltMaterial.dispose();
+      rubyMaterial.dispose();
       contourMaterial.dispose();
       seamMaterial.dispose();
       environment.dispose();

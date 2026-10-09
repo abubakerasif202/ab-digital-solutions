@@ -113,7 +113,7 @@ export default async function ServicePage({ params }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="signal-page content-page service-page" id="main-content">
+      <main className="content-page service-page" id="main-content">
         <div className="container content-shell">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>

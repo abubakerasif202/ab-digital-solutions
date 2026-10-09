@@ -96,7 +96,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className={`signal-page content-page case-study-page gr-cs gr-cs--${variant}`} id="main-content">
+      <main className={`content-page case-study-page gr-cs gr-cs--${variant}`} id="main-content">
         <header className="container gr-cs-hero">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>

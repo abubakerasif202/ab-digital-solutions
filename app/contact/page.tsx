@@ -57,7 +57,7 @@ export default function ContactPage() {
   return (
     <>
       <SiteHeader />
-      <main className="signal-page content-page gr-contact" id="main-content">
+      <main className="content-page gr-contact" id="main-content">
         <section className="container gr-contact-layout contact-section" id="contact" aria-labelledby="contact-heading">
           <div className="gr-contact-copy">
             <nav className="content-breadcrumb" aria-label="Breadcrumb">

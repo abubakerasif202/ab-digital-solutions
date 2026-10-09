@@ -16,15 +16,13 @@ test("brand variants are local accessible vectors and application icons are non-
   }
 });
 
-test("homepage curates six projects while the Work page retains the full canonical registry", async () => {
+test("homepage showcases every live project and the Work page retains the full canonical registry", async () => {
   const [home, portfolio, work] = await Promise.all([read("../app/agency-home.tsx"), read("../app/components/PortfolioSection.tsx"), read("../app/components/WorkIndexBody.tsx")]);
   assert.ok(home.indexOf("<PortfolioSection />") < home.indexOf('id="services"'));
-  const slugs = [...portfolio.matchAll(/  "([a-z0-9-]+)",/g)].map((match) => match[1]);
-  assert.equal(slugs.length, 6);
-  assert.equal(new Set(slugs).size, 6);
-  assert.match(portfolio, /findProject\(slug\)/);
+  // The showcase slider and the typographic index both draw from the canonical registry; nothing is curated away.
+  assert.match(portfolio, /<ProjectShowcase \/>/);
+  assert.match(portfolio, /projects\.map\(\(project, i\)/);
   assert.match(work, /projects/);
-  assert.match(portfolio, /project=\{project\}/);
   assert.match(portfolio, /\/work\/\$\{project\.slug\}/);
 });
 
