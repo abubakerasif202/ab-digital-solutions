@@ -4,15 +4,8 @@ import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ArrowIcon } from "../icons";
 import { siteConfig } from "../site-config";
-
-const services = [
-  "Website design & development",
-  "SEO & local visibility",
-  "Branding & content",
-  "E-commerce solutions",
-  "Digital marketing",
-  "Website care & support",
-] as const;
+import { contactBudgets, contactServices } from "../contact-options";
+import { trackEnquirySuccess } from "../lib/contact-analytics";
 
 export function ContactForm() {
   const sendingRef = useRef(false);
@@ -43,6 +36,8 @@ export function ContactForm() {
         throw new Error(result.error || `We could not send your enquiry. Please email ${siteConfig.email}.`);
       }
       form.reset();
+      setFieldErrors({});
+      if (!data.company) trackEnquirySuccess();
       setFormState("success");
       setFormStatus("Thanks — your enquiry has been sent. We’ll be in touch shortly.");
     } catch (error) {
@@ -84,7 +79,7 @@ export function ContactForm() {
       <fieldset className="form-services">
         <legend>What do you need?</legend>
         <div className="form-service-options">
-          {services.map((service, index) => (
+          {contactServices.map((service, index) => (
             <label className="form-service-option" key={service}>
               <input type="radio" name="service" value={service} defaultChecked={index === 0} />
               <span>{service}</span>
@@ -104,10 +99,7 @@ export function ContactForm() {
         <label htmlFor="budget">Approx. budget</label>
         <select id="budget" name="budget" defaultValue="">
           <option value="" disabled>Select a range</option>
-          <option>$1,500–$3,000</option>
-          <option>$3,000–$6,000</option>
-          <option>$6,000+</option>
-          <option>Not sure yet</option>
+          {contactBudgets.map((budget) => <option key={budget}>{budget}</option>)}
         </select>
         <label htmlFor="timeline">Ideal timeline</label>
         <select id="timeline" name="timeline" defaultValue="">

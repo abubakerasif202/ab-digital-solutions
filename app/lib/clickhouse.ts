@@ -1,5 +1,5 @@
 type AnalyticsEvent = {
-  event_name: "page_view" | "cta_click" | "web_vital";
+  event_name: "page_view" | "cta_click" | "web_vital" | "project_enquiry";
   path: string;
   label?: string;
   metric_name?: string;

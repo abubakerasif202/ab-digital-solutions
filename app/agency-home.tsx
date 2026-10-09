@@ -66,9 +66,6 @@ const services = [
   },
 ] as const;
 
-// Homepage card slugs must always point at a canonical service page; fail the
-// build loudly if the two lists ever drift apart. The homepage keeps its own
-// card copy on purpose — it is marketing language, not the service-page text.
 // Homepage rows must always point at a canonical service page, and each row
 // borrows that page's featured live project as its preview image; fail the
 // build loudly if either list drifts. The homepage keeps its own row copy on
@@ -125,15 +122,19 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <div className="stage-intro">
                 <p className="stage-tagline">Built for your business.</p>
                 <p className="hero-intro">
-                  Independent design and development for Australian businesses. From distinctive <Link href="/services/web-design-sydney">websites</Link> to web applications, business systems and connected workflows.
+                  Independent design and development for Australian businesses. From distinctive <Link href="/services/web-design-sydney" prefetch={false}>websites</Link> to web applications, business systems and connected workflows.
                 </p>
                 <div className="hero-actions">
                   <a className="button button-primary" href="#contact" data-magnetic>
-                    Start a Project <ArrowIcon />
+                    Get a Website Quote <ArrowIcon />
                   </a>
                   <a className="button button-ghost" href="#work" data-magnetic>
                     View Our Work <ArrowIcon direction="down-right" />
                   </a>
+                </div>
+                <div className="stage-confidence" aria-label="Explore the studio or call directly">
+                  <Link href="/work" prefetch={false}>{projects.length} project case studies <ArrowIcon /></Link>
+                  <a href={`tel:${siteConfig.phoneInternational}`}>Prefer a conversation? {siteConfig.phoneDisplay}</a>
                 </div>
               </div>
               <LiveTicker items={tickerItems} />
@@ -249,7 +250,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <Reveal className="studio-trust" variant="blur" role="group" aria-label="Studio details">
                 <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
                 <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>
-                <p><strong>Real project portfolio</strong><span>{projects.length} live digital project case studies</span></p>
+                <p><strong>Real project portfolio</strong><span>{projects.length} digital project case studies</span></p>
               </Reveal>
               <Reveal as="p" variant="blur">We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</Reveal>
               <Reveal as="p" variant="blur" delay={90}>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</Reveal>

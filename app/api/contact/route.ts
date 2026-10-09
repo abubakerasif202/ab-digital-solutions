@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { siteConfig } from "../../site-config";
 import { withinRateLimit } from "./rate-limit";
+import { contactBudgets, contactServices } from "../../contact-options";
 
 export const runtime = "nodejs";
 
 type ContactPayload = Record<string, unknown>;
 const MAX_BODY_BYTES = 12_000;
-const allowedServices = new Set([
-  "Website design & development", "SEO & local visibility", "Branding & content",
-  "E-commerce solutions", "Digital marketing", "Website care & support",
-]);
-const allowedBudgets = new Set(["", "$1,500–$3,000", "$3,000–$6,000", "$6,000+", "Not sure yet"]);
+const allowedServices = new Set<string>(contactServices);
+const allowedBudgets = new Set<string>(["", ...contactBudgets]);
 const allowedTimelines = new Set(["", "As soon as possible", "Within 1 month", "Within 2–3 months", "Just exploring"]);
 
 function value(payload: ContactPayload, key: string, max: number) {

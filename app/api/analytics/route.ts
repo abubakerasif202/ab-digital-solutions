@@ -4,7 +4,7 @@ import { clickHouseConfigured, insertAnalyticsEvent } from "../../lib/clickhouse
 export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 4_096;
-const allowedEvents = new Set(["page_view", "cta_click", "web_vital"]);
+const allowedEvents = new Set(["page_view", "cta_click", "web_vital", "project_enquiry"]);
 const allowedMetrics = new Set(["CLS", "FCP", "FID", "INP", "LCP", "TTFB"]);
 const allowedRatings = new Set(["", "good", "needs-improvement", "poor"]);
 
@@ -50,7 +50,23 @@ export async function POST(request: NextRequest) {
 
   let payload: Payload;
   try {
-    const parsed: unknown = await request.json();
+    if (!request.body) return new NextResponse(null, { status: 400 });
+    const reader = request.body.getReader();
+    const decoder = new TextDecoder();
+    let body = "";
+    let bytes = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > MAX_BODY_BYTES) {
+        await reader.cancel();
+        return new NextResponse(null, { status: 413 });
+      }
+      body += decoder.decode(value, { stream: true });
+    }
+    body += decoder.decode();
+    const parsed: unknown = JSON.parse(body);
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
       return new NextResponse(null, { status: 400 });
     }
@@ -78,7 +94,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await insertAnalyticsEvent({
-      event_name: eventName as "page_view" | "cta_click" | "web_vital",
+      event_name: eventName as "page_view" | "cta_click" | "web_vital" | "project_enquiry",
       path,
       label: textValue(payload, "label", 160),
       metric_name: metricName,

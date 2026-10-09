@@ -7,6 +7,11 @@ import test from "node:test";
 
 const read = async (path) => {
   const source = await readFile(new URL(path, import.meta.url), "utf8");
+  if (path === "../app/compositions.css") {
+    return source
+      + await readFile(new URL("../app/work/compositions.css", import.meta.url), "utf8")
+      + await readFile(new URL("../app/interior-compositions.css", import.meta.url), "utf8");
+  }
   return path === "../app/agency-home.tsx"
     ? source + await readFile(new URL("../app/components/PortfolioSection.tsx", import.meta.url), "utf8")
     : source;
@@ -38,12 +43,12 @@ test("portfolio contains every required live project", async () => {
     "https://www.247trucktyreservices.com.au/",
     "https://www.maplerentals.com.au/",
     "https://www.galarentals.com.au/",
-    "https://zqremovals.au/",
+    "https://zqremovalsadelaide.com.au/",
     "https://www.decentdevelopment.com.au/",
     "https://milestonedevelopment.com.au/",
     "https://4point-concrete-website.vercel.app/",
     "https://www.1stclassexpress.com.au/",
-    "https://www.hfremovalsadelaide.com/",
+    "https://www.hfremovalsadelaide.com.au/",
     "https://www.aftabandsons.com.au/",
     "https://247trucktyreservices.store/",
     "https://jufaja-homes-platform.vercel.app/",
@@ -158,14 +163,12 @@ test("project count copy is derived from the canonical registry", async () => {
     read("../app/agency-home.tsx"),
     read("../app/components/WorkIndexBody.tsx"),
   ]);
-  assert.match(homepage, /Explore \{projects\.length\} live digital projects/);
-  assert.match(homepage, /\{projects\.length\} responsive websites and custom software projects/);
-  assert.match(homepage, /isSoftwareProject\(project\) \? "Live system" : "Live website"/);
-  assert.match(homepage, /\{projects\.length\} live digital project case studies/);
+  assert.match(homepage, /\{projects\.length\} project case studies/);
+  assert.match(homepage, /\{projects\.length\} digital project case studies/);
   assert.match(workIndexBody, /\{projects\.length\} projects/);
-  assert.match(workIndexBody, /isSoftwareProject\(project\) \? "Live system" : "Live website"/);
+  assert.match(workIndexBody, /projectDestinationLabel\(project\)/);
   assert.match(await read("../app/project-data.ts"), /project\.kind === "software"/);
-  assert.match(await read("../app/work/[slug]/page.tsx"), /project\.ctaLabel \?\? "View Live Website"/);
+  assert.match(await read("../app/work/[slug]/page.tsx"), /projectVisitLabel\(project\)/);
   assert.doesNotMatch(homepage, /\b(?:seven|eight)\b/i);
   assert.doesNotMatch(await read("../app/globals.css"), /grid-template-columns: repeat\(6, 1fr\)/);
 });

@@ -19,11 +19,13 @@ export type Project = {
   ctaLabel?: string;
   seoTitle?: string;
   seoDescription?: string;
+  destination?: "hosted-showcase" | "unavailable";
 };
 
 export const projects = [
   {
     slug: "jufaja-homes",
+    destination: "hosted-showcase",
     name: "Jufaja Construction / Jufaja Homes",
     category: "Construction / Property Digital Platform",
     sector: "Property & construction",
@@ -170,6 +172,7 @@ export const projects = [
   },
   {
     slug: "gala-rentals",
+    destination: "unavailable",
     name: "Gala Rentals",
     category: "Mobility / Car rentals",
     sector: "Mobility",
@@ -201,8 +204,8 @@ export const projects = [
       "ZQ Removals presents residential and commercial moving services in Adelaide with a direct path to quote enquiries.",
     solution:
       "We engineered a conversion-focused local service layout with clear service categories, coverage maps, and a fast multi-step quote request form.",
-    url: "https://zqremovals.au/",
-    displayUrl: "zqremovals.au",
+    url: "https://zqremovalsadelaide.com.au/",
+    displayUrl: "zqremovalsadelaide.com.au",
     image: `${assetBase}/ab-portfolio-zq-removals.jpg`,
     alt: "ZQ Removals website homepage preview",
     tags: ["Lead Conversion", "Local Service SEO", "Fast Touch-UI"],
@@ -262,6 +265,7 @@ export const projects = [
   },
   {
     slug: "4-point-concrete",
+    destination: "hosted-showcase",
     name: "4 Point Concrete",
     category: "Construction / Civil",
     sector: "Property & construction",
@@ -318,8 +322,8 @@ export const projects = [
       "HF Removals Adelaide handles residential, apartment, office and interstate moves from an Elizabeth Vale base, needing pricing transparency and a quote path that converts around the clock.",
     solution:
       "We built a rate-transparent removals platform pairing published local and per-cubic-metre interstate pricing with an above-the-fold instant quote form, suburb and route landing pages, and review-backed trust signals.",
-    url: "https://www.hfremovalsadelaide.com/",
-    displayUrl: "hfremovalsadelaide.com",
+    url: "https://www.hfremovalsadelaide.com.au/",
+    displayUrl: "hfremovalsadelaide.com.au",
     image: `${assetBase}/ab-portfolio-hf-removals.jpg`,
     alt: "HF Removals Adelaide website homepage preview",
     tags: ["Quote Conversion", "Local Service SEO", "Rate Transparency"],
@@ -365,6 +369,18 @@ export function findProject(slug: string): Project | undefined {
 
 export function isSoftwareProject(project: Project): boolean {
   return project.kind === "software";
+}
+
+export function projectDestinationLabel(project: Project): string {
+  if (project.destination === "unavailable") return "Website currently unavailable";
+  if (project.destination === "hosted-showcase") return "Hosted website showcase";
+  return isSoftwareProject(project) ? "Staff-access system" : "Live website";
+}
+
+export function projectVisitLabel(project: Project): string {
+  if (project.destination === "unavailable") return "Check Project Website";
+  if (project.destination === "hosted-showcase") return "View Website Showcase";
+  return project.ctaLabel ?? "View Live Website";
 }
 
 /** Editorial label form of a category: "Mobility / Car rentals" → "Mobility · Car rentals". */

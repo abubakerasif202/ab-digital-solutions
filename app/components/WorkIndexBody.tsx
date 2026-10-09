@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, type CSSProperties } from "react";
 import { flushSync } from "react-dom";
 import { ProjectArtwork, projectArtworkRatio } from "../project-artwork";
-import { formatCategory, isSoftwareProject, projects, sectors, type Project } from "../project-data";
+import { formatCategory, isSoftwareProject, projectDestinationLabel, projects, sectors, type Project } from "../project-data";
 import { ArrowIcon } from "../icons";
 
 const ALL_SECTORS = "All work";
@@ -74,7 +74,7 @@ export function WorkIndexBody() {
       <section className="work-index-hero gr-wi-hero">
         <div className="container gr-wi-hero-inner">
           <p className="eyebrow" data-reveal>
-            <span className="eyebrow-mark" /> Index / live client work
+            <span className="eyebrow-mark" /> Index / client work
           </p>
           <div className="gr-wi-hero-row">
             <h1 data-reveal>The work, at the size it <span className="accent-serif">deserves.</span></h1>
@@ -151,7 +151,7 @@ function WorkIndexCard({ project, type }: { project: Project; type: BlockType })
             <ProjectArtwork project={project} sizes={sizes} priority={type === "feature"} />
           </div>
           <span className="live-label">
-            <i /> {isSoftwareProject(project) ? "Live system" : "Live website"}
+            <i /> {projectDestinationLabel(project)}
           </span>
         </div>
         <div className="gr-wi-meta">
