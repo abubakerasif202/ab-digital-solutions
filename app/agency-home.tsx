@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ContactForm } from "./components/ContactForm";
 import { Hero3DExperience } from "./components/Hero3DExperience";
+import { LiveTicker } from "./components/LiveTicker";
 import { findProject, projects, type Project } from "./project-data";
 import { findService } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
@@ -87,52 +88,79 @@ const processSteps = [
   ["04", "Launch", "We complete launch checks, publish with confidence and stay available as you grow."],
 ] as const;
 
+const tickerItems = projects.slice(0, 6).map(({ slug, name, sector, image }) => ({ slug, name, sector, image }));
+
 export default function AgencyHome({ currentYear }: { currentYear: number }) {
   return (
     <>
       <SiteHeader />
 
-      <main id="main-content" className="cinematic-home signal-home">
-        <section className="hero signal-hero" aria-labelledby="hero-heading">
-          <div className="container signal-hero-top">
-            <p className="eyebrow hero-label"><span className="eyebrow-mark" /> Sydney studio <span aria-hidden="true">/</span> Australia-wide</p>
-            <span className="signal-edition" aria-hidden="true">Independent by design.</span>
+      <main id="main-content" className="cinematic-home">
+        <section className="stage-hero" aria-labelledby="hero-heading">
+          <div className="stage-hero-art" aria-hidden="true">
+            <Hero3DExperience />
+            <span className="stage-ring stage-ring--outer" />
+            <span className="stage-ring stage-ring--inner" />
           </div>
-          <div className="container signal-hero-grid">
-            <div className="hero-copy">
-              <h1 id="hero-heading" className="hero-title">
-                <span>Websites with presence.</span>
-                <span className="signal-title-outline">Software with purpose.</span>
-              </h1>
-              <p className="signal-hero-note">Built for your business.</p>
-              <p className="hero-intro">Independent design and development for Australian businesses. From distinctive <Link href="/services/web-design-sydney">websites</Link> to web applications, business systems and connected workflows.</p>
-              <div className="hero-actions">
-                <a className="button button-primary" href="#contact" data-magnetic>Start a Project <ArrowIcon /></a>
-                <a className="button button-ghost" href="#work">View Our Work <ArrowIcon direction="down-right" /></a>
+
+          <div className="container stage-hero-top">
+            <p className="eyebrow hero-label">
+              <span className="eyebrow-mark" />
+              <span className="hero-label-primary">Sydney studio</span>
+              <span className="micro-rule" aria-hidden="true" />
+              <span className="hero-label-secondary">Australia-wide</span>
+            </p>
+            <span className="stage-edition" aria-hidden="true">Independent by design.</span>
+          </div>
+
+          <div className="container stage-hero-body">
+            <h1 id="hero-heading" className="stage-title">
+              <span className="stage-line"><span>Websites with</span></span>
+              <span className="stage-line"><span>presence.</span></span>
+              <span className="stage-line stage-line--ruby"><span className="metal-ruby">Software with</span></span>
+              <span className="stage-line stage-line--gilt"><span className="metal-gilt">purpose.</span></span>
+            </h1>
+
+            <div className="stage-foot">
+              <div className="stage-intro">
+                <p className="stage-tagline">Built for your business.</p>
+                <p className="hero-intro">
+                  Independent design and development for Australian businesses. From distinctive <Link href="/services/web-design-sydney">websites</Link> to web applications, business systems and connected workflows.
+                </p>
+                <div className="hero-actions">
+                  <a className="button button-primary" href="#contact" data-magnetic>
+                    Start a Project <ArrowIcon />
+                  </a>
+                  <a className="button button-ghost" href="#work" data-magnetic>
+                    View Our Work <ArrowIcon direction="down-right" />
+                  </a>
+                </div>
               </div>
-            </div>
-            <div className="signal-art-stage" data-tilt>
-              <span className="signal-art-coordinate" aria-hidden="true">FORM STUDY — 001</span>
-              <Hero3DExperience />
-              <div className="signal-art-caption" aria-hidden="true"><span>One idea. Multiple dimensions.</span><span>AB / STUDIO</span></div>
+              <LiveTicker items={tickerItems} />
             </div>
           </div>
-          <div className="container signal-hero-bottom">
-            <a href="#work" className="signal-explore"><ArrowIcon direction="down-right" /> Scroll to explore</a>
-            <p>Design-led websites.<br />Purpose-built technology.</p>
+
+          <div className="container stage-bar">
+            <a className="stage-scroll-cue" href="#work"><span className="stage-scroll-line" aria-hidden="true" />Scroll to explore</a>
+            <p>Design-led websites · Purpose-built technology</p>
             <Link href="/work">{projects.length} real projects <ArrowIcon /></Link>
           </div>
+
           <div className="hero-marquee" aria-label="Capabilities">
             <div className="hero-marquee-track">
-              <div className="hero-marquee-group"><span>Web design</span><i>✳</i><span>Development</span><i>✳</i><span>Business systems</span><i>✳</i><span>AI + automation</span><i>✳</i></div>
-              <div className="hero-marquee-group" aria-hidden="true"><span>Web design</span><i>✳</i><span>Development</span><i>✳</i><span>Business systems</span><i>✳</i><span>AI + automation</span><i>✳</i></div>
+              <div className="hero-marquee-group">
+                <span>Web design</span><i>✳</i><span>Development</span><i>✳</i><span>Business systems</span><i>✳</i><span>AI + automation</span><i>✳</i><span>Performance</span><i>✳</i>
+              </div>
+              <div className="hero-marquee-group" aria-hidden="true">
+                <span>Web design</span><i>✳</i><span>Development</span><i>✳</i><span>Business systems</span><i>✳</i><span>AI + automation</span><i>✳</i><span>Performance</span><i>✳</i>
+              </div>
             </div>
           </div>
         </section>
 
         <PortfolioSection />
 
-        <section className="section services-section gr-services" id="services" aria-labelledby="services-heading">
+        <section className="section ruby-band" id="services" aria-labelledby="services-heading">
           <div className="container">
             <div className="section-heading" data-reveal>
               <div>
@@ -142,6 +170,11 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <p>From the first strategic decision to post-launch support, every recommendation is tied to a clear business goal.</p>
             </div>
             <StudioCapabilities />
+          </div>
+        </section>
+
+        <section className="section services-section gr-services" aria-label="Services">
+          <div className="container">
             <div className="gr-service-index">
               <p className="eyebrow supporting-services-label">The details that bring it together</p>
               <ol className="services-list">
@@ -213,19 +246,19 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <p className="eyebrow section-index"><span className="section-index-num">04</span><span className="micro-rule" aria-hidden="true" />About AB</p>
               <h2 id="about-heading">Your digital presence should <em>work as hard</em> as you do.</h2>
               <p>AB Web Studio is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
-              <div className="studio-trust" role="group" aria-label="Studio details">
+              <Reveal className="studio-trust" variant="blur" role="group" aria-label="Studio details">
                 <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
                 <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>
                 <p><strong>Real project portfolio</strong><span>{projects.length} live digital project case studies</span></p>
-              </div>
-              <p>We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</p>
-              <p>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</p>
+              </Reveal>
+              <Reveal as="p" variant="blur">We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</Reveal>
+              <Reveal as="p" variant="blur" delay={90}>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</Reveal>
               <Link className="text-link" href="/about">Inside the studio <ArrowIcon /></Link>
-              <dl className="about-values">
+              <Reveal as="dl" className="about-values" variant="fade-up">
                 <div><dt>Clear communication</dt><dd>Simple advice and transparent decisions.</dd></div>
                 <div><dt>Reliable delivery</dt><dd>A professional process from brief to launch.</dd></div>
                 <div><dt>Results-focused work</dt><dd>Design choices connected to business goals.</dd></div>
-              </dl>
+              </Reveal>
             </div>
           </div>
         </section>

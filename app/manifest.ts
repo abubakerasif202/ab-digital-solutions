@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: siteConfig.description,
     start_url: "/",
     display: "standalone",
-    background_color: "#101114",
-    theme_color: "#101114",
+    background_color: "#070708",
+    theme_color: "#070708",
     icons: [
       {
         src: "/brand/ab-luxury-mark-192.png",

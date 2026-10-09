@@ -1,22 +1,12 @@
 import Link from "next/link";
 import { ArrowIcon } from "../icons";
-import { ProjectArtwork, projectArtworkRatio } from "../project-artwork";
-import { findProject, isSoftwareProject, projects } from "../project-data";
+import { ProjectArtwork } from "../project-artwork";
+import { ProjectShowcase } from "./ProjectShowcase";
+import { isSoftwareProject, projects } from "../project-data";
 
-// Deliberate homepage sequence: brand, operations, commerce and local services.
-const selectedSlugs = [
-  "jufaja-homes",
-  "247-inventory-system",
-  "adelaide-wholesale-tyres",
-  "aftab-sons-transport",
-  "maple-rentals",
-  "zq-removals",
-] as const;
-const selectedProjects = selectedSlugs.map((slug) => {
-  const project = findProject(slug);
-  if (!project) throw new Error(`PortfolioSection: unknown project "${slug}"`);
-  return project;
-});
+/* Selected work: a browsable showcase of every live project, then a
+   typographic index of the same registry with hover previews. Nothing in the
+   canonical project list is filtered out. */
 
 export function PortfolioSection() {
   return (
@@ -24,30 +14,43 @@ export function PortfolioSection() {
       <div className="container">
         <header className="gr-section-head" data-reveal>
           <p className="eyebrow section-index"><span className="section-index-num">01</span><span className="micro-rule" aria-hidden="true" />Selected work</p>
-          <h2 id="work-heading" className="gr-display-xl">Real businesses.<br />Distinctive digital worlds.</h2>
+          <h2 id="work-heading" className="gr-display-xl">The work <span className="accent-serif">speaks first.</span></h2>
           <div className="gr-section-head-aside">
             <p>{projects.length} responsive websites and custom software projects across mobility, logistics, local services, construction and property.</p>
-            <Link className="section-heading-link" href="/work">View all case studies <ArrowIcon /></Link>
+            <Link className="section-heading-link" href="/work">
+              View all case studies <ArrowIcon />
+            </Link>
           </div>
         </header>
-        <div className="signal-work-grid">
-          {selectedProjects.map((project, index) => (
-            <Link className="signal-work-item" data-tilt href={`/work/${project.slug}`} key={project.slug}>
-              <div className="signal-work-media">
-                <div className="signal-project-image" style={{ aspectRatio: projectArtworkRatio(project) }}><ProjectArtwork project={project} sizes={index === 0 || index === 3 ? "(max-width: 720px) 90vw, 85vw" : "(max-width: 720px) 90vw, 45vw"} /></div>
-                <span className="live-label"><i />{isSoftwareProject(project) ? "Live system" : "Live website"}</span>
-              </div>
-              <div className="signal-work-meta">
-                <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                <div><h3>{project.name}</h3><p>{project.description}</p><span className="project-cta">View Case Study <ArrowIcon /></span></div>
-                <ArrowIcon />
-              </div>
-            </Link>
+
+        <ProjectShowcase />
+
+        <p className="gr-kicker gr-index-label">The full index</p>
+        <ul className="gr-index" aria-label="More live projects">
+          {projects.map((project, i) => (
+            <li key={project.slug}><Link
+              className="gr-index-row"
+              href={`/work/${project.slug}`}
+              data-cursor="VIEW"
+              aria-label={`${project.name} — View Case Study`}
+            >
+              <span className="gr-index-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <span className="gr-index-name">{project.name}</span>
+              <span className="gr-index-sector">{project.sector}</span>
+              <span className="gr-index-kind">{isSoftwareProject(project) ? "Live system" : "Live website"}</span>
+              <span className="gr-index-arrow" aria-hidden="true"><ArrowIcon /></span>
+              <span className="gr-index-preview" aria-hidden="true">
+                <ProjectArtwork project={project} sizes="(max-width: 860px) 30vw, 360px" />
+              </span>
+            </Link></li>
           ))}
-        </div>
-        <div className="gr-work-foot">
+        </ul>
+
+        <div className="gr-work-foot" data-reveal>
           <p>Explore {projects.length} live digital projects, each with its own case study.</p>
-          <Link className="button button-ghost" href="/work">Open the work index <ArrowIcon /></Link>
+          <Link className="button button-ghost" href="/work" data-magnetic>
+            Open the work index <ArrowIcon />
+          </Link>
         </div>
       </div>
     </section>

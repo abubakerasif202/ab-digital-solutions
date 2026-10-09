@@ -21,9 +21,9 @@ test("homepage exposes content directly instead of using an iframe", async () =>
   ]);
 
   assert.doesNotMatch(page, /<iframe\b/i);
-  assert.match(homepage, /className="hero-title"/);
-  assert.match(homepage, /Websites with presence\./);
-  assert.match(homepage, /Software with purpose\./);
+  assert.match(homepage, /className="stage-title"/);
+  assert.match(homepage, /Websites with<\/span><\/span>\s*<span className="stage-line"><span>presence\./);
+  assert.match(homepage, /metal-ruby">Software with<[\s\S]*?metal-gilt">purpose\./);
   assert.match(homepage, /Built for your business\./);
   assert.match(homepage, /id="contact"/);
   assert.match(showcase, /aria-roledescription="carousel"/);
@@ -79,8 +79,10 @@ test("every project ships a real preview image and routes visitors through a cas
     assert.ok(statSync(asset).size > 0, `${name} is missing`);
   }
 
-  assert.match(homepage, /className="project-cta">View Case Study/);
-  assert.match(homepage, /href=\{`\/work\/\$\{project\.slug\}`\}/);
+  const [portfolio, showcaseSource] = await Promise.all([read("../app/components/PortfolioSection.tsx"), read("../app/components/ProjectShowcase.tsx")]);
+  assert.match(showcaseSource, /View Case Study/);
+  assert.match(portfolio, /href=\{`\/work\/\$\{project\.slug\}`\}/);
+  assert.doesNotMatch(portfolio, /href=\{project\.url\}/);
   assert.doesNotMatch(homepage, /href=\{project\.url\}/);
   assert.doesNotMatch(workPage, /href=\{project\.url\}/);
   assert.doesNotMatch(workIndexBody, /href=\{project\.url\}/);
@@ -178,7 +180,7 @@ test("reviewed design issues remain remediated", async () => {
   ]);
 
   assert.doesNotMatch(homepage, /hero-brand-art/);
-  assert.match(homepage, /className="studio-trust"/);
+  assert.match(homepage, /<LiveTicker items=\{tickerItems\} \/>/);
   assert.match(showcase, /sliderPreferencePaused \|\| hovered \|\| focused \|\| !isVisible \|\| !isPageVisible/);
   assert.match(showcase, /onMouseEnter=\{\(\) => setHovered\(true\)\}/);
   assert.match(showcase, /onMouseLeave=\{\(\) => setHovered\(false\)\}/);
@@ -271,8 +273,8 @@ test("premium interaction layer is wired without heavy dependencies", async () =
     read("../package.json"),
   ]);
 
-  assert.match(homepage, /signal-title-outline/);
-  assert.match(homepage, /signal-explore/);
+  assert.match(homepage, /metal-gilt/);
+  assert.match(homepage, /stage-scroll-cue/);
   assert.match(homepage, /process-rail-fill/);
   assert.doesNotMatch(homepage, /project-ghost-index/);
   assert.match(homepage, /<Hero3DExperience \/>/);
@@ -421,12 +423,13 @@ test("typography is self-hosted so every platform gets the intended pairing", as
   ]);
   assert.match(layout, /from "next\/font\/google"/);
   assert.match(layout, /variable: "--font-sans"/);
+  assert.match(layout, /variable: "--font-display"/);
   assert.match(layout, /variable: "--font-mono"/);
   // Every font variable must sit on <html>: the role tokens are declared on
   // :root, so a variable set lower in the tree would leave them invalid.
-  assert.match(layout, /<html[^>]*className=\{`\$\{sansFont\.variable\} \$\{monoFont\.variable\}`\}/);
+  assert.match(layout, /<html[^>]*className=\{`\$\{sansFont\.variable\} \$\{displayFont\.variable\} \$\{monoFont\.variable\}`\}/);
   assert.match(styles, /--sans: var\(--font-sans\),/);
-  assert.match(await read("../app/signal.css"), /--display: var\(--sans\)/);
+  assert.match(styles, /--display: var\(--font-display\),/);
   assert.match(styles, /--mono: var\(--font-mono\),/);
   // next/font serves files same-origin, which the CSP must continue to allow.
   assert.match(nextConfig, /"font-src 'self'/);
@@ -512,13 +515,19 @@ test("anchor jumps re-align once offscreen sections have rendered", async () => 
   assert.match(settle, /passes >= 2/);
 });
 
-test("display and interface share one variable font while labels avoid preloading", async () => {
+test("display and mono fonts load only the weights and styles they render", async () => {
   const layout = await read("../app/layout.tsx");
-  const sans = layout.match(/Schibsted_Grotesk\(\{[\s\S]*?\}\)/)?.[0];
-  assert.ok(sans, "shared variable grotesk font");
-  assert.doesNotMatch(sans, /weight:|preload: false/);
-  assert.match(sans, /display: "swap"/);
-  assert.doesNotMatch(layout, /Bodoni_Moda|const displayFont/);
+  const serif = layout.match(/Bodoni_Moda\(\{[\s\S]*?\}\)/)?.[0];
+  assert.ok(serif, "Bodoni Moda display font");
+  // Headlines use 400–700, so one variable file (with its optical-size axis)
+  // replaces several static weights.
+  assert.doesNotMatch(serif, /weight:/);
+  assert.match(serif, /axes: \["opsz"\]/);
+  // The whole hero h1 (LCP) is set in the display face, so it is preloaded
+  // rather than swapped in late.
+  assert.match(serif, /style: \["normal", "italic"\]/);
+  assert.doesNotMatch(serif, /preload: false/);
+
   const mono = layout.match(/IBM_Plex_Mono\(\{[\s\S]*?\}\)/)?.[0];
   assert.ok(mono, "IBM Plex Mono label font");
   assert.match(mono, /weight: \["400", "500"\]/);
@@ -547,21 +556,24 @@ test("Tailwind only scans app source, keeping unused utilities out of critical C
   assert.match(styles, /@import "tailwindcss" source\(none\);\s*\n@source "\.\/";/);
 });
 
-test("Signal / Form defines the active palette, typography, responsive grid and focus states", async () => {
-  const [layout, signal] = await Promise.all([
+test("Gilt & Ruby design system: didone headlines, grotesk body and The Cut", async () => {
+  const [layout, studio, layer] = await Promise.all([
     read("../app/layout.tsx"),
-    read("../app/signal.css"),
+    read("../app/studio.css"),
+    read("../app/gilt-ruby.css"),
   ]);
-  assert.match(layout, /<body className="signal-studio">/);
-  assert.ok(layout.indexOf('import "./signal.css"') > layout.indexOf('import "./studio-premium.css"'));
-  assert.ok(layout.indexOf('import "./signal-pages.css"') > layout.indexOf('import "./signal.css"'));
-  assert.match(signal, /--ink: #101114/);
-  assert.match(signal, /--paper: #e9e9e2/);
-  assert.match(signal, /--signal-blue: #3157ff/);
-  assert.match(signal, /--display: var\(--sans\)/);
-  assert.match(signal, /\.signal-studio :where\(a, button, input, textarea, select, summary\):focus-visible \{ outline: 2px solid/);
-  assert.match(signal, /@media \(max-width: 720px\)[\s\S]*?\.signal-hero-grid \{ grid-template-columns: 1fr;/);
-  assert.match(signal, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?animation: none !important/);
+
+  assert.match(layout, /Bodoni_Moda\(/);
+  assert.match(layout, /Schibsted_Grotesk\(/);
+  assert.match(layout, /variable: "--font-display"/);
+  assert.match(layout, /import "\.\/gilt-ruby\.css";/);
+  assert.ok(layout.indexOf('import "./gilt-ruby.css"') > layout.indexOf('import "./editorial.css"'), "gilt-ruby.css must load last");
+  assert.doesNotMatch(studio, /\.cinematic-home h1, \.cinematic-home h2[^{]*\{[^}]*var\(--sans\)/);
+
+  assert.match(layer, /--clip-cut-sm: polygon\(/);
+  assert.match(layer, /\.button-primary,[\s\S]*?clip-path: var\(--clip-cut-sm\)/);
+  // Clipped controls must not hide their keyboard focus ring.
+  assert.match(layer, /\.button-primary:focus-visible,[\s\S]*?\.mobile-project-cta:focus-visible\s*\{\s*clip-path: none;/);
 });
 
 test("second-pass compositions: real pages, varied portfolio and case-study systems", async () => {

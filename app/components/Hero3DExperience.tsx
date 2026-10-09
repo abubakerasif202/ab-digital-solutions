@@ -64,7 +64,10 @@ export function Hero3DExperience() {
     // intent to explore it; the expensive GPU setup then runs after input yields.
     const handlePointerIntent = (event: PointerEvent) => {
       if (hasIntent || motionQuery.matches || mobileQuery.matches || coarseQuery.matches) return;
-      if (!(event.target instanceof Node) || !stage.contains(event.target)) return;
+      // The stage sits behind the copy and ignores pointer events, so test the
+      // pointer against its bounds rather than the event target.
+      const bounds = stage.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) return;
       hasIntent = true;
       updateMode();
     };
