@@ -30,8 +30,8 @@ test("studio motion supports static content, touch and reduced motion", async ()
   const [styles, pointer, canvas, page] = await Promise.all([read("../app/studio.css"), read("../app/components/PointerFX.tsx"), read("../app/components/Hero3DCanvas.tsx"), read("../app/page.tsx")]);
   assert.match(styles, /prefers-reduced-motion: reduce/);
   assert.match(pointer, /finePointer\.matches && !reducedMotion\.matches/);
-  assert.match(canvas, /createSignalGeometry\(isTablet \? 120 : 180, 12\)/);
-  assert.match(canvas, /geometry\.computeVertexNormals\(\)/);
+  assert.match(canvas, /new THREE.TextureLoader/);
+  assert.match(canvas, /artworkTexture\?\.dispose/);
   assert.doesNotMatch(canvas, /TorusKnotGeometry|PointsMaterial|Math\.random/);
   assert.doesNotMatch(page, /IntroReveal/);
 });
@@ -53,14 +53,13 @@ test("mobile header keeps fixed navigation independent of backdrop containment",
 });
 
 
-test("static hero sculpture uses the same geometry as WebGL without an image request", async () => {
-  const [fallback, styles] = await Promise.all([read("../app/components/HeroFallback.tsx"), read("../app/studio.css")]);
-  assert.match(fallback, /import \{ projectSignalPoint \} from "\.\/signal-geometry"/);
-  assert.match(fallback, /<svg viewBox="0 0 640 620"/);
+test("hero fallback and WebGL preserve the same approved artwork", async () => {
+  const [fallback, canvas] = await Promise.all([read("../app/components/HeroFallback.tsx"), read("../app/components/Hero3DCanvas.tsx")]);
+  for (const source of [fallback, canvas]) assert.match(source, /\/brand\/ab-hero-monogram\.webp/);
+  assert.match(fallback, /preload/);
   assert.match(fallback, /aria-hidden="true"/);
-  assert.match(fallback, /\.sort\(\(a, b\) => a\.depth - b\.depth\)/);
-  assert.doesNotMatch(fallback, /<img|<image|<canvas|useEffect/);
-  assert.doesNotMatch(styles, /url\(['"]?\/brand\/ab-monogram/);
+  assert.doesNotMatch(canvas, /createSignalGeometry|ExtrudeGeometry/);
+  assert.ok((await stat(new URL("../public/brand/ab-hero-monogram.webp", import.meta.url))).size > 10000);
 });
 
 test("brand intro is brief, non-blocking and once per session", async () => {
@@ -76,7 +75,7 @@ test("brand intro is brief, non-blocking and once per session", async () => {
   assert.match(gate, /pointer: coarse/);
   assert.match(gate, /saveData/);
   assert.doesNotMatch(gate, /rel="preload"/);
-  assert.match(intro, /<ABLogo decorative/);
+  assert.match(intro, /ab-luxury-monogram\.webp/);
   assert.doesNotMatch(intro, /<video/);
   assert.match(styles, /pointer-events: none/);
   assert.doesNotMatch(styles, /overflow: hidden|hero-actions|site-header/);

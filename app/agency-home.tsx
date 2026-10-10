@@ -126,10 +126,10 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 </p>
                 <div className="hero-actions">
                   <a className="button button-primary" href="#contact" data-magnetic>
-                    Get a Website Quote <ArrowIcon />
+                    Start a Project <ArrowIcon />
                   </a>
                   <a className="button button-ghost" href="#work" data-magnetic>
-                    View Our Work <ArrowIcon direction="down-right" />
+                    Explore Our Work <ArrowIcon direction="down-right" />
                   </a>
                 </div>
                 <div className="stage-confidence" aria-label="Explore the studio or call directly">

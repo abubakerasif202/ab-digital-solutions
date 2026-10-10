@@ -133,8 +133,8 @@ test("premium motion remains present while mobile rendering is constrained", asy
   assert.match(experience, /else if \(tabletQuery\.matches\)/);
   assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.25\)/);
   assert.doesNotMatch(canvas, /TorusKnotGeometry|particleCount|PointsMaterial/);
-  assert.match(canvas, /createSignalGeometry/);
-  assert.match(canvas, /new THREE\.BufferGeometry\(\)/);
+  assert.match(canvas, /TextureLoader/);
+  assert.match(canvas, /new THREE\.PlaneGeometry\(/);
   assert.match(styles, /\.service-card\s*\{\s*min-height: 0;/);
   assert.match(styles, /@media \(max-width: 960px\) and \(orientation: landscape\)/);
 });

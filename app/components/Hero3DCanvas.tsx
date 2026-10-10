@@ -3,8 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { HeroFallback } from "./HeroFallback";
-import { createSignalGeometry, signalPoint } from "./signal-geometry";
-import { studioRadiance } from "./studio-radiance";
 
 interface Hero3DCanvasProps {
   className?: string;
@@ -64,67 +62,33 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     container.appendChild(renderer.domElement);
 
-    // The physical iridescence shader samples an original procedural softbox rig.
-    const radiance = new THREE.DataTexture(studioRadiance(), 256, 128);
-    radiance.mapping = THREE.EquirectangularReflectionMapping;
-    radiance.colorSpace = THREE.SRGBColorSpace;
-    radiance.needsUpdate = true;
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    const environment = pmrem.fromEquirectangular(radiance);
-    scene.environment = environment.texture;
-    pmrem.dispose();
-    radiance.dispose();
-    scene.add(new THREE.AmbientLight(0xffe9d2, 1.5));
-    const keyLight = new THREE.DirectionalLight(0xffffff, 5);
-    keyLight.position.set(2, 4, 5);
-    scene.add(keyLight);
-    const edgeLight = new THREE.DirectionalLight(0xff4a63, 4);
-    edgeLight.position.set(-4, -2, 3);
-    scene.add(edgeLight);
-    const goldLight = new THREE.DirectionalLight(0xf6d98f, 3);
-    goldLight.position.set(3, -3, -2);
-    scene.add(goldLight);
+    // A textured plane preserves the supplied bevels, letterforms and silhouette.
     const heroGroup = new THREE.Group();
-    heroGroup.rotation.set(-0.2, -0.38, -0.12);
     scene.add(heroGroup);
-    // Gilt on the front face, ruby on the back: the twist reads as one metal
-    // object turning between the two brand colours.
-    const giltMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xd1a64c, metalness: 0.92, roughness: 0.26,
-      clearcoat: 0.8, clearcoatRoughness: 0.2, envMapIntensity: 1.9, side: THREE.FrontSide,
-    });
-    const rubyMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xd21736, metalness: 0.72, roughness: 0.3,
-      clearcoat: 1, clearcoatRoughness: 0.18, envMapIntensity: 1.6, side: THREE.BackSide,
-    });
-    // A view-dependent rim adds a champagne-to-ruby edge light without bloom passes.
-    const chromaticShift = { value: 0.5 };
-    giltMaterial.onBeforeCompile = (shader) => {
-      shader.uniforms.uSignalShift = chromaticShift;
-      shader.fragmentShader = "uniform float uSignalShift;\n" + shader.fragmentShader;
-      shader.fragmentShader = shader.fragmentShader.replace("#include <opaque_fragment>", `
-        float signalFresnel = pow(1.0 - abs(dot(normal, normalize(vViewPosition))), 3.0);
-        vec3 signalRim = mix(vec3(0.94, 0.79, 0.42), vec3(0.82, 0.09, 0.21), uSignalShift);
-        outgoingLight += signalRim * signalFresnel * 0.38;
-        #include <opaque_fragment>
-      `);
+    const geometry = new THREE.PlaneGeometry(4.8, 4);
+    const material = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false, toneMapped: false });
+    const artwork = new THREE.Mesh(geometry, material);
+    heroGroup.add(artwork);
+    // Match the fallback's contained size so activating WebGL does not resize it.
+    const fitArtwork = (canvasWidth: number, canvasHeight: number) => {
+      const viewHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * camera.position.z;
+      const viewWidth = viewHeight * canvasWidth / canvasHeight;
+      heroGroup.scale.setScalar(Math.min(viewWidth * 0.86 / 4.8, viewHeight * 0.9 / 4));
     };
-    giltMaterial.customProgramCacheKey = () => "gilt-ruby-rim-v1";
-    const surface = createSignalGeometry(isTablet ? 120 : 180, 12);
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute("position", new THREE.Float32BufferAttribute(surface.positions, 3));
-    geometry.setIndex(surface.indices);
-    geometry.computeVertexNormals();
-    const geometries: THREE.BufferGeometry[] = [geometry];
-    heroGroup.add(new THREE.Mesh(geometry, giltMaterial), new THREE.Mesh(geometry, rubyMaterial));
-    const contourMaterial = new THREE.LineBasicMaterial({ color: 0xffeebe, transparent: true, opacity: 0.55 });
-    const seamMaterial = new THREE.LineBasicMaterial({ color: 0xe7c995, transparent: true, opacity: 0.4 });
-    for (const across of [-1, -0.86, 0.86, 1]) {
-      const points = Array.from({ length: 241 }, (_, index) => new THREE.Vector3(...signalPoint(index / 240 * Math.PI * 2, across)));
-      const contour = new THREE.BufferGeometry().setFromPoints(points);
-      geometries.push(contour);
-      heroGroup.add(new THREE.Line(contour, Math.abs(across) === 1 ? contourMaterial : seamMaterial));
-    }
+    fitArtwork(width, height);
+    let disposed = false;
+    let textureReady = false;
+    let artworkTexture: THREE.Texture | undefined;
+    new THREE.TextureLoader().load("/brand/ab-hero-monogram.webp", (texture) => {
+      if (disposed) { texture.dispose(); return; }
+      texture.colorSpace = THREE.SRGBColorSpace;
+      artworkTexture = texture;
+      material.map = texture;
+      material.needsUpdate = true;
+      textureReady = true;
+      renderStaticFrame();
+      startLoop();
+    });
 
     // Animation & Smooth Control State
     let animationFrameId = 0;
@@ -201,11 +165,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       scrollY += (targetScrollY - scrollY) * 0.05;
       const scrollFactor = Math.min(scrollY / 1000, 2);
 
-      chromaticShift.value = (mouseX + 1) * 0.5;
-      edgeLight.position.x = -4 + mouseX * 2;
-      keyLight.position.y = 4 - mouseY * 1.5;
-      heroGroup.rotation.x = -0.2 + mouseY * 0.09;
-      heroGroup.rotation.y = -0.38 + mouseX * 0.12;
+      heroGroup.rotation.x = mouseY * 0.045;
+      heroGroup.rotation.y = mouseX * 0.075;
       heroGroup.position.y = -scrollFactor * 0.12;
       camera.position.x = mouseX * 0.12;
       camera.position.y = -mouseY * 0.12;
@@ -225,8 +186,8 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     const renderStaticFrame = () => {
       camera.lookAt(scene.position);
       renderer.render(scene, camera);
-      if (revealFrame || container.dataset.renderReady === "true") return;
-      // Two frames establish the SVG/canvas before-state for a real crossfade.
+      if (!textureReady || revealFrame || container.dataset.renderReady === "true") return;
+      // Two frames establish the artwork/canvas before-state for a crossfade.
       revealFrame = requestAnimationFrame(() => {
         revealFrame = requestAnimationFrame(() => {
           container.dataset.renderReady = "true";
@@ -319,6 +280,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
       camera.aspect = newWidth / newHeight;
       camera.updateProjectionMatrix();
+      fitArtwork(newWidth, newHeight);
       renderer.setPixelRatio(newPixelRatio);
       renderer.setSize(newWidth, newHeight);
       if (isVisible || prefersReducedMotion) renderStaticFrame();
@@ -339,12 +301,10 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       renderer.domElement.removeEventListener("webglcontextlost", handleContextLost);
 
-      geometries.forEach((geometry) => geometry.dispose());
-      giltMaterial.dispose();
-      rubyMaterial.dispose();
-      contourMaterial.dispose();
-      seamMaterial.dispose();
-      environment.dispose();
+      disposed = true;
+      geometry.dispose();
+      material.dispose();
+      artworkTexture?.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
 
@@ -365,7 +325,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       style={{
         width: "100%",
         height: "100%",
-        minHeight: "450px",
+        minHeight: "0",
         position: "relative",
         overflow: "hidden",
         pointerEvents: "none", // Prevent canvas from hijacking clicks or drag gestures
