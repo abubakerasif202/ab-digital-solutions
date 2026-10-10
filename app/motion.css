@@ -15,6 +15,14 @@
     clip-path 900ms var(--ease-lux) var(--reveal-delay, 0ms);
 }
 .reveal[data-reveal-state="armed"] { opacity: 0; }
+/* Keyboard users must never focus a link hidden by a scroll timeline. */
+[data-reveal]:focus-within {
+  animation: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  clip-path: none !important;
+}
 .reveal[data-reveal-state="armed"][data-reveal-variant="fade-up"] { translate: 0 22px; }
 .reveal[data-reveal-state="armed"][data-reveal-variant="blur"] { translate: 0 12px; filter: blur(8px); }
 .reveal[data-reveal-state="armed"][data-reveal-variant="mask"] { opacity: 1; clip-path: inset(0 0 100% 0); translate: 0 14px; }

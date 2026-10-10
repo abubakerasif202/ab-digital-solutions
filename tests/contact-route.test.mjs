@@ -210,3 +210,26 @@ test("shared rate-limit store failure falls back without leaking details", async
   assert.deepEqual(body, { ok: true });
   assert.ok(!JSON.stringify(body).includes("upstash"), "client response must not mention the store");
 });
+
+test("starter budgets and custom software enquiries remain deliverable", async () => {
+  const response = await POST(contactRequest(validPayload({ budget: "Under $1,500", service: "Custom software & business systems" }), { "x-real-ip": nextIp() }));
+  assert.equal(response.status, 200);
+  const sent = JSON.parse(fetchCalls[0].init.body);
+  assert.match(sent.text, /Under \$1,500/);
+  assert.match(sent.text, /Custom software & business systems/);
+});
+
+test("invalid options and cross-origin requests never trigger delivery", async () => {
+  const invalid = await POST(contactRequest(validPayload({ budget: "$50" }), { "x-real-ip": nextIp() }));
+  assert.equal(invalid.status, 400);
+  const crossOrigin = await POST(contactRequest(validPayload(), { origin: "https://evil.example", host: "www.abwebstudio.com.au", "x-real-ip": nextIp() }));
+  assert.equal(crossOrigin.status, 403);
+  assert.equal(fetchCalls.length, 0);
+});
+
+test("delivery rejection and network errors are recoverable failures", async () => {
+  fetchResponder = () => new Response("rejected", { status: 403 });
+  assert.equal((await POST(contactRequest(validPayload(), { "x-real-ip": nextIp() }))).status, 502);
+  fetchResponder = () => { throw new Error("mock network failure"); };
+  assert.equal((await POST(contactRequest(validPayload(), { "x-real-ip": nextIp() }))).status, 502);
+});

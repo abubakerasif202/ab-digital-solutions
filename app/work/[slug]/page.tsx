@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProjectArtwork, projectArtworkRatio } from "../../project-artwork";
-import { findProject, formatCategory, isSoftwareProject, projects } from "../../project-data";
+import { findProject, formatCategory, isSoftwareProject, projectDestinationLabel, projectVisitLabel, projects } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
 import { siteConfig } from "../../site-config";
@@ -91,7 +91,8 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
   // feel identical: live software gets a dark system frame, websites
   // alternate between a cinematic full-width hero and an editorial split.
   const variant = softwareProject ? "system" : currentIndex % 2 === 0 ? "cinematic" : "split";
-  const visitLabel = `${project.ctaLabel ?? "View Live Website"} — ${project.name} (opens in a new tab)`;
+  const destinationLabel = projectDestinationLabel(project);
+  const visitLabel = `${projectVisitLabel(project)} — ${project.name} (opens in a new tab)`;
 
   return (
     <>
@@ -121,10 +122,10 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                   data-magnetic
                   aria-label={visitLabel}
                 >
-                  {project.ctaLabel ?? "View Live Website"} <ArrowIcon />
+                  {projectVisitLabel(project)} <ArrowIcon />
                 </a>
                 <Link className="button button-ghost" href="/contact" data-magnetic>
-                  Start a Project <ArrowIcon />
+                  Get a Website Quote <ArrowIcon />
                 </Link>
               </div>
             </div>
@@ -136,7 +137,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             <div><span>Category</span><strong>{formatCategory(project.category)}</strong></div>
             <div><span>Stack</span><strong>{project.techStack.join(" · ")}</strong></div>
             <div>
-              <span>{softwareProject ? "Production URL" : "Live at"}</span>
+              <span>{destinationLabel}</span>
               <a href={project.url} target="_blank" rel="noopener noreferrer" data-cursor="VISIT" aria-label={`${project.displayUrl} (opens in a new tab)`}>
                 {project.displayUrl} <ArrowIcon />
               </a>
@@ -211,10 +212,14 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
         <section className="gr-cs-live" aria-labelledby="live-proof-heading">
           <div className="container gr-cs-live-inner" data-reveal>
             <div>
-              <p className="eyebrow">Live digital experience</p>
+              <p className="eyebrow">{destinationLabel}</p>
               <h2 id="live-proof-heading">See {project.name} <span className="accent-serif">in action.</span></h2>
               <p>
-                {softwareProject
+                {project.destination === "unavailable"
+                  ? "The external project website was unavailable during our latest check. The case study above documents the delivered work."
+                  : project.destination === "hosted-showcase"
+                    ? "Explore the hosted website showcase. This address is separate from a verified client production domain."
+                    : softwareProject
                   ? "Continue to the secure production system to view its public staff access experience."
                   : "Continue to the client website when you are ready to explore the published experience."}
               </p>
@@ -226,9 +231,9 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
               rel="noopener noreferrer"
               data-cursor="VISIT"
               data-magnetic
-              aria-label={`${project.ctaLabel ?? "Visit Live Website"} — ${project.name} (opens in a new tab)`}
+              aria-label={visitLabel}
             >
-              {project.ctaLabel ?? "Visit Live Website"} <ArrowIcon />
+              {projectVisitLabel(project)} <ArrowIcon />
             </a>
           </div>
         </section>
@@ -254,7 +259,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             <h2>Let&apos;s create a digital experience with a clear <span className="accent-serif">commercial purpose.</span></h2>
             <div className="content-actions">
               <Link className="button button-primary" href="/contact" data-magnetic>
-                Start a Project <ArrowIcon />
+                Get a Website Quote <ArrowIcon />
               </Link>
               <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
                 Call {siteConfig.phoneDisplay}

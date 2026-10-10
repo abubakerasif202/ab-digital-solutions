@@ -11,7 +11,7 @@ declare global {
 }
 
 type AnalyticsPayload = {
-  event_name: "page_view" | "cta_click" | "web_vital";
+  event_name: "page_view" | "cta_click" | "web_vital" | "project_enquiry";
   path: string;
   label?: string;
   metric_name?: string;
@@ -22,6 +22,7 @@ type AnalyticsPayload = {
 
 function sendAnalytics(payload: AnalyticsPayload) {
   if (typeof window === "undefined") return;
+  if (navigator.doNotTrack === "1" || (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl) return;
 
   const body = JSON.stringify(payload);
 
@@ -75,10 +76,13 @@ export function WebVitals() {
       let label = "";
       if (href.startsWith("tel:")) label = "phone";
       else if (href.startsWith("mailto:")) label = "email";
+      else if (href.startsWith("https://wa.me/")) label = "whatsapp";
       else {
         try {
           const url = new URL(target.href, window.location.href);
           if (url.origin !== window.location.origin) label = `outbound:${url.hostname}`;
+          else if (url.pathname === "/contact" || url.hash === "#contact") label = "project_cta";
+          else if (url.pathname.startsWith("/work/")) label = `portfolio:${url.pathname.split("/")[2]}`;
         } catch {
           return;
         }
@@ -93,8 +97,15 @@ export function WebVitals() {
       }
     }
 
+    function trackEnquiry() {
+      sendAnalytics({ event_name: "project_enquiry", path: window.location.pathname, label: "contact_form" });
+    }
     document.addEventListener("click", trackClick, { capture: true });
-    return () => document.removeEventListener("click", trackClick, { capture: true });
+    window.addEventListener("ab:enquiry-success", trackEnquiry);
+    return () => {
+      document.removeEventListener("click", trackClick, { capture: true });
+      window.removeEventListener("ab:enquiry-success", trackEnquiry);
+    };
   }, []);
 
   useReportWebVitals((metric) => {

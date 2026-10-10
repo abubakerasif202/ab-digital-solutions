@@ -28,6 +28,14 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: contentSecurityPolicy,
   },
+  // Diagnose inline framework scripts before considering a nonce migration.
+  // Report-only never blocks hydration, and preserves static page caching.
+  ...(process.env.CSP_REPORT_ONLY === "true" && !isDevelopment
+    ? [{
+      key: "Content-Security-Policy-Report-Only",
+      value: contentSecurityPolicy.replace(/script-src [^;]+/, "script-src 'self'"),
+    }]
+    : []),
 ];
 
 const nextConfig: NextConfig = {

@@ -77,7 +77,7 @@ export default function WorkPage() {
             </p>
             <div className="content-actions">
               <Link className="button button-primary" href="/contact" data-magnetic>
-                Start a Project <ArrowIcon />
+                Get a Website Quote <ArrowIcon />
               </Link>
               <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
                 Call {siteConfig.phoneDisplay}

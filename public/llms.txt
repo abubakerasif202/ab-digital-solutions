@@ -8,7 +8,7 @@
 - Location: Sydney, NSW, Australia.
 - Service Area: Sydney and Australia-wide.
 - Website Stack: Next.js 16, React 19, TypeScript, CSS, and Vercel.
-- Selected Portfolio: Live digital projects across transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services. See the Work index for the current project count.
+- Selected Portfolio: Digital projects across transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services. See the Work index for the current project count.
 
 ## Main Services & Pages
 
@@ -19,13 +19,13 @@
 - [Branding & Website Content](https://www.abwebstudio.com.au/services/branding-content): Visual direction, brand positioning, and website copy.
 - [Digital Marketing](https://www.abwebstudio.com.au/services/digital-marketing): Landing page design, lead generation, and campaign strategy.
 - [Website Maintenance & Support](https://www.abwebstudio.com.au/services/website-maintenance): Ongoing support, technical health checks, and performance updates.
-- [Work & Case Studies](https://www.abwebstudio.com.au/work): Every live project with its own case study.
+- [Work & Case Studies](https://www.abwebstudio.com.au/work): Every portfolio project with its own case study.
 - [Services](https://www.abwebstudio.com.au/services): Index of all six services.
 - [About](https://www.abwebstudio.com.au/about): The studio, its approach and principles.
 - [Contact](https://www.abwebstudio.com.au/contact): Start a project — enquiry form, phone, email and WhatsApp.
 - [Privacy Policy](https://www.abwebstudio.com.au/privacy): Information handling and privacy guidelines under Australian law.
 
-## Selected Portfolio (live websites and software)
+## Selected Portfolio (websites, hosted showcases and software)
 
 - [Jufaja Construction / Jufaja Homes](https://jufaja-homes-platform.vercel.app/): Construction / property — premium digital platform with home design navigation and dedicated enquiry pathways.
 - [Aftab & Sons Transport](https://www.aftabandsons.com.au/): Transport & logistics — industrial identity, responsive interface and conversion-focused presentation for heavy-vehicle transport.
@@ -33,13 +33,13 @@
 - [Adelaide Wholesale Tyres](https://adelaidewholesaletyres.com.au/): E-commerce / wholesale — searchable wholesale tyre catalogue with cart-based bulk ordering and quote workflow.
 - [24/7 Truck Tyre Services](https://www.247trucktyreservices.com.au/): Automotive / roadside assistance — emergency-led service enquiries for truck tyre support.
 - [Maple Rentals](https://www.maplerentals.com.au/): Mobility / car rentals — premium driver rentals and streamlined online applications.
-- [Gala Rentals](https://www.galarentals.com.au/): Mobility / car rentals — weekly car rental booking experience in Sydney.
-- [ZQ Removals](https://zqremovals.au/): Services / removals — local-service positioning with a direct path to quote requests.
+- [Gala Rentals](https://www.galarentals.com.au/): Mobility / car rentals — weekly car rental booking experience in Sydney. External website unavailable at the latest check; case study remains available.
+- [ZQ Removals](https://zqremovalsadelaide.com.au/): Services / removals — local-service positioning with a direct path to quote requests.
 - [DECENT Development](https://www.decentdevelopment.com.au/): Property / development — digital presence for a Sydney construction business.
 - [Milestone Development](https://milestonedevelopment.com.au/): Property / construction — project-led residential and commercial showcase.
 - [4 Point Concrete](https://4point-concrete-website.vercel.app/): Construction / civil — capability-focused concrete and structural works site.
 - [1st Class Express](https://www.1stclassexpress.com.au/): Transport & logistics — interstate freight positioning, fleet showcase and quote enquiries.
-- [HF Removals Adelaide](https://www.hfremovalsadelaide.com/): Services / removals — published reference rates with an instant quote request flow.
+- [HF Removals Adelaide](https://www.hfremovalsadelaide.com.au/): Services / removals — published reference rates with an instant quote request flow.
 - [Cheap Adelaide Removalist](https://www.cheapadelaideremovalist.com.au/): Services / removals — transparent per-30-minute rates with a Bento-style pricing and logistics engine.
 
 ## Contact & Authority Information

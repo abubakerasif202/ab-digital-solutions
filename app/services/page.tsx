@@ -12,7 +12,7 @@ import { ArrowIcon } from "../icons";
 export const metadata: Metadata = {
   title: "Digital Services",
   description:
-    "Web design, e-commerce development, SEO, branding, digital marketing and website care for Australian businesses — every engagement tied to a clear commercial goal.",
+    "Sydney web design, e-commerce, custom software, SEO and website care for Australian businesses. Explore practical digital services from AB Web Studio.",
   alternates: { canonical: "/services" },
   openGraph: {
     title: `Digital Services | ${siteConfig.name}`,

@@ -16,7 +16,6 @@ import "./gilt-ruby.css";
 import "./compositions.css";
 import "./studio-premium.css";
 import "./studio-pages.css";
-import "./work-premium.css";
 import "./gilt-ruby-stage.css";
 
 export const metadata: Metadata = {
@@ -161,9 +160,8 @@ const sansFont = Schibsted_Grotesk({
   variable: "--font-sans",
 });
 
-// The didone sets every headline, including the hero h1 (the LCP element), so
-// it is preloaded. The optical-size axis keeps hairlines crisp from 32px cards
-// to the 6rem hero.
+// Preload the display faces for editorial headlines. The optical-size axis
+// keeps their hairlines crisp from small cards to the oversized hero.
 const displayFont = Bodoni_Moda({
   subsets: ["latin"],
   style: ["normal", "italic"],

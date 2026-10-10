@@ -12,6 +12,8 @@ export function SiteHeader() {
   const [mobileCtaVisible, setMobileCtaVisible] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  // Keep speculative route assets off the homepage's initial rendering path.
+  const prefetchNavigation = pathname !== "/" || menuOpen;
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
@@ -253,11 +255,11 @@ export function SiteHeader() {
             className={`site-nav${menuOpen ? " is-open" : ""}`}
             aria-label="Primary navigation"
           >
-            <Link href="/work" onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
-            <Link href="/services" onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
+            <Link href="/work" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
+            <Link href="/services" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
             <Link href="/#process" onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
-            <Link href="/about" onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
-            <Link className="nav-cta" href="/contact" onClick={handleNavLinkClick} data-magnetic>
+            <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
+            <Link className="nav-cta" href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} data-magnetic>
               Start a project <ArrowIcon />
             </Link>
           </nav>

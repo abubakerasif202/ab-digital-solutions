@@ -32,6 +32,7 @@ export function LiveTicker({ items }: { items: readonly LiveTickerItem[] }) {
     <Link
       className="live-ticker"
       href={`/work/${item.slug}`}
+      prefetch={false}
       data-cursor="VIEW"
       onPointerEnter={() => setPaused(true)}
       onPointerLeave={() => setPaused(false)}
@@ -42,7 +43,7 @@ export function LiveTicker({ items }: { items: readonly LiveTickerItem[] }) {
         <Image key={item.slug} src={item.image} alt="" fill sizes="96px" />
       </span>
       <span className="live-ticker-copy">
-        <small><i aria-hidden="true" />Live work · {String(index + 1).padStart(2, "0")}/{String(items.length).padStart(2, "0")}</small>
+        <small><i aria-hidden="true" />Featured · {String(index + 1).padStart(2, "0")}/{String(items.length).padStart(2, "0")}</small>
         <strong>{item.name}</strong>
         <span>{item.sector}</span>
       </span>

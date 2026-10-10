@@ -26,20 +26,29 @@ export function Reveal({ as = "div", variant = "fade-up", delay = 0, className, 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
+    if (!("IntersectionObserver" in window)) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (element.getBoundingClientRect().top < window.innerHeight * 0.92) return;
 
     element.setAttribute("data-reveal-state", "armed");
+    const show = () => {
+      element.setAttribute("data-reveal-state", "in");
+      observer.disconnect();
+    };
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
-        element.setAttribute("data-reveal-state", "in");
-        observer.disconnect();
+        show();
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.12 },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0 },
     );
     observer.observe(element);
-    return () => observer.disconnect();
+    element.addEventListener("focusin", show);
+    return () => {
+      observer.disconnect();
+      element.removeEventListener("focusin", show);
+      element.removeAttribute("data-reveal-state");
+    };
   }, []);
 
   const delayStyle = delay ? ({ "--reveal-delay": `${delay}ms`, ...style } as CSSProperties) : style;

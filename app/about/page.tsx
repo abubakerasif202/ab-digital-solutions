@@ -9,7 +9,7 @@ import { SiteFooter } from "../site-footer";
 import { siteConfig } from "../site-config";
 
 const description =
-  "AB Web Studio is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.";
+  "Meet AB Web Studio, a Sydney digital studio creating websites and custom software for Australian businesses with thoughtful design and practical technology.";
 
 export const metadata: Metadata = {
   title: "About the Studio",
