@@ -7,14 +7,13 @@ import { findService } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
-import { ArrowIcon, Glyph } from "./icons";
-import { Mail, MessageCircle, Phone } from "lucide-react";
+import { ArrowIcon } from "./icons";
 import { PortfolioSection } from "./components/PortfolioSection";
 import { StudioCapabilities } from "./components/StudioCapabilities";
-import { ABBrandImage } from "./components/brand/ABBrandImage";
 import { ProcessTimeline } from "./components/motion/ProcessTimeline";
 import { StackLedger } from "./components/StackLedger";
-import { Reveal } from "./components/motion/Reveal";
+import { EnquirySection } from "./components/studio/EnquirySection";
+import { StudioAbout } from "./components/studio/StudioAbout";
 
 const services = [
   {
@@ -228,7 +227,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         <section className="standard-section" aria-labelledby="standard-heading">
           <div className="container standard-layout">
             <div className="standard-statement" data-reveal>
-              <p className="eyebrow section-index"><span className="eyebrow-mark" />The AB standard</p>
+              <p className="eyebrow section-index"><span className="section-index-num">05</span><span className="micro-rule" aria-hidden="true" />The AB standard</p>
               <h2 id="standard-heading">Feel the quality. <span className="accent-serif">Then see the thinking.</span></h2>
             </div>
             <div className="standard-points">
@@ -239,54 +238,11 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           </div>
         </section>
 
-        <section className="section about-section" id="about" aria-labelledby="about-heading">
-          <div className="container about-layout">
-            <div className="about-logo" data-reveal>
-              <div className="about-logo-ring" aria-hidden="true" />
-              <ABBrandImage full />
-              <span>Sydney / Australia</span>
-            </div>
-            <div className="about-copy" data-reveal>
-              <p className="eyebrow section-index"><span className="section-index-num">05</span><span className="micro-rule" aria-hidden="true" />About AB</p>
-              <h2 id="about-heading">Your digital presence should <em>work as hard</em> as you do.</h2>
-              <p>AB Web Studio is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
-              <Reveal className="studio-trust" variant="blur" role="group" aria-label="Studio details">
-                <p><strong>Abubakar Asif</strong><span>Founder &amp; Lead Developer</span></p>
-                <p><strong>Sydney, Australia</strong><span>Working Australia-wide</span></p>
-                <p><strong>Real project portfolio</strong><span>{projects.length} digital project case studies</span></p>
-              </Reveal>
-              <Reveal as="p" variant="blur">We create digital experiences that look considered, feel effortless to use and give your business a stronger platform for sustainable growth.</Reveal>
-              <Reveal as="p" variant="blur" delay={90}>Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.</Reveal>
-              <Link className="text-link" href="/about">Inside the studio <ArrowIcon /></Link>
-              <Reveal as="dl" className="about-values" variant="fade-up">
-                <div><dt>Clear communication</dt><dd>Simple advice and transparent decisions.</dd></div>
-                <div><dt>Reliable delivery</dt><dd>A professional process from brief to launch.</dd></div>
-                <div><dt>Results-focused work</dt><dd>Design choices connected to business goals.</dd></div>
-              </Reveal>
-            </div>
-          </div>
-        </section>
+        <StudioAbout id="about" index="06" showStudioLink />
 
-        <section className="section contact-section" id="contact" aria-labelledby="contact-heading">
-          <div className="contact-word" aria-hidden="true">HELLO</div>
-          <div className="container contact-layout">
-            <div className="contact-copy" data-reveal>
-              <p className="eyebrow section-index"><span className="section-index-num">06</span><span className="micro-rule" aria-hidden="true" />Start a conversation</p>
-              <h2 id="contact-heading" className="contact-title scroll-mask">
-                <span className="mask-line"><span>Let’s build your next</span></span>
-                <span className="mask-line contact-title-accent"><span>digital advantage.</span></span>
-              </h2>
-              <p>Tell us what you are building and where you want the business to go. We will come back with a practical next step.</p>
-              <Reveal className="contact-options" variant="fade-up" delay={120}>
-                <a href={`tel:${siteConfig.phoneInternational}`}><span><Glyph icon={Phone} />Call</span><strong>{siteConfig.phoneDisplay}</strong><ArrowIcon /></a>
-                <a href={`mailto:${siteConfig.email}`}><span><Glyph icon={Mail} />Email</span><strong>{siteConfig.email}</strong><ArrowIcon /></a>
-                <a href={`https://wa.me/${siteConfig.phoneInternational.replace("+", "")}`} target="_blank" rel="noopener noreferrer"><span><Glyph icon={MessageCircle} />WhatsApp</span><strong>Message directly</strong><ArrowIcon /><span className="sr-only"> (opens in a new tab)</span></a>
-              </Reveal>
-            </div>
-
-            <ContactForm />
-          </div>
-        </section>
+        <EnquirySection id="contact" index="07">
+          <ContactForm />
+        </EnquirySection>
       </main>
 
       <SiteFooter currentYear={currentYear} />

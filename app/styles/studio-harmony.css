@@ -1,0 +1,81 @@
+/* Studio harmony ----------------------------------------------------------------
+   Brings the rest of the site into the approved dark language. Earlier layers
+   alternated dark sections with light paper/bone bands; the reference is one
+   continuous obsidian surface where rhythm comes from elevation (surface vs
+   obsidian), hairlines and gilt detail. The bands below keep their layouts:
+   their light-theme tokens are remapped in scope, then the few hard-coded
+   light greys are corrected explicitly.                                       */
+
+:root .cinematic-home .gr-services,
+:root .cinematic-home .standard-section,
+:root .gr-svc-section,
+:root .gr-about-principles,
+:root .gr-cs-features {
+  --ink: var(--ivory);
+  --paper: var(--obsidian);
+  --paper-warm: var(--surface);
+  --gold-dark: var(--gilt);
+  --red-text: var(--gilt);
+  --bone: var(--surface);
+  --bone-ink: var(--ivory);
+  --bone-muted: var(--ivory-muted);
+  --bone-gilt: var(--gilt);
+  --bone-line: var(--hair);
+  --bone-line-strong: var(--hair-strong);
+  border-color: var(--hair);
+  background: var(--surface);
+  color: var(--ivory);
+}
+
+/* Alternate elevation so neighbouring bands still read as distinct. */
+:root .cinematic-home .standard-section { background: var(--obsidian); border-block: 1px solid var(--hair); }
+
+:is(.cinematic-home .gr-services, .cinematic-home .standard-section, .gr-svc-section, .gr-about-principles, .gr-cs-features) :focus-visible {
+  outline-color: var(--gilt);
+}
+
+/* Hard-coded light-theme greys and black hairlines from earlier layers. */
+/* Route-level stylesheets load after this layer, so these carry :root. */
+:root .cinematic-home .gr-services .section-heading > p,
+:root .cinematic-home .gr-services .capability-card p,
+:root .gr-svc-section .gr-section-head-aside p,
+:root .gr-svc-panel-copy .gr-kicker,
+:root .gr-about-principles-list p,
+:root .gr-about-values dd { color: var(--ivory-muted); }
+
+.cinematic-home .gr-services .capability-symbol { border-color: var(--hair-strong); color: var(--gilt); }
+.cinematic-home .standard-section::before { color: rgba(244, 241, 234, 0.035); }
+
+@media (max-width: 960px) {
+  .cinematic-home .gr-services .capability-card { border-bottom-color: var(--hair); }
+}
+
+/* Indexed rows: gilt numerals and indicators, hairline rules, and a quiet
+   surface lift on hover instead of the old ink inversion. */
+:root .cinematic-home .gr-services .services-list { border-top-color: var(--hair-strong); }
+:root .cinematic-home .gr-services .service-card,
+:root .gr-svc-page .gr-svc-row,
+:root .gr-about-principles-list li { border-bottom-color: var(--hair); }
+:root .cinematic-home .gr-services .service-card-index,
+:root .gr-svc-num,
+:root .gr-about-principles-list span { color: var(--gilt); }
+:root .gr-service-desc,
+:root .gr-svc-summary { color: var(--ivory-muted); }
+:root .gr-svc-row::after { background: var(--gilt); }
+:root .cinematic-home .gr-services .service-card:is(:hover, :focus-visible) { background: var(--surface-2); color: var(--ivory); }
+:root .cinematic-home .gr-services .service-card:is(:hover, :focus-visible) :is(h3, .gr-service-desc) { color: var(--ivory); }
+
+/* Lists that used full-strength ink rules on paper read as hairlines on dark. */
+:root .gr-svc-list,
+:root .gr-svc-list > li,
+:root .gr-about-principles-list,
+:root .gr-about-principles-list > li { border-color: var(--hair-strong); }
+
+/* Service pages: indices, kickers and FAQ markers are detail, so they are gilt. */
+.service-inclusions li > span,
+.service-process li > span,
+.service-faq summary span,
+.service-project > div:last-child > span,
+.process-list li > span:first-child,
+.cinematic-home .standard-points article > span { color: var(--gilt); }
+.service-context::before { background: var(--gilt); }

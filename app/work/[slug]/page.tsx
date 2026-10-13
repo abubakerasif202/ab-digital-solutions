@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Image from "next/image";
+import { Reveal } from "../../components/motion/Reveal";
 import { ProjectArtwork, projectArtworkRatio } from "../../project-artwork";
 import { findProject, formatCategory, isSoftwareProject, projectDestinationLabel, projectVisitLabel, projects } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
@@ -132,7 +134,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             <span className="gr-number gr-cs-number" aria-hidden="true">{number}</span>
           </div>
 
-          <div className="case-study-meta gr-cs-meta" data-reveal>
+          <Reveal className="case-study-meta gr-cs-meta">
             <div><span>Sector</span><strong>{project.sector}</strong></div>
             <div><span>Category</span><strong>{formatCategory(project.category)}</strong></div>
             <div><span>Stack</span><strong>{project.techStack.join(" · ")}</strong></div>
@@ -142,7 +144,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 {project.displayUrl} <ArrowIcon />
               </a>
             </div>
-          </div>
+          </Reveal>
         </header>
 
         <div className="gr-cs-hero-media">
@@ -160,20 +162,20 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
         </div>
 
         <section className="container gr-cs-story" aria-label="Case study overview and approach">
-          <div className="gr-cs-story-block" data-reveal>
+          <Reveal className="gr-cs-story-block">
             <p className="eyebrow">01 / Overview</p>
             <p className="gr-cs-statement">{project.overview}</p>
-          </div>
-          <div className="gr-cs-story-block gr-cs-story-block--approach" data-reveal>
+          </Reveal>
+          <Reveal className="gr-cs-story-block gr-cs-story-block--approach" delay={120}>
             <p className="eyebrow">02 / Approach</p>
             <h2>{approachHeading}</h2>
             <p className="case-study-body-text">{project.solution}</p>
-          </div>
+          </Reveal>
         </section>
 
         <section className="gr-cs-features" aria-labelledby="features-heading">
           <div className="container gr-cs-features-grid">
-            <div className="gr-cs-features-head" data-reveal>
+            <Reveal className="gr-cs-features-head">
               <p className="eyebrow">03 / Key features</p>
               <h2 id="features-heading">{project.name}: <span className="accent-serif">in detail.</span></h2>
               <div className="gr-cs-capabilities">
@@ -186,12 +188,14 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                   {project.techStack.map((tech) => <span key={tech} className="tech-pill">{tech}</span>)}
                 </div>
               </div>
-            </div>
+            </Reveal>
             <ol className="gr-cs-feature-list">
               {project.keyFeatures.map((feature, idx) => (
-                <li key={feature} data-reveal>
-                  <span className="gr-cs-feature-num" aria-hidden="true">{String(idx + 1).padStart(2, "0")}</span>
-                  <span>{feature}</span>
+                <li key={feature}>
+                  <Reveal className="gr-cs-feature-row" delay={idx * 90}>
+                    <span className="gr-cs-feature-num" aria-hidden="true">{String(idx + 1).padStart(2, "0")}</span>
+                    <span>{feature}</span>
+                  </Reveal>
                 </li>
               ))}
             </ol>
@@ -199,18 +203,34 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
         </section>
 
         <section className="container gr-cs-detail" aria-labelledby="visual-showcase-heading">
-          <div className="gr-cs-detail-head" data-reveal>
+          <Reveal className="gr-cs-detail-head">
             <p className="eyebrow">04 / A closer look</p>
             <h2 id="visual-showcase-heading">{softwareProject ? "The public staff-access experience." : `${project.name}, on screen.`}</h2>
-          </div>
-          <div className="gr-cs-pan gr-cut-lg" style={{ aspectRatio: projectArtworkRatio(project) }} data-reveal>
+          </Reveal>
+          <Reveal variant="mask" className="gr-cs-pan gr-cut-lg" style={{ aspectRatio: projectArtworkRatio(project) }}>
             <ProjectArtwork project={project} sizes="(max-width: 860px) 100vw, 1440px" />
-          </div>
+          </Reveal>
           <p className="gr-cs-pan-caption">{softwareProject ? "Public sign-in capture only. Internal records remain private." : `Desktop homepage capture · ${project.displayUrl}`}</p>
+          {project.gallery ? (
+            <ul className="gr-cs-gallery" aria-label={`${project.name} tool screens`}>
+              {project.gallery.map((shot, idx) => (
+                <li key={shot.src}>
+                  <Reveal as="div" delay={idx * 110}>
+                    <figure>
+                    <div className="gr-cs-gallery-frame" style={{ aspectRatio: projectArtworkRatio(project) }}>
+                      <Image src={shot.src} alt={shot.alt} fill loading="lazy" sizes="(max-width: 860px) 100vw, 33vw" />
+                    </div>
+                    <figcaption>{shot.caption}</figcaption>
+                    </figure>
+                  </Reveal>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </section>
 
         <section className="gr-cs-live" aria-labelledby="live-proof-heading">
-          <div className="container gr-cs-live-inner" data-reveal>
+          <Reveal className="container gr-cs-live-inner">
             <div>
               <p className="eyebrow">{destinationLabel}</p>
               <h2 id="live-proof-heading">See {project.name} <span className="accent-serif">in action.</span></h2>
@@ -235,7 +255,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             >
               {projectVisitLabel(project)} <ArrowIcon />
             </a>
-          </div>
+          </Reveal>
         </section>
 
         <nav className="next-project-nav gr-cs-next" aria-label="Next Project">
@@ -254,7 +274,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
         </nav>
 
         <aside className="gr-final-cta" aria-label="Start your project">
-          <div className="container gr-final-cta-inner" data-reveal>
+          <Reveal className="container gr-final-cta-inner">
             <p className="eyebrow">Have a project in mind?</p>
             <h2>Let&apos;s create a digital experience with a clear <span className="accent-serif">commercial purpose.</span></h2>
             <div className="content-actions">
@@ -265,7 +285,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 Call {siteConfig.phoneDisplay}
               </a>
             </div>
-          </div>
+          </Reveal>
         </aside>
         <script
           type="application/ld+json"

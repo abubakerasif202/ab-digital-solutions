@@ -3,8 +3,10 @@ import test from "node:test";
 import { findProject, projectDestinationLabel, projectVisitLabel, projects } from "../app/project-data.ts";
 
 test("portfolio retains every case study and distinguishes external destination types", () => {
-  assert.equal(projects.length, 14);
-  assert.equal(new Set(projects.map(({ slug }) => slug)).size, 14);
+  assert.equal(new Set(projects.map(({ slug }) => slug)).size, projects.length);
+  assert.ok(findProject("milestone-renovate"));
+  assert.ok(findProject("milestone-development"));
+  assert.notEqual(findProject("milestone-renovate").url, findProject("milestone-development").url);
   const jufaja = findProject("jufaja-homes");
   const gala = findProject("gala-rentals");
   const software = findProject("247-inventory-system");

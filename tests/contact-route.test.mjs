@@ -219,6 +219,49 @@ test("starter budgets and custom software enquiries remain deliverable", async (
   assert.match(sent.text, /Custom software & business systems/);
 });
 
+test("multi-select services and the business field are delivered", async () => {
+  const payload = validPayload({
+    service: undefined,
+    services: ["Website design & development", "SEO & local visibility"],
+    business: "Harbour Joinery",
+  });
+  const response = await POST(contactRequest(payload, { "x-real-ip": nextIp() }));
+  assert.equal(response.status, 200);
+  const sent = JSON.parse(fetchCalls[0].init.body);
+  assert.match(sent.text, /Services: Website design & development, SEO & local visibility/);
+  assert.match(sent.text, /Business: Harbour Joinery/);
+});
+
+test("the business field is optional and never mistaken for the honeypot", async () => {
+  const response = await POST(contactRequest(validPayload({ business: "" }), { "x-real-ip": nextIp() }));
+  assert.equal(response.status, 200);
+  assert.equal(fetchCalls.length, 1);
+  assert.match(JSON.parse(fetchCalls[0].init.body).text, /Business: Not supplied/);
+});
+
+test("service selections must come from the offered options", async () => {
+  const cases = [
+    { services: [] },
+    { services: ["Website design & development", "Crypto mining"] },
+    { services: ["Website design & development", "Website design & development"] },
+    { services: [42] },
+    { services: "Website design & development" },
+    { service: "", services: undefined },
+  ];
+  for (const overrides of cases) {
+    const response = await POST(contactRequest(validPayload({ service: undefined, ...overrides }), { "x-real-ip": nextIp() }));
+    assert.equal(response.status, 400, JSON.stringify(overrides));
+  }
+  assert.equal(fetchCalls.length, 0);
+});
+
+test("an overlong business name is rejected instead of truncated", async () => {
+  const response = await POST(contactRequest(validPayload({ business: "x".repeat(161) }), { "x-real-ip": nextIp() }));
+  assert.equal(response.status, 400);
+  assert.match((await response.json()).error, /shorten/);
+  assert.equal(fetchCalls.length, 0);
+});
+
 test("invalid options and cross-origin requests never trigger delivery", async () => {
   const invalid = await POST(contactRequest(validPayload({ budget: "$50" }), { "x-real-ip": nextIp() }));
   assert.equal(invalid.status, 400);
