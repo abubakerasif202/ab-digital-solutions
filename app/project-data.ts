@@ -20,6 +20,13 @@ export type Project = {
   seoTitle?: string;
   seoDescription?: string;
   destination?: "hosted-showcase" | "unavailable";
+  gallery?: readonly ProjectShot[];
+};
+
+export type ProjectShot = {
+  src: string;
+  alt: string;
+  caption: string;
 };
 
 export const projects = [
@@ -48,6 +55,50 @@ export const projects = [
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
     seoTitle: "Jufaja — Web Design & Development",
     seoDescription: "Premium website and digital experience created for Jufaja by AB Web Studio.",
+  },
+  {
+    slug: "milestone-renovate",
+    name: "Milestone Renovate",
+    category: "Renovation / Planning Platform",
+    sector: "Property & construction",
+    description:
+      "A renovation planning website for Sydney homeowners, pairing guided tools with practical guidance from the first idea to the first conversation.",
+    overview:
+      "Milestone Renovate is the renovation chapter of Milestone, separate from the Milestone Development showcase. It needed a calm, trustworthy front door that helps Sydney homeowners understand cost, design direction and approvals before they speak to anyone.",
+    solution:
+      "We built a forest-green and gold planning platform around four guided tools: an indicative renovation cost planner, a moodboard design studio, a renovation questionnaire and an NSW DA or CDC approvals guide. Enquiries are validated and delivered by email, and the site is explicit that estimates are indicative, imagery is AI-generated concept art and the call request is a request, not a live booking.",
+    url: "https://milestonerenovate.com/",
+    displayUrl: "milestonerenovate.com",
+    image: `${assetBase}/ab-portfolio-milestone-renovate.webp`,
+    alt: "Milestone Renovate homepage with a forest-green header, gold call to action and an AI-generated renovation concept image",
+    tags: ["Planning Tools", "Interactive UX", "Lead Capture", "Responsive Design"],
+    keyFeatures: [
+      "Indicative renovation cost planner with ranges, timelines and stated assumptions",
+      "Guided design studio that builds a moodboard from the visitor's selections",
+      "Renovation questionnaire feeding a validated email enquiry flow",
+      "NSW approvals guide helping visitors gauge DA or CDC pathways",
+    ],
+    techStack: ["HTML", "Python", "Vanilla JavaScript", "Supabase", "Zod", "Resend", "Vercel"],
+    gallery: [
+      {
+        src: `${assetBase}/ab-portfolio-milestone-renovate-cost-planner.webp`,
+        alt: "Milestone Renovate cost planner showing an indicative estimate range and a not-a-quote notice",
+        caption: "Cost planner: indicative ranges, clearly not a quote.",
+      },
+      {
+        src: `${assetBase}/ab-portfolio-milestone-renovate-design-studio.webp`,
+        alt: "Milestone Renovate design studio introduction with its AI-generated concept imagery notice",
+        caption: "Design studio: a moodboard of selections, labelled concept imagery.",
+      },
+      {
+        src: `${assetBase}/ab-portfolio-milestone-renovate-approvals.webp`,
+        alt: "Milestone Renovate NSW approvals guide with an exempt, CDC or DA pathway result",
+        caption: "Approvals guide: a general pathway guide, not planning advice.",
+      },
+    ],
+    seoTitle: "Milestone Renovate — Renovation Planning Website",
+    seoDescription:
+      "Renovation planning website with a cost planner, design studio and NSW approvals guide, built by AB Web Studio.",
   },
   {
     slug: "aftab-sons-transport",

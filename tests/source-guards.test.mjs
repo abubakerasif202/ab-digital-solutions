@@ -67,7 +67,7 @@ test("every project ships a real preview image and routes visitors through a cas
     read("../app/work/[slug]/page.tsx"),
   ]);
 
-  const imageNames = [...projects.matchAll(/\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
+  const imageNames = [...projects.matchAll(/image: `\$\{assetBase\}\/([\w.-]+)/g)].map(([, name]) => name);
   assert.equal(imageNames.length, [...projects.matchAll(/slug: "/g)].length);
   assert.ok(imageNames.includes("ab-portfolio-jufaja-homes.webp"));
   assert.ok(imageNames.includes("ab-portfolio-adelaide-wholesale-tyres.webp"));
@@ -174,12 +174,16 @@ test("stack ledger derives every count from the canonical registry", async () =>
 });
 
 test("project count copy is derived from the canonical registry", async () => {
-  const [homepage, workIndexBody] = await Promise.all([
+  const [homepage, workIndexBody, studioAbout] = await Promise.all([
     read("../app/agency-home.tsx"),
     read("../app/components/WorkIndexBody.tsx"),
+    read("../app/components/studio/StudioAbout.tsx"),
   ]);
   assert.match(homepage, /\{projects\.length\} project case studies/);
-  assert.match(homepage, /\{projects\.length\} digital project case studies/);
+  // The shared About section (homepage and /about) states the case-study count.
+  assert.match(homepage, /<StudioAbout\b/);
+  assert.match(studioAbout, /<dt>Project case studies<\/dt>\s*<dd[^>]*>\{projects\.length\}<\/dd>/);
+  assert.doesNotMatch(studioAbout, /<dd[^>]*>\d+<\/dd>/);
   assert.match(workIndexBody, /\{projects\.length\} projects/);
   assert.match(workIndexBody, /projectDestinationLabel\(project\)/);
   assert.match(await read("../app/project-data.ts"), /project\.kind === "software"/);
@@ -395,6 +399,16 @@ test("contact form posts to the protected server endpoint", async () => {
   assert.match(contactForm, /\.contact-form \.form-grid/);
   assert.match(contactForm, /mailto:\$\{siteConfig\.email\}/);
   assert.doesNotMatch(contactForm, /window\.location\.assign/);
+  // The optional business field must never reuse the honeypot's name, or the
+  // route would silently discard every real enquiry that fills it in.
+  assert.match(contactForm, /name="business"/);
+  assert.equal([...contactForm.matchAll(/name="company"/g)].length, 1);
+  assert.match(contactForm, /<div className="form-trap" aria-hidden="true" style=\{\{ display: "none" \}\}>/);
+  // Service chips are native inputs whose choices travel as one validated array.
+  assert.match(contactForm, /type="checkbox" name="service"/);
+  assert.match(contactForm, /formData\.getAll\("service"\)/);
+  assert.match(route, /function selectedServices/);
+  assert.match(route, /tooLong\(payload, "business", 160\)/);
   assert.match(route, /RESEND_API_KEY/);
   assert.match(route, /allowedOrigin/);
   assert.match(route, /withinRateLimit/);
@@ -614,7 +628,7 @@ test("second-pass compositions: real pages, varied portfolio and case-study syst
   assert.match(chrome, /className="nav-cta" href="\/contact"/);
   assert.match(about, /canonical: "\/about"/);
   assert.match(contact, /canonical: "\/contact"/);
-  assert.match(contact, /<ContactForm \/>/);
+  assert.match(contact, /<ContactForm\b[^>]*\/>/);
   assert.match(contact, /id="contact"/);
 
   // The work index composes distinct presentations instead of one card.

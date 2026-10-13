@@ -1,0 +1,405 @@
+/* AB Studio system ------------------------------------------------------------
+   The approved "about & enquiry" design, applied site-wide. Loaded after every
+   legacy layer, so it states the final word on tokens, chrome and shared
+   components. Obsidian surfaces, paper type, gilt for detail and ruby only
+   for conversion; hairlines instead of boxes; The Cut for framed surfaces.   */
+
+:root {
+  /* Surfaces */
+  --obsidian: #070708;
+  --surface: #0f0f12;
+  --surface-2: #151519;
+  /* Type */
+  --ivory: #f4f1ea;
+  --ivory-muted: #a7a29a;
+  --placeholder: #8b867c;
+  /* Metal + ruby */
+  --gilt: #d1a64c;
+  --gilt-bright: #efc96a;
+  --ruby: #d21736;
+  --ruby-deep: #b8142f;
+  --ruby-mark: #e5484d;
+  --ruby-text: #f07a80;   /* error copy on dark surfaces (≥6:1) */
+  /* Lines */
+  --hair: rgba(244, 241, 234, 0.13);
+  --hair-strong: rgba(244, 241, 234, 0.24);
+  /* Layout */
+  --gutter: clamp(16px, 4vw, 48px);
+  --shell: 1280px;
+  /* As in the reference: a 1280px frame whose gutters sit inside it. */
+  --container: calc(min(100%, var(--shell)) - 2 * var(--gutter));
+  --header-height: 80px;
+  --section-y: clamp(80px, 12vw, 160px);
+  /* Type scale */
+  --t-display: clamp(2.6rem, 5.4vw, 4.5rem);
+  --t-label: 0.75rem;
+  /* Motion */
+  --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-ui: 300ms;
+  /* Italic accent colour: overridden only where a surface needs it. */
+  --accent-ink: var(--gilt);
+}
+
+@media (max-width: 720px) {
+  :root { --header-height: 72px; }
+}
+
+html { background: var(--obsidian); }
+body { background: var(--obsidian); color: var(--ivory); }
+::selection { background: var(--gilt); color: var(--obsidian); }
+
+/* Focus: one gilt ring everywhere; clipped controls drop their cut while focused. */
+:is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--gilt);
+  outline-offset: 3px;
+}
+
+.studio-shell { width: var(--container); margin-inline: auto; }
+
+/* Editorial accents -----------------------------------------------------------
+   Every italic headline accent is set in gilt (the reference's "work as hard").
+   Legacy layers coloured some of them ruby; ruby is reserved for conversion. */
+:is(h1, h2, h3) em,
+:is(h1, h2, h3) .accent-serif {
+  color: var(--accent-ink) !important;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Specific enough to outrank legacy `.content-page h1` sizing on interior pages. */
+.studio-shell :is(h1, h2).studio-display {
+  max-width: none;
+  margin: 0;
+  color: var(--ivory);
+  font-family: var(--display);
+  font-size: var(--t-display);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+/* Section index: "06 / About AB" ------------------------------------------- */
+.eyebrow {
+  color: var(--ivory-muted);
+  font-family: var(--mono);
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow.section-index { display: flex; align-items: baseline; gap: 0; margin: 0; }
+.eyebrow .section-index-num,
+.cinematic-home .eyebrow .section-index-num { color: var(--gilt); font-variant-numeric: tabular-nums; }
+.eyebrow.section-index .micro-rule {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  margin: 0 0.6em;
+  border: 0;
+  background: none;
+  color: var(--ivory-muted);
+}
+.eyebrow.section-index .micro-rule::before { content: "/"; }
+.eyebrow-mark { background: var(--gilt); }
+
+/* Buttons ----------------------------------------------------------------------
+   Primary: ruby with The Cut on two corners. Secondary: gilt outline, square
+   so the border never breaks. Sentence case, no tracking, as in the reference. */
+.button {
+  gap: 12px;
+  min-height: 52px;
+  padding: 0 26px;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  text-transform: none;
+}
+
+.button.button-primary {
+  border: 0;
+  background: var(--ruby);
+  color: #fff;
+  clip-path: var(--clip-cut-sm);
+}
+
+.button.button-primary::before { background: var(--ruby-deep); }
+
+.button.button-primary:is(:hover, :focus-visible) {
+  background: var(--ruby-deep);
+  box-shadow: none;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.button.button-ghost {
+  border: 1px solid var(--gilt);
+  background: transparent;
+  color: var(--gilt);
+  clip-path: none;
+}
+
+.button.button-ghost::before { background: rgba(209, 166, 76, 0.12); }
+.button.button-ghost::after { background: var(--gilt-bright); }
+
+.button.button-ghost:is(:hover, :focus-visible) {
+  border-color: var(--gilt-bright);
+  background: transparent;
+  color: var(--gilt-bright);
+  transform: translateY(-1px);
+}
+
+.button:focus-visible { clip-path: none; }
+
+/* Header ------------------------------------------------------------------------ */
+.site-header {
+  border-bottom: 1px solid var(--hair);
+  box-shadow: none;
+  background: rgba(7, 7, 8, 0.72);
+  backdrop-filter: blur(14px) saturate(130%);
+  transition: background var(--dur-ui) var(--ease-lux), border-color var(--dur-ui) var(--ease-lux);
+}
+
+.site-header.is-scrolled { border-bottom-color: var(--hair); background: rgba(7, 7, 8, 0.9); backdrop-filter: blur(14px) saturate(130%); }
+
+.site-header .nav-wrap {
+  width: var(--container);
+  min-height: var(--header-height);
+  gap: 12px 32px;
+}
+
+.site-header .brand,
+.studio-footer .brand { display: inline-flex; min-height: 44px; align-items: center; color: var(--ivory); }
+
+.brand .brand-lockup { display: inline-flex; align-items: center; gap: 12px; }
+
+.brand .brand-monogram-image,
+.site-header .brand .brand-monogram-image { width: 36px; height: 36px; object-fit: contain; }
+
+.brand-wordmark {
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.brand-wordmark i { margin: 0 0.15em; color: var(--gilt); font-style: normal; }
+
+@media (min-width: 961px) {
+  .site-header .site-nav { flex: 1 1 auto; justify-content: flex-start; gap: 0 28px; }
+  .site-header .site-nav > a:first-child { margin-left: auto; }
+  .site-header .site-nav .nav-phone { margin-left: auto; }
+}
+
+.site-header .site-nav a:not(.nav-cta) {
+  min-height: 44px;
+  padding: 12px 0;
+  color: var(--ivory-muted);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.site-header .site-nav a:not(.nav-cta):is(:hover, :focus-visible) { color: var(--ivory); }
+
+/* Underline: a gilt hairline drawn from the left. */
+.site-header .site-nav a:not(.nav-cta, .nav-phone)::after {
+  position: absolute;
+  right: 0;
+  bottom: 8px;
+  left: 0;
+  height: 1px;
+  background: var(--gilt);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 420ms var(--ease-lux);
+}
+
+.site-header .site-nav a:not(.nav-cta, .nav-phone):is(:hover, :focus-visible)::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Current page / section: gilt with the reference's leading slash. */
+.site-header .site-nav a:not(.nav-cta)::before { content: none; }
+.site-header .site-nav a.is-active,
+.site-header .site-nav a[aria-current] { color: var(--gilt); }
+.site-header .site-nav a[aria-current]::before {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0 0.35em 0 0;
+  border-radius: 0;
+  background: none;
+  color: var(--gilt);
+  content: "/";
+  transform: none;
+}
+.site-header .site-nav a[aria-current]::after { display: none; }
+
+.site-header .site-nav .nav-phone {
+  color: var(--ivory-muted);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+}
+
+.site-header .site-nav .nav-phone:is(:hover, :focus-visible) { color: var(--ivory); }
+
+.site-header .site-nav .nav-cta {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  border: 1px solid var(--gilt);
+  background: transparent;
+  color: var(--gilt);
+  clip-path: none;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.site-header .site-nav .nav-cta::before { background: rgba(209, 166, 76, 0.12); }
+.site-header .site-nav .nav-cta::after { background: linear-gradient(105deg, transparent 30%, rgba(239, 201, 106, 0.22) 50%, transparent 70%); }
+
+.site-header .site-nav .nav-cta:is(:hover, :focus-visible) {
+  border-color: var(--gilt-bright);
+  background: transparent;
+  box-shadow: none;
+  color: var(--gilt-bright);
+  transform: none;
+}
+
+.menu-toggle { width: 44px; height: 44px; padding: 11px; border: 1px solid var(--hair-strong); }
+.menu-toggle span { background: var(--ivory); }
+
+/* Tablet and phone: the menu is a full-height display index. */
+@media (max-width: 960px) {
+  .site-header .site-nav {
+    padding: 8px var(--gutter) calc(32px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--hair);
+    background: var(--obsidian);
+    overflow-y: auto;
+  }
+
+  .site-header .site-nav a:not(.nav-cta) {
+    min-height: 64px;
+    padding: 0;
+    border-bottom: 1px solid var(--hair);
+    color: var(--ivory);
+    font-family: var(--display);
+    font-size: clamp(1.9rem, 7.6vw, 2.6rem);
+    letter-spacing: -0.015em;
+  }
+
+  .site-header .site-nav a[aria-current] { color: var(--gilt); }
+
+  .site-header .site-nav .nav-phone {
+    margin-top: 12px;
+    border-bottom: 0;
+    color: var(--ivory-muted);
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    letter-spacing: 0.06em;
+  }
+
+  .site-header .site-nav .nav-cta {
+    justify-content: space-between;
+    min-height: 52px;
+    margin-top: 8px;
+    font-size: 1rem;
+  }
+}
+
+/* Footer ----------------------------------------------------------------------- */
+.site-footer.studio-footer {
+  padding: clamp(56px, 7vw, 96px) 0 32px;
+  border-top: 1px solid var(--hair);
+  background: var(--surface);
+  color: var(--ivory);
+}
+
+.studio-footer-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px 64px;
+  padding-bottom: clamp(48px, 6vw, 72px);
+}
+
+.studio-footer-brand { display: flex; min-width: 0; flex: 4 1 300px; flex-direction: column; align-items: flex-start; gap: 20px; }
+.studio-footer-brand .brand .brand-monogram-image { width: 44px; height: 44px; }
+.studio-footer-brand p { max-width: 24rem; margin: 0; color: var(--ivory-muted); font-size: 1.0625rem; line-height: 1.6; }
+.studio-footer-brand .button { min-height: 48px; padding: 0 22px; font-size: 0.9375rem; }
+
+.studio-footer-col { min-width: 0; flex: 2 1 160px; }
+.studio-footer-col--services { flex: 3 1 220px; }
+.studio-footer-col:last-child { flex: 3 1 220px; }
+
+.studio-footer-col h2 {
+  margin: 0 0 16px;
+  color: var(--gilt);
+  font-family: var(--mono);
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.studio-footer-col ul { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 1.0625rem; }
+.studio-footer-col li > :is(a, span) { display: inline-block; padding: 8px 0; color: var(--ivory-muted); text-decoration: none; }
+.studio-footer-col a { transition: color var(--dur-ui) var(--ease-lux); }
+.studio-footer-col a:is(:hover, :focus-visible) { color: var(--ivory); }
+.studio-footer-col a.studio-footer-strong { color: var(--ivory); }
+.studio-footer-col a.studio-footer-strong:is(:hover, :focus-visible) { color: var(--gilt-bright); }
+.studio-footer-email { overflow-wrap: anywhere; }
+
+.studio-footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hair);
+  color: var(--ivory-muted);
+  font-family: var(--mono);
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.studio-footer-legal p { margin: 0; }
+.studio-footer-legal-links { display: flex; gap: 24px; }
+.studio-footer-legal a { display: inline-flex; align-items: center; gap: 8px; padding: 10px 0; color: var(--ivory-muted); text-decoration: none; }
+.studio-footer-legal a:is(:hover, :focus-visible) { color: var(--ivory); }
+
+/* Breadcrumbs ------------------------------------------------------------------- */
+.studio-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6em;
+  color: var(--ivory-muted);
+  font-family: var(--mono);
+  font-size: var(--t-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.studio-crumbs a { color: var(--ivory-muted); text-decoration: none; }
+.studio-crumbs a:is(:hover, :focus-visible) { color: var(--ivory); }
+.studio-crumbs [aria-current] { color: var(--gilt); }
