@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowIcon } from "./icons";
+import { siteConfig } from "./site-config";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -259,6 +260,7 @@ export function SiteHeader() {
             <Link href="/services" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
             <Link href="/#process" onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
             <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
+            <a className="nav-phone" href={`tel:${siteConfig.phoneInternational}`} onClick={handleNavLinkClick}>{siteConfig.phoneDisplay}</a>
             <Link className="nav-cta" href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} data-magnetic>
               Start a project <ArrowIcon />
             </Link>

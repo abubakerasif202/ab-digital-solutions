@@ -17,6 +17,7 @@ import "./compositions.css";
 import "./studio-premium.css";
 import "./studio-pages.css";
 import "./gilt-ruby-stage.css";
+import "./premium-dev.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),

@@ -1,0 +1,200 @@
+/* Premium developer layer ------------------------------------------------------
+   Loaded after every other stylesheet. Brings the "AB Studio Redesign" canvas
+   onto the existing structure without touching guarded rules:
+   - the stack ledger and build sheet (developer proof drawn from project data)
+   - a Bone editorial band for the AB standard (contact and about already
+     alternate light and dark, so they keep their existing bands)
+   - a direct phone line in the header, a privacy contents rail and a 404 numeral
+   Bone tokens keep body text >= 5.1:1 and gilt detail >= 4.8:1 on paper. */
+
+:root {
+  --bone: var(--paper);
+  --bone-ink: var(--ink);
+  --bone-muted: #5c574f;
+  --bone-gilt: var(--gold-dark);
+  --bone-line: rgba(7, 7, 8, 0.14);
+  --bone-line-strong: rgba(7, 7, 8, 0.28);
+}
+
+/* Stack ledger --------------------------------------------------------------- */
+.stack-section { background: var(--ink); color: var(--paper); border-top: 1px solid var(--line); }
+.stack-section .section-heading > p { color: var(--muted); }
+.stack-section .accent-serif { color: var(--gold-bright); }
+.stack-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: clamp(40px, 5vw, 72px);
+  align-items: start;
+  margin-top: clamp(48px, 6vw, 80px);
+}
+.stack-table-wrap { min-width: 0; overflow-x: auto; }
+.stack-table { width: 100%; min-width: 520px; border-collapse: collapse; }
+.stack-table caption {
+  padding-bottom: 16px;
+  caption-side: top;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--type-micro);
+  letter-spacing: 0.16em;
+  text-align: left;
+  text-transform: uppercase;
+}
+.stack-table caption span { color: var(--gold); }
+.stack-table thead th {
+  padding: 12px 16px 12px 0;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--type-micro);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+}
+.stack-table thead th:last-child { width: 42%; }
+.stack-table tbody tr { border-bottom: 1px solid var(--line); }
+.stack-table tbody th {
+  padding: 18px 16px 18px 0;
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  font-weight: 500;
+  text-align: left;
+}
+.stack-table td { padding: 18px 16px 18px 0; color: var(--muted); }
+.stack-meter { display: flex; align-items: center; gap: 14px; }
+.stack-meter-track { flex: 1 1 auto; height: 4px; background: var(--line); }
+.stack-meter-track > span { display: block; height: 100%; background: var(--gold); transform-origin: left center; }
+.stack-meter-value { min-width: 4.5em; color: var(--paper); font-family: var(--mono); font-size: var(--type-small); text-align: right; white-space: nowrap; }
+
+.stack-aside {
+  display: grid;
+  gap: 18px;
+  padding: clamp(24px, 2.6vw, 32px);
+  border: 1px solid var(--line);
+  background: var(--ink-soft);
+  clip-path: var(--clip-cut-lg);
+}
+.stack-aside h3 {
+  margin: 0;
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: var(--type-micro);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.stack-aside h3:not(:first-child) { margin-top: 12px; padding-top: 22px; border-top: 1px solid var(--line); }
+.build-sheet { display: grid; gap: 10px; margin: 0; font-family: var(--mono); font-size: var(--type-small); line-height: 1.5; }
+.build-sheet div { display: grid; grid-template-columns: 5.5em minmax(0, 1fr); gap: 16px; }
+.build-sheet dt { color: var(--muted); }
+.build-sheet dd { margin: 0; color: var(--paper); }
+.stack-aside .text-link { justify-self: start; }
+.stack-standards { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.stack-standards li { display: flex; gap: 12px; color: var(--paper); line-height: 1.5; }
+.stack-standards li::before { color: var(--gold); content: "/"; }
+
+@media (max-width: 960px) {
+  .stack-layout { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stack-meter-track > span { animation: stack-meter-grow 1200ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-timeline: view(); animation-range: entry 0% cover 30%; }
+  @keyframes stack-meter-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+}
+
+/* Bone band: the AB standard ---------------------------------------------------- */
+.cinematic-home .standard-section {
+  border-block-color: var(--bone-line);
+  background: var(--bone);
+  color: var(--bone-ink);
+}
+.cinematic-home .standard-section::before { color: rgba(7, 7, 8, 0.05); }
+.cinematic-home .standard-section::after { opacity: 0.03; }
+.cinematic-home .standard-section :is(h2, h3) { color: var(--bone-ink); }
+.cinematic-home .standard-section .eyebrow { color: var(--bone-muted); }
+.cinematic-home .standard-section .eyebrow-mark { background: var(--bone-gilt); }
+.cinematic-home .standard-statement h2 .accent-serif { color: var(--bone-gilt); }
+.cinematic-home .standard-points { border-top-color: var(--bone-line-strong); }
+.cinematic-home .standard-points article { border-color: var(--bone-line-strong); }
+.cinematic-home .standard-points article > span { color: var(--bone-gilt); }
+.cinematic-home .standard-points p { color: var(--bone-muted); }
+.cinematic-home .standard-section .standard-points a { color: var(--bone-ink); text-decoration-color: var(--bone-gilt); }
+.cinematic-home .standard-section :focus-visible { outline-color: var(--bone-ink); }
+
+/* Header: a direct line beside the call to action ----------------------------------- */
+.site-nav .nav-phone {
+  color: var(--paper-dim);
+  font-family: var(--mono);
+  font-size: var(--type-action);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.site-nav .nav-phone:is(:hover, :focus-visible) { color: var(--paper); }
+@media (min-width: 961px) and (max-width: 1180px) {
+  .site-nav .nav-phone { display: none; }
+}
+
+/* Marquee: the slash is the typographic echo of The Cut --------------------------- */
+.hero-marquee-group i { font-style: normal; opacity: 0.7; }
+
+/* Privacy: contents rail ---------------------------------------------------------- */
+.legal-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.32fr) minmax(0, 1fr);
+  gap: clamp(40px, 6vw, 88px);
+  align-items: start;
+  margin-top: clamp(32px, 4vw, 56px);
+}
+.legal-page .content-shell:has(.legal-layout) { max-width: 1180px; }
+.legal-toc {
+  position: sticky;
+  top: calc(var(--header-height) + 24px);
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: var(--ink-soft);
+  clip-path: var(--clip-cut-lg);
+}
+.legal-toc h2 {
+  margin: 0 0 12px;
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: var(--type-micro);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.legal-toc ol { display: grid; margin: 0; padding: 0; list-style: none; counter-reset: legal; }
+.legal-toc li { counter-increment: legal; }
+.legal-toc a { display: flex; gap: 12px; min-height: 44px; align-items: center; color: var(--muted); text-decoration: none; }
+.legal-toc a::before { color: var(--gold); content: counter(legal, decimal-leading-zero); font-family: var(--mono); font-size: var(--type-micro); }
+.legal-toc a:is(:hover, :focus-visible) { color: var(--paper); }
+.legal-body section { scroll-margin-top: calc(var(--header-height) + 24px); }
+@media (max-width: 860px) {
+  .legal-layout { grid-template-columns: 1fr; }
+  .legal-toc { position: static; }
+}
+
+/* 404: an outlined numeral behind the message ----------------------------------- */
+.not-found-numeral {
+  position: absolute;
+  top: 50%;
+  right: -2vw;
+  z-index: 0;
+  color: transparent;
+  font-family: var(--display);
+  font-size: clamp(14rem, 34vw, 32rem);
+  font-style: italic;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+  pointer-events: none;
+  transform: translateY(-50%);
+  -webkit-text-stroke: 1px rgba(209, 166, 76, 0.32);
+}
+.not-found-content { position: relative; z-index: 1; }
+@media (max-width: 720px) {
+  .not-found-numeral { top: auto; bottom: 4%; transform: none; font-size: 46vw; }
+}
+@media (forced-colors: active) {
+  .not-found-numeral { display: none; }
+}
