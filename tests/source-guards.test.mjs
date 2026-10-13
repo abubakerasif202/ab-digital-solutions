@@ -158,6 +158,21 @@ test("homepage interactive work is isolated and pauses when hidden", async () =>
   assert.match(contact, /fetch\("\/api\/contact"/);
 });
 
+test("stack ledger derives every count from the canonical registry", async () => {
+  const [homepage, ledger] = await Promise.all([
+    read("../app/agency-home.tsx"),
+    read("../app/components/StackLedger.tsx"),
+  ]);
+  assert.match(homepage, /<StackLedger \/>/);
+  assert.match(ledger, /projects\.filter\(\(project\) => project\.techStack\.some/);
+  assert.match(ledger, /const total = projects\.length/);
+  assert.match(ledger, /projectDestinationLabel\(lead\)/);
+  // Counts and totals must never be typed in by hand.
+  assert.doesNotMatch(ledger, /\b\d+ (?:of|\/) \d+\b/);
+  assert.match(ledger, /<caption>/);
+  assert.match(ledger, /<th scope="row">/);
+});
+
 test("project count copy is derived from the canonical registry", async () => {
   const [homepage, workIndexBody] = await Promise.all([
     read("../app/agency-home.tsx"),

@@ -13,6 +13,7 @@ import { PortfolioSection } from "./components/PortfolioSection";
 import { StudioCapabilities } from "./components/StudioCapabilities";
 import { ABBrandImage } from "./components/brand/ABBrandImage";
 import { ProcessTimeline } from "./components/motion/ProcessTimeline";
+import { StackLedger } from "./components/StackLedger";
 import { Reveal } from "./components/motion/Reveal";
 
 const services = [
@@ -150,10 +151,10 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <div className="hero-marquee" aria-label="Capabilities">
             <div className="hero-marquee-track">
               <div className="hero-marquee-group">
-                <span>Web design</span><i>✳</i><span>Development</span><i>✳</i><span>Business systems</span><i>✳</i><span>AI + automation</span><i>✳</i><span>Performance</span><i>✳</i>
+                <span>Web design</span><i aria-hidden="true">/</i><span>Development</span><i aria-hidden="true">/</i><span>Business systems</span><i aria-hidden="true">/</i><span>AI + automation</span><i aria-hidden="true">/</i><span>Performance</span><i aria-hidden="true">/</i>
               </div>
               <div className="hero-marquee-group" aria-hidden="true">
-                <span>Web design</span><i>✳</i><span>Development</span><i>✳</i><span>Business systems</span><i>✳</i><span>AI + automation</span><i>✳</i><span>Performance</span><i>✳</i>
+                <span>Web design</span><i>/</i><span>Development</span><i>/</i><span>Business systems</span><i>/</i><span>AI + automation</span><i>/</i><span>Performance</span><i>/</i>
               </div>
             </div>
           </div>
@@ -222,6 +223,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           </div>
         </section>
 
+        <StackLedger />
+
         <section className="standard-section" aria-labelledby="standard-heading">
           <div className="container standard-layout">
             <div className="standard-statement" data-reveal>
@@ -244,7 +247,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <span>Sydney / Australia</span>
             </div>
             <div className="about-copy" data-reveal>
-              <p className="eyebrow section-index"><span className="section-index-num">04</span><span className="micro-rule" aria-hidden="true" />About AB</p>
+              <p className="eyebrow section-index"><span className="section-index-num">05</span><span className="micro-rule" aria-hidden="true" />About AB</p>
               <h2 id="about-heading">Your digital presence should <em>work as hard</em> as you do.</h2>
               <p>AB Web Studio is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.</p>
               <Reveal className="studio-trust" variant="blur" role="group" aria-label="Studio details">
@@ -268,7 +271,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <div className="contact-word" aria-hidden="true">HELLO</div>
           <div className="container contact-layout">
             <div className="contact-copy" data-reveal>
-              <p className="eyebrow section-index"><span className="section-index-num">05</span><span className="micro-rule" aria-hidden="true" />Start a conversation</p>
+              <p className="eyebrow section-index"><span className="section-index-num">06</span><span className="micro-rule" aria-hidden="true" />Start a conversation</p>
               <h2 id="contact-heading" className="contact-title scroll-mask">
                 <span className="mask-line"><span>Let’s build your next</span></span>
                 <span className="mask-line contact-title-accent"><span>digital advantage.</span></span>
