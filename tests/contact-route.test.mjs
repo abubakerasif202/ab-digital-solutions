@@ -86,6 +86,33 @@ test("valid enquiry is delivered through Resend and returns ok", async () => {
   assert.match(sent.text, /I would like a new website/);
 });
 
+test("preview deployments refuse delivery, say so, and never call Resend", async () => {
+  process.env.VERCEL_ENV = "preview";
+  const response = await POST(contactRequest(validPayload(), { "x-real-ip": nextIp() }));
+  assert.equal(response.status, 503);
+  const body = await response.json();
+  assert.equal(body.code, "preview-disabled");
+  assert.match(body.error, /disabled in preview/i);
+  assert.notEqual(body.ok, true);
+  assert.equal(fetchCalls.length, 0);
+});
+
+test("preview still validates input before reporting that delivery is disabled", async () => {
+  process.env.VERCEL_ENV = "preview";
+  const response = await POST(contactRequest(validPayload({ email: "not-an-email" }), { "x-real-ip": nextIp() }));
+  assert.equal(response.status, 400);
+  assert.equal(fetchCalls.length, 0);
+});
+
+test("production deployments still deliver enquiries", async () => {
+  process.env.VERCEL_ENV = "production";
+  const response = await POST(contactRequest(validPayload(), { "x-real-ip": nextIp() }));
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { ok: true });
+  assert.equal(fetchCalls.length, 1);
+  assert.equal(fetchCalls[0].url, "https://api.resend.com/emails");
+});
+
 test("prefers the Vercel-provided client IP header for rate limiting", async () => {
   const vercelIp = nextIp();
   const statuses = [];

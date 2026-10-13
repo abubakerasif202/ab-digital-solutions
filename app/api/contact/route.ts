@@ -125,6 +125,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Please choose the form options provided." }, { status: 400 });
   }
 
+  // Preview deployments must never deliver real enquiries, even if a delivery
+  // key is later added to the Preview scope. Say so plainly: no false success.
+  if (process.env.VERCEL_ENV === "preview") {
+    return NextResponse.json(
+      { error: "Enquiry submissions are disabled in preview deployments. Nothing was sent.", code: "preview-disabled" },
+      { status: 503 },
+    );
+  }
+
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return NextResponse.json({ error: `Online enquiries are temporarily unavailable. Please email ${siteConfig.email}.` }, { status: 503 });
 
