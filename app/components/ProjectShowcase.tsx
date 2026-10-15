@@ -157,9 +157,10 @@ export function ProjectShowcase() {
                 aria-label={`${project.name} — View Case Study`}
                 data-cursor="VIEW"
               >
+                {/* Below the fold: lazy-load. A priority preload here competes
+                    with the hero's CSS, fonts and LCP on every home visit. */}
                 <ProjectArtwork
                   project={project}
-                  priority={isActive && index === 0}
                   sizes="(max-width: 1080px) 92vw, (max-width: 1440px) 46vw, (max-width: 1800px) 660px, 800px"
                 />
               </Link>
