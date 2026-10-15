@@ -2303,8 +2303,11 @@ h1 em {
   transform: none;
 }
 
+/* The fade starts at 0.8, not 0: text at lower opacity cannot meet 4.5:1
+   contrast while a card is mid-reveal (or audited before it scrolls in). The
+   scroll-linked rise carries the motion. */
 @keyframes reveal-on-view {
-  from { opacity: 0; transform: translateY(26px); }
+  from { opacity: 0.8; transform: translateY(26px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
