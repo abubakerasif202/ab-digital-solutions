@@ -1,38 +1,40 @@
-import { projectSignalPoint } from "./signal-geometry";
+import { LOGO_PATHS, LOGO_VIEWBOX } from "./logo-mark";
 
-/* Gilt where the ribbon faces the light, ruby where it turns away: the same
-   split as the WebGL object, computed once at module load. */
-function panelColour(light: number, turned: boolean): string {
-  const lift = (light + 1) / 2;
-  const [r, g, b] = turned ? [Math.round(70 + lift * 150), Math.round(6 + lift * 34), Math.round(20 + lift * 44)] : [Math.round(120 + lift * 119), Math.round(88 + lift * 113), Math.round(24 + lift * 82)];
-  return `rgb(${r},${g},${b})`;
-}
+/* Depth is faked with a short stack of offset copies: the WebGL extrusion's
+   side walls, flattened. Offsets run toward the lower right, away from the key light. */
+const EXTRUSION_STEPS = 9;
+const STEP_X = 0.42;
+const STEP_Y = 0.34;
 
-const panels = Array.from({ length: 96 }, (_, index) => {
-  const t = index / 96 * Math.PI * 2;
-  const end = (index + 1) / 96 * Math.PI * 2;
-  const corners = [projectSignalPoint(t, -1), projectSignalPoint(end, -1), projectSignalPoint(end, 1), projectSignalPoint(t, 1)];
-  const light = Math.sin(t * 2 + 0.35);
-  return {
-    index,
-    depth: corners.reduce((sum, point) => sum + point.depth, 0) / 4,
-    points: corners.map((point) => `${point.x.toFixed(2)},${point.y.toFixed(2)}`).join(" "),
-    colour: panelColour(light, t > Math.PI),
-  };
-}).sort((a, b) => a.depth - b.depth);
+const extrusion = Array.from({ length: EXTRUSION_STEPS }, (_, index) => EXTRUSION_STEPS - index);
 
 /** Inline geometry keeps this decorative layer off the image loading path. */
 export function HeroFallback() {
+  const { width, height } = LOGO_VIEWBOX;
   return (
     <div className="hero-3d-fallback" aria-hidden="true">
-      <svg viewBox="0 0 640 620" fill="none" focusable="false" className="hero-sculpture">
-        {panels.map((panel) => <polygon key={panel.index} points={panel.points} fill={panel.colour} stroke={panel.colour} strokeWidth="0.65" />)}
-        {[-1, -0.86, 0.86, 1].map((across) => (
-          <polyline key={across} points={Array.from({ length: 193 }, (_, index) => {
-            const point = projectSignalPoint(index / 192 * Math.PI * 2, across);
-            return `${point.x.toFixed(2)},${point.y.toFixed(2)}`;
-          }).join(" ")} stroke={Math.abs(across) === 1 ? "#ffeebe" : "#e7c995"} strokeOpacity="0.45" strokeWidth="0.8" />
+      <svg viewBox={`-6 -2 ${width + 14} ${height + 8}`} fill="none" focusable="false" className="hero-sculpture">
+        <defs>
+          <linearGradient id="hero-gilt" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#f6e2a4" />
+            <stop offset="0.45" stopColor="#d1a64c" />
+            <stop offset="1" stopColor="#8a6420" />
+          </linearGradient>
+          <linearGradient id="hero-ruby" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#ff4a63" />
+            <stop offset="1" stopColor="#8f0f26" />
+          </linearGradient>
+        </defs>
+        {extrusion.map((step) => (
+          <g key={step} transform={`translate(${(step * STEP_X).toFixed(2)} ${(step * STEP_Y).toFixed(2)})`} fill="#3a2a0c" opacity={0.9}>
+            <path d={LOGO_PATHS.letterA} />
+            <path d={LOGO_PATHS.letterB} />
+            <path d={LOGO_PATHS.slash} fill="#4a0a15" />
+          </g>
         ))}
+        <path d={LOGO_PATHS.letterA} fill="url(#hero-gilt)" />
+        <path d={LOGO_PATHS.letterB} fill="url(#hero-gilt)" />
+        <path d={LOGO_PATHS.slash} fill="url(#hero-ruby)" />
       </svg>
     </div>
   );
