@@ -76,7 +76,7 @@ test("brand intro is brief, non-blocking and once per session", async () => {
   assert.match(gate, /pointer: coarse/);
   assert.match(gate, /saveData/);
   assert.doesNotMatch(gate, /rel="preload"/);
-  assert.match(intro, /<ABLogo decorative/);
+  assert.match(intro, /ab-luxury-monogram\.webp/);
   assert.doesNotMatch(intro, /<video/);
   assert.match(styles, /pointer-events: none/);
   assert.doesNotMatch(styles, /overflow: hidden|hero-actions|site-header/);

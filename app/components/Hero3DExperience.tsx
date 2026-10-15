@@ -22,8 +22,7 @@ export function Hero3DExperience() {
     const stage = stageRef.current?.parentElement;
     if (!stage) return;
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // Phones skip WebGL entirely: the inline SVG fallback avoids a GPU context and
-    // keeps mobile LCP/INP clean.
+    // Phones use the approved artwork without allocating a GPU context.
     const mobileQuery = window.matchMedia("(max-width: 720px)");
     const coarseQuery = window.matchMedia("(pointer: coarse)");
     const tabletQuery = window.matchMedia("(max-width: 1024px)");

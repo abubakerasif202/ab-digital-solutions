@@ -17,6 +17,11 @@ import "./compositions.css";
 import "./studio-premium.css";
 import "./studio-pages.css";
 import "./gilt-ruby-stage.css";
+import "./premium-dev.css";
+// The studio system states the final word on tokens, chrome and shared sections.
+import "./styles/studio-system.css";
+import "./styles/studio-sections.css";
+import "./styles/studio-harmony.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { StudioAbout } from "../components/studio/StudioAbout";
 import { PageTransition } from "../components/motion/PageTransition";
-import { ABBrandImage } from "../components/brand/ABBrandImage";
 import { ArrowIcon } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
 import { findProject, projects, type Project } from "../project-data";
@@ -54,12 +54,6 @@ const principles = [
   ["03", "Keep the next step obvious.", "Responsive, accessible, search-ready website foundations engineered to feel fast on the devices customers actually use."],
 ] as const;
 
-const values = [
-  ["Clear communication", "Simple advice and transparent decisions."],
-  ["Reliable delivery", "A professional process from brief to launch."],
-  ["Results-focused work", "Design choices connected to business goals."],
-] as const;
-
 const approach = [
   ["Design", "Positioning, content hierarchy and a visual direction shaped around the business behind the brief — never a generic template dressed in your colours."],
   ["Development", "Responsive web applications and digital products built around the way your business works, with accessibility-conscious implementation and technical SEO foundations."],
@@ -76,43 +70,18 @@ export default function AboutPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page gr-about" id="main-content">
-        <header className="container gr-about-hero">
-          <nav className="content-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">About</span>
-          </nav>
-          <p className="eyebrow">About AB / Sydney, Australia</p>
-          <h1>Design with intent. <span className="accent-serif">Engineering with care.</span></h1>
-          <div className="gr-about-intro">
-            <p className="gr-about-lede">{description}</p>
-            <p>Led by Abubakar Asif, Founder & Lead Developer, the studio connects considered interfaces with practical implementation — from public websites to the operational workflows behind a business.</p>
-          </div>
-        </header>
+      <main className="content-page studio-page gr-about" id="main-content">
+        <nav className="studio-shell studio-crumbs" aria-label="Breadcrumb">
+          <Link href="/">Home</Link>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">About</span>
+        </nav>
 
-        <section className="gr-about-brand" aria-label="Studio identity">
-          <div className="container gr-about-brand-grid">
-            <div className="gr-about-mark" data-reveal>
-              <ABBrandImage full />
-            </div>
-            <div className="gr-about-founder" data-reveal>
-              <p className="eyebrow">The studio</p>
-              <dl className="gr-about-facts">
-                <div><dt>Founder</dt><dd>Abubakar Asif<span>Founder &amp; Lead Developer</span></dd></div>
-                <div><dt>Based in</dt><dd>Sydney, Australia<span>Working Australia-wide</span></dd></div>
-                <div><dt>Portfolio</dt><dd>{projects.length} live projects<span>Websites, e-commerce and custom software</span></dd></div>
-              </dl>
-              <p className="gr-about-quote">
-                Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking.
-              </p>
-            </div>
-          </div>
-        </section>
+        <StudioAbout headingAs="h1" index="01" />
 
         <section className="container gr-about-approach" aria-labelledby="approach-heading">
           <div className="gr-section-head">
-            <p className="eyebrow section-index"><span className="section-index-num">01</span><span className="micro-rule" aria-hidden="true" />Approach</p>
+            <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />Approach</p>
             <h2 id="approach-heading" className="gr-display-l">Design, development and <span className="accent-serif">systems</span> under one roof.</h2>
           </div>
           <ol className="gr-about-approach-list">
@@ -149,7 +118,7 @@ export default function AboutPage() {
         <section className="gr-about-principles" aria-labelledby="principles-heading">
           <div className="container">
             <div className="gr-section-head">
-              <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />The AB standard</p>
+              <p className="eyebrow section-index"><span className="section-index-num">03</span><span className="micro-rule" aria-hidden="true" />The AB standard</p>
               <h2 id="principles-heading" className="gr-display-l">Feel the quality. <span className="accent-serif">Then see the thinking.</span></h2>
             </div>
             <ol className="gr-about-principles-list">
@@ -161,11 +130,6 @@ export default function AboutPage() {
                 </li>
               ))}
             </ol>
-            <dl className="gr-about-values">
-              {values.map(([term, detail]) => (
-                <div key={term}><dt>{term}</dt><dd>{detail}</dd></div>
-              ))}
-            </dl>
           </div>
         </section>
 
@@ -174,8 +138,8 @@ export default function AboutPage() {
             <p className="eyebrow">Start a conversation</p>
             <h2 id="about-cta-heading">Tell us what you are building and where you want the business to <span className="accent-serif">go.</span></h2>
             <div className="content-actions">
-              <Link className="button button-primary" href="/contact" data-magnetic>Start a Project <ArrowIcon /></Link>
-              <Link className="button button-ghost" href="/services" data-magnetic>Explore services</Link>
+              <Link className="button button-primary" href="/contact">Start a project <ArrowIcon /></Link>
+              <Link className="button button-ghost" href="/services">Explore services <ArrowIcon direction="right" /></Link>
             </div>
           </div>
         </aside>

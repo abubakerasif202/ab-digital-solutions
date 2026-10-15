@@ -18,7 +18,7 @@ const REST_PITCH = -0.1;
 function buildLogoPart(name: LogoPartName, curveSegments: number): THREE.ExtrudeGeometry {
   const loader = new SVGLoader();
   const parsed = loader.parse(`<svg xmlns="http://www.w3.org/2000/svg"><path d="${LOGO_PATHS[name]}"/></svg>`);
-  const shapes = parsed.paths.flatMap((path) => SVGLoader.createShapes(path));
+  const shapes = parsed.paths.flatMap((path) => path.toShapes());
   const geometry = new THREE.ExtrudeGeometry(shapes, {
     depth: name === "slash" ? LOGO_DEPTH + SLASH_LIFT : LOGO_DEPTH,
     bevelEnabled: true,

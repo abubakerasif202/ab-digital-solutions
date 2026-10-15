@@ -24,6 +24,18 @@ function singleLine(payload: ContactPayload, key: string, max: number) {
   return value(payload, key, max).replace(/[\r\n\t]+/g, " ");
 }
 
+// The enquiry form sends `services` (one or more checkbox choices); older
+// clients send a single `service` string. Either way every choice must be an
+// offered option, listed once. Returns null when the selection is invalid.
+function selectedServices(payload: ContactPayload): string[] | null {
+  const raw = "services" in payload ? payload.services : payload.service;
+  const choices = typeof raw === "string" && !("services" in payload) ? [raw] : raw;
+  if (!Array.isArray(choices) || choices.length === 0 || choices.length > allowedServices.size) return null;
+  const services = choices.map((choice) => (typeof choice === "string" ? choice.trim() : ""));
+  const valid = services.every((service) => allowedServices.has(service));
+  return valid && new Set(services).size === services.length ? services : null;
+}
+
 function allowedOrigin(request: NextRequest) {
   const origin = request.headers.get("origin");
   if (!origin) return true;
@@ -91,6 +103,7 @@ export async function POST(request: NextRequest) {
   if (tooLong(payload, "fullName", 160) || tooLong(payload, "firstName", 80)
     || tooLong(payload, "lastName", 80) || tooLong(payload, "email", 254)
     || tooLong(payload, "phone", 50) || tooLong(payload, "service", 100)
+    || tooLong(payload, "business", 160)
     || tooLong(payload, "budget", 100) || tooLong(payload, "timeline", 100)
     || tooLong(payload, "message", 4000)) {
     return NextResponse.json({ error: "Please shorten your enquiry and try again." }, { status: 400 });
@@ -100,15 +113,25 @@ export async function POST(request: NextRequest) {
     || [singleLine(payload, "firstName", 80), singleLine(payload, "lastName", 80)].filter(Boolean).join(" ");
   const email = singleLine(payload, "email", 254);
   const phone = singleLine(payload, "phone", 50);
-  const service = singleLine(payload, "service", 100);
+  const business = singleLine(payload, "business", 160);
+  const services = selectedServices(payload);
   const budget = singleLine(payload, "budget", 100);
   const timeline = singleLine(payload, "timeline", 100);
   const message = value(payload, "message", 4000);
   if (!fullName || !message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: "Please complete your name, email and project details." }, { status: 400 });
   }
-  if (!allowedServices.has(service) || !allowedBudgets.has(budget) || !allowedTimelines.has(timeline)) {
+  if (!services || !allowedBudgets.has(budget) || !allowedTimelines.has(timeline)) {
     return NextResponse.json({ error: "Please choose the form options provided." }, { status: 400 });
+  }
+
+  // Preview deployments must never deliver real enquiries, even if a delivery
+  // key is later added to the Preview scope. Say so plainly: no false success.
+  if (process.env.VERCEL_ENV === "preview") {
+    return NextResponse.json(
+      { error: "Enquiry submissions are disabled in preview deployments. Nothing was sent.", code: "preview-disabled" },
+      { status: 503 },
+    );
   }
 
   const apiKey = process.env.RESEND_API_KEY;
@@ -116,7 +139,8 @@ export async function POST(request: NextRequest) {
 
   const lines = [
     `Name: ${fullName}`, `Email: ${email}`, `Phone: ${phone || "Not supplied"}`,
-    `Service: ${service || "Not selected"}`, `Approx. budget: ${budget || "Not selected"}`,
+    `Business: ${business || "Not supplied"}`,
+    `Services: ${services.join(", ")}`, `Approx. budget: ${budget || "Not selected"}`,
     `Ideal timeline: ${timeline || "Not selected"}`, "", "Project details:", message,
   ];
   let response: Response;

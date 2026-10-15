@@ -1,0 +1,425 @@
+/* Studio sections --------------------------------------------------------------
+   The plate surface, the About and Enquiry compositions and the enquiry form
+   from the approved reference. Selectors are deliberately specific enough to
+   retire the legacy light-band form styles still present in globals.css.     */
+
+/* The plate: an elevated surface with The Cut on its top-right corner and a
+   hairline drawn across the cut so the edge reads as machined, not missing. */
+.studio-plate {
+  position: relative;
+  border: 1px solid var(--hair);
+  background: var(--surface);
+  clip-path: var(--clip-cut-lg);
+}
+
+.studio-plate::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--cut-lg);
+  height: var(--cut-lg);
+  background: linear-gradient(to bottom left, transparent calc(50% - 0.75px), var(--hair-strong) 50%, transparent calc(50% + 0.75px));
+  content: "";
+  pointer-events: none;
+}
+
+.studio-split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 56px 72px;
+}
+
+/* About ---------------------------------------------------------------------- */
+.studio-about { position: relative; padding-block: var(--section-y); scroll-margin-top: calc(var(--header-height) + 24px); }
+
+.studio-about-plate-wrap { min-width: 0; flex: 5 1 340px; }
+.studio-about-plate { display: flex; flex-direction: column; gap: 20px; margin: 0; }
+
+.studio-plate--mark {
+  display: grid;
+  aspect-ratio: 1 / 1;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 60% at var(--pointer-x, 50%) var(--pointer-y, 45%), rgba(209, 166, 76, 0.14), transparent 70%),
+    radial-gradient(90% 70% at 85% 110%, rgba(210, 23, 54, 0.1), transparent 60%),
+    var(--surface);
+  perspective: 900px;
+}
+
+.studio-plate-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.studio-plate-ring--outer { inset: 12%; border: 1px solid rgba(209, 166, 76, 0.28); }
+.studio-plate-ring--inner { inset: 22%; border: 1px solid var(--hair); }
+
+/* A single gilt glint travels the outer ring: light, not ornament. */
+.studio-plate-glint {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: conic-gradient(from var(--glint-angle, 0deg), transparent 0deg, rgba(239, 201, 106, 0.55) 18deg, transparent 40deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+  pointer-events: none;
+}
+
+.studio-plate-monogram {
+  position: relative;
+  width: 46%;
+  height: auto;
+  filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.55));
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateZ(24px);
+  transition: transform 600ms var(--ease-lux);
+}
+
+.studio-plate-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--ivory-muted);
+  font-family: var(--mono);
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.studio-plate-caption i,
+.studio-enquiry-location i { color: var(--gilt); font-style: normal; }
+
+.studio-about-copy { display: flex; min-width: 0; flex: 7 1 480px; flex-direction: column; gap: 28px; }
+
+.studio-lead { max-width: 40rem; margin: 0; color: var(--ivory); font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem); line-height: 1.6; }
+.studio-body { max-width: 40rem; margin: 0; color: var(--ivory-muted); font-size: 1.0625rem; line-height: 1.65; }
+.studio-body--lead { max-width: 32rem; font-size: 1.125rem; line-height: 1.6; }
+
+.studio-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  margin: 8px 0 0;
+  background: var(--hair);
+}
+
+.studio-facts > div {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 180px;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 24px;
+  background: var(--surface);
+}
+
+.studio-facts dt {
+  color: var(--ivory-muted);
+  font-family: var(--mono);
+  font-size: var(--t-label);
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.studio-facts dd {
+  margin: 0;
+  color: var(--ivory);
+  font-family: var(--display);
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.studio-facts .studio-facts-count { color: var(--gilt); font-variant-numeric: lining-nums tabular-nums; }
+
+.studio-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px 32px;
+  margin: 8px 0 0;
+}
+
+.studio-values > div { padding-top: 16px; border-top: 1px solid var(--hair); }
+.studio-values dt { color: var(--ivory); font-weight: 600; }
+.studio-values dd { margin: 6px 0 0; color: var(--ivory-muted); font-size: 1.0625rem; line-height: 1.55; }
+
+.studio-text-link {
+  display: inline-flex;
+  align-self: flex-start;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  color: var(--gilt);
+  font-weight: 600;
+  text-decoration: none;
+  background: linear-gradient(var(--gilt), var(--gilt)) left calc(100% - 8px) / 0 1px no-repeat;
+  transition: background-size 420ms var(--ease-lux), color var(--dur-ui) var(--ease-lux);
+}
+
+.studio-text-link:is(:hover, :focus-visible) { color: var(--gilt-bright); background-size: 100% 1px; }
+
+/* Enquiry --------------------------------------------------------------------- */
+.studio-enquiry {
+  position: relative;
+  padding-block: var(--section-y);
+  border-top: 1px solid var(--hair);
+  background: radial-gradient(900px 480px at 12% 0%, rgba(210, 23, 54, 0.08), transparent 70%), var(--obsidian);
+  scroll-margin-top: calc(var(--header-height) + 24px);
+}
+
+.studio-enquiry-copy { display: flex; min-width: 0; flex: 5 1 340px; flex-direction: column; gap: 28px; }
+.studio-enquiry-form { min-width: 0; flex: 7 1 480px; }
+
+.studio-contact-rows { margin: 8px 0 0; padding: 0; border-top: 1px solid var(--hair); list-style: none; }
+.studio-contact-rows li { border-bottom: 1px solid var(--hair); }
+
+.studio-contact-rows a {
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  gap: 16px;
+  padding: 0 12px;
+  color: var(--ivory);
+  text-decoration: none;
+  transition: background var(--dur-ui) var(--ease-lux);
+}
+
+.studio-contact-rows a:is(:hover, :focus-visible) { background: var(--surface-2); }
+
+.studio-contact-label {
+  flex: 0 0 92px;
+  color: var(--ivory-muted);
+  font-family: var(--mono);
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.studio-contact-rows strong {
+  min-width: 0;
+  flex: 1 1 auto;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.studio-contact-rows .studio-contact-email { font-size: 1.35rem; overflow-wrap: anywhere; }
+.studio-contact-rows .icon-swap { color: var(--gilt); }
+
+.studio-enquiry-location {
+  margin: 0;
+  color: var(--ivory-muted);
+  font-family: var(--mono);
+  font-size: var(--t-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Enquiry form ----------------------------------------------------------------- */
+.contact-form.enquiry-form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: clamp(24px, 3.5vw, 48px);
+  border: 1px solid var(--hair);
+  background: var(--surface);
+  box-shadow: none;
+  clip-path: var(--clip-cut-lg);
+  color: var(--ivory);
+}
+
+.contact-form.enquiry-form[data-state] { box-shadow: none; }
+
+/* While sending, a gilt filament runs along the top edge. */
+.contact-form.enquiry-form::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gilt), transparent);
+  content: "";
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.contact-form.enquiry-form[data-state="sending"]::before {
+  opacity: 1;
+  animation: enquiry-filament 1.2s var(--ease-lux) infinite;
+}
+
+@keyframes enquiry-filament {
+  to { transform: translateX(100%); }
+}
+
+.enquiry-form-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; }
+
+.contact-form .enquiry-form-title {
+  margin: 0;
+  color: var(--ivory);
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+
+.enquiry-form-required { margin: 0; color: var(--ivory-muted); font-size: 0.875rem; }
+.enquiry-form-required span,
+.contact-form .form-req { color: var(--ruby-mark); }
+.contact-form .form-optional { color: var(--ivory-muted); font-weight: 400; }
+
+.contact-form.enquiry-form .form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: start;
+  gap: 20px 24px;
+  border: 0;
+}
+
+.contact-form.enquiry-form .form-field { display: flex; min-width: 0; flex-direction: column; gap: 8px; }
+
+.contact-form.enquiry-form :is(.form-grid, .form-field) label {
+  padding: 0;
+  border: 0;
+  color: var(--ivory);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.contact-form.enquiry-form :is(input:not([type="checkbox"], [type="radio"]), textarea) {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  border: 1px solid var(--hair-strong);
+  border-radius: 0;
+  background: var(--surface-2);
+  box-shadow: none;
+  color: var(--ivory);
+  font: inherit;
+  font-size: 1.0625rem;
+  transition: border-color var(--dur-ui) var(--ease-lux), box-shadow var(--dur-ui) var(--ease-lux), background var(--dur-ui) var(--ease-lux);
+}
+
+.contact-form.enquiry-form textarea { min-height: 148px; padding: 14px 16px; line-height: 1.55; resize: vertical; }
+.contact-form.enquiry-form :is(input, textarea)::placeholder { color: var(--placeholder); opacity: 1; }
+
+.contact-form.enquiry-form :is(input:not([type="checkbox"], [type="radio"]), textarea):hover { border-color: rgba(244, 241, 234, 0.36); }
+
+.contact-form.enquiry-form :is(input:not([type="checkbox"], [type="radio"]), textarea):focus {
+  border-color: var(--gilt);
+  background: #18181d;
+  box-shadow: 0 0 0 4px rgba(209, 166, 76, 0.12);
+  outline: 0;
+}
+
+.contact-form.enquiry-form :is(input, textarea):focus-visible { outline: 2px solid var(--gilt); outline-offset: 3px; }
+.contact-form.enquiry-form [aria-invalid="true"] { border-color: var(--ruby-mark); }
+
+.contact-form.enquiry-form .field-error { color: var(--ruby-text); font-size: 0.875rem; line-height: 1.45; }
+.contact-form.enquiry-form .form-help { margin: 0; color: var(--ivory-muted); font-size: 0.875rem; }
+
+/* Chips: native checkboxes and radios, so FormData, reset() and keyboard
+   behaviour come for free. The input stays in the accessibility tree. */
+.contact-form.enquiry-form .form-chips { display: flex; flex-direction: column; gap: 12px; min-width: 0; margin: 0; padding: 0; border: 0; }
+
+.contact-form.enquiry-form .form-chips legend {
+  margin: 0;
+  padding: 0 0 12px;
+  color: var(--ivory);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.form-chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.form-chip { position: relative; display: inline-flex; cursor: pointer; }
+
+.form-chip input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+}
+
+.form-chip span {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 0 18px;
+  border: 1px solid var(--hair-strong);
+  border-radius: 999px;
+  color: var(--ivory-muted);
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  transition: background var(--dur-ui) var(--ease-lux), border-color var(--dur-ui) var(--ease-lux), color var(--dur-ui) var(--ease-lux), transform 200ms var(--ease-lux);
+}
+
+.form-chip--mono span { font-family: var(--mono); font-size: 0.875rem; }
+.form-chip:hover span { border-color: var(--gilt); color: var(--ivory); }
+.form-chip input:checked + span { border-color: var(--gilt); background: var(--gilt); color: var(--obsidian); font-weight: 600; }
+.form-chip input:focus-visible + span { outline: 2px solid var(--gilt); outline-offset: 3px; }
+.form-chip:active span { transform: scale(0.97); }
+
+.contact-form.enquiry-form .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }
+
+.contact-form.enquiry-form .form-actions .button {
+  width: auto;
+  min-height: 56px;
+  margin: 0;
+  padding: 0 30px;
+}
+
+.contact-form.enquiry-form .button:disabled { cursor: progress; opacity: 0.72; transform: none; }
+
+.form-call { padding: 12px 0; color: var(--ivory); font-weight: 600; text-decoration: none; transition: color var(--dur-ui) var(--ease-lux); }
+.form-call:is(:hover, :focus-visible) { color: var(--gilt-bright); }
+
+.contact-form.enquiry-form .form-note { margin: -12px 0 0; color: var(--ivory-muted); font-size: 0.8125rem; }
+
+.contact-form.enquiry-form .form-status { margin: 0; color: var(--ivory); font-size: 0.9375rem; font-weight: 400; line-height: 1.55; }
+.contact-form.enquiry-form .form-status:empty { display: none; }
+.contact-form.enquiry-form .form-status:is(.success, .error) { padding: 16px 18px; border-left: 2px solid var(--gilt); background: var(--surface-2); }
+.contact-form.enquiry-form .form-status.error { border-left-color: var(--ruby-mark); }
+.contact-form.enquiry-form .form-status-label { display: block; margin-bottom: 4px; color: var(--gilt-bright); font-weight: 600; }
+.contact-form.enquiry-form .form-status.error .form-status-label { color: var(--ruby-text); }
+
+@media (max-width: 540px) {
+  .contact-form.enquiry-form .form-actions .button { width: 100%; justify-content: space-between; }
+  /* Label above value, so the email address never breaks mid-domain. */
+  .studio-contact-rows a { flex-wrap: wrap; row-gap: 2px; min-height: 80px; padding: 14px 4px; }
+  .studio-contact-label { flex: 1 0 100%; }
+  .studio-contact-rows strong { font-size: 1.35rem; }
+  .studio-contact-rows .studio-contact-email { font-size: 1.15rem; overflow-wrap: normal; }
+}
+
+/* Interior pages: the first studio section sits under the breadcrumb. -------- */
+.studio-page { padding-top: var(--header-height); }
+.studio-page > .studio-crumbs { padding-top: clamp(28px, 4vw, 48px); }
+.studio-page > .studio-crumbs + .studio-about { padding-top: clamp(32px, 5vw, 64px); }
+.studio-page > .studio-enquiry:first-child { padding-top: clamp(40px, 6vw, 80px); border-top: 0; }
+.studio-crumbs--inline { margin-bottom: -8px; }
+
+/* Offscreen rendering for the two homepage sections below the fold. */
+.cinematic-home .studio-about,
+.cinematic-home .studio-enquiry {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto var(--cv-size, 1200px);
+}
+
+.cinematic-home .studio-about { --cv-size: 1100px; }
+.cinematic-home .studio-enquiry { --cv-size: 1250px; }

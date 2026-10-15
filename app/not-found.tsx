@@ -6,6 +6,7 @@ export default function NotFound() {
   return (
     <main className="not-found">
       <div className="not-found-grid" aria-hidden="true" />
+      <span className="not-found-numeral" aria-hidden="true">404</span>
       <div className="not-found-content">
         {/* eslint-disable-next-line @next/next/no-img-element -- next/image blocks SVG optimization by default; this is a trusted, self-authored decorative asset */}
         <img

@@ -1,6 +1,6 @@
 /* Gilt & Ruby, stage layer ----------------------------------------------------
    Loaded last. Ports the design system's iteration-2 pieces onto the live site:
-   the hero stage with the gilt/ruby ribbon as its focal point, the "live work"
+   the hero stage with the authentic AB artwork as its focal point, the "live work"
    ticker, metallic display words, film grain and the ruby capability band.
    Everything animates transform/opacity only and stands still under
    prefers-reduced-motion. The blue Signal experiment lives, unloaded, in
@@ -250,4 +250,34 @@
   .metal-gilt, .metal-ruby, .stage-ring--outer, .stage-ring--inner, .stage-line > span,
   .live-ticker-thumb img, .live-ticker-copy small i, .stage-scroll-line::after { animation: none !important; }
   .stage-scroll-line::after { transform: none; }
+}
+
+/* Keep the authentic mark separate from reading and enquiry surfaces. */
+:root {
+  --gilt-metal: linear-gradient(100deg, #d1a64c, #fff1c4 36%, #efc96a 60%, #f5d98c);
+}
+.cinematic-home .metal-ruby { background: none; color: var(--paper); -webkit-text-fill-color: var(--paper); }
+.cinematic-home .stage-tagline { color: var(--champagne); }
+.cinematic-home .stage-hero {
+  background: radial-gradient(ellipse 44% 52% at 82% 32%, rgba(148, 15, 35, 0.12), transparent 70%), radial-gradient(ellipse 46% 58% at 76% 46%, rgba(212, 163, 47, 0.1), transparent 70%), #070707;
+}
+.stage-hero-art { inset: 12% 4% 25% 48%; }
+.stage-hero .hero-monogram { position: static; width: 86%; height: auto; max-height: 90%; object-fit: contain; }
+.stage-line { overflow: visible; }
+.stage-ring--inner { display: none; }
+.stage-ring--outer { animation: none; }
+@media (min-width: 721px) and (max-width: 1024px) {
+  .stage-hero-art { inset: 8% 2% 55% 52%; opacity: 1; }
+  .stage-hero-art::after { display: none; }
+  .cinematic-home .stage-title { font-size: clamp(3.1rem, 5.8vw, 4.4rem); }
+}
+@media (max-width: 720px) {
+  .stage-hero-top { order: 0; }
+  .stage-hero-art { order: 1; position: relative; inset: auto; width: min(72vw, 280px); height: 230px; margin: 8px auto 0; opacity: 1; }
+  .stage-hero-art::after { display: none; }
+  .stage-hero-body { order: 2; padding-top: 12px; }
+  .stage-bar { order: 3; }
+  .cinematic-home .stage-hero .hero-marquee { order: 4; }
+  .stage-ring--outer { inset: 4% 0; }
+  .cinematic-home .stage-title { font-size: clamp(2.35rem, 11.5vw, 3.6rem); }
 }

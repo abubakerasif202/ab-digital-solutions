@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ABLogo } from "../brand/ABLogo";
+import Image from "next/image";
 import { introTiming } from "./intro-config";
 
 /** A brief identity accent. Content and navigation remain usable throughout. */
@@ -31,7 +31,7 @@ export function BrandIntro() {
   if (!visible) return null;
   return (
     <div className="brand-intro" aria-hidden="true">
-      <ABLogo decorative />
+      <Image src="/brand/ab-luxury-monogram.webp" width={32} height={32} alt="" />
       <span>AB Web Studio</span>
       <span className="brand-intro-line" />
     </div>
