@@ -219,7 +219,7 @@
 
 /* Responsive ---------------------------------------------------------------------- */
 @media (max-width: 1024px) {
-  .stage-hero-art { inset: 2% -12% 38% 24%; opacity: 0.9; }
+  .stage-hero-art { inset: 2% 2% 38% 30%; opacity: 0.9; }
   .stage-hero-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(7, 7, 7, 0.68), transparent 76%); }
   .cinematic-home .stage-title { max-width: 12ch; }
 }
