@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PageTransition } from "../../components/motion/PageTransition";
 import { notFound } from "next/navigation";
 import { ProjectArtwork } from "../../project-artwork";
 import { findProject, projects } from "../../project-data";
@@ -113,6 +114,7 @@ export default async function ServicePage({ params }: Props) {
   return (
     <>
       <SiteHeader />
+      <PageTransition>
       <main className="content-page service-page" id="main-content">
         <div className="container content-shell">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
@@ -245,6 +247,7 @@ export default async function ServicePage({ params }: Props) {
         </div>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );

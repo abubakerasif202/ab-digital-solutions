@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PageTransition } from "../components/motion/PageTransition";
 import { Mail, MessageCircle, Phone } from "lucide-react";
 import { ContactForm } from "../components/ContactForm";
 import { ArrowIcon, Glyph } from "../icons";
@@ -57,6 +58,7 @@ export default function ContactPage() {
   return (
     <>
       <SiteHeader />
+      <PageTransition>
       <main className="content-page gr-contact" id="main-content">
         <section className="container gr-contact-layout contact-section" id="contact" aria-labelledby="contact-heading">
           <div className="gr-contact-copy">
@@ -105,6 +107,7 @@ export default function ContactPage() {
 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );

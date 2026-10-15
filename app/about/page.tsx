@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PageTransition } from "../components/motion/PageTransition";
 import { ABBrandImage } from "../components/brand/ABBrandImage";
 import { ArrowIcon } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
@@ -74,6 +75,7 @@ export default function AboutPage() {
   return (
     <>
       <SiteHeader />
+      <PageTransition>
       <main className="content-page gr-about" id="main-content">
         <header className="container gr-about-hero">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
@@ -180,6 +182,7 @@ export default function AboutPage() {
 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );

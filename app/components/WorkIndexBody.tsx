@@ -147,7 +147,10 @@ function WorkIndexCard({ project, type }: { project: Project; type: BlockType })
       <Link className="gr-wi-link" href={`/work/${project.slug}`}>
         <div className="gr-wi-media gr-wi-media--framed">
           <div className="gr-browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
-          <div className="gr-wi-image" style={{ aspectRatio: projectArtworkRatio(project) }}>
+          <div
+            className="gr-wi-image"
+            style={{ aspectRatio: projectArtworkRatio(project), viewTransitionName: `project-${project.slug}` } as CardMotionStyle}
+          >
             <ProjectArtwork project={project} sizes={sizes} priority={type === "feature"} />
           </div>
           <span className="live-label">

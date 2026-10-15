@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PageTransition } from "../components/motion/PageTransition";
 import { ProjectArtwork } from "../project-artwork";
 import { findProject, projects } from "../project-data";
 import { ServiceIndex, type ServiceIndexItem } from "../components/ServiceIndex";
@@ -85,6 +86,7 @@ export default function ServicesPage() {
   return (
     <>
       <SiteHeader />
+      <PageTransition>
       <main className="content-page service-page gr-svc-page" id="main-content">
         <div className="container">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
@@ -171,6 +173,7 @@ export default function ServicesPage() {
         </aside>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );
