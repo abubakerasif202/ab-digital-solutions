@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PageTransition } from "./components/motion/PageTransition";
 import { ContactForm } from "./components/ContactForm";
 import { Hero3DExperience } from "./components/Hero3DExperience";
 import { LiveTicker } from "./components/LiveTicker";
@@ -92,6 +93,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
     <>
       <SiteHeader />
 
+      <PageTransition>
       <main id="main-content" className="cinematic-home">
         <section className="stage-hero" aria-labelledby="hero-heading">
           <div className="stage-hero-art" aria-hidden="true">
@@ -244,6 +246,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <ContactForm />
         </EnquirySection>
       </main>
+      </PageTransition>
 
       <SiteFooter currentYear={currentYear} />
     </>

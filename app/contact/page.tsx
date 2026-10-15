@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ContactForm } from "../components/ContactForm";
 import { EnquirySection } from "../components/studio/EnquirySection";
+import { PageTransition } from "../components/motion/PageTransition";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { siteConfig } from "../site-config";
@@ -55,6 +56,7 @@ export default function ContactPage() {
   return (
     <>
       <SiteHeader />
+      <PageTransition>
       <main className="content-page studio-page studio-page--contact" id="main-content">
         <EnquirySection
           id="contact"
@@ -88,6 +90,7 @@ export default function ContactPage() {
 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );

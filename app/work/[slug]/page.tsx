@@ -1,4 +1,6 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
+import { PageTransition } from "../../components/motion/PageTransition";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -99,6 +101,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
   return (
     <>
       <SiteHeader />
+      <PageTransition>
       <main className={`content-page case-study-page gr-cs gr-cs--${variant}`} id="main-content">
         <header className="container gr-cs-hero">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
@@ -154,7 +157,11 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 <i /><i /><i />
                 <span>{project.displayUrl}</span>
               </div>
-              <div className="case-study-hero-image" style={{ aspectRatio: projectArtworkRatio(project) }}>
+              {/* Same name as the work-index card image, so it morphs between them. */}
+              <div
+                className="case-study-hero-image"
+                style={{ aspectRatio: projectArtworkRatio(project), viewTransitionName: `project-${project.slug}` } as CSSProperties}
+              >
                 <ProjectArtwork project={project} priority sizes="(max-width: 1040px) 100vw, 1440px" />
               </div>
             </div>
@@ -292,6 +299,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
         />
       </main>
+      </PageTransition>
       <SiteFooter currentYear={currentYear} />
     </>
   );

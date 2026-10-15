@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PageTransition } from "../components/motion/PageTransition";
 import { WorkIndexBody } from "../components/WorkIndexBody";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
@@ -64,6 +65,7 @@ export default function WorkPage() {
   return (
     <>
       <SiteHeader />
+      <PageTransition>
       <main className="work-index-page" id="main-content">
         <WorkIndexBody />
 
@@ -91,6 +93,7 @@ export default function WorkPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
         />
       </main>
+      </PageTransition>
       <SiteFooter currentYear={currentYear} />
     </>
   );

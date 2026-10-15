@@ -1,7 +1,7 @@
 /* Interior-only compositions. Loaded by about, contact and service route layouts. */
 
 .gr-svc-page { padding-bottom: 0; }
-.gr-svc-hero h1 { max-width: 11ch; font-size: clamp(3.2rem, 8.4vw, 8.4rem); line-height: 0.88; }
+.gr-svc-hero h1 { max-width: 14ch; font-size: clamp(3rem, 6vw, 6.4rem); line-height: 0.92; }
 .gr-svc-hero h1 .accent-serif { display: block; color: var(--gold-bright); }
 .gr-svc-hero .content-lead { margin: 32px 0 0; }
 .gr-svc-hero .content-actions { margin-top: 40px; }

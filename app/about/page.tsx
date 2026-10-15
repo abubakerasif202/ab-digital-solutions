@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { StudioAbout } from "../components/studio/StudioAbout";
+import { PageTransition } from "../components/motion/PageTransition";
 import { ArrowIcon } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
 import { findProject, projects, type Project } from "../project-data";
@@ -68,6 +69,7 @@ export default function AboutPage() {
   return (
     <>
       <SiteHeader />
+      <PageTransition>
       <main className="content-page studio-page gr-about" id="main-content">
         <nav className="studio-shell studio-crumbs" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
@@ -144,6 +146,7 @@ export default function AboutPage() {
 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       </main>
+      </PageTransition>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>
   );

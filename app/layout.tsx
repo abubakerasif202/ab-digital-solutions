@@ -186,7 +186,7 @@ const monoFont = IBM_Plex_Mono({
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-AU" className={`${sansFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
+    <html lang="en-AU" data-scroll-behavior="smooth" className={`${sansFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
       <body>
         <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
         <BrandIntro />

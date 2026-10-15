@@ -30,8 +30,8 @@ test("studio motion supports static content, touch and reduced motion", async ()
   const [styles, pointer, canvas, page] = await Promise.all([read("../app/studio.css"), read("../app/components/PointerFX.tsx"), read("../app/components/Hero3DCanvas.tsx"), read("../app/page.tsx")]);
   assert.match(styles, /prefers-reduced-motion: reduce/);
   assert.match(pointer, /finePointer\.matches && !reducedMotion\.matches/);
-  assert.match(canvas, /new THREE.TextureLoader/);
-  assert.match(canvas, /artworkTexture\?\.dispose/);
+  assert.match(canvas, /buildLogoPart\(name, curveSegments\)/);
+  assert.match(canvas, /new THREE\.ExtrudeGeometry\(/);
   assert.doesNotMatch(canvas, /TorusKnotGeometry|PointsMaterial|Math\.random/);
   assert.doesNotMatch(page, /IntroReveal/);
 });
@@ -53,13 +53,14 @@ test("mobile header keeps fixed navigation independent of backdrop containment",
 });
 
 
-test("hero fallback and WebGL preserve the same approved artwork", async () => {
-  const [fallback, canvas] = await Promise.all([read("../app/components/HeroFallback.tsx"), read("../app/components/Hero3DCanvas.tsx")]);
-  for (const source of [fallback, canvas]) assert.match(source, /\/brand\/ab-hero-monogram\.webp/);
-  assert.match(fallback, /preload/);
+test("static hero sculpture uses the same geometry as WebGL without an image request", async () => {
+  const [fallback, styles] = await Promise.all([read("../app/components/HeroFallback.tsx"), read("../app/studio.css")]);
+  assert.match(fallback, /import \{ LOGO_PATHS, LOGO_VIEWBOX \} from "\.\/logo-mark"/);
+  assert.match(fallback, /<svg viewBox=/);
   assert.match(fallback, /aria-hidden="true"/);
-  assert.doesNotMatch(canvas, /createSignalGeometry|ExtrudeGeometry/);
-  assert.ok((await stat(new URL("../public/brand/ab-hero-monogram.webp", import.meta.url))).size > 10000);
+  assert.match(fallback, /LOGO_PATHS\.slash/);
+  assert.doesNotMatch(fallback, /<img|<image|<canvas|useEffect/);
+  assert.doesNotMatch(styles, /url\(['"]?\/brand\/ab-monogram/);
 });
 
 test("brand intro is brief, non-blocking and once per session", async () => {
