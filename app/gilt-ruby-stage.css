@@ -226,7 +226,7 @@
 @media (max-width: 720px) {
   .cinematic-home .stage-hero { min-height: 0; }
   /* On phones the static sculpture sits behind the headline, softened so copy stays AA. */
-  .stage-hero-art { inset: 56px -26% auto -26%; height: 420px; opacity: 0.38; }
+  .stage-hero-art { inset: 72px 3% auto 3%; height: 340px; opacity: 0.34; }
   .cinematic-home .stage-title { max-width: none; font-size: clamp(2.6rem, 13vw, 3.6rem); }
   .stage-edition { display: none; }
   .stage-foot { align-items: stretch; flex-direction: column; }

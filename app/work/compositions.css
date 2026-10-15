@@ -65,6 +65,8 @@
 
 .gr-wi-filter-bar .work-index-filter { flex: none; }
 .gr-wi-filter-bar .work-index-filter small { margin-left: 8px; opacity: 0.7; font-size: 0.68rem; }
+/* Full opacity on the red active chip: 70% white on #d21736 is only 3.2:1. */
+.gr-wi-filter-bar .work-index-filter.is-active small { opacity: 1; color: #fff; }
 
 .gr-wi-list { padding: clamp(64px, 8vw, 120px) 0 clamp(80px, 9vw, 140px); }
 .gr-wi-block + .gr-wi-block { margin-top: clamp(104px, 12vw, 184px); }
