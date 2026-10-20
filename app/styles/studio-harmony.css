@@ -79,3 +79,32 @@
 .process-list li > span:first-child,
 .cinematic-home .standard-points article > span { color: var(--gilt); }
 .service-context::before { background: var(--gilt); }
+
+/* A filtered ancestor contains fixed children: mobile navigation must remain
+   attached to the viewport rather than the short header. */
+@media (max-width: 960px) {
+  .site-header,
+  .site-header.is-scrolled { backdrop-filter: none; background: var(--obsidian); }
+  .site-header .site-nav { overscroll-behavior: contain; }
+}
+
+@media (min-width: 961px) and (max-width: 1200px) {
+  .site-header .nav-wrap { gap: 20px; }
+  .site-header .site-nav { gap: 18px; }
+  .site-header .site-nav .nav-phone { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-hero .hero-3d-container > :is(canvas, .hero-3d-fallback) { transition: none; }
+}
+
+.stage-hero .hero-sculpture { object-fit: contain; }
+.cinematic-home .showcase-meta .showcase-kicker { color: var(--gilt); }
+.cinematic-home .slider-tabs button > span:first-child { color: var(--ivory-muted); }
+.cinematic-home .slider-tabs button.is-active > span:first-child { color: var(--ivory); }
+@media (max-width: 720px) {
+  .stage-hero-art { width: 200px; height: 150px; margin-top: 4px; }
+  .stage-hero .stage-ring--outer { inset: 0 8%; }
+  .stage-hero-body { gap: 18px; }
+  .stage-tagline { margin-bottom: 10px; }
+}

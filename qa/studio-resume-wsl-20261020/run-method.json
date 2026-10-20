@@ -1,0 +1,20 @@
+{
+  "node": "22.23.1",
+  "mirror": "/home/abuba/ab-studio-local-qa",
+  "source": "/mnt/c/Users/abuba/ab-digital-solutions",
+  "browserScript": "scripts/studio-rebuild-qa.mjs",
+  "desktopRecovery": {
+    "method": "Temporary copies of the existing script, replacing the route width list with one desktop width per fresh browser process and changing only the output directory. All assertions and interaction checks are unchanged.",
+    "widths": [
+      1024,
+      1440,
+      1920
+    ],
+    "scriptEdits": {
+      "[360, 390, 768, 1024, 1440, 1920]": "[WIDTH]",
+      "qa/studio-rebuild-20261020/browser": "qa/studio-rebuild-20261020/desktop-WIDTH"
+    }
+  },
+  "contactDelivery": "Intercepted browser requests only; no provider calls",
+  "harnessRepair": "Explicit desktop fine-pointer and hover Blink settings resolve WSL headless pointer:none. Final script supports QA_WIDTHS and QA_OUTPUT_DIR; final interactions run uses the actual updated script."
+}

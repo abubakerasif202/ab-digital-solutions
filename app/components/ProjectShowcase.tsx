@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 import { ArrowIcon, Glyph } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
-import { formatCategory, projects } from "../project-data";
+import { formatCategory, projectDestinationLabel, projects } from "../project-data";
 import { motionTokens } from "./motion/tokens";
 
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
@@ -127,7 +127,7 @@ export function ProjectShowcase() {
       }}
     >
       <div className="showcase-topline">
-        <span>Selected live work</span>
+        <span>Selected studio work</span>
         <span>{String(activeSlide + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
       </div>
       <div className="showcase-dimensional" data-tilt>
@@ -139,7 +139,7 @@ export function ProjectShowcase() {
       <div className="showcase-browser-bar" aria-hidden="true">
         <span className="showcase-browser-dots"><i /><i /><i /></span>
         <span>{activeProject.displayUrl}</span>
-        <span className="showcase-browser-status">Live project</span>
+        <span className="showcase-browser-status">{projectDestinationLabel(activeProject)}</span>
       </div>
       <div className="showcase-stage">
         <div className="showcase-slides" aria-live={sliderPaused ? "polite" : "off"}>

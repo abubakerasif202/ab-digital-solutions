@@ -1,0 +1,26 @@
+{
+  "checks": 39,
+  "passed": 39,
+  "failures": [],
+  "exceptions": [],
+  "consoleErrors": [
+    {
+      "route": "http://127.0.0.1:3100/",
+      "source": "http://127.0.0.1:3100/api/contact",
+      "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "expected": true
+    },
+    {
+      "route": "http://127.0.0.1:3100/contact",
+      "source": "http://127.0.0.1:3100/api/contact",
+      "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "expected": true
+    },
+    {
+      "route": "http://127.0.0.1:3100/qa-route-does-not-exist",
+      "source": "http://127.0.0.1:3100/qa-route-does-not-exist",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "expected": true
+    }
+  ]
+}

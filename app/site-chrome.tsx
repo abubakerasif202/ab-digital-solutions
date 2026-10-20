@@ -185,10 +185,14 @@ export function SiteHeader() {
       .filter((element): element is HTMLElement => element !== null);
     if (sections.length === 0) return;
 
+    const visibleSections = new Set<string>();
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.find((entry) => entry.isIntersecting);
-        if (visible) setActiveSection(visible.target.id);
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) visibleSections.add(entry.target.id);
+          else visibleSections.delete(entry.target.id);
+        });
+        setActiveSection(sections.find((section) => visibleSections.has(section.id))?.id ?? null);
       },
       { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
     );

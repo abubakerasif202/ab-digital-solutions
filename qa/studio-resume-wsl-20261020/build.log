@@ -1,0 +1,538 @@
+
+> ab-digital-solutions@0.1.0 build
+> npm run verify && next build
+
+
+> ab-digital-solutions@0.1.0 verify
+> npm run lint && npm run typecheck && npm test
+
+
+> ab-digital-solutions@0.1.0 lint
+> eslint . --ignore-pattern dist --ignore-pattern .next
+
+
+> ab-digital-solutions@0.1.0 typecheck
+> node scripts/typecheck.mjs
+
+Generating route types...
+✓ Types generated successfully
+
+> ab-digital-solutions@0.1.0 test
+> node scripts/run-tests.mjs
+
+TAP version 13
+# Subtest: successful enquiry event uses existing first-party pipeline without enquiry data
+ok 1 - successful enquiry event uses existing first-party pipeline without enquiry data
+  ---
+  duration_ms: 11.214003
+  type: 'test'
+  ...
+# Subtest: unknown events and cross-origin writes are rejected
+ok 2 - unknown events and cross-origin writes are rejected
+  ---
+  duration_ms: 2.739219
+  type: 'test'
+  ...
+# Subtest: optional analytics stays inert without configuration
+ok 3 - optional analytics stays inert without configuration
+  ---
+  duration_ms: 1.564018
+  type: 'test'
+  ...
+# Subtest: chunked oversized payload is rejected even without content-length
+ok 4 - chunked oversized payload is rejected even without content-length
+  ---
+  duration_ms: 3.098464
+  type: 'test'
+  ...
+# Subtest: brand variants are local accessible vectors and application icons are non-empty
+ok 5 - brand variants are local accessible vectors and application icons are non-empty
+  ---
+  duration_ms: 67.333208
+  type: 'test'
+  ...
+# Subtest: homepage showcases every live project and the Work page retains the full canonical registry
+ok 6 - homepage showcases every live project and the Work page retains the full canonical registry
+  ---
+  duration_ms: 14.674551
+  type: 'test'
+  ...
+# Subtest: studio motion supports static content, touch and reduced motion
+ok 7 - studio motion supports static content, touch and reduced motion
+  ---
+  duration_ms: 11.266347
+  type: 'test'
+  ...
+# Subtest: brand text files remain valid UTF-8 without mojibake
+ok 8 - brand text files remain valid UTF-8 without mojibake
+  ---
+  duration_ms: 16.20382
+  type: 'test'
+  ...
+# Subtest: mobile header keeps fixed navigation independent of backdrop containment
+ok 9 - mobile header keeps fixed navigation independent of backdrop containment
+  ---
+  duration_ms: 13.495094
+  type: 'test'
+  ...
+# Subtest: static hero and WebGL preserve the supplied authentic artwork
+ok 10 - static hero and WebGL preserve the supplied authentic artwork
+  ---
+  duration_ms: 10.602311
+  type: 'test'
+  ...
+# Subtest: brand intro is brief, non-blocking and once per session
+ok 11 - brand intro is brief, non-blocking and once per session
+  ---
+  duration_ms: 3.515136
+  type: 'test'
+  ...
+# Subtest: intro media assets exist and are web-sized
+ok 12 - intro media assets exist and are web-sized
+  ---
+  duration_ms: 7.062794
+  type: 'test'
+  ...
+# Contact rate limiting is running on the per-instance fallback: UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN are not configured.
+# Shared contact rate limit unavailable; using per-instance fallback: rate-limit-store-500
+# Contact delivery failed 403
+# Contact delivery returned no acceptance identifier
+# Contact delivery returned no acceptance identifier
+# Contact delivery returned no acceptance identifier
+# Contact delivery returned no acceptance identifier
+# Contact delivery returned no acceptance identifier
+# Shared contact rate limit unavailable; using per-instance fallback: rate-limit-store-invalid-response
+# Shared contact rate limit unavailable; using per-instance fallback: rate-limit-store-invalid-response
+# Shared contact rate limit unavailable; using per-instance fallback: rate-limit-store-invalid-response
+# Shared contact rate limit unavailable; using per-instance fallback: rate-limit-store-invalid-response
+# Shared contact rate limit unavailable; using per-instance fallback: rate-limit-store-invalid-response
+# Shared contact rate limit unavailable; using per-instance fallback: rate-limit-store-invalid-response
+# Subtest: valid enquiry is delivered through Resend and returns ok
+ok 13 - valid enquiry is delivered through Resend and returns ok
+  ---
+  duration_ms: 17.102439
+  type: 'test'
+  ...
+# Subtest: preview deployments refuse delivery, say so, and never call Resend
+ok 14 - preview deployments refuse delivery, say so, and never call Resend
+  ---
+  duration_ms: 3.767355
+  type: 'test'
+  ...
+# Subtest: preview still validates input before reporting that delivery is disabled
+ok 15 - preview still validates input before reporting that delivery is disabled
+  ---
+  duration_ms: 3.102357
+  type: 'test'
+  ...
+# Subtest: production deployments still deliver enquiries
+ok 16 - production deployments still deliver enquiries
+  ---
+  duration_ms: 6.348979
+  type: 'test'
+  ...
+# Subtest: prefers the Vercel-provided client IP header for rate limiting
+ok 17 - prefers the Vercel-provided client IP header for rate limiting
+  ---
+  duration_ms: 15.595927
+  type: 'test'
+  ...
+# Subtest: requests without any client IP share one fallback bucket
+ok 18 - requests without any client IP share one fallback bucket
+  ---
+  duration_ms: 6.387542
+  type: 'test'
+  ...
+# Subtest: repeated enquiries from one client are rate limited
+ok 19 - repeated enquiries from one client are rate limited
+  ---
+  duration_ms: 6.521788
+  type: 'test'
+  ...
+# Subtest: malformed, null and non-object JSON bodies are rejected with 400
+ok 20 - malformed, null and non-object JSON bodies are rejected with 400
+  ---
+  duration_ms: 4.052984
+  type: 'test'
+  ...
+# Subtest: oversized enquiry is rejected with 413
+ok 21 - oversized enquiry is rejected with 413
+  ---
+  duration_ms: 2.014427
+  type: 'test'
+  ...
+# Subtest: overlong fields are rejected instead of silently truncated
+ok 22 - overlong fields are rejected instead of silently truncated
+  ---
+  duration_ms: 7.181516
+  type: 'test'
+  ...
+# Subtest: honeypot submissions are silently accepted without sending email
+ok 23 - honeypot submissions are silently accepted without sending email
+  ---
+  duration_ms: 1.339726
+  type: 'test'
+  ...
+# Subtest: missing RESEND_API_KEY returns 503 and sends nothing
+ok 24 - missing RESEND_API_KEY returns 503 and sends nothing
+  ---
+  duration_ms: 1.334714
+  type: 'test'
+  ...
+# Subtest: shared rate-limit store decision is honoured when configured
+ok 25 - shared rate-limit store decision is honoured when configured
+  ---
+  duration_ms: 1.846975
+  type: 'test'
+  ...
+# Subtest: shared rate-limit store failure falls back without leaking details
+ok 26 - shared rate-limit store failure falls back without leaking details
+  ---
+  duration_ms: 2.725997
+  type: 'test'
+  ...
+# Subtest: starter budgets and custom software enquiries remain deliverable
+ok 27 - starter budgets and custom software enquiries remain deliverable
+  ---
+  duration_ms: 1.571761
+  type: 'test'
+  ...
+# Subtest: multi-select services and the business field are delivered
+ok 28 - multi-select services and the business field are delivered
+  ---
+  duration_ms: 1.354441
+  type: 'test'
+  ...
+# Subtest: the business field is optional and never mistaken for the honeypot
+ok 29 - the business field is optional and never mistaken for the honeypot
+  ---
+  duration_ms: 8.523252
+  type: 'test'
+  ...
+# Subtest: service selections must come from the offered options
+ok 30 - service selections must come from the offered options
+  ---
+  duration_ms: 3.499649
+  type: 'test'
+  ...
+# Subtest: an overlong business name is rejected instead of truncated
+ok 31 - an overlong business name is rejected instead of truncated
+  ---
+  duration_ms: 1.313219
+  type: 'test'
+  ...
+# Subtest: invalid options and cross-origin requests never trigger delivery
+ok 32 - invalid options and cross-origin requests never trigger delivery
+  ---
+  duration_ms: 11.618859
+  type: 'test'
+  ...
+# Subtest: delivery rejection and network errors are recoverable failures
+ok 33 - delivery rejection and network errors are recoverable failures
+  ---
+  duration_ms: 3.558022
+  type: 'test'
+  ...
+# Subtest: successful HTTP responses without a provider acceptance ID never report delivery
+ok 34 - successful HTTP responses without a provider acceptance ID never report delivery
+  ---
+  duration_ms: 14.836282
+  type: 'test'
+  ...
+# Subtest: malformed shared-store results cannot bypass the fallback request budget
+ok 35 - malformed shared-store results cannot bypass the fallback request budget
+  ---
+  duration_ms: 24.913625
+  type: 'test'
+  ...
+# Subtest: 3D logo outlines match the canonical brand mark SVG
+ok 36 - 3D logo outlines match the canonical brand mark SVG
+  ---
+  duration_ms: 41.337678
+  type: 'test'
+  ...
+# Subtest: portfolio retains every case study and distinguishes external destination types
+ok 37 - portfolio retains every case study and distinguishes external destination types
+  ---
+  duration_ms: 2.371438
+  type: 'test'
+  ...
+# Subtest: portfolio links use the verified redirect destinations
+ok 38 - portfolio links use the verified redirect destinations
+  ---
+  duration_ms: 0.510852
+  type: 'test'
+  ...
+# Subtest: destination helpers retain a graceful unavailable-site state
+ok 39 - destination helpers retain a graceful unavailable-site state
+  ---
+  duration_ms: 0.587327
+  type: 'test'
+  ...
+# Subtest: strict CSP diagnostics are opt-in and never replace the enforced policy
+ok 40 - strict CSP diagnostics are opt-in and never replace the enforced policy
+  ---
+  duration_ms: 99.175292
+  type: 'test'
+  ...
+# Subtest: homepage exposes content directly instead of using an iframe
+ok 41 - homepage exposes content directly instead of using an iframe
+  ---
+  duration_ms: 33.512604
+  type: 'test'
+  ...
+# Subtest: portfolio contains every required live project
+ok 42 - portfolio contains every required live project
+  ---
+  duration_ms: 5.871909
+  type: 'test'
+  ...
+# Subtest: every project ships a real preview image and routes visitors through a case study
+ok 43 - every project ships a real preview image and routes visitors through a case study
+  ---
+  duration_ms: 31.448157
+  type: 'test'
+  ...
+# Subtest: Three.js is delayed, constrained on smaller devices and paused off screen
+ok 44 - Three.js is delayed, constrained on smaller devices and paused off screen
+  ---
+  duration_ms: 2.631121
+  type: 'test'
+  ...
+# Subtest: premium motion remains present while mobile rendering is constrained
+ok 45 - premium motion remains present while mobile rendering is constrained
+  ---
+  duration_ms: 6.893149
+  type: 'test'
+  ...
+# Subtest: homepage interactive work is isolated and pauses when hidden
+ok 46 - homepage interactive work is isolated and pauses when hidden
+  ---
+  duration_ms: 5.580833
+  type: 'test'
+  ...
+# Subtest: stack ledger derives every count from the canonical registry
+ok 47 - stack ledger derives every count from the canonical registry
+  ---
+  duration_ms: 9.240623
+  type: 'test'
+  ...
+# Subtest: project count copy is derived from the canonical registry
+ok 48 - project count copy is derived from the canonical registry
+  ---
+  duration_ms: 5.587016
+  type: 'test'
+  ...
+# Subtest: reviewed design issues remain remediated
+ok 49 - reviewed design issues remain remediated
+  ---
+  duration_ms: 5.732058
+  type: 'test'
+  ...
+# Subtest: mobile navigation keeps keyboard focus within its open menu
+ok 50 - mobile navigation keeps keyboard focus within its open menu
+  ---
+  duration_ms: 2.341128
+  type: 'test'
+  ...
+# Subtest: SEO routes and metadata are configured
+ok 51 - SEO routes and metadata are configured
+  ---
+  duration_ms: 9.112433
+  type: 'test'
+  ...
+# Subtest: premium interaction layer is wired without heavy dependencies
+ok 52 - premium interaction layer is wired without heavy dependencies
+  ---
+  duration_ms: 15.618945
+  type: 'test'
+  ...
+# Subtest: brand theme balances premium red and gold accents
+ok 53 - brand theme balances premium red and gold accents
+  ---
+  duration_ms: 3.147084
+  type: 'test'
+  ...
+# Subtest: llms.txt stays in sync with the canonical project registry
+ok 54 - llms.txt stays in sync with the canonical project registry
+  ---
+  duration_ms: 104.105843
+  type: 'test'
+  ...
+# Subtest: service featured projects resolve to canonical project slugs
+ok 55 - service featured projects resolve to canonical project slugs
+  ---
+  duration_ms: 21.955401
+  type: 'test'
+  ...
+# Subtest: services index page exists and is wired into SEO routes
+ok 56 - services index page exists and is wired into SEO routes
+  ---
+  duration_ms: 2.225096
+  type: 'test'
+  ...
+# Subtest: contact form posts to the protected server endpoint
+ok 57 - contact form posts to the protected server endpoint
+  ---
+  duration_ms: 9.857381
+  type: 'test'
+  ...
+# Subtest: Vercel configuration uses the Next.js production build
+ok 58 - Vercel configuration uses the Next.js production build
+  ---
+  duration_ms: 25.458012
+  type: 'test'
+  ...
+# Subtest: typography is self-hosted so every platform gets the intended pairing
+ok 59 - typography is self-hosted so every platform gets the intended pairing
+  ---
+  duration_ms: 15.447809
+  type: 'test'
+  ...
+# Subtest: portfolio screenshots keep their left-aligned headlines in frame
+ok 60 - portfolio screenshots keep their left-aligned headlines in frame
+  ---
+  duration_ms: 7.732915
+  type: 'test'
+  ...
+# Subtest: service heroes carry decorative real project evidence
+ok 61 - service heroes carry decorative real project evidence
+  ---
+  duration_ms: 21.441934
+  type: 'test'
+  ...
+# Subtest: hero content paints immediately without an intro overlay or hydration suppression
+ok 62 - hero content paints immediately without an intro overlay or hydration suppression
+  ---
+  duration_ms: 2.566779
+  type: 'test'
+  ...
+# Subtest: reduced motion removes the headline rise and intro entirely
+ok 63 - reduced motion removes the headline rise and intro entirely
+  ---
+  duration_ms: 2.899267
+  type: 'test'
+  ...
+# Subtest: phones never initialise WebGL and 3D waits for idle
+ok 64 - phones never initialise WebGL and 3D waits for idle
+  ---
+  duration_ms: 4.410218
+  type: 'test'
+  ...
+# Subtest: production builds do not reuse a Turbopack filesystem cache
+ok 65 - production builds do not reuse a Turbopack filesystem cache
+  ---
+  duration_ms: 12.724938
+  type: 'test'
+  ...
+# Subtest: below-fold homepage sections skip offscreen layout with sized placeholders
+ok 66 - below-fold homepage sections skip offscreen layout with sized placeholders
+  ---
+  duration_ms: 10.082589
+  type: 'test'
+  ...
+# Subtest: anchor jumps re-align once offscreen sections have rendered
+ok 67 - anchor jumps re-align once offscreen sections have rendered
+  ---
+  duration_ms: 2.009547
+  type: 'test'
+  ...
+# Subtest: display and mono fonts load only the weights and styles they render
+ok 68 - display and mono fonts load only the weights and styles they render
+  ---
+  duration_ms: 1.798521
+  type: 'test'
+  ...
+# Subtest: icons come from one tree-shaken library through named imports
+ok 69 - icons come from one tree-shaken library through named imports
+  ---
+  duration_ms: 9.958488
+  type: 'test'
+  ...
+# Subtest: Tailwind only scans app source, keeping unused utilities out of critical CSS
+ok 70 - Tailwind only scans app source, keeping unused utilities out of critical CSS
+  ---
+  duration_ms: 1.918791
+  type: 'test'
+  ...
+# Subtest: Gilt & Ruby design system: didone headlines, grotesk body and The Cut
+ok 71 - Gilt & Ruby design system: didone headlines, grotesk body and The Cut
+  ---
+  duration_ms: 8.311951
+  type: 'test'
+  ...
+# Subtest: second-pass compositions: real pages, varied portfolio and case-study systems
+ok 72 - second-pass compositions: real pages, varied portfolio and case-study systems
+  ---
+  duration_ms: 9.870399
+  type: 'test'
+  ...
+# Subtest: studio light rig is deterministic, opaque and includes bright reflection panels
+ok 73 - studio light rig is deterministic, opaque and includes bright reflection panels
+  ---
+  duration_ms: 17.728794
+  type: 'test'
+  ...
+# Subtest: softbox rig rejects invalid image dimensions
+ok 74 - softbox rig rejects invalid image dimensions
+  ---
+  duration_ms: 0.441484
+  type: 'test'
+  ...
+1..74
+# tests 74
+# suites 0
+# pass 74
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1464.320805
+▲ Next.js 16.3.8 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 53ms
+- Experiments (use with caution):
+  ⨯ turbopackFileSystemCacheForBuild
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 10.9s
+  Running TypeScript ...
+  Finished TypeScript in 8.7s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/35) ...
+  Generating static pages using 7 workers (8/35)
+  Generating static pages using 7 workers (17/35)
+  Generating static pages using 7 workers (26/35)
+✓ Generating static pages using 7 workers (35/35) in 1898ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ƒ /api/analytics
+├ ƒ /api/contact
+├ ○ /contact
+├ ○ /manifest.webmanifest
+├ ○ /opengraph-image
+├ ○ /privacy
+├ ○ /robots.txt
+├ ○ /services
+├   /services/[slug]
+│ ├ ● /services/web-design-sydney
+│ ├ ● /services/ecommerce-website-development
+│ ├ ● /services/seo-local-visibility
+│ └ ● [+3 more paths]
+├ ○ /sitemap.xml
+├ ○ /work
+├   /work/[slug]
+│ ├ ● /work/jufaja-homes
+│ ├ ● /work/milestone-renovate
+│ ├ ● /work/aftab-sons-transport
+│ └ ● [+12 more paths]
+└ ƒ /work/[slug]/opengraph-image
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand

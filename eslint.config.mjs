@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     ".codex/**",
     ".claude/**",
     "next-env.d.ts",
+    // An extracted reference snapshot is not part of the deployed application.
+    "ab-digital-solutions/**",
   ]),
   ...nextVitals,
   ...nextTs,

@@ -66,7 +66,7 @@ export const projects = [
     overview:
       "Milestone Renovate is the renovation chapter of Milestone, separate from the Milestone Development showcase. It needed a calm, trustworthy front door that helps Sydney homeowners understand cost, design direction and approvals before they speak to anyone.",
     solution:
-      "We built a forest-green and gold planning platform around four guided tools: an indicative renovation cost planner, a moodboard design studio, a renovation questionnaire and an NSW DA or CDC approvals guide. Enquiries are validated and delivered by email, and the site is explicit that estimates are indicative, imagery is AI-generated concept art and the call request is a request, not a live booking.",
+      "We built a forest-green and gold planning platform around four guided tools: an indicative renovation cost planner, a moodboard design studio, a renovation questionnaire and an NSW DA or CDC approvals guide. Enquiries are validated and delivered by email, with indicative estimates and a call request rather than a confirmed booking. The site distinguishes owner-supplied project photography from concept references.",
     url: "https://milestonerenovate.com/",
     displayUrl: "milestonerenovate.com",
     image: `${assetBase}/ab-portfolio-milestone-renovate.webp`,
@@ -148,7 +148,7 @@ export const projects = [
     ],
     techStack: ["Next.js", "TypeScript", "Supabase", "PostgreSQL"],
     kind: "software",
-    ctaLabel: "View System",
+    ctaLabel: "View Staff Sign-in",
   },
   {
     slug: "adelaide-wholesale-tyres",
@@ -223,7 +223,6 @@ export const projects = [
   },
   {
     slug: "gala-rentals",
-    destination: "unavailable",
     name: "Gala Rentals",
     category: "Mobility / Car rentals",
     sector: "Mobility",
@@ -254,7 +253,7 @@ export const projects = [
     overview:
       "ZQ Removals presents residential and commercial moving services in Adelaide with a direct path to quote enquiries.",
     solution:
-      "We engineered a conversion-focused local service layout with clear service categories, coverage maps, and a fast multi-step quote request form.",
+      "We built a local service website with clear moving services, Adelaide coverage information and direct quote request pathways.",
     url: "https://zqremovalsadelaide.com.au/",
     displayUrl: "zqremovalsadelaide.com.au",
     image: `${assetBase}/ab-portfolio-zq-removals.jpg`,
@@ -277,7 +276,7 @@ export const projects = [
     overview:
       "DECENT Development builds custom architectural homes and commercial developments in Sydney, needing a digital presence that reflects their craftsmanship.",
     solution:
-      "We crafted a dark, sophisticated portfolio site emphasizing project photography, architectural specifications, and direct consultation booking.",
+      "We crafted a dark, sophisticated portfolio site emphasizing project photography, service information and direct consultation enquiries.",
     url: "https://www.decentdevelopment.com.au/",
     displayUrl: "decentdevelopment.com.au",
     image: `${assetBase}/ab-portfolio-decent-development.jpg`,
@@ -285,7 +284,7 @@ export const projects = [
     tags: ["Brand Direction", "Portfolio Gallery", "Performance"],
     keyFeatures: [
       "Full-width architectural project gallery",
-      "Detailed project specifications & build scope",
+      "Construction service and project information",
       "Dark luxury aesthetic matching brand identity",
       "Fast page load & image optimization",
     ],
@@ -309,7 +308,7 @@ export const projects = [
     keyFeatures: [
       "Filterable project portfolio showcase",
       "Commercial & residential capability breakdown",
-      "Corporate presentation & accreditation credentials",
+      "Company, team and construction process information",
       "Responsive accessibility-conscious structure",
     ],
     techStack: ["HTML", "CSS", "JavaScript", "GSAP"],
@@ -324,19 +323,19 @@ export const projects = [
     overview:
       "4 Point Concrete provides specialized concrete placement and structural civil services across commercial and industrial projects.",
     solution:
-      "We created a capability-focused digital presentation detailing concrete specification options, equipment resources, and direct estimator enquiry channels.",
+      "We created a concrete-services website with a clear services structure, project presentation and quote enquiry pathways. Concept imagery is labelled on the hosted showcase.",
     url: "https://4point-concrete-website.vercel.app/",
     displayUrl: "4point-concrete-website.vercel.app",
     image: `${assetBase}/ab-portfolio-four-point-concrete.jpg`,
     alt: "4 Point Concrete website homepage preview",
     tags: ["Capability Deck", "Civil Services", "Mobile UX"],
     keyFeatures: [
-      "Detailed civil & structural capability presentation",
-      "Project estimator & tender inquiry pathway",
-      "Industrial equipment & safety accreditation display",
-      "High-contrast mobile UX for site managers",
+      "Concrete service and capability presentation",
+      "Direct quote enquiry pathway",
+      "Clearly labelled concept imagery",
+      "Responsive navigation and contact options",
     ],
-    techStack: ["Next.js", "Vite", "TypeScript", "Tailwind CSS"],
+    techStack: ["React", "Vite", "Tailwind CSS"],
   },
   {
     slug: "1st-class-express",
@@ -396,16 +395,16 @@ export const projects = [
     overview:
       "Cheap Adelaide Removalist needed a digital presence that could compete on trust and clarity rather than just price — publishing transparent hourly rates, service coverage and a fast quote path for house, apartment, office and interstate moves across Greater Adelaide.",
     solution:
-      "We built a rate-transparent local service platform anchored by a Bento-style pricing and logistics engine: published per-30-minute crew rates with a stated no-hidden-surcharges policy, a move-sizer and crew-allocator module, suburb-level arterial coverage content, eight dedicated service pages, a four-step process explainer, an extensive FAQ and a detailed multi-field quote request form.",
+      "We built a local service website with published starting rates and clear pricing conditions, dedicated moving-service pages, Adelaide coverage information, practical moving guides, FAQs and a quote request form that gathers move details.",
     url: "https://www.cheapadelaideremovalist.com.au/",
     displayUrl: "cheapadelaideremovalist.com.au",
     image: `${assetBase}/ab-portfolio-cheap-adelaide-removalist.png`,
     alt: "Cheap Adelaide Removalist website homepage showing published moving rates and a branded removals truck",
     tags: ["Local SEO Architecture", "Quote Conversion", "Transparent Pricing UX"],
     keyFeatures: [
-      "Bento-style pricing and logistics engine with a move-sizer and crew allocator",
-      "Published per-30-minute rates with a zero-hidden-surcharge policy",
-      "Eight dedicated service pages plus suburb and arterial coverage content",
+      "Published starting rates with move-specific pricing conditions",
+      "Dedicated moving-service pages and practical guides",
+      "Adelaide suburb and service-area information",
       "Multi-field quote request form with property access and inventory scoping",
     ],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "JSON-LD"],

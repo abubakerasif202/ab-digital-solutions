@@ -100,8 +100,8 @@ export default function ServicesPage() {
               <p className="eyebrow">Digital services / Sydney</p>
               <h1>Websites to business systems. <span className="accent-serif">Built with purpose.</span></h1>
               <p className="content-lead">
-                One studio covering the full digital journey — from the first strategic decision to
-                post-launch support, with every recommendation tied to a clear business goal.
+                Websites, online stores and custom software for Australian businesses. Bring us a new
+                project, an existing site to improve or a workflow that needs a better system.
               </p>
               <div className="content-actions">
                 <Link className="button button-primary" href="/contact" data-magnetic>Start a Project <ArrowIcon /></Link>
@@ -114,7 +114,7 @@ export default function ServicesPage() {
                 <ProjectArtwork project={projects[0]} priority sizes="(max-width: 960px) 92vw, 520px" />
               </div>
               <figcaption>
-                <span>Live work</span>
+                <span>Studio project</span>
                 {projects[0].name}
               </figcaption>
             </figure>
@@ -127,7 +127,7 @@ export default function ServicesPage() {
               <p className="eyebrow section-index"><span className="section-index-num">01</span><span className="micro-rule" aria-hidden="true" />Capabilities</p>
               <h2 id="services-index-heading" className="gr-display-l">Explore each <span className="accent-serif">service.</span></h2>
               <div className="gr-section-head-aside">
-                <p>Every service links to a detailed page covering inclusions, approach, relevant live work and common questions.</p>
+                <p>Explore the approach, scope and relevant project experience behind each service. We agree deliverables and costs in a written proposal.</p>
               </div>
             </div>
             <ServiceIndex items={serviceItems} />

@@ -10,7 +10,7 @@ import { ArrowIcon } from "../icons";
 export const metadata: Metadata = {
   title: "Our Work & Case Studies",
   description:
-    "Explore our portfolio of strategy-led, high-converting websites built for Australian mobility, logistics, construction and local service businesses.",
+    "Explore our portfolio of websites and custom business systems built for Australian mobility, logistics, construction and local service businesses.",
   alternates: { canonical: "/work" },
   openGraph: {
     title: `Our Work & Case Studies | ${siteConfig.name}`,
@@ -45,7 +45,7 @@ const schema = {
       "@type": "CollectionPage",
       name: "Our Work & Case Studies",
       description:
-        "Selected client websites designed and developed by AB Web Studio.",
+        "Selected websites, hosted showcases and business software by AB Web Studio.",
       url: `${siteConfig.url}/work`,
       publisher: { "@id": `${siteConfig.url}/#organization` },
     },

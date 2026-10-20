@@ -5,11 +5,11 @@ import { projects } from "./project-data";
 
 // Static content-change dates (never the current build time, which would make
 // every build differ). Bump the relevant constant when that content actually changes.
-const HOME_LAST_MODIFIED = "2026-10-07";
-const WORK_LAST_MODIFIED = "2026-10-07";
-const SERVICES_LAST_MODIFIED = "2026-09-23";
-const PRIVACY_LAST_MODIFIED = "2026-08-05";
-const STUDIO_LAST_MODIFIED = "2026-10-07";
+const HOME_LAST_MODIFIED = "2026-10-20";
+const WORK_LAST_MODIFIED = "2026-10-20";
+const SERVICES_LAST_MODIFIED = "2026-10-20";
+const PRIVACY_LAST_MODIFIED = "2026-10-20";
+const STUDIO_LAST_MODIFIED = "2026-10-20";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

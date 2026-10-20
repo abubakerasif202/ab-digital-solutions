@@ -48,9 +48,9 @@ export function StackLedger() {
         </div>
 
         <div className="stack-layout">
-          <div className="stack-table-wrap" data-reveal>
+          <div className="stack-table-wrap" role="region" aria-labelledby="stack-table-caption" tabIndex={0} data-reveal>
             <table className="stack-table">
-              <caption>Portfolio stack ledger <span aria-hidden="true">/</span> projects using each technology</caption>
+              <caption id="stack-table-caption">Portfolio stack ledger <span aria-hidden="true">/</span> projects using each technology</caption>
               <thead>
                 <tr><th scope="col">Technology</th><th scope="col">Role</th><th scope="col">Projects</th></tr>
               </thead>

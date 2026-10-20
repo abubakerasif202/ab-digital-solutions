@@ -60,7 +60,7 @@ const approach = [
   ["Systems", "Inventory, purchasing, sales and invoicing workflows brought together in practical custom software when a website alone is not enough."],
 ] as const;
 
-// A small, deliberately varied selection of real live work for the collage.
+// A varied selection of studio projects, including a protected application.
 const collage = ["aftab-sons-transport", "247-inventory-system", "decent-development"]
   .map((slug) => findProject(slug))
   .filter((project): project is Project => Boolean(project));
@@ -98,7 +98,7 @@ export default function AboutPage() {
         <section className="gr-about-collage" aria-labelledby="collage-heading">
           <div className="container">
             <div className="gr-about-collage-head" data-reveal>
-              <p className="eyebrow">Selected live work</p>
+              <p className="eyebrow">Selected studio projects</p>
               <h2 id="collage-heading">From a first impression to <span className="accent-serif">day-to-day operations.</span></h2>
               <Link className="text-link" href="/work">See all {projects.length} projects <ArrowIcon /></Link>
             </div>

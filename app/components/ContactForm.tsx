@@ -56,9 +56,11 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
         body: JSON.stringify(payload),
         signal: controller.signal,
       });
-      if (!response.ok) {
-        const result = await response.json().catch(() => ({})) as { error?: string };
-        throw new Error(result.error || `We could not send your enquiry. Please email ${siteConfig.email}.`);
+      const result: unknown = await response.json().catch(() => null);
+      if (!response.ok || !result || typeof result !== "object" || !("ok" in result) || result.ok !== true) {
+        const error = result && typeof result === "object" && "error" in result && typeof result.error === "string"
+          ? result.error : `We could not confirm delivery. Please email ${siteConfig.email} before resending.`;
+        throw new Error(error);
       }
       form.reset();
       setFieldErrors({});
@@ -178,7 +180,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
       <p className={`form-status ${formState}`} role="status" aria-live="polite">
         {(formState === "success" || formState === "error") && (
           <strong className="form-status-label">
-            {formState === "success" ? "Enquiry received" : "Enquiry not sent"}
+            {formState === "success" ? "Enquiry received" : "Please check your enquiry"}
           </strong>
         )}
         {formStatus}

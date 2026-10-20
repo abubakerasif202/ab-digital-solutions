@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Scroll spy clears at hero @360",
+    "passed": true,
+    "detail": {
+      "scrollY": 0,
+      "overflow": 0,
+      "current": null
+    }
+  },
+  {
+    "name": "Scroll spy clears at hero @390",
+    "passed": true,
+    "detail": {
+      "scrollY": 0,
+      "overflow": 0,
+      "current": null
+    }
+  },
+  {
+    "name": "Scroll spy clears at hero @768",
+    "passed": true,
+    "detail": {
+      "scrollY": 0,
+      "overflow": 0,
+      "current": null
+    }
+  },
+  {
+    "name": "Scroll spy clears at hero @1024",
+    "passed": true,
+    "detail": {
+      "scrollY": 0,
+      "overflow": 0,
+      "current": null
+    }
+  },
+  {
+    "name": "Scroll spy clears at hero @1440",
+    "passed": true,
+    "detail": {
+      "scrollY": 0,
+      "overflow": 0,
+      "current": null
+    }
+  },
+  {
+    "name": "Scroll spy clears at hero @1920",
+    "passed": true,
+    "detail": {
+      "scrollY": 0,
+      "overflow": 0,
+      "current": null
+    }
+  }
+]

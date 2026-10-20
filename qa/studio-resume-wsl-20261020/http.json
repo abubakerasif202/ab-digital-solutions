@@ -1,0 +1,41 @@
+{
+  "checkedAt": "2026-10-20T05:27:54.517973+00:00",
+  "checks": [
+    {
+      "route": "/sitemap.xml",
+      "expected": 200,
+      "status": 200,
+      "passed": true
+    },
+    {
+      "route": "/robots.txt",
+      "expected": 200,
+      "status": 200,
+      "passed": true
+    },
+    {
+      "route": "/manifest.webmanifest",
+      "expected": 200,
+      "status": 200,
+      "passed": true
+    },
+    {
+      "route": "/opengraph-image",
+      "expected": 200,
+      "status": 200,
+      "passed": true
+    },
+    {
+      "route": "/qa-route-does-not-exist",
+      "expected": 404,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "route": "/site/ab-digital-premium/index.html",
+      "status": 308,
+      "location": "/",
+      "passed": true
+    }
+  ]
+}

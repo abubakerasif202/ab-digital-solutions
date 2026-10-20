@@ -124,7 +124,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <div className="stage-intro">
                 <p className="stage-tagline">Built for your business.</p>
                 <p className="hero-intro">
-                  Independent design and development for Australian businesses. From distinctive <Link href="/services/web-design-sydney" prefetch={false}>websites</Link> to web applications, business systems and connected workflows.
+                  Premium <Link href="/services/web-design-sydney" prefetch={false}>websites and redesigns</Link>, online stores and custom business systems for Australian businesses. Thoughtful design, clear customer journeys and technology that supports your daily work.
                 </p>
                 <div className="hero-actions">
                   <a className="button button-primary" href="#contact" data-magnetic>

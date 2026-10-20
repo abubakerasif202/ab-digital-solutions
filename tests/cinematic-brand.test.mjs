@@ -30,8 +30,8 @@ test("studio motion supports static content, touch and reduced motion", async ()
   const [styles, pointer, canvas, page] = await Promise.all([read("../app/studio.css"), read("../app/components/PointerFX.tsx"), read("../app/components/Hero3DCanvas.tsx"), read("../app/page.tsx")]);
   assert.match(styles, /prefers-reduced-motion: reduce/);
   assert.match(pointer, /finePointer\.matches && !reducedMotion\.matches/);
-  assert.match(canvas, /buildLogoPart\(name, curveSegments\)/);
-  assert.match(canvas, /new THREE\.ExtrudeGeometry\(/);
+  assert.match(canvas, /new THREE\.TextureLoader\(\)\.load\("\/brand\/ab-hero-monogram\.webp"/);
+  assert.match(canvas, /new THREE\.PlaneGeometry\(/);
   assert.doesNotMatch(canvas, /TorusKnotGeometry|PointsMaterial|Math\.random/);
   assert.doesNotMatch(page, /IntroReveal/);
 });
@@ -46,21 +46,30 @@ test("brand text files remain valid UTF-8 without mojibake", async () => {
 
 
 test("mobile header keeps fixed navigation independent of backdrop containment", async () => {
-  const styles = await read("../app/studio.css");
+  const [styles, harmony, layout] = await Promise.all([
+    read("../app/studio.css"),
+    read("../app/styles/studio-harmony.css"),
+    read("../app/layout.tsx"),
+  ]);
   const mobile = styles.slice(styles.indexOf("@media (max-width: 960px)"));
   assert.match(mobile, /\.site-header \{ backdrop-filter: none;/);
   assert.match(mobile, /height: calc\(100dvh - var\(--header-height\)\)/);
+  // The final system layer must preserve this, after desktop glass is applied.
+  assert.ok(layout.indexOf('"./styles/studio-harmony.css"') > layout.indexOf('"./styles/studio-system.css"'));
+  assert.match(harmony, /@media \(max-width: 960px\)\s*\{\s*\.site-header,\s*\.site-header\.is-scrolled\s*\{ backdrop-filter: none;/);
 });
 
 
-test("static hero sculpture uses the same geometry as WebGL without an image request", async () => {
-  const [fallback, styles] = await Promise.all([read("../app/components/HeroFallback.tsx"), read("../app/studio.css")]);
-  assert.match(fallback, /import \{ LOGO_PATHS, LOGO_VIEWBOX \} from "\.\/logo-mark"/);
-  assert.match(fallback, /<svg viewBox=/);
+test("static hero and WebGL preserve the supplied authentic artwork", async () => {
+  const [fallback, canvas] = await Promise.all([read("../app/components/HeroFallback.tsx"), read("../app/components/Hero3DCanvas.tsx")]);
+  for (const source of [fallback, canvas]) assert.ok(source.includes("/brand/ab-hero-monogram.webp"));
+  assert.match(fallback, /width=\{936\}/);
+  assert.match(fallback, /height=\{792\}/);
   assert.match(fallback, /aria-hidden="true"/);
-  assert.match(fallback, /LOGO_PATHS\.slash/);
-  assert.doesNotMatch(fallback, /<img|<image|<canvas|useEffect/);
-  assert.doesNotMatch(styles, /url\(['"]?\/brand\/ab-monogram/);
+  assert.doesNotMatch(fallback, /LOGO_PATHS|<canvas|useEffect/);
+  assert.doesNotMatch(canvas, /ExtrudeGeometry|SVGLoader|studioRadiance/);
+  assert.match(canvas, /texture\.dispose\(\)/);
+  assert.match(canvas, /if \(disposed\) return/);
 });
 
 test("brand intro is brief, non-blocking and once per session", async () => {
