@@ -3,8 +3,8 @@
 This replaces a historical release checklist. Old deployment ticks were not evidence for the current checkout.
 
 - Preserve the existing Gilt & Ruby identity, authentic assets and canonical Next.js source in `app/`.
-- Maintain the 15-project registry in `app/project-data.ts` and six established service routes. Counts are derived; projects include public sites, demonstrations and a protected business application.
-- Verify destinations, distinguish status and remove unsupported claims. Fresh Stop remains an unfinished preview and is excluded.
+- Maintain the 16-project registry in `app/project-data.ts` and six established service routes. Counts are derived; projects include public sites, demonstrations and a protected business application.
+- Verify destinations, distinguish status and remove unsupported claims. Fresh Stop is approved as project #16 and uses its published custom domain, https://www.freshstop.com.au/. The earlier preview exclusion is superseded.
 - Keep public contact details consistent with the supplied business brief; keep delivery configuration server-only.
 - Validate contact acceptance, shared rate-limit responses, keyboard interaction, mobile navigation and reduced motion.
 - Run clean install, lint, typecheck, tests, production build and responsive browser QA. Record actual results in `docs/studio-rebuild-qa.md`.

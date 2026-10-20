@@ -1,5 +1,7 @@
 # Portfolio verification
 
+Current registry: **16 projects**. Fresh Stop was approved by the owner for public AB Web Studio attribution and added on its published custom domain on 20 October 2026. This supersedes the earlier preview exclusion. Current evidence and validation: [Fresh Stop integration](fresh-stop-portfolio-qa.md).
+
 Checked 20 October 2026 using public HTTPS GET requests only. All 15 recorded destinations returned HTTP 200 and an expected business title. This verifies availability and brand identity at the time of the check, not ownership, conversion results, browser behaviour or the operation of forms, checkout and private features.
 
 | # | Observed title | Recorded URL | HTTP | Classification |
@@ -19,7 +21,7 @@ Checked 20 October 2026 using public HTTPS GET requests only. All 15 recorded de
 | 13 | 1st Class Express · Freight, Drivers &amp; Fleet Solutions | [Destination](https://www.1stclassexpress.com.au/) | 200 | Published business website |
 | 14 | Removalists Adelaide &amp; Movers · HF Removals Adelaide | [Destination](https://www.hfremovalsadelaide.com.au/) | 200 | Published business website |
 | 15 | Cheap Adelaide Removalists · Affordable Adelaide Movers | [Destination](https://www.cheapadelaideremovalist.com.au/) | 200 | Published business website |
-| 16 | Fresh Stop — Sydney Fresh Produce &amp; Online Groceries | [Destination](https://fresh-stop.vercel.app/) | 200 | Active preview; excluded |
+| 16 | Fresh Stop — Sydney Fresh Produce &amp; Online Groceries | [Destination](https://www.freshstop.com.au/) | 200 | Published business website; owner-approved attribution |
 
 ## Content corrections
 
@@ -36,9 +38,11 @@ Checked 20 October 2026 using public HTTPS GET requests only. All 15 recorded de
 
 Read package manifests from nearby checkouts: jufaja-homes-platform, Aftabandsons/frontend, 247truck/inventory-app, adelaide-wholesale-tyres, maple-rental-clean, Gala-rentals, decent-development, 4point-concrete, 1st, HF, cheapadelaide and milestonedevelopment-site. These support the major framework labels. Installed dependencies do not prove that every feature is used or that the current remote build matches the local checkout. Milestone Renovate's full technology attribution still needs owner confirmation. No screenshots or client artwork were replaced; existing public portfolio captures remain the visual source.
 
-## Fresh Stop decision
+## Fresh Stop decision — superseded and approved
 
-The preview responds successfully and describes an enquiry-only grocery catalogue with indicative prices and labelled illustrative product art. Excluded from the public registry: a reachable preview is insufficient evidence of an approved finished launch or portfolio artwork. Obtain owner approval, an accurate preview label and an authentic website capture before adding it.
+The owner explicitly approved Fresh Stop for public portfolio inclusion. The published custom domain `https://www.freshstop.com.au/` returns 200, identifies the Sydney grocery business and credits AB Web Studio in its footer. Project #16 uses this domain and an actual 1348 × 926 browser screenshot. The published catalogue labels prices as indicative and offers cart-based enquiries, wholesale/business contact and home delivery enquiries through email/WhatsApp. Product artwork is labelled as illustrative where applicable on the source website; the portfolio screenshot is a genuine capture, not a fabricated mockup.
+
+Repository inspection verifies Next.js, React, TypeScript, Tailwind CSS, Prisma and PostgreSQL. Stripe packages exist in source but are not evidence of live payments and are not advertised in this case study. No confirmed orders or inventory synchronisation are claimed. The older `fresh-stop.vercel.app` preview is not the portfolio destination.
 
 ## Limits and business verification
 
@@ -46,6 +50,6 @@ Confirm permission to publish all project attributions and screenshots, current 
 
 ## Native WSL follow-up — 20 October 2026
 
-Rechecked all 15 registry destinations using public HTTPS GET requests from WSL. Every destination returned HTTP 200 with the expected business title. The inventory destination redirects to `/login`. Machine-readable evidence: `qa/studio-resume-wsl-20261020/portfolio.json`. The earlier Fresh Stop assessment was not repeated and remains an exclusion decision, not a current availability claim.
+Rechecked all 15 registry destinations using public HTTPS GET requests from WSL. Every destination returned HTTP 200 with the expected business title. The inventory destination redirects to `/login`. Machine-readable evidence: `qa/studio-resume-wsl-20261020/portfolio.json`. That follow-up predates Fresh Stop approval; its exclusion decision has since been superseded by the approved custom-domain integration above.
 
 Contact source review confirms the centralized public defaults: `enquiry@abwebstudio.com.au`, `0423 332 037` (`+61423332037`) and Sydney, NSW, Australia. Header, footer, contact links and structured data consume this configuration. This confirms implementation consistency; mailbox provisioning, phone ownership, client permissions and real email delivery require business confirmation. No real enquiries were submitted.

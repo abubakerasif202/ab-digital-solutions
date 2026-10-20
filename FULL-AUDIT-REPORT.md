@@ -1,6 +1,6 @@
 # AB Digital Solutions SEO Audit
 
-> Historical migration audit. The Sites build fallback has since been retired and the portfolio now contains 15 projects. For current local implementation and validation, see [20 October 2026 QA](docs/studio-rebuild-qa.md). Historical findings and release claims below are not current verification.
+> Historical migration audit. The Sites build fallback has since been retired and the portfolio now contains 16 projects. For current local implementation and validation, see [20 October 2026 QA](docs/studio-rebuild-qa.md). Historical findings and release claims below are not current verification.
 
 ## Audit summary
 

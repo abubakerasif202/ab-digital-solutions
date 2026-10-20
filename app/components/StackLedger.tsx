@@ -12,7 +12,9 @@ const ledger = [
   { name: "Vite", role: "Build tooling", matches: ["Vite"] },
   { name: "Framer Motion", role: "Motion", matches: ["Framer Motion"] },
   { name: "JSON-LD", role: "Structured data", matches: ["JSON-LD"] },
-  { name: "Supabase + PostgreSQL", role: "Data & auth", matches: ["Supabase", "PostgreSQL"] },
+  { name: "Supabase", role: "Data & auth", matches: ["Supabase"] },
+  { name: "PostgreSQL", role: "Database", matches: ["PostgreSQL"] },
+  { name: "Prisma", role: "Data access", matches: ["Prisma"] },
 ] as const;
 
 const rows = ledger

@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-10-20T05:50:54.264098+00:00",
+  "repository": "/mnt/c/Users/abuba/fresh-stop",
+  "head": "7b60bff30aca784d7a89c5db762f58f779971e9d",
+  "evidenceScope": "Inspected current working-tree source; does not prove deployed database configuration or active payments.",
+  "declaredVersions": {
+    "next": "^15.5.28",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^5.7.2",
+    "tailwindcss": "^4.0.0",
+    "prisma": "^5.22.0",
+    "@prisma/client": "^5.22.0"
+  },
+  "databaseProvider": "postgresql",
+  "sha256": {
+    "package.json": "1b6e404639b1097f19ce0f4d25bc0e4cb7106fcd8280eb08f3d926e92c323739",
+    "src/app/globals.css": "35c5f1f59ea87aa7173aaa546862458aa5f48a157259a021ee5c9d773d28d796",
+    "src/lib/db.ts": "d0c02c7d5fb6d36c404b9705a68fd72c35a25d32c21f4c409425c5dfa94bf864",
+    "prisma/schema.prisma": "95eb23acba629cb1a521c7da636b32a32c39cbe458cb80208967f45afcee5d82",
+    "src/components/checkout/OrderPreview.tsx": "afe0bc06ba4632e79b54306ae6b27b6b6d98683234534e9c207e0dcf535f5c88",
+    "src/components/cart/CartSummary.tsx": "7eec87cb43a7551de62dda0c7d440161bd0a9be8d22f28a6c9d328c4284cfdb0",
+    "src/components/enquiry/EnquirySheet.tsx": "43308cc26e46f146cc076a239800b38a4f504dab4a0b44506a93eb540210a994",
+    "src/components/layout/Footer.tsx": "eb84f69485c0175d505290eb033a741b0b51ed09d863402d9913a2f45bb00f25"
+  }
+}

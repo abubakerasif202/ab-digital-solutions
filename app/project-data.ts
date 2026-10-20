@@ -409,6 +409,35 @@ export const projects = [
     ],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "JSON-LD"],
   },
+  {
+    slug: "fresh-stop",
+    name: "Fresh Stop",
+    category: "Grocery / Fresh Produce / Online Catalogue",
+    sector: "Grocery & fresh produce",
+    description:
+      "A fresh produce and grocery catalogue for Sydney, with indicative prices, a cart-based enquiry journey and clear wholesale and home delivery contact pathways.",
+    overview:
+      "Fresh Stop serves customers in Rockdale and Riverwood, Sydney, Australia. The business needed a responsive online catalogue that makes its fruit, vegetables, pantry essentials and frozen foods easy to explore before speaking with the team.",
+    solution:
+      "AB Web Studio built a colourful grocery website with category browsing, indicative AUD prices and a shopping cart that prepares an enquiry rather than a confirmed order. Dedicated wholesale and business enquiry pathways sit alongside home delivery enquiries through email and WhatsApp. Responsive navigation and clear product guidance preserve the distinction between browsing, requesting details and placing an order. Product imagery is labelled as illustrative where applicable on the published site.",
+    url: "https://www.freshstop.com.au/",
+    displayUrl: "freshstop.com.au",
+    image: `${assetBase}/ab-portfolio-fresh-stop.jpg`,
+    alt: "Fresh Stop live homepage with green and red branding, fresh produce artwork and catalogue, wholesale and home delivery navigation",
+    tags: ["Product Catalogue", "Cart Enquiries", "Wholesale & Home Delivery", "Responsive Design"],
+    keyFeatures: [
+      "Fresh fruit, vegetables, pantry and frozen food category browsing",
+      "Product browsing with clearly labelled indicative AUD prices",
+      "Cart-based shopping list and enquiry workflow",
+      "Dedicated wholesale and business enquiry pathways",
+      "Home delivery enquiries through email and WhatsApp",
+      "Responsive presentation and navigation across screen sizes",
+    ],
+    techStack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+    seoTitle: "Fresh Stop — Grocery Catalogue Website Case Study",
+    seoDescription:
+      "Fresh Stop's Sydney grocery catalogue website by AB Web Studio: indicative prices, cart-based enquiries, wholesale pathways and home delivery contact options.",
+  },
 ] as const satisfies readonly Project[];
 
 export const sectors: readonly string[] = Array.from(new Set(projects.map((project) => project.sector)));

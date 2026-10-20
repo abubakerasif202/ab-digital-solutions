@@ -8,7 +8,7 @@
 - Location: Sydney, NSW, Australia.
 - Service Area: Sydney and Australia-wide.
 - Website Stack: Next.js 16, React 19, TypeScript, CSS, and Vercel.
-- Selected Portfolio: Digital projects across transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services. See the Work index for the current project count.
+- Selected Portfolio: 16 digital projects across grocery, fresh produce, transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services. See the Work index for the current project count.
 
 ## Main Services & Pages
 
@@ -42,6 +42,8 @@
 - [1st Class Express](https://www.1stclassexpress.com.au/): Transport & logistics — interstate freight positioning, fleet showcase and quote enquiries.
 - [HF Removals Adelaide](https://www.hfremovalsadelaide.com.au/): Services / removals — published reference rates with an instant quote request flow.
 - [Cheap Adelaide Removalist](https://www.cheapadelaideremovalist.com.au/): Services / removals — service-area information, published pricing and quote enquiries.
+
+- [Fresh Stop](https://www.freshstop.com.au/): Published Sydney grocery and fresh produce catalogue by AB Web Studio — fruit, vegetables, pantry and frozen foods, indicative prices, cart-based enquiries, wholesale pathways and email/WhatsApp home delivery enquiries. Case study: https://www.abwebstudio.com.au/work/fresh-stop.
 
 ## Contact & Authority Information
 

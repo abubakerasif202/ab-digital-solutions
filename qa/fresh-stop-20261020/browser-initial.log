@@ -1,0 +1,13 @@
+file:///home/abuba/ab-studio-local-qa/node_modules/puppeteer-core/lib/puppeteer/common/WaitTask.js:46
+            this.#timeoutError = new TimeoutError(`Waiting failed: ${options.timeout}ms exceeded`);
+                                 ^
+
+TimeoutError: Waiting failed: 30000ms exceeded
+    at new WaitTask (file:///home/abuba/ab-studio-local-qa/node_modules/puppeteer-core/lib/puppeteer/common/WaitTask.js:46:34)
+    at IsolatedWorld.waitForFunction (file:///home/abuba/ab-studio-local-qa/node_modules/puppeteer-core/lib/puppeteer/api/Realm.js:49:26)
+    at CdpFrame.waitForFunction (file:///home/abuba/ab-studio-local-qa/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:585:43)
+    at CdpFrame.<anonymous> (file:///home/abuba/ab-studio-local-qa/node_modules/puppeteer-core/lib/puppeteer/util/decorators.js:101:27)
+    at CdpPage.waitForFunction (file:///home/abuba/ab-studio-local-qa/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:1464:37)
+    at file:///home/abuba/ab-studio-local-qa/scripts/fresh-stop-portfolio-qa.mjs:60:20
+
+Node.js v22.23.1

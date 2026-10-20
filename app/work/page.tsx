@@ -10,7 +10,7 @@ import { ArrowIcon } from "../icons";
 export const metadata: Metadata = {
   title: "Our Work & Case Studies",
   description:
-    "Explore our portfolio of websites and custom business systems built for Australian mobility, logistics, construction and local service businesses.",
+    "Explore our portfolio of websites and custom business systems built for Australian grocery, fresh produce, mobility, logistics, construction and local service businesses.",
   alternates: { canonical: "/work" },
   openGraph: {
     title: `Our Work & Case Studies | ${siteConfig.name}`,

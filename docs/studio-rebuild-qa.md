@@ -1,5 +1,7 @@
 # AB Web Studio local implementation and QA — 20 October 2026
 
+> Follow-up: the owner has now approved Fresh Stop as project #16 on its published custom domain. The earlier exclusion below is historical and superseded. See [Fresh Stop portfolio QA](fresh-stop-portfolio-qa.md) for the current registry, source evidence and validation.
+
 ## Scope and source
 
 Branch: `feat/studio-complete-local-qa`, based on `dd1ecb1` (`fix(a11y): keep reveal text above contrast threshold on scroll-in`). Next.js 16.3.8, React 19.2.8, Node 22.23.1, npm 10.9.8. Production target remains the existing Next.js/Vercel application at https://www.abwebstudio.com.au/.

@@ -85,7 +85,7 @@ export function WorkIndexBody() {
           <div className="gr-wi-hero-copy" data-reveal>
             <p className="content-lead">
               A portfolio of websites and custom software created for
-              Australian transport, logistics, mobility, removals, construction and property
+              Australian grocery, fresh produce, transport, logistics, mobility, removals, construction and property
               businesses.
             </p>
             <p className="work-index-count">{projects.length} projects · Sydney studio</p>

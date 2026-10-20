@@ -29,3 +29,20 @@ test("destination helpers retain a graceful unavailable-site state", () => {
   assert.equal(projectDestinationLabel(project), "Website currently unavailable");
   assert.equal(projectVisitLabel(project), "Check Project Website");
 });
+
+test("Fresh Stop is the approved sixteenth project on its published custom domain", () => {
+  const project = findProject("fresh-stop");
+  assert.equal(projects.length, 16);
+  assert.equal(projects[15], project);
+  assert.equal(project.url, "https://www.freshstop.com.au/");
+  assert.equal(project.displayUrl, "freshstop.com.au");
+  assert.equal(projectDestinationLabel(project), "Live website");
+  assert.equal(projectVisitLabel(project), "View Live Website");
+  assert.equal(project.image, "/site/ab-digital-premium/assets/ab-portfolio-fresh-stop.jpg");
+  for (const tech of ["Next.js", "React", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"]) {
+    assert.ok(project.techStack.includes(tech));
+  }
+  assert.match(project.solution, /enquiry rather than a confirmed order/);
+  assert.match(project.solution, /email and WhatsApp/);
+  assert.doesNotMatch(JSON.stringify(project), /fresh-stop\.vercel\.app|Stripe|inventory synchronisation/i);
+});

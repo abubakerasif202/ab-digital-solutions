@@ -16,7 +16,7 @@ export function PortfolioSection() {
           <p className="eyebrow section-index"><span className="section-index-num">01</span><span className="micro-rule" aria-hidden="true" />Selected work</p>
           <h2 id="work-heading" className="gr-display-xl">The work <span className="accent-serif">speaks first.</span></h2>
           <div className="gr-section-head-aside">
-            <p>{projects.length} responsive websites and custom software projects across mobility, logistics, local services, construction and property.</p>
+            <p>{projects.length} responsive websites and custom software projects across grocery, fresh produce, mobility, logistics, local services, construction and property.</p>
             <Link className="section-heading-link" href="/work">
               View all case studies <ArrowIcon />
             </Link>

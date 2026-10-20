@@ -65,7 +65,7 @@ Business details and the canonical URL fallback live in `app/site-config.ts`. Ho
 
 1. Capture a homepage screenshot of the live site at **1348 × 926** (aspect ratio 1.46:1 — every card and hero slide assumes it) and save it as `public/site/ab-digital-premium/assets/ab-portfolio-<slug>.jpg`.
 2. Follow the `Project` type and an existing registry entry, including a stable `slug`, `sector`, overview, solution, features, evidence-backed technology labels, destination classification and descriptive image `alt`. The project image is required and has no fallback.
-3. Keep `public/llms.txt` and destination classifications in sync. Counts derive from the registry: the current source contains 15 projects, including public sites, hosted demonstrations and a protected internal application. Verify availability without accessing private data.
+3. Keep `public/llms.txt` and destination classifications in sync. Counts derive from the registry: the current source contains 16 projects, including public sites, hosted demonstrations and a protected internal application. Verify availability without accessing private data.
 4. Run `npm run verify`. `tests/source-guards.test.mjs` checks canonical project and asset contracts; the local browser sweep checks rendered routes, images and metadata.
 
 External project links always render with `target="_blank"` and `rel="noopener noreferrer"`, and the accessible name announces that the link opens in a new tab.
@@ -82,3 +82,5 @@ External project links always render with `target="_blank"` and `rel="noopener n
 See [20 October implementation and QA](docs/studio-rebuild-qa.md) and [portfolio verification](docs/portfolio-verification.md). Historical audit reports are snapshots. With a local production server running on port 3100, `node scripts/studio-rebuild-qa.mjs` checks all public routes at six widths and mocks contact delivery; `node scripts/studio-header-qa.mjs` verifies section highlighting. Screenshots and machine-readable results go to `qa/studio-rebuild-20261020/`.
 
 For native WSL, use a separate Linux source/dependency mirror; do not install Linux packages into the mounted Windows `node_modules`. The browser harness accepts `QA_WIDTHS=390,1440` and `QA_OUTPUT_DIR=qa/custom-run` to run selected widths with separate evidence. It explicitly models desktop pointer input for the WebGL lifecycle checks. See the native WSL section in the QA report for verified commands and limitations.
+
+Fresh Stop is approved as project #16 on `https://www.freshstop.com.au/`. See [Fresh Stop integration and evidence](docs/fresh-stop-portfolio-qa.md) for the authentic capture, verified stack and catalogue/enquiry scope.
