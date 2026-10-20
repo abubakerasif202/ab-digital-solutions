@@ -4,7 +4,7 @@ import path from "node:path";
 
 const base = process.env.QA_BASE_URL || "http://127.0.0.1:3100";
 if (!["127.0.0.1", "localhost"].includes(new URL(base).hostname)) throw new Error("Local-only QA.");
-const output = path.resolve("qa/fresh-stop-20261020/browser");
+const output = path.resolve(process.env.QA_OUTPUT_DIR || "qa/fresh-stop-20261020/browser");
 await mkdir(output, { recursive: true });
 const axe = await readFile("node_modules/axe-core/axe.min.js", "utf8");
 const checks = [];
@@ -38,6 +38,11 @@ try {
         await Promise.race([Promise.all([...document.images].map((image) => image.decode().catch(() => {}))), new Promise((resolve) => setTimeout(resolve, 1500))]);
         scrollTo({ top: 0, behavior: "instant" });
       });
+      // Cold image optimisation can outlast the decode grace period. Wait for
+      // images specifically, independently of unrelated background requests.
+      await page.waitForFunction(() => [...document.images]
+        .filter((image) => image.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }))
+        .every((image) => image.complete), { timeout: 15_000 });
       const state = await page.evaluate(() => ({
         overflow: document.documentElement.scrollWidth - innerWidth,
         h1: document.querySelectorAll("h1").length,
