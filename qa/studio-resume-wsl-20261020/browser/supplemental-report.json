@@ -1,0 +1,31 @@
+{
+  "checks": [
+    {
+      "name": "Short-height menu CTA reachable",
+      "passed": true,
+      "detail": {
+        "top": 336,
+        "bottom": 388,
+        "height": 420
+      }
+    },
+    {
+      "name": "Carousel next selects second project",
+      "passed": true
+    },
+    {
+      "name": "Carousel previous restores first project",
+      "passed": true
+    },
+    {
+      "name": "No-JavaScript hero and primary links available",
+      "passed": true,
+      "detail": {
+        "logo": 200,
+        "heading": "Websites withpresence.Software withpurpose.",
+        "links": 12,
+        "overflow": 0
+      }
+    }
+  ]
+}

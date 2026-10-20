@@ -164,5 +164,12 @@ export async function POST(request: NextRequest) {
     console.error("Contact delivery failed", response.status);
     return NextResponse.json({ error: `We could not send your enquiry. Please email ${siteConfig.email}.` }, { status: 502 });
   }
+  // A successful HTTP status alone does not establish provider acceptance.
+  const delivery: unknown = await response.json().catch(() => null);
+  if (!delivery || typeof delivery !== "object" || !("id" in delivery)
+    || typeof delivery.id !== "string" || !delivery.id.trim()) {
+    console.error("Contact delivery returned no acceptance identifier");
+    return NextResponse.json({ error: `We could not confirm delivery. Please email ${siteConfig.email} before resending.` }, { status: 502 });
+  }
   return NextResponse.json({ ok: true });
 }

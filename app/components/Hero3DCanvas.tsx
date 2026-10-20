@@ -3,34 +3,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { HeroFallback } from "./HeroFallback";
-import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
-import { LOGO_PATHS, LOGO_VIEWBOX, type LogoPartName } from "./logo-mark";
-import { studioRadiance } from "./studio-radiance";
-
-/** Logo units are SVG pixels; this maps the 80-wide mark to ~4.4 scene units. */
-const LOGO_SCALE = 0.055;
-const LOGO_DEPTH = 7;
-const SLASH_LIFT = 3.2;
-const INTRO_MS = 1500;
-const REST_YAW = -0.3;
-const REST_PITCH = -0.1;
-
-function buildLogoPart(name: LogoPartName, curveSegments: number): THREE.ExtrudeGeometry {
-  const loader = new SVGLoader();
-  const parsed = loader.parse(`<svg xmlns="http://www.w3.org/2000/svg"><path d="${LOGO_PATHS[name]}"/></svg>`);
-  const shapes = parsed.paths.flatMap((path) => path.toShapes());
-  const geometry = new THREE.ExtrudeGeometry(shapes, {
-    depth: name === "slash" ? LOGO_DEPTH + SLASH_LIFT : LOGO_DEPTH,
-    bevelEnabled: true,
-    bevelThickness: 0.9,
-    bevelSize: 0.7,
-    bevelSegments: 4,
-    curveSegments,
-  });
-  // Centre on the mark's optical middle so rotation pivots around the logo.
-  geometry.translate(-LOGO_VIEWBOX.width / 2, -LOGO_VIEWBOX.height / 2, -LOGO_DEPTH / 2);
-  return geometry;
-}
+const INTRO_MS = 900;
+const REST_YAW = -0.06;
+const REST_PITCH = -0.025;
 
 interface Hero3DCanvasProps {
   className?: string;
@@ -90,61 +65,27 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
     container.appendChild(renderer.domElement);
 
-    // The physical iridescence shader samples an original procedural softbox rig.
-    const radiance = new THREE.DataTexture(studioRadiance(), 256, 128);
-    radiance.mapping = THREE.EquirectangularReflectionMapping;
-    radiance.colorSpace = THREE.SRGBColorSpace;
-    radiance.needsUpdate = true;
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    const environment = pmrem.fromEquirectangular(radiance);
-    scene.environment = environment.texture;
-    pmrem.dispose();
-    radiance.dispose();
-    scene.add(new THREE.AmbientLight(0xffffff, 1.1));
-    const keyLight = new THREE.DirectionalLight(0xffffff, 5);
-    keyLight.position.set(2, 4, 5);
-    scene.add(keyLight);
-    const edgeLight = new THREE.DirectionalLight(0xff6a7d, 2.2);
-    edgeLight.position.set(-4, -2, 3);
-    scene.add(edgeLight);
-    const goldLight = new THREE.DirectionalLight(0xfff4de, 3.2);
-    goldLight.position.set(3, -3, -2);
-    scene.add(goldLight);
+    // Render the supplied artwork intact. Invented extrusion geometry changed
+    // the identity; a lightly tilted image plane preserves its real proportions.
     const heroGroup = new THREE.Group();
     heroGroup.rotation.set(REST_PITCH, REST_YAW, 0);
-    // SVG y runs downward; the negative y scale stands the mark upright.
-    heroGroup.scale.set(LOGO_SCALE, -LOGO_SCALE, LOGO_SCALE);
     scene.add(heroGroup);
-    // Gilt letters with a ruby slash, matching the flat brand mark.
-    const giltMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xf0cf7c, metalness: 0.88, roughness: 0.2,
-      clearcoat: 0.8, clearcoatRoughness: 0.2, envMapIntensity: 1.9,
+    const geometry = new THREE.PlaneGeometry(4.8, 4.8 * 792 / 936);
+    const material = new THREE.MeshBasicMaterial({ transparent: true, toneMapped: false });
+    heroGroup.add(new THREE.Mesh(geometry, material));
+    let disposed = false;
+    let textureReady = false;
+    const texture = new THREE.TextureLoader().load("/brand/ab-hero-monogram.webp", (loaded) => {
+      if (disposed) return;
+      loaded.colorSpace = THREE.SRGBColorSpace;
+      material.map = loaded;
+      material.needsUpdate = true;
+      textureReady = true;
+      renderStaticFrame();
+      startLoop();
+    }, undefined, () => {
+      if (!disposed) setRendererFailed(true);
     });
-    const rubyMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xb3122d, metalness: 0.6, roughness: 0.3,
-      clearcoat: 1, clearcoatRoughness: 0.18, envMapIntensity: 1.6,
-    });
-    // A view-dependent rim adds a champagne-to-ruby edge light without bloom passes.
-    const chromaticShift = { value: 0.5 };
-    giltMaterial.onBeforeCompile = (shader) => {
-      shader.uniforms.uSignalShift = chromaticShift;
-      shader.fragmentShader = "uniform float uSignalShift;\n" + shader.fragmentShader;
-      shader.fragmentShader = shader.fragmentShader.replace("#include <opaque_fragment>", `
-        float signalFresnel = pow(1.0 - abs(dot(normal, normalize(vViewPosition))), 3.0);
-        vec3 signalRim = mix(vec3(0.94, 0.79, 0.42), vec3(0.82, 0.09, 0.21), uSignalShift);
-        outgoingLight += signalRim * signalFresnel * 0.38;
-        #include <opaque_fragment>
-      `);
-    };
-    giltMaterial.customProgramCacheKey = () => "gilt-ruby-rim-v1";
-    const curveSegments = isTablet ? 10 : 18;
-    const geometries = (Object.keys(LOGO_PATHS) as LogoPartName[]).map((name) => ({
-      name,
-      geometry: buildLogoPart(name, curveSegments),
-    }));
-    for (const { name, geometry } of geometries) {
-      heroGroup.add(new THREE.Mesh(geometry, name === "slash" ? rubyMaterial : giltMaterial));
-    }
 
     // Animation & Smooth Control State
     let animationFrameId = 0;
@@ -199,6 +140,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       animationFrameId = 0;
       isRunning = false;
       nextRenderTime = 0;
+      lastFrameTime = 0;
     };
 
     const animate = (timestamp: number) => {
@@ -223,16 +165,13 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       scrollY += (targetScrollY - scrollY) * 0.05;
       const scrollFactor = Math.min(scrollY / 1000, 2);
 
-      chromaticShift.value = (mouseX + 1) * 0.5;
-      edgeLight.position.x = -4 + mouseX * 2;
-      keyLight.position.y = 4 - mouseY * 1.5;
       if (introProgress < 1) {
         introProgress = Math.min(1, introProgress + (lastFrameTime ? timestamp - lastFrameTime : 0) / INTRO_MS);
       }
       lastFrameTime = timestamp;
       const settle = 1 - Math.pow(1 - introProgress, 3);
-      heroGroup.rotation.x = REST_PITCH + mouseY * 0.14;
-      heroGroup.rotation.y = REST_YAW - (1 - settle) * 1.1 + mouseX * 0.38;
+      heroGroup.rotation.x = REST_PITCH + mouseY * 0.035;
+      heroGroup.rotation.y = REST_YAW - (1 - settle) * 0.08 + mouseX * 0.07;
       heroGroup.position.y = -scrollFactor * 0.12;
       camera.position.x = mouseX * 0.12;
       camera.position.y = -mouseY * 0.12;
@@ -250,6 +189,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     };
 
     const renderStaticFrame = () => {
+      if (!textureReady || disposed) return;
       camera.lookAt(scene.position);
       renderer.render(scene, camera);
       if (revealFrame || container.dataset.renderReady === "true") return;
@@ -366,10 +306,10 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       renderer.domElement.removeEventListener("webglcontextlost", handleContextLost);
 
-      geometries.forEach(({ geometry }) => geometry.dispose());
-      giltMaterial.dispose();
-      rubyMaterial.dispose();
-      environment.dispose();
+      disposed = true;
+      texture.dispose();
+      geometry.dispose();
+      material.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
 

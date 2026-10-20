@@ -303,3 +303,35 @@ test("delivery rejection and network errors are recoverable failures", async () 
   fetchResponder = () => { throw new Error("mock network failure"); };
   assert.equal((await POST(contactRequest(validPayload(), { "x-real-ip": nextIp() }))).status, 502);
 });
+
+test("successful HTTP responses without a provider acceptance ID never report delivery", async () => {
+  for (const body of ["not JSON", "null", "{}", '{"id":""}', '{"id":42}']) {
+    fetchResponder = () => new Response(body, { status: 200 });
+    const response = await POST(contactRequest(validPayload(), { "x-real-ip": nextIp() }));
+    assert.equal(response.status, 502);
+    assert.match((await response.json()).error, /could not confirm delivery/);
+  }
+});
+
+test("malformed shared-store results cannot bypass the fallback request budget", async () => {
+  process.env.UPSTASH_REDIS_REST_URL = "https://upstash.example.test";
+  process.env.UPSTASH_REDIS_REST_TOKEN = "test-upstash-token";
+  const ip = nextIp();
+  const malformed = [
+    [{ result: null }, { result: 1 }],
+    [{ result: 0 }, { result: 1 }],
+    [{ result: 1 }, { error: "expiry failed" }],
+    [{ result: 1 }],
+    [{ result: "1" }, { result: 1 }],
+    [{ result: 1 }, { result: null }],
+  ];
+  let attempt = 0;
+  fetchResponder = (url) => new Response(JSON.stringify(
+    url.includes("/pipeline") ? malformed[attempt++] : { id: "test-email" },
+  ), { status: 200 });
+  const statuses = [];
+  for (let index = 0; index < malformed.length; index += 1) {
+    statuses.push((await POST(contactRequest(validPayload(), { "x-real-ip": ip }))).status);
+  }
+  assert.deepEqual(statuses, [200, 200, 200, 200, 200, 429]);
+});

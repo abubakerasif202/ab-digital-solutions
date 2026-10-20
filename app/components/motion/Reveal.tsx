@@ -44,9 +44,15 @@ export function Reveal({ as = "div", variant = "fade-up", delay = 0, className, 
     );
     observer.observe(element);
     element.addEventListener("focusin", show);
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleMotionChange = () => {
+      if (motionQuery.matches) show();
+    };
+    motionQuery.addEventListener("change", handleMotionChange);
     return () => {
       observer.disconnect();
       element.removeEventListener("focusin", show);
+      motionQuery.removeEventListener("change", handleMotionChange);
       element.removeAttribute("data-reveal-state");
     };
   }, []);

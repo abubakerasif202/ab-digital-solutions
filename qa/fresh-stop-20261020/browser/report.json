@@ -1,0 +1,484 @@
+{
+  "checkedAt": "2026-10-20T05:49:56.535Z",
+  "checks": [
+    {
+      "name": "/ @360",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Web Design Sydney & Digital Agency | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/",
+        "description": "Sydney digital studio building premium websites, online stores and custom business systems for Australian businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "Fresh Stop showcase and stack @360",
+      "passed": true,
+      "detail": {
+        "slides": 16,
+        "active": "/work/fresh-stop",
+        "count": "Selected studio work16 / 16",
+        "ledger": "Portfolio stack ledger / projects using each technologyTechnologyRoleProjectsTypeScriptLanguage10 of 16Tailwind CSSStyling10 of 16Next.jsFramework7 of 16ReactInterface7 of 16ViteBuild tooling5 of 16Framer MotionMotion3 of 16JSON-LDStructured data3 of 16SupabaseData & auth2 of 16PostgreSQLDatabase2 of 16PrismaData access1 of 16"
+      }
+    },
+    {
+      "name": "/work @360",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Our Work & Case Studies | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work",
+        "description": "Explore our portfolio of websites and custom business systems built for Australian grocery, fresh produce, mobility, logistics, construction and local service businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "/work/fresh-stop @360",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Fresh Stop — Grocery Catalogue Website Case Study | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work/fresh-stop",
+        "description": "Fresh Stop's Sydney grocery catalogue website by AB Web Studio: indicative prices, cart-based enquiries, wholesale pathways and home delivery contact options.",
+        "brokenImages": [],
+        "freshStopLinks": 0
+      }
+    },
+    {
+      "name": "Fresh Stop safe external links @360",
+      "passed": true,
+      "detail": [
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "freshstop.com.au "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        }
+      ]
+    },
+    {
+      "name": "/ @390",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Web Design Sydney & Digital Agency | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/",
+        "description": "Sydney digital studio building premium websites, online stores and custom business systems for Australian businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "Accessibility / @390",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Fresh Stop showcase and stack @390",
+      "passed": true,
+      "detail": {
+        "slides": 16,
+        "active": "/work/fresh-stop",
+        "count": "Selected studio work16 / 16",
+        "ledger": "Portfolio stack ledger / projects using each technologyTechnologyRoleProjectsTypeScriptLanguage10 of 16Tailwind CSSStyling10 of 16Next.jsFramework7 of 16ReactInterface7 of 16ViteBuild tooling5 of 16Framer MotionMotion3 of 16JSON-LDStructured data3 of 16SupabaseData & auth2 of 16PostgreSQLDatabase2 of 16PrismaData access1 of 16"
+      }
+    },
+    {
+      "name": "/work @390",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Our Work & Case Studies | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work",
+        "description": "Explore our portfolio of websites and custom business systems built for Australian grocery, fresh produce, mobility, logistics, construction and local service businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "Accessibility /work @390",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "/work/fresh-stop @390",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Fresh Stop — Grocery Catalogue Website Case Study | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work/fresh-stop",
+        "description": "Fresh Stop's Sydney grocery catalogue website by AB Web Studio: indicative prices, cart-based enquiries, wholesale pathways and home delivery contact options.",
+        "brokenImages": [],
+        "freshStopLinks": 0
+      }
+    },
+    {
+      "name": "Accessibility /work/fresh-stop @390",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Fresh Stop safe external links @390",
+      "passed": true,
+      "detail": [
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "freshstop.com.au "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        }
+      ]
+    },
+    {
+      "name": "/ @768",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Web Design Sydney & Digital Agency | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/",
+        "description": "Sydney digital studio building premium websites, online stores and custom business systems for Australian businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "Fresh Stop showcase and stack @768",
+      "passed": true,
+      "detail": {
+        "slides": 16,
+        "active": "/work/fresh-stop",
+        "count": "Selected studio work16 / 16",
+        "ledger": "Portfolio stack ledger / projects using each technologyTechnologyRoleProjectsTypeScriptLanguage10 of 16Tailwind CSSStyling10 of 16Next.jsFramework7 of 16ReactInterface7 of 16ViteBuild tooling5 of 16Framer MotionMotion3 of 16JSON-LDStructured data3 of 16SupabaseData & auth2 of 16PostgreSQLDatabase2 of 16PrismaData access1 of 16"
+      }
+    },
+    {
+      "name": "/work @768",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Our Work & Case Studies | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work",
+        "description": "Explore our portfolio of websites and custom business systems built for Australian grocery, fresh produce, mobility, logistics, construction and local service businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "/work/fresh-stop @768",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Fresh Stop — Grocery Catalogue Website Case Study | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work/fresh-stop",
+        "description": "Fresh Stop's Sydney grocery catalogue website by AB Web Studio: indicative prices, cart-based enquiries, wholesale pathways and home delivery contact options.",
+        "brokenImages": [],
+        "freshStopLinks": 0
+      }
+    },
+    {
+      "name": "Fresh Stop safe external links @768",
+      "passed": true,
+      "detail": [
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "freshstop.com.au "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        }
+      ]
+    },
+    {
+      "name": "/ @1024",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Web Design Sydney & Digital Agency | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/",
+        "description": "Sydney digital studio building premium websites, online stores and custom business systems for Australian businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "Fresh Stop showcase and stack @1024",
+      "passed": true,
+      "detail": {
+        "slides": 16,
+        "active": "/work/fresh-stop",
+        "count": "Selected studio work16 / 16",
+        "ledger": "Portfolio stack ledger / projects using each technologyTechnologyRoleProjectsTypeScriptLanguage10 of 16Tailwind CSSStyling10 of 16Next.jsFramework7 of 16ReactInterface7 of 16ViteBuild tooling5 of 16Framer MotionMotion3 of 16JSON-LDStructured data3 of 16SupabaseData & auth2 of 16PostgreSQLDatabase2 of 16PrismaData access1 of 16"
+      }
+    },
+    {
+      "name": "/work @1024",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Our Work & Case Studies | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work",
+        "description": "Explore our portfolio of websites and custom business systems built for Australian grocery, fresh produce, mobility, logistics, construction and local service businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "/work/fresh-stop @1024",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Fresh Stop — Grocery Catalogue Website Case Study | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work/fresh-stop",
+        "description": "Fresh Stop's Sydney grocery catalogue website by AB Web Studio: indicative prices, cart-based enquiries, wholesale pathways and home delivery contact options.",
+        "brokenImages": [],
+        "freshStopLinks": 0
+      }
+    },
+    {
+      "name": "Fresh Stop safe external links @1024",
+      "passed": true,
+      "detail": [
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "freshstop.com.au "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        }
+      ]
+    },
+    {
+      "name": "/ @1440",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Web Design Sydney & Digital Agency | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/",
+        "description": "Sydney digital studio building premium websites, online stores and custom business systems for Australian businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "Accessibility / @1440",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Fresh Stop showcase and stack @1440",
+      "passed": true,
+      "detail": {
+        "slides": 16,
+        "active": "/work/fresh-stop",
+        "count": "Selected studio work16 / 16",
+        "ledger": "Portfolio stack ledger / projects using each technologyTechnologyRoleProjectsTypeScriptLanguage10 of 16Tailwind CSSStyling10 of 16Next.jsFramework7 of 16ReactInterface7 of 16ViteBuild tooling5 of 16Framer MotionMotion3 of 16JSON-LDStructured data3 of 16SupabaseData & auth2 of 16PostgreSQLDatabase2 of 16PrismaData access1 of 16"
+      }
+    },
+    {
+      "name": "/work @1440",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Our Work & Case Studies | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work",
+        "description": "Explore our portfolio of websites and custom business systems built for Australian grocery, fresh produce, mobility, logistics, construction and local service businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "Accessibility /work @1440",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "/work/fresh-stop @1440",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Fresh Stop — Grocery Catalogue Website Case Study | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work/fresh-stop",
+        "description": "Fresh Stop's Sydney grocery catalogue website by AB Web Studio: indicative prices, cart-based enquiries, wholesale pathways and home delivery contact options.",
+        "brokenImages": [],
+        "freshStopLinks": 0
+      }
+    },
+    {
+      "name": "Accessibility /work/fresh-stop @1440",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Fresh Stop safe external links @1440",
+      "passed": true,
+      "detail": [
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "freshstop.com.au "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        }
+      ]
+    },
+    {
+      "name": "/ @1920",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Web Design Sydney & Digital Agency | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/",
+        "description": "Sydney digital studio building premium websites, online stores and custom business systems for Australian businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "Fresh Stop showcase and stack @1920",
+      "passed": true,
+      "detail": {
+        "slides": 16,
+        "active": "/work/fresh-stop",
+        "count": "Selected studio work16 / 16",
+        "ledger": "Portfolio stack ledger / projects using each technologyTechnologyRoleProjectsTypeScriptLanguage10 of 16Tailwind CSSStyling10 of 16Next.jsFramework7 of 16ReactInterface7 of 16ViteBuild tooling5 of 16Framer MotionMotion3 of 16JSON-LDStructured data3 of 16SupabaseData & auth2 of 16PostgreSQLDatabase2 of 16PrismaData access1 of 16"
+      }
+    },
+    {
+      "name": "/work @1920",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Our Work & Case Studies | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work",
+        "description": "Explore our portfolio of websites and custom business systems built for Australian grocery, fresh produce, mobility, logistics, construction and local service businesses.",
+        "brokenImages": [],
+        "freshStopLinks": 1
+      }
+    },
+    {
+      "name": "/work/fresh-stop @1920",
+      "passed": true,
+      "detail": {
+        "overflow": 0,
+        "h1": 1,
+        "title": "Fresh Stop — Grocery Catalogue Website Case Study | AB Web Studio",
+        "canonical": "https://www.abwebstudio.com.au/work/fresh-stop",
+        "description": "Fresh Stop's Sydney grocery catalogue website by AB Web Studio: indicative prices, cart-based enquiries, wholesale pathways and home delivery contact options.",
+        "brokenImages": [],
+        "freshStopLinks": 0
+      }
+    },
+    {
+      "name": "Fresh Stop safe external links @1920",
+      "passed": true,
+      "detail": [
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "freshstop.com.au "
+        },
+        {
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "text": "View Live Website "
+        }
+      ]
+    },
+    {
+      "name": "Authentic JPEG loads at 1348 x 926",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "width": 1348,
+        "height": 926
+      }
+    },
+    {
+      "name": "Sitemap includes Fresh Stop case study and 16 project routes",
+      "passed": true
+    },
+    {
+      "name": "LLMs summary uses published Fresh Stop domain and 16 projects",
+      "passed": true
+    },
+    {
+      "name": "No application exceptions",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No failed image requests",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "exceptions": [],
+  "failedImages": []
+}

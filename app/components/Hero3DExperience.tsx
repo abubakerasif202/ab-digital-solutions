@@ -21,6 +21,7 @@ export function Hero3DExperience() {
   useEffect(() => {
     const stage = stageRef.current?.parentElement;
     if (!stage) return;
+    if (!("IntersectionObserver" in window) || !("ResizeObserver" in window)) return;
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     // Phones use the approved artwork without allocating a GPU context.
     const mobileQuery = window.matchMedia("(max-width: 720px)");

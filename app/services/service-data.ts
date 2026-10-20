@@ -3,9 +3,9 @@ export const servicePages = [
     slug: "web-design-sydney",
     title: "Web Design Sydney",
     summary: "Premium, responsive websites designed around your customers, your offer and the enquiries your business needs.",
-    intro: "Custom website design and Next.js development for Sydney businesses that need a clearer, more credible path from first visit to genuine enquiry.",
+    intro: "Custom websites and website redesigns for Sydney and Australian businesses that need a clearer path from first visit to genuine enquiry.",
     detailTitle: "A website shaped around the decision your customer needs to make.",
-    detail: "We bring positioning, content hierarchy, responsive UX and dependable development into one delivery process. Each build is shaped around your audience and offer, with accessibility-conscious implementation, technical SEO foundations and clear review points—without relying on a generic template.",
+    detail: "We bring positioning, content hierarchy, responsive UX and dependable development into one delivery process. We can modernise an existing site or build a new one, with accessibility-conscious implementation, technical SEO foundations and clear review points. Custom dashboards, integrations and operational workflows can be scoped alongside the public website.",
     benefits: ["Custom UX and visual direction", "Responsive, accessibility-conscious development", "Conversion-focused content structure", "Launch and measurement foundations"],
     featuredProject: "maple-rentals",
   },
@@ -56,7 +56,7 @@ export const servicePages = [
     intro: "Ongoing website care for Australian businesses that need their digital presence to stay current, dependable and useful after launch.",
     detailTitle: "Practical care for the website your business already depends on.",
     detail: "Support can cover content updates, framework and dependency maintenance, technical health checks, performance work and measured feature improvements. Priorities and response expectations are agreed clearly, so ongoing work stays connected to the site’s real operational needs.",
-    benefits: ["Content updates", "Technical health checks", "Performance improvements", "Priority support"],
+    benefits: ["Content updates", "Technical health checks", "Performance improvements", "Agreed support scope"],
     featuredProject: "4-point-concrete",
   },
 ] as const;
@@ -83,7 +83,7 @@ export const serviceDelivery: Record<ServicePage["slug"], {
   "ecommerce-website-development": {
     steps: [["Map the catalogue", "Understand products, collections, stock information and the way customers buy."], ["Design product discovery", "Shape filtering, product information and mobile browsing around that catalogue."], ["Connect the purchase path", "Scope cart, checkout, payment and quote requirements around operational needs."], ["Review the full journey", "Check browsing, ordering and customer information before launch."]],
     question: "Can an online store support wholesale enquiries?",
-    answer: "Yes, where it fits the business. Adelaide Wholesale Tyres combines a searchable catalogue, cart-based bulk ordering and a wholesale quote workflow. We agree the purchasing and enquiry paths your store needs before building.",
+    answer: "Yes. A searchable catalogue and wholesale enquiry journey can help customers prepare a product request without taking online payments. Purchasing, account and payment requirements are agreed separately for each project.",
     layers: ["Product catalogue", "Cart & quote journey", "Order requirements"],
   },
   "seo-local-visibility": {

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PageTransition } from "../../components/motion/PageTransition";
 import { notFound } from "next/navigation";
 import { ProjectArtwork } from "../../project-artwork";
-import { findProject, projects } from "../../project-data";
+import { findProject } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
 import { findService, servicePages, serviceDelivery } from "../service-data";
@@ -50,7 +50,8 @@ export default async function ServicePage({ params }: Props) {
   const service = findService((await params).slug);
   if (!service) notFound();
 
-  const featuredProject = findProject(service.featuredProject) ?? projects[0];
+  const featuredProject = findProject(service.featuredProject);
+  if (!featuredProject) throw new Error(`service: unknown featured project "${service.featuredProject}"`);
   const relatedMap: Record<string, string[]> = {
     "web-design-sydney": ["branding-content", "seo-local-visibility", "website-maintenance"],
     "ecommerce-website-development": ["digital-marketing", "web-design-sydney", "website-maintenance"],
@@ -141,21 +142,21 @@ export default async function ServicePage({ params }: Props) {
                 <ProjectArtwork project={featuredProject} priority sizes="(max-width: 900px) 92vw, 440px" />
               </div>
               <figcaption>
-                <span>Live work</span>
+                <span>Studio project</span>
                 {featuredProject.name}
               </figcaption>
             </figure>
           </header>
 
           <section className="studio-concept" aria-labelledby="concept-heading">
-            <div><p className="eyebrow">Conceptual delivery model</p><h2 id="concept-heading">{service.title}, in layers.</h2><p>A simple view of the work to scope together. Project deliverables are agreed in your proposal.</p></div>
+            <div><p className="eyebrow">Planning the work</p><h2 id="concept-heading">{service.title}, in layers.</h2><p>These are the areas we review together. Your proposal sets out the deliverables, responsibilities and costs.</p></div>
             <ol className="studio-interface-layers">{delivery.layers.map((layer, index) => <li key={layer}><span aria-hidden="true">0{index + 1}</span>{layer}</li>)}</ol>
           </section>
 
           <section className="service-inclusions" aria-labelledby="included-heading">
             <div className="service-section-heading">
               <p className="eyebrow">Built around the goal</p>
-              <h2 id="included-heading">What&apos;s included</h2>
+              <h2 id="included-heading">What we can help with</h2>
             </div>
             <ul>{service.benefits.map((benefit, index) => <li key={benefit}><span>{String(index + 1).padStart(2, "0")}</span>{benefit}</li>)}</ul>
           </section>
@@ -171,7 +172,7 @@ export default async function ServicePage({ params }: Props) {
 
           <section className="service-showcase" aria-labelledby="work-proof-heading">
             <div className="service-section-heading">
-              <p className="eyebrow">Relevant live work</p>
+              <p className="eyebrow">Relevant project experience</p>
               <h2 id="work-proof-heading">{featuredProject.name}: the work behind the service.</h2>
               <p>{featuredProject.overview}</p>
             </div>

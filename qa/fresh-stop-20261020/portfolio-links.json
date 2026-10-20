@@ -1,0 +1,167 @@
+{
+  "checkedAt": "2026-10-20T05:48:09.180236+00:00",
+  "external": [
+    {
+      "url": "https://jufaja-homes-platform.vercel.app/",
+      "status": 200,
+      "finalUrl": "https://jufaja-homes-platform.vercel.app/"
+    },
+    {
+      "url": "https://milestonerenovate.com/",
+      "status": 200,
+      "finalUrl": "https://milestonerenovate.com/"
+    },
+    {
+      "url": "https://www.aftabandsons.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.aftabandsons.com.au/"
+    },
+    {
+      "url": "https://247trucktyreservices.store/",
+      "status": 200,
+      "finalUrl": "https://247trucktyreservices.store/login"
+    },
+    {
+      "url": "https://adelaidewholesaletyres.com.au/",
+      "status": 200,
+      "finalUrl": "https://adelaidewholesaletyres.com.au/"
+    },
+    {
+      "url": "https://www.247trucktyreservices.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.247trucktyreservices.com.au/"
+    },
+    {
+      "url": "https://www.maplerentals.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.maplerentals.com.au/"
+    },
+    {
+      "url": "https://www.galarentals.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.galarentals.com.au/"
+    },
+    {
+      "url": "https://zqremovalsadelaide.com.au/",
+      "status": 200,
+      "finalUrl": "https://zqremovalsadelaide.com.au/"
+    },
+    {
+      "url": "https://www.decentdevelopment.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.decentdevelopment.com.au/"
+    },
+    {
+      "url": "https://milestonedevelopment.com.au/",
+      "status": 200,
+      "finalUrl": "https://milestonedevelopment.com.au/"
+    },
+    {
+      "url": "https://4point-concrete-website.vercel.app/",
+      "status": 200,
+      "finalUrl": "https://4point-concrete-website.vercel.app/"
+    },
+    {
+      "url": "https://www.1stclassexpress.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.1stclassexpress.com.au/"
+    },
+    {
+      "url": "https://www.hfremovalsadelaide.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.hfremovalsadelaide.com.au/"
+    },
+    {
+      "url": "https://www.cheapadelaideremovalist.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.cheapadelaideremovalist.com.au/"
+    },
+    {
+      "url": "https://www.freshstop.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.freshstop.com.au/"
+    }
+  ],
+  "caseStudies": [
+    {
+      "url": "http://127.0.0.1:3100/work/jufaja-homes",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/jufaja-homes"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/milestone-renovate",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/milestone-renovate"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/aftab-sons-transport",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/aftab-sons-transport"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/247-inventory-system",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/247-inventory-system"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/adelaide-wholesale-tyres",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/adelaide-wholesale-tyres"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/247-truck-tyre-services",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/247-truck-tyre-services"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/maple-rentals",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/maple-rentals"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/gala-rentals",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/gala-rentals"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/zq-removals",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/zq-removals"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/decent-development",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/decent-development"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/milestone-development",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/milestone-development"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/4-point-concrete",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/4-point-concrete"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/1st-class-express",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/1st-class-express"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/hf-removals-adelaide",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/hf-removals-adelaide"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/cheap-adelaide-removalist",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/cheap-adelaide-removalist"
+    },
+    {
+      "url": "http://127.0.0.1:3100/work/fresh-stop",
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:3100/work/fresh-stop"
+    }
+  ]
+}

@@ -8,14 +8,14 @@
 - Location: Sydney, NSW, Australia.
 - Service Area: Sydney and Australia-wide.
 - Website Stack: Next.js 16, React 19, TypeScript, CSS, and Vercel.
-- Selected Portfolio: Digital projects across transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services. See the Work index for the current project count.
+- Selected Portfolio: 16 digital projects across grocery, fresh produce, transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services. See the Work index for the current project count.
 
 ## Main Services & Pages
 
 - [Homepage](https://www.abwebstudio.com.au/): Services, selected client work, studio process, principles, and contact form.
 - [Web Design Sydney](https://www.abwebstudio.com.au/services/web-design-sydney): Custom website design and Next.js development for Sydney businesses.
-- [SEO & Local Visibility](https://www.abwebstudio.com.au/services/seo-local-visibility): Technical SEO, local search optimization, and search architecture.
-- [E-commerce Solutions](https://www.abwebstudio.com.au/services/ecommerce-website-development): Mobile-first storefronts, catalog management, and checkout integration.
+- [SEO & Local Visibility](https://www.abwebstudio.com.au/services/seo-local-visibility): Technical SEO, local search optimisation, and search architecture.
+- [E-commerce Solutions](https://www.abwebstudio.com.au/services/ecommerce-website-development): Mobile-first storefronts, catalogue management, and checkout integration.
 - [Branding & Website Content](https://www.abwebstudio.com.au/services/branding-content): Visual direction, brand positioning, and website copy.
 - [Digital Marketing](https://www.abwebstudio.com.au/services/digital-marketing): Landing page design, lead generation, and campaign strategy.
 - [Website Maintenance & Support](https://www.abwebstudio.com.au/services/website-maintenance): Ongoing support, technical health checks, and performance updates.
@@ -30,10 +30,10 @@
 - [Jufaja Construction / Jufaja Homes](https://jufaja-homes-platform.vercel.app/): Construction / property — premium digital platform with home design navigation and dedicated enquiry pathways.
 - [Aftab & Sons Transport](https://www.aftabandsons.com.au/): Transport & logistics — industrial identity, responsive interface and conversion-focused presentation for heavy-vehicle transport.
 - [247 Inventory System](https://247trucktyreservices.store/): Custom business software — role-protected inventory, purchasing, sales and finance platform for 24/7 Truck Tyre Services.
-- [Adelaide Wholesale Tyres](https://adelaidewholesaletyres.com.au/): E-commerce / wholesale — searchable wholesale tyre catalogue with cart-based bulk ordering and quote workflow.
+- [Adelaide Wholesale Tyres](https://adelaidewholesaletyres.com.au/): E-commerce / wholesale — searchable wholesale tyre catalogue with enquiry workflows.
 - [24/7 Truck Tyre Services](https://www.247trucktyreservices.com.au/): Automotive / roadside assistance — emergency-led service enquiries for truck tyre support.
 - [Maple Rentals](https://www.maplerentals.com.au/): Mobility / car rentals — premium driver rentals and streamlined online applications.
-- [Gala Rentals](https://www.galarentals.com.au/): Mobility / car rentals — weekly car rental booking experience in Sydney. External website unavailable at the latest check; case study remains available.
+- [Gala Rentals](https://www.galarentals.com.au/): Mobility / car rentals — weekly car rental booking experience in Sydney.
 - [ZQ Removals](https://zqremovalsadelaide.com.au/): Services / removals — local-service positioning with a direct path to quote requests.
 - [DECENT Development](https://www.decentdevelopment.com.au/): Property / development — digital presence for a Sydney construction business.
 - [Milestone Development](https://milestonedevelopment.com.au/): Property / construction — project-led residential and commercial showcase.
@@ -41,12 +41,14 @@
 - [4 Point Concrete](https://4point-concrete-website.vercel.app/): Construction / civil — capability-focused concrete and structural works site.
 - [1st Class Express](https://www.1stclassexpress.com.au/): Transport & logistics — interstate freight positioning, fleet showcase and quote enquiries.
 - [HF Removals Adelaide](https://www.hfremovalsadelaide.com.au/): Services / removals — published reference rates with an instant quote request flow.
-- [Cheap Adelaide Removalist](https://www.cheapadelaideremovalist.com.au/): Services / removals — transparent per-30-minute rates with a Bento-style pricing and logistics engine.
+- [Cheap Adelaide Removalist](https://www.cheapadelaideremovalist.com.au/): Services / removals — service-area information, published pricing and quote enquiries.
+
+- [Fresh Stop](https://www.freshstop.com.au/): Published Sydney grocery and fresh produce catalogue by AB Web Studio — fruit, vegetables, pantry and frozen foods, indicative prices, cart-based enquiries, wholesale pathways and email/WhatsApp home delivery enquiries. Case study: https://www.abwebstudio.com.au/work/fresh-stop.
 
 ## Contact & Authority Information
 
 - Studio Name: AB Web Studio
 - Founder: Abubakar Asif
-- Email: admin@abwebstudio.com.au
+- Email: enquiry@abwebstudio.com.au
 - Phone: +61 423 332 037 (0423 332 037)
 - Location: Sydney, NSW, Australia

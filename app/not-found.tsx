@@ -4,7 +4,7 @@ import { ArrowIcon } from "./icons";
 
 export default function NotFound() {
   return (
-    <main className="not-found">
+    <main className="not-found" id="main-content">
       <div className="not-found-grid" aria-hidden="true" />
       <span className="not-found-numeral" aria-hidden="true">404</span>
       <div className="not-found-content">

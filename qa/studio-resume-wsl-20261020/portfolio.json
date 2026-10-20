@@ -1,0 +1,95 @@
+{
+  "checkedAt": "2026-10-20T05:24:47.637443+00:00",
+  "destinations": [
+    {
+      "url": "https://jufaja-homes-platform.vercel.app/",
+      "status": 200,
+      "finalUrl": "https://jufaja-homes-platform.vercel.app/",
+      "title": "JUFAJA Constructions | Home Designs &amp; Building Enquiries"
+    },
+    {
+      "url": "https://milestonerenovate.com/",
+      "status": 200,
+      "finalUrl": "https://milestonerenovate.com/",
+      "title": "Milestone Renovate | Thoughtful Home Renovations Sydney"
+    },
+    {
+      "url": "https://www.aftabandsons.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.aftabandsons.com.au/",
+      "title": "Aftab &amp; Sons Transport | Australian Road &amp; Interstate Freight"
+    },
+    {
+      "url": "https://247trucktyreservices.store/",
+      "status": 200,
+      "finalUrl": "https://247trucktyreservices.store/login",
+      "title": "24/7 Inventory Operations"
+    },
+    {
+      "url": "https://adelaidewholesaletyres.com.au/",
+      "status": 200,
+      "finalUrl": "https://adelaidewholesaletyres.com.au/",
+      "title": "Wholesale Tyres Adelaide | Bulk Tyres &amp; Free Delivery | Adelaide Wholesale Tyres"
+    },
+    {
+      "url": "https://www.247trucktyreservices.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.247trucktyreservices.com.au/",
+      "title": "24/7 Truck Tyre Services Adelaide | Roadside Assistance"
+    },
+    {
+      "url": "https://www.maplerentals.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.maplerentals.com.au/",
+      "title": "Premium Driver Car Rentals Sydney | Maple Rentals"
+    },
+    {
+      "url": "https://www.galarentals.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.galarentals.com.au/",
+      "title": "Galarentals | Premium Car Rentals Sydney"
+    },
+    {
+      "url": "https://zqremovalsadelaide.com.au/",
+      "status": 200,
+      "finalUrl": "https://zqremovalsadelaide.com.au/",
+      "title": "Adelaide Removalists | Home &amp; Interstate Moves | ZQ Removals"
+    },
+    {
+      "url": "https://www.decentdevelopment.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.decentdevelopment.com.au/",
+      "title": "Sydney Duplex Builder &amp; Property Development | DECENT Development"
+    },
+    {
+      "url": "https://milestonedevelopment.com.au/",
+      "status": 200,
+      "finalUrl": "https://milestonedevelopment.com.au/",
+      "title": "Milestone Development | Residential &amp; Commercial Construction"
+    },
+    {
+      "url": "https://4point-concrete-website.vercel.app/",
+      "status": 200,
+      "finalUrl": "https://4point-concrete-website.vercel.app/",
+      "title": "4Point Concrete Construction Group | Concrete Contractor Girraween NSW"
+    },
+    {
+      "url": "https://www.1stclassexpress.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.1stclassexpress.com.au/",
+      "title": "1st Class Express | Freight, Drivers &amp; Fleet Solutions"
+    },
+    {
+      "url": "https://www.hfremovalsadelaide.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.hfremovalsadelaide.com.au/",
+      "title": "Removalists Adelaide &amp; Movers | HF Removals Adelaide"
+    },
+    {
+      "url": "https://www.cheapadelaideremovalist.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.cheapadelaideremovalist.com.au/",
+      "title": "Cheap Adelaide Removalists | Affordable Adelaide Movers"
+    }
+  ]
+}

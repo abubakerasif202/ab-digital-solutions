@@ -133,8 +133,8 @@ test("premium motion remains present while mobile rendering is constrained", asy
   assert.match(experience, /else if \(tabletQuery\.matches\)/);
   assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.25\)/);
   assert.doesNotMatch(canvas, /TorusKnotGeometry|particleCount|PointsMaterial/);
-  assert.match(canvas, /LOGO_PATHS/);
-  assert.match(canvas, /new THREE\.ExtrudeGeometry\(/);
+  assert.match(canvas, /ab-hero-monogram\.webp/);
+  assert.match(canvas, /new THREE\.PlaneGeometry\(/);
   assert.match(styles, /\.service-card\s*\{\s*min-height: 0;/);
   assert.match(styles, /@media \(max-width: 960px\) and \(orientation: landscape\)/);
 });
@@ -169,7 +169,7 @@ test("stack ledger derives every count from the canonical registry", async () =>
   assert.match(ledger, /projectDestinationLabel\(lead\)/);
   // Counts and totals must never be typed in by hand.
   assert.doesNotMatch(ledger, /\b\d+ (?:of|\/) \d+\b/);
-  assert.match(ledger, /<caption>/);
+  assert.match(ledger, /<caption(?:\s[^>]*)?>/);
   assert.match(ledger, /<th scope="row">/);
 });
 

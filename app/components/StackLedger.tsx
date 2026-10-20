@@ -12,7 +12,9 @@ const ledger = [
   { name: "Vite", role: "Build tooling", matches: ["Vite"] },
   { name: "Framer Motion", role: "Motion", matches: ["Framer Motion"] },
   { name: "JSON-LD", role: "Structured data", matches: ["JSON-LD"] },
-  { name: "Supabase + PostgreSQL", role: "Data & auth", matches: ["Supabase", "PostgreSQL"] },
+  { name: "Supabase", role: "Data & auth", matches: ["Supabase"] },
+  { name: "PostgreSQL", role: "Database", matches: ["PostgreSQL"] },
+  { name: "Prisma", role: "Data access", matches: ["Prisma"] },
 ] as const;
 
 const rows = ledger
@@ -48,9 +50,9 @@ export function StackLedger() {
         </div>
 
         <div className="stack-layout">
-          <div className="stack-table-wrap" data-reveal>
+          <div className="stack-table-wrap" role="region" aria-labelledby="stack-table-caption" tabIndex={0} data-reveal>
             <table className="stack-table">
-              <caption>Portfolio stack ledger <span aria-hidden="true">/</span> projects using each technology</caption>
+              <caption id="stack-table-caption">Portfolio stack ledger <span aria-hidden="true">/</span> projects using each technology</caption>
               <thead>
                 <tr><th scope="col">Technology</th><th scope="col">Role</th><th scope="col">Projects</th></tr>
               </thead>

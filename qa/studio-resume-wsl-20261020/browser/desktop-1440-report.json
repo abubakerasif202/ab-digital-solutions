@@ -1,0 +1,770 @@
+{
+  "base": "http://127.0.0.1:3100",
+  "capturedAt": "2026-10-20T05:30:34.933Z",
+  "routes": [
+    "/",
+    "/work",
+    "/work/jufaja-homes",
+    "/work/milestone-renovate",
+    "/work/aftab-sons-transport",
+    "/work/247-inventory-system",
+    "/work/adelaide-wholesale-tyres",
+    "/work/247-truck-tyre-services",
+    "/work/maple-rentals",
+    "/work/gala-rentals",
+    "/work/zq-removals",
+    "/work/decent-development",
+    "/work/milestone-development",
+    "/work/4-point-concrete",
+    "/work/1st-class-express",
+    "/work/hf-removals-adelaide",
+    "/work/cheap-adelaide-removalist",
+    "/services",
+    "/services/web-design-sydney",
+    "/services/ecommerce-website-development",
+    "/services/seo-local-visibility",
+    "/services/branding-content",
+    "/services/digital-marketing",
+    "/services/website-maintenance",
+    "/about",
+    "/contact",
+    "/privacy"
+  ],
+  "checks": [
+    {
+      "name": "/ @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/",
+        "title": "Web Design Sydney & Digital Agency | AB Web Studio",
+        "description": "Sydney digital studio building premium websites, online stores and custom business systems for Australian businesses.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 16,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "Automated accessibility / @1440",
+      "passed": true,
+      "detail": {
+        "violations": [],
+        "incomplete": 2
+      }
+    },
+    {
+      "name": "/work @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work",
+        "title": "Our Work & Case Studies | AB Web Studio",
+        "description": "Explore our portfolio of websites and custom business systems built for Australian mobility, logistics, construction and local service businesses.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 4,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "Automated accessibility /work @1440",
+      "passed": true,
+      "detail": {
+        "violations": [],
+        "incomplete": 1
+      }
+    },
+    {
+      "name": "/work/jufaja-homes @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/jufaja-homes",
+        "title": "Jufaja — Web Design & Development | AB Web Studio",
+        "description": "Premium website and digital experience created for Jufaja by AB Web Studio.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "Automated accessibility /work/jufaja-homes @1440",
+      "passed": true,
+      "detail": {
+        "violations": [],
+        "incomplete": 1
+      }
+    },
+    {
+      "name": "/work/milestone-renovate @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/milestone-renovate",
+        "title": "Milestone Renovate — Renovation Planning Website | AB Web Studio",
+        "description": "Renovation planning website with a cost planner, design studio and NSW approvals guide, built by AB Web Studio.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 2,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/aftab-sons-transport @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/aftab-sons-transport",
+        "title": "Aftab & Sons Transport Case Study | AB Web Studio",
+        "description": "Premium transport and logistics website for an Australian heavy-vehicle transport company, with an industrial identity, responsive interface and conversion-focused presentation.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/247-inventory-system @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/247-inventory-system",
+        "title": "247 Inventory System Case Study | AB Web Studio",
+        "description": "Custom inventory and business management platform for 24/7 Truck Tyre Services, centralising tyre stock, operational workflows, sales and business records.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/adelaide-wholesale-tyres @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/adelaide-wholesale-tyres",
+        "title": "Adelaide Wholesale Tyres Case Study | AB Web Studio",
+        "description": "A modern wholesale tyre platform built for Adelaide workshops, fleets, transport operators and trade buyers to browse live stock and order or request a quote.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/247-truck-tyre-services @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/247-truck-tyre-services",
+        "title": "24/7 Truck Tyre Services Case Study | AB Web Studio",
+        "description": "A responsive roadside assistance website built to generate emergency service enquiries and present truck tyre support for commercial operators.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/maple-rentals @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/maple-rentals",
+        "title": "Maple Rentals Case Study | AB Web Studio",
+        "description": "Premium driver rentals and streamlined online applications.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/gala-rentals @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/gala-rentals",
+        "title": "Gala Rentals Case Study | AB Web Studio",
+        "description": "A confident booking experience for weekly car rentals in Sydney.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/zq-removals @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/zq-removals",
+        "title": "ZQ Removals Case Study | AB Web Studio",
+        "description": "Local-service positioning and a direct path to quote requests.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/decent-development @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/decent-development",
+        "title": "DECENT Development Case Study | AB Web Studio",
+        "description": "A refined digital presence for a Sydney construction business.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/milestone-development @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/milestone-development",
+        "title": "Milestone Development Case Study | AB Web Studio",
+        "description": "A project-led showcase for residential and commercial construction.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/4-point-concrete @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/4-point-concrete",
+        "title": "4 Point Concrete Case Study | AB Web Studio",
+        "description": "Capability-focused presentation for concrete and structural works.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/1st-class-express @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/1st-class-express",
+        "title": "1st Class Express Case Study | AB Web Studio",
+        "description": "Interstate freight positioning, a clear fleet showcase and a fast path to quote enquiries on every screen size.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/hf-removals-adelaide @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/hf-removals-adelaide",
+        "title": "HF Removals Adelaide Case Study | AB Web Studio",
+        "description": "Published reference rates, an instant quote request and round-the-clock enquiry capture.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/work/cheap-adelaide-removalist @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/work/cheap-adelaide-removalist",
+        "title": "Cheap Adelaide Removalist Case Study | AB Web Studio",
+        "description": "A conversion-focused removals platform for Adelaide, built to make pricing, services and quote requests easy to understand while building a strong local-search content foundation.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/services @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/services",
+        "title": "Digital Services | AB Web Studio",
+        "description": "Sydney web design, e-commerce, custom software, SEO and website care for Australian businesses. Explore practical digital services from AB Web Studio.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 5,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "Automated accessibility /services @1440",
+      "passed": true,
+      "detail": {
+        "violations": [],
+        "incomplete": 1
+      }
+    },
+    {
+      "name": "/services/web-design-sydney @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/services/web-design-sydney",
+        "title": "Web Design Sydney | AB Web Studio",
+        "description": "Premium, responsive websites designed around your customers, your offer and the enquiries your business needs.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "Automated accessibility /services/web-design-sydney @1440",
+      "passed": true,
+      "detail": {
+        "violations": [],
+        "incomplete": 1
+      }
+    },
+    {
+      "name": "/services/ecommerce-website-development @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/services/ecommerce-website-development",
+        "title": "E-commerce Website Development | AB Web Studio",
+        "description": "Fast, trustworthy online stores that make products easy to explore and purchasing feel effortless.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/services/seo-local-visibility @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/services/seo-local-visibility",
+        "title": "SEO & Local Visibility | AB Web Studio",
+        "description": "Search-ready foundations that help the right customers find and understand your business.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/services/branding-content @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/services/branding-content",
+        "title": "Branding & Website Content | AB Web Studio",
+        "description": "A coherent visual direction and persuasive words that make your business easier to recognise and trust.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/services/digital-marketing @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/services/digital-marketing",
+        "title": "Digital Marketing | AB Web Studio",
+        "description": "Focused campaigns and landing pages designed to attract attention and generate qualified enquiries.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/services/website-maintenance @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/services/website-maintenance",
+        "title": "Website Maintenance & Support | AB Web Studio",
+        "description": "Practical ongoing care that keeps your website current, secure and performing after launch.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "/about @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/about",
+        "title": "About the Studio | AB Web Studio",
+        "description": "Meet AB Web Studio, a Sydney digital studio creating websites and custom software for Australian businesses with thoughtful design and practical technology.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "Automated accessibility /about @1440",
+      "passed": true,
+      "detail": {
+        "violations": [],
+        "incomplete": 1
+      }
+    },
+    {
+      "name": "/contact @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/contact",
+        "title": "Start a Project | AB Web Studio",
+        "description": "Start a project with AB Web Studio. Tell us what you are building and where you want the business to go — we will come back with a practical next step.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "Automated accessibility /contact @1440",
+      "passed": true,
+      "detail": {
+        "violations": [],
+        "incomplete": 1
+      }
+    },
+    {
+      "name": "/privacy @1440",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "overflow": 0,
+        "h1": 1,
+        "canonical": "https://www.abwebstudio.com.au/privacy",
+        "title": "Privacy Policy | AB Web Studio",
+        "description": "How AB Web Studio handles website enquiries and personal information.",
+        "brokenImages": [],
+        "hiddenOrDeferredImages": 0,
+        "navOverflow": 0,
+        "brokenAnchors": []
+      }
+    },
+    {
+      "name": "Automated accessibility /privacy @1440",
+      "passed": true,
+      "detail": {
+        "violations": [],
+        "incomplete": 1
+      }
+    },
+    {
+      "name": "Fine-pointer GPU prerequisites",
+      "passed": false,
+      "detail": {
+        "fine": false,
+        "coarse": false,
+        "reduced": false,
+        "cores": 8
+      }
+    },
+    {
+      "name": "Fine-pointer WebGL loads authentic texture",
+      "passed": true
+    },
+    {
+      "name": "Switching reduced motion releases WebGL",
+      "passed": true
+    },
+    {
+      "name": "Context loss restores authentic static artwork",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu viewport and initial focus @360",
+      "passed": true,
+      "detail": {
+        "top": 72,
+        "bottom": 844,
+        "height": 772,
+        "viewport": 844,
+        "focused": true,
+        "mainInert": true,
+        "backdrop": "none"
+      }
+    },
+    {
+      "name": "Mobile menu keyboard wraps backwards @360",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu keyboard wraps forwards @360",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu Escape focus restoration @360",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu viewport and initial focus @390",
+      "passed": true,
+      "detail": {
+        "top": 72,
+        "bottom": 844,
+        "height": 772,
+        "viewport": 844,
+        "focused": true,
+        "mainInert": true,
+        "backdrop": "none"
+      }
+    },
+    {
+      "name": "Mobile menu keyboard wraps backwards @390",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu keyboard wraps forwards @390",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu Escape focus restoration @390",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu viewport and initial focus @768",
+      "passed": true,
+      "detail": {
+        "top": 80,
+        "bottom": 844,
+        "height": 764,
+        "viewport": 844,
+        "focused": true,
+        "mainInert": true,
+        "backdrop": "none"
+      }
+    },
+    {
+      "name": "Mobile menu keyboard wraps backwards @768",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu keyboard wraps forwards @768",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu Escape focus restoration @768",
+      "passed": true
+    },
+    {
+      "name": "Reduced-motion static hero and content",
+      "passed": true,
+      "detail": {
+        "canvases": 0,
+        "armed": 0,
+        "artwork": true,
+        "intro": false
+      }
+    },
+    {
+      "name": "/ required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/ 200/success loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/ 200/success delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "/ required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/ 200/error loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/ 200/error delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "/ required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/ 503/error loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/ 503/error delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "/contact required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/contact 200/success loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/contact 200/success delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "/contact required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/contact 200/error loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/contact 200/error delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "/contact required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/contact 503/error loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/contact 503/error delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "Not found responds 404 with useful content",
+      "passed": true
+    },
+    {
+      "name": "No browser runtime exceptions",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No failed image responses",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No unexpected console errors",
+      "passed": true,
+      "detail": [
+        {
+          "route": "http://127.0.0.1:3100/",
+          "source": "http://127.0.0.1:3100/api/contact",
+          "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+          "expected": true
+        },
+        {
+          "route": "http://127.0.0.1:3100/contact",
+          "source": "http://127.0.0.1:3100/api/contact",
+          "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+          "expected": true
+        },
+        {
+          "route": "http://127.0.0.1:3100/qa-route-does-not-exist",
+          "source": "http://127.0.0.1:3100/qa-route-does-not-exist",
+          "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "expected": true
+        }
+      ]
+    }
+  ],
+  "exceptions": [],
+  "consoleErrors": [
+    {
+      "route": "http://127.0.0.1:3100/",
+      "source": "http://127.0.0.1:3100/api/contact",
+      "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "expected": true
+    },
+    {
+      "route": "http://127.0.0.1:3100/contact",
+      "source": "http://127.0.0.1:3100/api/contact",
+      "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "expected": true
+    },
+    {
+      "route": "http://127.0.0.1:3100/qa-route-does-not-exist",
+      "source": "http://127.0.0.1:3100/qa-route-does-not-exist",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "expected": true
+    }
+  ],
+  "failedImageResponses": []
+}

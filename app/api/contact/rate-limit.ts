@@ -39,9 +39,16 @@ async function upstashRateLimit(key: string, url: string, token: string) {
   });
 
   if (!response.ok) throw new Error(`rate-limit-store-${response.status}`);
-  const result = await response.json() as Array<{ result?: number }>;
-  const count = Number(result[0]?.result);
-  if (!Number.isFinite(count)) throw new Error("rate-limit-store-invalid-response");
+  const result: unknown = await response.json();
+  if (!Array.isArray(result) || result.length !== 2
+    || !result.every((entry: unknown) => entry !== null && typeof entry === "object" && !("error" in entry))) {
+    throw new Error("rate-limit-store-invalid-response");
+  }
+  const count: unknown = result[0]?.result;
+  const expiry: unknown = result[1]?.result;
+  if (typeof count !== "number" || !Number.isSafeInteger(count) || count < 1 || (expiry !== 0 && expiry !== 1)) {
+    throw new Error("rate-limit-store-invalid-response");
+  }
   return count <= MAX_REQUESTS;
 }
 

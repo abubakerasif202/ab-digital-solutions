@@ -1,31 +1,25 @@
-# AB Digital Solutions Release Action Plan
+# AB Web Studio local improvement plan
 
-## Completed in source
+This replaces a historical release checklist. Old deployment ticks were not evidence for the current checkout.
 
-- [x] Replace the iframe homepage with native semantic React content.
-- [x] Rebuild the visual system around the supplied premium black-and-gold art direction.
-- [x] Add seven live projects with retained screenshot previews or clearly labelled portfolio artwork.
-- [x] Add an accessible, pausable hero project slideshow.
-- [x] Improve navigation, typography, spacing, cards, forms and mobile reflow.
-- [x] Add canonical, social, robots, sitemap, manifest and JSON-LD metadata.
-- [x] Add six substantive service routes, a privacy policy and a secure server-side contact flow.
-- [x] Configure native Next.js output for Vercel while retaining the Sites build fallback.
-- [x] Add deployment contract tests and a custom not-found route.
+- Preserve the existing Gilt & Ruby identity, authentic assets and canonical Next.js source in `app/`.
+- Maintain the 16-project registry in `app/project-data.ts` and six established service routes. Counts are derived; projects include public sites, demonstrations and a protected business application.
+- Verify destinations, distinguish status and remove unsupported claims. Fresh Stop is approved as project #16 and uses its published custom domain, https://www.freshstop.com.au/. The earlier preview exclusion is superseded.
+- Keep public contact details consistent with the supplied business brief; keep delivery configuration server-only.
+- Validate contact acceptance, shared rate-limit responses, keyboard interaction, mobile navigation and reduced motion.
+- Run clean install, lint, typecheck, tests, production build and responsive browser QA. Record actual results in `docs/studio-rebuild-qa.md`.
+- No push, merge or production deployment is authorised by this local task.
 
-## Release gates
+## Release requirements
 
-- [x] Complete `npm ci` in Vercel's production build environment.
-- [x] Pass `npm run lint`.
-- [x] Pass `npm run typecheck`.
-- [x] Pass `npm test`.
-- [x] Pass `npm run build`.
-- [x] Review and commit the final diff.
-- [x] Push `main` to the configured GitHub remote.
-- [x] Deploy the production release to the single Vercel project.
-- [x] Verify the live responsive implementation, metadata, links, images and contact actions; confirm the production runtime error scan is clean.
+After local review, confirm the current approved commercial offer, mailbox and Resend sender/destination, shared Upstash configuration, and an authorised delivery test. A build or HTTP 200 does not prove email delivery or portfolio ownership.
 
-## Post-launch maintenance
+Recheck live destinations and production metrics at release time. Historical audit reports are snapshots, not current release gates.
 
-- Measure production LCP, INP and CLS after launch.
-- Review service content quarterly and project previews after client-site redesigns.
-- Add substantive service or case-study pages only when each route has genuinely unique content.
+## Native WSL completion — 20 October 2026
+
+- Preserved the existing branch, implementation, Windows dependencies and extracted reference tree.
+- Reproduced lint, TypeScript, all 74 tests and the production build using isolated Linux dependencies.
+- Refreshed responsive Chromium, navigation, contact-interception, fallback, portfolio and internal-link evidence; see the QA report for exact coverage and remaining release requirements.
+- Create a selective local commit of the existing studio implementation, QA scripts, documentation and current evidence. Preserve unrelated package additions and local settings outside the commit.
+- Push, merge and deployment remain prohibited for this task.

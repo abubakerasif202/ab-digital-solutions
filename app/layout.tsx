@@ -56,13 +56,13 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "AB Web Studio | Websites Built to Earn Attention",
+    title: "Web Design Sydney & Custom Business Systems | AB Web Studio",
     description: siteConfig.description,
     url: "/",
     siteName: siteConfig.name,
     type: "website",
     locale: "en_AU",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "AB Web Studio website design and digital growth studio" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "AB Web Studio — websites and custom business systems" }],
   },
   twitter: {
     card: "summary_large_image",

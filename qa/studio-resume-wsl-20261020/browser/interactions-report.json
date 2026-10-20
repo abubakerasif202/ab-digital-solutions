@@ -1,0 +1,274 @@
+{
+  "base": "http://127.0.0.1:3100",
+  "capturedAt": "2026-10-20T05:34:08.039Z",
+  "routes": [
+    "/",
+    "/work",
+    "/work/jufaja-homes",
+    "/work/milestone-renovate",
+    "/work/aftab-sons-transport",
+    "/work/247-inventory-system",
+    "/work/adelaide-wholesale-tyres",
+    "/work/247-truck-tyre-services",
+    "/work/maple-rentals",
+    "/work/gala-rentals",
+    "/work/zq-removals",
+    "/work/decent-development",
+    "/work/milestone-development",
+    "/work/4-point-concrete",
+    "/work/1st-class-express",
+    "/work/hf-removals-adelaide",
+    "/work/cheap-adelaide-removalist",
+    "/services",
+    "/services/web-design-sydney",
+    "/services/ecommerce-website-development",
+    "/services/seo-local-visibility",
+    "/services/branding-content",
+    "/services/digital-marketing",
+    "/services/website-maintenance",
+    "/about",
+    "/contact",
+    "/privacy"
+  ],
+  "checks": [
+    {
+      "name": "Fine-pointer GPU prerequisites",
+      "passed": true,
+      "detail": {
+        "fine": true,
+        "coarse": false,
+        "reduced": false,
+        "cores": 8
+      }
+    },
+    {
+      "name": "Fine-pointer WebGL loads authentic texture",
+      "passed": true
+    },
+    {
+      "name": "Switching reduced motion releases WebGL",
+      "passed": true
+    },
+    {
+      "name": "Context loss restores authentic static artwork",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu viewport and initial focus @360",
+      "passed": true,
+      "detail": {
+        "top": 72,
+        "bottom": 844,
+        "height": 772,
+        "viewport": 844,
+        "focused": true,
+        "mainInert": true,
+        "backdrop": "none"
+      }
+    },
+    {
+      "name": "Mobile menu keyboard wraps backwards @360",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu keyboard wraps forwards @360",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu Escape focus restoration @360",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu viewport and initial focus @390",
+      "passed": true,
+      "detail": {
+        "top": 72,
+        "bottom": 844,
+        "height": 772,
+        "viewport": 844,
+        "focused": true,
+        "mainInert": true,
+        "backdrop": "none"
+      }
+    },
+    {
+      "name": "Mobile menu keyboard wraps backwards @390",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu keyboard wraps forwards @390",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu Escape focus restoration @390",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu viewport and initial focus @768",
+      "passed": true,
+      "detail": {
+        "top": 80,
+        "bottom": 844,
+        "height": 764,
+        "viewport": 844,
+        "focused": true,
+        "mainInert": true,
+        "backdrop": "none"
+      }
+    },
+    {
+      "name": "Mobile menu keyboard wraps backwards @768",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu keyboard wraps forwards @768",
+      "passed": true
+    },
+    {
+      "name": "Mobile menu Escape focus restoration @768",
+      "passed": true
+    },
+    {
+      "name": "Reduced-motion static hero and content",
+      "passed": true,
+      "detail": {
+        "canvases": 0,
+        "armed": 0,
+        "artwork": true,
+        "intro": false
+      }
+    },
+    {
+      "name": "/ required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/ 200/success loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/ 200/success delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "/ required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/ 200/error loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/ 200/error delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "/ required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/ 503/error loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/ 503/error delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "/contact required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/contact 200/success loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/contact 200/success delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "/contact required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/contact 200/error loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/contact 200/error delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "/contact required fields block sending",
+      "passed": true
+    },
+    {
+      "name": "/contact 503/error loading disables submit",
+      "passed": true
+    },
+    {
+      "name": "/contact 503/error delivery contract and duplicate prevention",
+      "passed": true
+    },
+    {
+      "name": "Not found responds 404 with useful content",
+      "passed": true
+    },
+    {
+      "name": "No browser runtime exceptions",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No failed image responses",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No unexpected console errors",
+      "passed": true,
+      "detail": [
+        {
+          "route": "http://127.0.0.1:3100/",
+          "source": "http://127.0.0.1:3100/api/contact",
+          "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+          "expected": true
+        },
+        {
+          "route": "http://127.0.0.1:3100/contact",
+          "source": "http://127.0.0.1:3100/api/contact",
+          "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+          "expected": true
+        },
+        {
+          "route": "http://127.0.0.1:3100/qa-route-does-not-exist",
+          "source": "http://127.0.0.1:3100/qa-route-does-not-exist",
+          "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "expected": true
+        }
+      ]
+    }
+  ],
+  "exceptions": [],
+  "consoleErrors": [
+    {
+      "route": "http://127.0.0.1:3100/",
+      "source": "http://127.0.0.1:3100/api/contact",
+      "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "expected": true
+    },
+    {
+      "route": "http://127.0.0.1:3100/contact",
+      "source": "http://127.0.0.1:3100/api/contact",
+      "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "expected": true
+    },
+    {
+      "route": "http://127.0.0.1:3100/qa-route-does-not-exist",
+      "source": "http://127.0.0.1:3100/qa-route-does-not-exist",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "expected": true
+    }
+  ],
+  "failedImageResponses": []
+}
