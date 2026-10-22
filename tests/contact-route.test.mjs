@@ -205,7 +205,7 @@ test("shared rate-limit store decision is honoured when configured", async () =>
   process.env.UPSTASH_REDIS_REST_URL = "https://upstash.example.test";
   process.env.UPSTASH_REDIS_REST_TOKEN = "test-upstash-token";
   fetchResponder = (url) => {
-    if (url.includes("/pipeline")) {
+    if (url.includes("/multi-exec")) {
       return new Response(JSON.stringify([{ result: 6 }, { result: 1 }]), { status: 200 });
     }
     return new Response(JSON.stringify({ id: "test-email" }), { status: 200 });
@@ -214,10 +214,10 @@ test("shared rate-limit store decision is honoured when configured", async () =>
   const response = await POST(contactRequest(validPayload(), { "x-real-ip": nextIp() }));
   assert.equal(response.status, 429);
 
-  const pipelineCall = fetchCalls.find(({ url }) => url.includes("/pipeline"));
-  assert.ok(pipelineCall, "expected an Upstash pipeline call");
-  assert.equal(pipelineCall.init.headers.Authorization, "Bearer test-upstash-token");
-  const commands = JSON.parse(pipelineCall.init.body);
+  const transactionCall = fetchCalls.find(({ url }) => url.includes("/multi-exec"));
+  assert.ok(transactionCall, "expected an Upstash atomic transaction call");
+  assert.equal(transactionCall.init.headers.Authorization, "Bearer test-upstash-token");
+  const commands = JSON.parse(transactionCall.init.body);
   assert.deepEqual(commands[0][0], "INCR");
   assert.deepEqual(commands[1], ["PEXPIRE", commands[0][1], 600000, "NX"]);
   assert.equal(fetchCalls.filter(({ url }) => url.includes("resend.com")).length, 0);
@@ -227,7 +227,7 @@ test("shared rate-limit store failure falls back without leaking details", async
   process.env.UPSTASH_REDIS_REST_URL = "https://upstash.example.test";
   process.env.UPSTASH_REDIS_REST_TOKEN = "test-upstash-token";
   fetchResponder = (url) => {
-    if (url.includes("/pipeline")) return new Response("upstream error", { status: 500 });
+    if (url.includes("/multi-exec")) return new Response("upstream error", { status: 500 });
     return new Response(JSON.stringify({ id: "test-email" }), { status: 200 });
   };
 
@@ -327,11 +327,44 @@ test("malformed shared-store results cannot bypass the fallback request budget",
   ];
   let attempt = 0;
   fetchResponder = (url) => new Response(JSON.stringify(
-    url.includes("/pipeline") ? malformed[attempt++] : { id: "test-email" },
+    url.includes("/multi-exec") ? malformed[attempt++] : { id: "test-email" },
   ), { status: 200 });
   const statuses = [];
   for (let index = 0; index < malformed.length; index += 1) {
     statuses.push((await POST(contactRequest(validPayload(), { "x-real-ip": ip }))).status);
   }
   assert.deepEqual(statuses, [200, 200, 200, 200, 200, 429]);
+});
+
+
+test("rate-limited responses include a conservative retry window", async () => {
+  const ip = nextIp();
+  for (let i = 0; i < 5; i++) await POST(contactRequest(validPayload(), { "x-real-ip": ip }));
+  const response = await POST(contactRequest(validPayload(), { "x-real-ip": ip }));
+  assert.equal(response.status, 429);
+  assert.equal(response.headers.get("retry-after"), "600");
+  assert.equal(response.headers.get("cache-control"), "no-store");
+});
+
+test("shared limiter hashes visitor IPs and allows accepted enquiries", async () => {
+  process.env.UPSTASH_REDIS_REST_URL = "https://upstash.example.test";
+  process.env.UPSTASH_REDIS_REST_TOKEN = "test-token";
+  const ip = nextIp();
+  fetchResponder = (url) => new Response(JSON.stringify(url.includes("/multi-exec")
+    ? [{ result: 1 }, { result: 1 }] : { id: "accepted" }), { status: 200 });
+  const response = await POST(contactRequest(validPayload(), { "x-real-ip": ip }));
+  assert.equal(response.status, 200);
+  const store = fetchCalls.find(({ url }) => url.endsWith("/multi-exec"));
+  assert.ok(store);
+  assert.ok(!store.init.body.includes(ip));
+  assert.match(JSON.parse(store.init.body)[0][1], /^contact-rate:[a-f0-9]{64}$/);
+});
+
+test("insecure store configuration never receives credentials", async () => {
+  process.env.UPSTASH_REDIS_REST_URL = "http://upstash.example.test";
+  process.env.UPSTASH_REDIS_REST_TOKEN = "test-token";
+  const response = await POST(contactRequest(validPayload(), { "x-real-ip": nextIp() }));
+  assert.equal(response.status, 200);
+  assert.equal(fetchCalls.length, 1);
+  assert.equal(fetchCalls[0].url, "https://api.resend.com/emails");
 });

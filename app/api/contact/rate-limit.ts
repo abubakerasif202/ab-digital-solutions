@@ -1,8 +1,12 @@
+import { createHash } from "node:crypto";
+
 type MemoryEntry = { count: number; resetAt: number };
 
 const requests = new Map<string, MemoryEntry>();
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS = 5;
+const MAX_MEMORY_KEYS = 5000;
+export const RATE_LIMIT_RETRY_SECONDS = WINDOW_MS / 1000;
 
 function memoryRateLimit(key: string) {
   const now = Date.now();
@@ -14,6 +18,7 @@ function memoryRateLimit(key: string) {
 
   const current = requests.get(key);
   if (!current || current.resetAt <= now) {
+    if (!current && requests.size >= MAX_MEMORY_KEYS) return false;
     requests.set(key, { count: 1, resetAt: now + WINDOW_MS });
     return true;
   }
@@ -22,9 +27,10 @@ function memoryRateLimit(key: string) {
   return current.count <= MAX_REQUESTS;
 }
 
+// Atomic transaction: increment and first-request expiry cannot interleave.
 async function upstashRateLimit(key: string, url: string, token: string) {
   const redisKey = `contact-rate:${key}`;
-  const response = await fetch(`${url.replace(/\/$/, "")}/pipeline`, {
+  const response = await fetch(`${url.replace(/\/$/, "")}/multi-exec`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -59,7 +65,9 @@ function isProduction() {
     || (!process.env.VERCEL_ENV && process.env.NODE_ENV === "production");
 }
 
-export async function withinRateLimit(key: string) {
+export async function withinRateLimit(clientIp: string) {
+  // Keep raw visitor addresses out of both Redis and the bounded local store.
+  const key = createHash("sha256").update(clientIp).digest("hex");
   const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
   const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
 
@@ -77,12 +85,17 @@ export async function withinRateLimit(key: string) {
   }
 
   try {
+    const endpoint = new URL(url);
+    if (endpoint.protocol !== "https:" || endpoint.username || endpoint.password
+      || endpoint.search || endpoint.hash || endpoint.pathname !== "/") {
+      throw new Error("rate-limit-store-invalid-url");
+    }
     return await upstashRateLimit(key, url, token);
-  } catch (error) {
+  } catch {
     // Log the failure class only; never surface store details to the client.
     console.error(
       "Shared contact rate limit unavailable; using per-instance fallback:",
-      error instanceof Error ? error.message : "unknown error",
+      "Store request failed or returned an invalid result.",
     );
     return memoryRateLimit(key);
   }

@@ -108,3 +108,27 @@
   .stage-hero-body { gap: 18px; }
   .stage-tagline { margin-bottom: 10px; }
 }
+
+/* Hero 2.0: the mark keeps its own space beside the editorial headline. */
+.cinematic-home .stage-title { letter-spacing: -0.025em; }
+.cinematic-home .stage-intro .hero-intro { color: var(--ivory-muted); line-height: 1.75; }
+.stage-hero .hero-actions { gap: 12px; }
+.stage-hero .hero-actions .button { min-height: 52px; }
+.stage-hero .hero-actions .button:focus-visible {
+  outline: 2px solid var(--gilt-bright);
+  outline-offset: 5px;
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  [data-magnetic] svg { transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px));
+    transition: transform 240ms var(--ease-lux); }
+}
+@media (min-width: 1025px) {
+  .stage-hero-art { inset: 9% 3% 30% 50%; }
+  .stage-hero-body { gap: clamp(28px, 4vh, 48px); }
+}
+@media (max-width: 375px) {
+  .stage-hero .hero-actions { flex-direction: column; align-items: stretch; }
+  .stage-hero .hero-actions .button { justify-content: space-between; }
+}
+/* WebGL owns hero parallax; do not stack a second scroll animation on it. */
+.cinematic-home .stage-hero .hero-3d-bg-wrap { animation: none; }

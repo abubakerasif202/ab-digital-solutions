@@ -1,38 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
+import { buildParticles, clamp01, glide } from "./logo-reveal-math";
 
 const SEEN_KEY = "ab-logo-reveal-seen";
 const DURATION_S = 5.5;
 const PERSPECTIVE = 1200;
 const COLOURS = ["#a87a2c", "#d1a64c", "#efc96a", "#fff1cf", "#d21736"] as const;
-
-type Particle = {
-  tx: number; ty: number; col: number; sx: number; sy: number; sz: number;
-  t0: number; du: number; ph: number; size: number; glint: boolean;
-};
-
-const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
-const glide = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
-
-function buildParticles(data: ReadonlyArray<readonly [number, number, number, number]>, count: number): Particle[] {
-  // Deterministic LCG keeps the layout identical between plays and renders.
-  let seed = 42;
-  const rand = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
-  const step = data.length / count;
-  const out: Particle[] = [];
-  for (let i = 0; i < count && data.length; i++) {
-    const [tx, ty, ruby, bright] = data[Math.floor(i * step)];
-    out.push({
-      tx, ty,
-      col: ruby ? 4 : bright > 0.9 ? 3 : bright > 0.68 ? 2 : bright > 0.42 ? 1 : 0,
-      sx: rand() * 2 - 1, sy: rand() * 2 - 1, sz: -2000 + rand() * 2300,
-      t0: 0.1 + rand() * 0.9, du: 1.3 + rand() * 0.5, ph: rand() * 6.283,
-      size: 0.5 + rand(), glint: rand() < 0.1,
-    });
-  }
-  return out.sort((a, b) => a.col - b.col);
-}
 
 /**
  * Gold particles assemble into the AB monogram, then settle into the static
@@ -50,6 +24,7 @@ export function LogoReveal() {
   const sweepRef = useRef<HTMLImageElement>(null);
   const wordRef = useRef<HTMLImageElement>(null);
   const rafRef = useRef(0);
+  const generationRef = useRef(0);
   const stopRef = useRef<() => void>(() => {});
 
   const rest = useCallback(() => {
@@ -66,7 +41,12 @@ export function LogoReveal() {
     const root = rootRef.current, canvas = canvasRef.current, markWrap = markWrapRef.current;
     if (!root || !canvas || !markWrap) return;
     stopRef.current();
-    const { logoParticles } = await import("./logo-particles");
+    const generation = ++generationRef.current;
+    const data = await import("./logo-particles").catch(() => null);
+    if (!data) { rest(); return; }
+    const { logoParticles } = data;
+    if (generation !== generationRef.current || !root.isConnected || document.hidden
+      || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = canvas.getContext("2d");
     if (!ctx || !rootRef.current) return;
 
@@ -152,25 +132,38 @@ export function LogoReveal() {
     const root = rootRef.current;
     if (!root) return;
     const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const stop = () => stopRef.current();
+    const stop = () => { generationRef.current++; stopRef.current(); };
+    const visibility = () => { if (document.hidden) stop(); };
+    document.addEventListener("visibilitychange", visibility);
+    window.addEventListener("resize", stop, { passive: true });
     reducedQuery.addEventListener("change", stop);
 
     let observer: IntersectionObserver | undefined;
     let seen = false;
     try { seen = window.sessionStorage.getItem(SEEN_KEY) === "1"; } catch { /* storage unavailable: play */ }
-    if (!reducedQuery.matches && !seen && "IntersectionObserver" in window) {
+    const constrained = window.matchMedia("(max-width: 720px), (pointer: coarse)").matches
+      || navigator.hardwareConcurrency <= 4
+      || ((navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8) <= 4
+      || (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+    if (!reducedQuery.matches && !constrained && !seen && "IntersectionObserver" in window) {
       observer = new IntersectionObserver(([entry]) => {
-        if (!entry?.isIntersecting) return;
+        if (!entry?.isIntersecting) { stop(); return; }
         observer?.disconnect();
         try { window.sessionStorage.setItem(SEEN_KEY, "1"); } catch { /* ignore */ }
         void play();
       }, { threshold: 0.45 });
       observer.observe(root);
     }
+    const lifecycle = "IntersectionObserver" in window
+      ? new IntersectionObserver(([entry]) => { if (!entry?.isIntersecting) stop(); }) : undefined;
+    lifecycle?.observe(root);
     return () => {
+      lifecycle?.disconnect();
       observer?.disconnect();
       reducedQuery.removeEventListener("change", stop);
-      cancelAnimationFrame(rafRef.current);
+      document.removeEventListener("visibilitychange", visibility);
+      window.removeEventListener("resize", stop);
+      stop();
     };
   }, [play]);
 
@@ -186,12 +179,12 @@ export function LogoReveal() {
       <div className="logo-reveal-lockup">
         <div className="logo-reveal-mark" ref={markWrapRef}>
           {/* eslint-disable-next-line @next/next/no-img-element -- animated by inline style; sized by aspect-ratio */}
-          <img ref={markRef} src="/brand/ab-reveal-mark.webp" width={882} height={779} alt="AB Web Studio monogram" decoding="async" />
+          <img ref={markRef} src="/brand/ab-reveal-mark.webp" width={882} height={779} alt="AB Web Studio monogram" loading="lazy" decoding="async" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img ref={sweepRef} className="logo-reveal-sweep" src="/brand/ab-reveal-mark-bright.webp" width={882} height={779} alt="" aria-hidden="true" loading="lazy" decoding="async" />
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img ref={wordRef} className="logo-reveal-word" src="/brand/ab-reveal-wordmark.webp" width={1174} height={146} alt="AB Web Studio" decoding="async" />
+        <img ref={wordRef} className="logo-reveal-word" src="/brand/ab-reveal-wordmark.webp" width={1174} height={146} alt="AB Web Studio" loading="lazy" decoding="async" />
       </div>
       <button type="button" className="logo-reveal-replay" onClick={replay} aria-label="Replay the logo animation">Replay</button>
     </div>
