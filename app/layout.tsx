@@ -22,6 +22,7 @@ import "./premium-dev.css";
 import "./styles/studio-system.css";
 import "./styles/studio-sections.css";
 import "./styles/studio-harmony.css";
+import "./styles/brand-film.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),

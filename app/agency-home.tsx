@@ -10,6 +10,7 @@ import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
 import { ArrowIcon } from "./icons";
 import { PortfolioSection } from "./components/PortfolioSection";
+import { BrandFilmSection } from "./components/film/BrandFilmSection";
 import { StudioCapabilities } from "./components/StudioCapabilities";
 import { ProcessTimeline } from "./components/motion/ProcessTimeline";
 import { StackLedger } from "./components/StackLedger";
@@ -162,6 +163,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         </section>
 
         <PortfolioSection />
+
+        <BrandFilmSection />
 
         <section className="section ruby-band" id="services" aria-labelledby="services-heading">
           <div className="container">
