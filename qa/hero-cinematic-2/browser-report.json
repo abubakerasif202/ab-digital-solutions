@@ -1,0 +1,1182 @@
+{
+  "base": "http://localhost:3104",
+  "checks": [
+    {
+      "name": "320 / layout",
+      "pass": true,
+      "detail": {
+        "viewport": 320,
+        "scroll": 320,
+        "h1": {
+          "x": 16,
+          "y": 322,
+          "width": 288,
+          "height": 159.375,
+          "top": 322,
+          "right": 304,
+          "bottom": 481.375,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "320 no initial film",
+      "pass": true
+    },
+    {
+      "name": "320 initial hero static",
+      "pass": true
+    },
+    {
+      "name": "320 /services layout",
+      "pass": true,
+      "detail": {
+        "viewport": 320,
+        "scroll": 320,
+        "h1": {
+          "x": 16,
+          "y": 266.0084533691406,
+          "width": 288,
+          "height": 220.78125,
+          "top": 266.0084533691406,
+          "right": 304,
+          "bottom": 486.7897033691406,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "320 /work layout",
+      "pass": true,
+      "detail": {
+        "viewport": 320,
+        "scroll": 320,
+        "h1": {
+          "x": 16,
+          "y": 200,
+          "width": 288,
+          "height": 129.5625,
+          "top": 200,
+          "right": 304,
+          "bottom": 329.5625,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "320 /about layout",
+      "pass": true,
+      "detail": {
+        "viewport": 320,
+        "scroll": 320,
+        "h1": {
+          "x": 16,
+          "y": 601.4742431640625,
+          "width": 288,
+          "height": 207.96875,
+          "top": 601.4742431640625,
+          "right": 304,
+          "bottom": 809.4429931640625,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "320 /contact layout",
+      "pass": true,
+      "detail": {
+        "viewport": 320,
+        "scroll": 320,
+        "h1": {
+          "x": 16,
+          "y": 197.8231658935547,
+          "width": 288,
+          "height": 166.37501525878906,
+          "top": 197.8231658935547,
+          "right": 304,
+          "bottom": 364.19818115234375,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "375 / layout",
+      "pass": true,
+      "detail": {
+        "viewport": 375,
+        "scroll": 375,
+        "h1": {
+          "x": 16,
+          "y": 298,
+          "width": 343,
+          "height": 182.8125,
+          "top": 298,
+          "right": 359,
+          "bottom": 480.8125,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "375 no initial film",
+      "pass": true
+    },
+    {
+      "name": "375 initial hero static",
+      "pass": true
+    },
+    {
+      "name": "375 /services layout",
+      "pass": true,
+      "detail": {
+        "viewport": 375,
+        "scroll": 375,
+        "h1": {
+          "x": 16,
+          "y": 266.0738220214844,
+          "width": 343,
+          "height": 220.78125,
+          "top": 266.0738220214844,
+          "right": 359,
+          "bottom": 486.8550720214844,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "375 /work layout",
+      "pass": true,
+      "detail": {
+        "viewport": 375,
+        "scroll": 375,
+        "h1": {
+          "x": 16,
+          "y": 200.02960205078125,
+          "width": 343,
+          "height": 86.375,
+          "top": 200.02960205078125,
+          "right": 359,
+          "bottom": 286.40460205078125,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "375 /about layout",
+      "pass": true,
+      "detail": {
+        "viewport": 375,
+        "scroll": 375,
+        "h1": {
+          "x": 16,
+          "y": 636.59375,
+          "width": 343,
+          "height": 166.375,
+          "top": 636.59375,
+          "right": 359,
+          "bottom": 802.96875,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "375 /contact layout",
+      "pass": true,
+      "detail": {
+        "viewport": 375,
+        "scroll": 375,
+        "h1": {
+          "x": 16,
+          "y": 197.8293914794922,
+          "width": 343,
+          "height": 124.78126525878906,
+          "top": 197.8293914794922,
+          "right": 359,
+          "bottom": 322.61065673828125,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "390 / layout",
+      "pass": true,
+      "detail": {
+        "viewport": 390,
+        "scroll": 390,
+        "h1": {
+          "x": 16,
+          "y": 298,
+          "width": 358,
+          "height": 190.09375,
+          "top": 298,
+          "right": 374,
+          "bottom": 488.09375,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "390 no initial film",
+      "pass": true
+    },
+    {
+      "name": "390 initial hero static",
+      "pass": true
+    },
+    {
+      "name": "390 /services layout",
+      "pass": true,
+      "detail": {
+        "viewport": 390,
+        "scroll": 390,
+        "h1": {
+          "x": 16,
+          "y": 266.07373046875,
+          "width": 358,
+          "height": 220.78125,
+          "top": 266.07373046875,
+          "right": 374,
+          "bottom": 486.85498046875,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "390 /work layout",
+      "pass": true,
+      "detail": {
+        "viewport": 390,
+        "scroll": 390,
+        "h1": {
+          "x": 16,
+          "y": 200.0896453857422,
+          "width": 358,
+          "height": 86.37501525878906,
+          "top": 200.0896453857422,
+          "right": 374,
+          "bottom": 286.46466064453125,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "390 /about layout",
+      "pass": true,
+      "detail": {
+        "viewport": 390,
+        "scroll": 390,
+        "h1": {
+          "x": 16,
+          "y": 651.612548828125,
+          "width": 358,
+          "height": 166.375,
+          "top": 651.612548828125,
+          "right": 374,
+          "bottom": 817.987548828125,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "390 /contact layout",
+      "pass": true,
+      "detail": {
+        "viewport": 390,
+        "scroll": 390,
+        "h1": {
+          "x": 16,
+          "y": 197.8592071533203,
+          "width": 358,
+          "height": 124.78123474121094,
+          "top": 197.8592071533203,
+          "right": 374,
+          "bottom": 322.64044189453125,
+          "left": 16
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "430 / layout",
+      "pass": true,
+      "detail": {
+        "viewport": 430,
+        "scroll": 430,
+        "h1": {
+          "x": 17.203125,
+          "y": 298,
+          "width": 395.59375,
+          "height": 209.65625,
+          "top": 298,
+          "right": 412.796875,
+          "bottom": 507.65625,
+          "left": 17.203125
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "430 no initial film",
+      "pass": true
+    },
+    {
+      "name": "430 initial hero static",
+      "pass": true
+    },
+    {
+      "name": "430 /services layout",
+      "pass": true,
+      "detail": {
+        "viewport": 430,
+        "scroll": 430,
+        "h1": {
+          "x": 17.203125,
+          "y": 266.0738525390625,
+          "width": 395.59375,
+          "height": 132.46875,
+          "top": 266.0738525390625,
+          "right": 412.796875,
+          "bottom": 398.5426025390625,
+          "left": 17.203125
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "430 /work layout",
+      "pass": true,
+      "detail": {
+        "viewport": 430,
+        "scroll": 430,
+        "h1": {
+          "x": 17.203125,
+          "y": 200.0160369873047,
+          "width": 395.59375,
+          "height": 86.37501525878906,
+          "top": 200.0160369873047,
+          "right": 412.796875,
+          "bottom": 286.39105224609375,
+          "left": 17.203125
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "430 /about layout",
+      "pass": true,
+      "detail": {
+        "viewport": 430,
+        "scroll": 430,
+        "h1": {
+          "x": 17.203125,
+          "y": 689.2199096679688,
+          "width": 395.59375,
+          "height": 166.375,
+          "top": 689.2199096679688,
+          "right": 412.796875,
+          "bottom": 855.5949096679688,
+          "left": 17.203125
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "430 /contact layout",
+      "pass": true,
+      "detail": {
+        "viewport": 430,
+        "scroll": 430,
+        "h1": {
+          "x": 17.203125,
+          "y": 197.87083435058594,
+          "width": 395.59375,
+          "height": 83.18751525878906,
+          "top": 197.87083435058594,
+          "right": 412.796875,
+          "bottom": 281.058349609375,
+          "left": 17.203125
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "768 / layout",
+      "pass": true,
+      "detail": {
+        "viewport": 768,
+        "scroll": 768,
+        "h1": {
+          "x": 30.71875,
+          "y": 175.03125,
+          "width": 368.71875,
+          "height": 210.21875,
+          "top": 175.03125,
+          "right": 399.4375,
+          "bottom": 385.25,
+          "left": 30.71875
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "768 no initial film",
+      "pass": true
+    },
+    {
+      "name": "768 initial hero static",
+      "pass": true
+    },
+    {
+      "name": "768 /services layout",
+      "pass": true,
+      "detail": {
+        "viewport": 768,
+        "scroll": 768,
+        "h1": {
+          "x": 30.71875,
+          "y": 292.0006408691406,
+          "width": 416.296875,
+          "height": 132.46878051757812,
+          "top": 292.0006408691406,
+          "right": 447.015625,
+          "bottom": 424.46942138671875,
+          "left": 30.71875
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "768 /work layout",
+      "pass": true,
+      "detail": {
+        "viewport": 768,
+        "scroll": 768,
+        "h1": {
+          "x": 30.71875,
+          "y": 208.0990447998047,
+          "width": 506.15625,
+          "height": 105.06248474121094,
+          "top": 208.0990447998047,
+          "right": 536.875,
+          "bottom": 313.1615295410156,
+          "left": 30.71875
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "768 /about layout",
+      "pass": true,
+      "detail": {
+        "viewport": 768,
+        "scroll": 768,
+        "h1": {
+          "x": 30.71875,
+          "y": 1017.3438720703125,
+          "width": 706.546875,
+          "height": 124.78125,
+          "top": 1017.3438720703125,
+          "right": 737.265625,
+          "bottom": 1142.1251220703125,
+          "left": 30.71875
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "768 /contact layout",
+      "pass": true,
+      "detail": {
+        "viewport": 768,
+        "scroll": 768,
+        "h1": {
+          "x": 30.71875,
+          "y": 212.05477905273438,
+          "width": 706.546875,
+          "height": 83.1875,
+          "top": 212.05477905273438,
+          "right": 737.265625,
+          "bottom": 295.2422790527344,
+          "left": 30.71875
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1024 / layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1024,
+        "scroll": 1024,
+        "h1": {
+          "x": 40.953125,
+          "y": 182.71875,
+          "width": 441.5,
+          "height": 251.8125,
+          "top": 182.71875,
+          "right": 482.453125,
+          "bottom": 434.53125,
+          "left": 40.953125
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1024 no initial film",
+      "pass": true
+    },
+    {
+      "name": "1024 initial hero static",
+      "pass": true
+    },
+    {
+      "name": "1024 /services layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1024,
+        "scroll": 1024,
+        "h1": {
+          "x": 40.953125,
+          "y": 319.67181396484375,
+          "width": 532.859375,
+          "height": 169.546875,
+          "top": 319.67181396484375,
+          "right": 573.8125,
+          "bottom": 489.21868896484375,
+          "left": 40.953125
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1024 /work layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1024,
+        "scroll": 1024,
+        "h1": {
+          "x": 40.953125,
+          "y": 220.50210571289062,
+          "width": 674.921875,
+          "height": 140.0625,
+          "top": 220.50210571289062,
+          "right": 715.875,
+          "bottom": 360.5646057128906,
+          "left": 40.953125
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1024 /about layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1024,
+        "scroll": 1024,
+        "h1": {
+          "x": 473.8125,
+          "y": 238.1563262939453,
+          "width": 509.21875,
+          "height": 221.18748474121094,
+          "top": 238.1563262939453,
+          "right": 983.03125,
+          "bottom": 459.34381103515625,
+          "left": 473.8125
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1024 /contact layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1024,
+        "scroll": 1024,
+        "h1": {
+          "x": 40.953125,
+          "y": 227.34368896484375,
+          "width": 360.859375,
+          "height": 221.1875,
+          "top": 227.34368896484375,
+          "right": 401.8125,
+          "bottom": 448.53118896484375,
+          "left": 40.953125
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1440 / layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1440,
+        "scroll": 1440,
+        "h1": {
+          "x": 128,
+          "y": 195.1875,
+          "width": 598.578125,
+          "height": 372.40625,
+          "top": 195.1875,
+          "right": 726.578125,
+          "bottom": 567.59375,
+          "left": 128
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1440 no initial film",
+      "pass": true
+    },
+    {
+      "name": "1440 initial hero static",
+      "pass": true
+    },
+    {
+      "name": "1440 /services layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1440,
+        "scroll": 1440,
+        "h1": {
+          "x": 128,
+          "y": 373.3668518066406,
+          "width": 713.4375,
+          "height": 238.45309448242188,
+          "top": 373.3668518066406,
+          "right": 841.4375,
+          "bottom": 611.8199462890625,
+          "left": 128
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1440 /work layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1440,
+        "scroll": 1440,
+        "h1": {
+          "x": 128,
+          "y": 258.04339599609375,
+          "width": 868.65625,
+          "height": 196.96875,
+          "top": 258.04339599609375,
+          "right": 996.65625,
+          "bottom": 455.01214599609375,
+          "left": 128
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1440 /about layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1440,
+        "scroll": 1440,
+        "h1": {
+          "x": 661.671875,
+          "y": 257.9537353515625,
+          "width": 650.328125,
+          "height": 288,
+          "top": 257.9537353515625,
+          "right": 1312,
+          "bottom": 545.9537353515625,
+          "left": 661.671875
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1440 /contact layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1440,
+        "scroll": 1440,
+        "h1": {
+          "x": 128,
+          "y": 246.01626586914062,
+          "width": 461.671875,
+          "height": 287.9999694824219,
+          "top": 246.01626586914062,
+          "right": 589.671875,
+          "bottom": 534.0162353515625,
+          "left": 128
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1920 / layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1920,
+        "scroll": 1920,
+        "h1": {
+          "x": 368,
+          "y": 196,
+          "width": 749.59375,
+          "height": 466.34375,
+          "top": 196,
+          "right": 1117.59375,
+          "bottom": 662.34375,
+          "left": 368
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1920 no initial film",
+      "pass": true
+    },
+    {
+      "name": "1920 initial hero static",
+      "pass": true
+    },
+    {
+      "name": "1920 /services layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1920,
+        "scroll": 1920,
+        "h1": {
+          "x": 368,
+          "y": 378.14630126953125,
+          "width": 698.09375,
+          "height": 471.015625,
+          "top": 378.14630126953125,
+          "right": 1066.09375,
+          "bottom": 849.1619262695312,
+          "left": 368
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1920 /work layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1920,
+        "scroll": 1920,
+        "h1": {
+          "x": 368,
+          "y": 260.3693542480469,
+          "width": 833.625,
+          "height": 345.5625305175781,
+          "top": 260.3693542480469,
+          "right": 1201.625,
+          "bottom": 605.931884765625,
+          "left": 368
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1920 /about layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1920,
+        "scroll": 1920,
+        "h1": {
+          "x": 901.671875,
+          "y": 258.001708984375,
+          "width": 650.328125,
+          "height": 288,
+          "top": 258.001708984375,
+          "right": 1552,
+          "bottom": 546.001708984375,
+          "left": 901.671875
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "1920 /contact layout",
+      "pass": true,
+      "detail": {
+        "viewport": 1920,
+        "scroll": 1920,
+        "h1": {
+          "x": 368,
+          "y": 246.01605224609375,
+          "width": 461.671875,
+          "height": 288,
+          "top": 246.01605224609375,
+          "right": 829.671875,
+          "bottom": 534.0160522460938,
+          "left": 368
+        },
+        "badImages": []
+      }
+    },
+    {
+      "name": "desktop single hero WebGL canvas",
+      "pass": true
+    },
+    {
+      "name": "hero rests without ongoing draw loop",
+      "pass": true,
+      "detail": {
+        "settled": 644,
+        "after": 644
+      }
+    },
+    {
+      "name": "hero stores session completion",
+      "pass": true
+    },
+    {
+      "name": "magnetic icon keeps button hit area fixed",
+      "pass": true
+    },
+    {
+      "name": "offscreen hero stops rendering",
+      "pass": true
+    },
+    {
+      "name": "film plays after explicit click",
+      "pass": true
+    },
+    {
+      "name": "film chapter seek",
+      "pass": true
+    },
+    {
+      "name": "film pauses when offscreen",
+      "pass": true
+    },
+    {
+      "name": "reduced motion releases WebGL",
+      "pass": true
+    },
+    {
+      "name": "phone and reduced motion remain static",
+      "pass": true
+    },
+    {
+      "name": "no mobile particle data or Three download",
+      "pass": true
+    },
+    {
+      "name": "mobile axe accessibility",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "contact 503 prevents repeat submission",
+      "pass": true
+    },
+    {
+      "name": "contact 503 one request",
+      "pass": true
+    },
+    {
+      "name": "contact 503 honest UI",
+      "pass": true
+    },
+    {
+      "name": "contact 429 prevents repeat submission",
+      "pass": true
+    },
+    {
+      "name": "contact 429 one request",
+      "pass": true
+    },
+    {
+      "name": "contact 429 honest UI",
+      "pass": true
+    },
+    {
+      "name": "contact 200 prevents repeat submission",
+      "pass": true
+    },
+    {
+      "name": "contact 200 one request",
+      "pass": true
+    },
+    {
+      "name": "contact 200 honest UI",
+      "pass": true
+    },
+    {
+      "name": "no browser exceptions",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no unexpected console errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "consoleErrors": [],
+  "resources": [
+    {
+      "url": "http://localhost:3104/_next/static/media/10a4c8eca0b9ce81-s.p.0rrr4v4rsoo3q.woff2",
+      "bytes": 0,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/media/28f82cd8566a528f-s.p.14og3_uq6yls0.woff2",
+      "bytes": 0,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/media/31a9145ccb84606d-s.p.3j3x29wbycqkn.woff2",
+      "bytes": 0,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fbrand%2Fab-luxury-monogram.webp&w=64&q=75",
+      "bytes": 0,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fbrand%2Fab-hero-monogram.webp&w=256&q=75",
+      "bytes": 0,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/1eq9o8g1cfv8y.css",
+      "bytes": 0,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/0jvmasu0-yz9w.css",
+      "bytes": 0,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/3yfl9fgvivx3-.js",
+      "bytes": 0,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/11jq0c2_zavac.js",
+      "bytes": 0,
+      "type": "script"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/3g4px251sg85e.js",
+      "bytes": 0,
+      "type": "script"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/0h-uhh91ijkha.js",
+      "bytes": 0,
+      "type": "script"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/turbopack-1lg051r-z4mo2.js",
+      "bytes": 0,
+      "type": "script"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/3k-sa__34gn6f.js",
+      "bytes": 0,
+      "type": "script"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/3fntmmi971322.js",
+      "bytes": 0,
+      "type": "script"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/0f5k8rccq_tgs.js",
+      "bytes": 0,
+      "type": "script"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/42-wwptq0be8l.js",
+      "bytes": 0,
+      "type": "script"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/chunks/0qqefrmgd4rw6.js",
+      "bytes": 0,
+      "type": "script"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fbrand%2Fab-hero-monogram.webp&w=640&q=75",
+      "bytes": 0,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-jufaja-homes.webp&w=1440&q=75",
+      "bytes": 0,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-milestone-renovate.webp&w=1080&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-aftab-sons-transport.webp&w=640&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-247-inventory-system.webp&w=384&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-adelaide-wholesale-tyres.webp&w=828&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-247-truck-tyre-services.jpg&w=384&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-maple-rentals.jpg&w=828&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-gala-rentals.jpg&w=384&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-zq-removals.jpg&w=828&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-decent-development.jpg&w=828&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-milestone-development.jpg&w=828&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-four-point-concrete.jpg&w=828&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-1st-class-express.jpg&w=384&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-hf-removals.jpg&w=384&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-cheap-adelaide-removalist.png&w=384&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/image?url=%2Fsite%2Fab-digital-premium%2Fassets%2Fab-portfolio-fresh-stop.jpg&w=384&q=75",
+      "bytes": 0,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/brand/ab-reveal-mark.webp",
+      "bytes": 300,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/brand/ab-reveal-mark-bright.webp",
+      "bytes": 300,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/brand/ab-reveal-wordmark.webp",
+      "bytes": 300,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/film/ab-film-poster.webp",
+      "bytes": 300,
+      "type": "img"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/media/99e609270109b47d-s.40sczeszzbjw1.woff2",
+      "bytes": 0,
+      "type": "css"
+    },
+    {
+      "url": "http://localhost:3104/_next/static/media/effe91970fc4db64-s.0oace-s_gkfks.woff2",
+      "bytes": 0,
+      "type": "css"
+    },
+    {
+      "url": "http://localhost:3104/manifest.webmanifest",
+      "bytes": 775,
+      "type": "link"
+    },
+    {
+      "url": "http://localhost:3104/brand/ab-luxury-mark-32.png",
+      "bytes": 300,
+      "type": "other"
+    },
+    {
+      "url": "http://localhost:3104/brand/ab-luxury-mark-192.png",
+      "bytes": 300,
+      "type": "other"
+    },
+    {
+      "url": "http://localhost:3104/api/analytics",
+      "bytes": 300,
+      "type": "beacon"
+    },
+    {
+      "url": "http://localhost:3104/_vercel/speed-insights/script.js",
+      "bytes": 300,
+      "type": "script"
+    },
+    {
+      "url": "http://localhost:3104/?_rsc=5CB68i4pnAekjehf",
+      "bytes": 636,
+      "type": "fetch"
+    },
+    {
+      "url": "http://localhost:3104/api/analytics",
+      "bytes": 300,
+      "type": "beacon"
+    },
+    {
+      "url": "http://localhost:3104/api/analytics",
+      "bytes": 300,
+      "type": "beacon"
+    },
+    {
+      "url": "http://localhost:3104/?_rsc=yIp22O3xgPPxC28X",
+      "bytes": 2687,
+      "type": "fetch"
+    },
+    {
+      "url": "http://localhost:3104/?_rsc=8nTjltbQWvg6NcbE",
+      "bytes": 12492,
+      "type": "fetch"
+    }
+  ]
+}

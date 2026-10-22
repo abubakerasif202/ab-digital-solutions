@@ -32,7 +32,7 @@ test("studio motion supports static content, touch and reduced motion", async ()
   assert.match(pointer, /finePointer\.matches && !reducedMotion\.matches/);
   assert.match(canvas, /new THREE\.TextureLoader\(\)\.load\("\/brand\/ab-hero-monogram\.webp"/);
   assert.match(canvas, /new THREE\.PlaneGeometry\(/);
-  assert.doesNotMatch(canvas, /TorusKnotGeometry|PointsMaterial|Math\.random/);
+  assert.doesNotMatch(canvas, /TorusKnotGeometry|Math\.random/);
   assert.doesNotMatch(page, /IntroReveal/);
 });
 

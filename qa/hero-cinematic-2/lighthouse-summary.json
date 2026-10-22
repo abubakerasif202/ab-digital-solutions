@@ -1,0 +1,140 @@
+{
+  "method": "Local production build, Lighthouse 13.5.0 default simulated mobile/desktop presets, baseline one run each; final two mobile and one desktop. Lab snapshots, not production or field INP.",
+  "measurements": [
+    {
+      "name": "baseline-mobile",
+      "url": "http://localhost:3100/",
+      "date": "2026-10-22T16:53:08.080Z",
+      "lighthouse": "13.5.0",
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 3039.5,
+        "credits": {
+          "axe-core": "4.13.0"
+        }
+      },
+      "scores": {
+        "performance": 82,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 4908.623424999999,
+      "cls": 0.00005406076223917629,
+      "tbtMs": 26,
+      "transferBytes": 905575,
+      "javaScriptTransferBytes": 182374,
+      "javaScriptResourceBytes": 562940,
+      "initialMediaTransferBytes": 407229,
+      "videoRequests": 0
+    },
+    {
+      "name": "baseline-desktop",
+      "url": "http://localhost:3100/",
+      "date": "2026-10-22T16:53:51.507Z",
+      "lighthouse": "13.5.0",
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 3062,
+        "credits": {
+          "axe-core": "4.13.0"
+        }
+      },
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 1017.9920999999998,
+      "cls": 0.001790775739625015,
+      "tbtMs": 0,
+      "transferBytes": 981038,
+      "javaScriptTransferBytes": 200110,
+      "javaScriptResourceBytes": 608862,
+      "initialMediaTransferBytes": 454277,
+      "videoRequests": 0
+    },
+    {
+      "name": "final-mobile",
+      "url": "http://localhost:3104/",
+      "date": "2026-10-22T17:06:16.931Z",
+      "lighthouse": "13.5.0",
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 2619,
+        "credits": {
+          "axe-core": "4.13.0"
+        }
+      },
+      "scores": {
+        "performance": 84,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 4518.309400000001,
+      "cls": 0.00005406076223917629,
+      "tbtMs": 59,
+      "transferBytes": 610829,
+      "javaScriptTransferBytes": 182706,
+      "javaScriptResourceBytes": 564551,
+      "initialMediaTransferBytes": 111991,
+      "videoRequests": 0
+    },
+    {
+      "name": "final-mobile-repeat",
+      "url": "http://localhost:3104/",
+      "date": "2026-10-22T17:06:33.752Z",
+      "lighthouse": "13.5.0",
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 2535.5,
+        "credits": {
+          "axe-core": "4.13.0"
+        }
+      },
+      "scores": {
+        "performance": 84,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 4493.005425000002,
+      "cls": 0.00005406076223917629,
+      "tbtMs": 50.5,
+      "transferBytes": 610829,
+      "javaScriptTransferBytes": 182706,
+      "javaScriptResourceBytes": 564551,
+      "initialMediaTransferBytes": 111991,
+      "videoRequests": 0
+    },
+    {
+      "name": "final-desktop",
+      "url": "http://localhost:3104/",
+      "date": "2026-10-22T17:06:50.241Z",
+      "lighthouse": "13.5.0",
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 2560,
+        "credits": {
+          "axe-core": "4.13.0"
+        }
+      },
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 934.0322999999996,
+      "cls": 0.001723458163847904,
+      "tbtMs": 0,
+      "transferBytes": 686298,
+      "javaScriptTransferBytes": 200442,
+      "javaScriptResourceBytes": 610473,
+      "initialMediaTransferBytes": 159039,
+      "videoRequests": 0
+    }
+  ]
+}

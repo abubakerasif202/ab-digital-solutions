@@ -129,7 +129,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 </p>
                 <div className="hero-actions">
                   <a className="button button-primary" href="#contact" data-magnetic>
-                    Start a Project <ArrowIcon />
+                    Start Your Project <ArrowIcon />
                   </a>
                   <a className="button button-ghost" href="#work" data-magnetic>
                     Explore Our Work <ArrowIcon direction="down-right" />
@@ -210,7 +210,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <p className="eyebrow section-index"><span className="section-index-num">03</span><span className="micro-rule" aria-hidden="true" />How we work</p>
               <h2 id="process-heading">A clear path from ambition to <span className="accent-serif">launch.</span></h2>
               <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
-              <a className="text-link" href="#contact">Start a Project <ArrowIcon /></a>
+              <a className="text-link" href="#contact">Start Your Project <ArrowIcon /></a>
             </div>
             <ProcessTimeline>
               <span className="process-rail-fill" aria-hidden="true" />

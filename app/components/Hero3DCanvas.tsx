@@ -3,7 +3,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { HeroFallback } from "./HeroFallback";
-const INTRO_MS = 900;
+import { buildParticles, clamp01, glide, type Particle } from "./film/logo-reveal-math";
+const INTRO_MS = 4600;
+const SEEN_KEY = "ab-logo-reveal-seen";
 const REST_YAW = -0.06;
 const REST_PITCH = -0.025;
 
@@ -73,12 +75,29 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     const geometry = new THREE.PlaneGeometry(4.8, 4.8 * 792 / 936);
     const material = new THREE.MeshBasicMaterial({ transparent: true, toneMapped: false });
     heroGroup.add(new THREE.Mesh(geometry, material));
+    const sweepMaterial = new THREE.ShaderMaterial({
+      uniforms: { artwork: { value: null }, progress: { value: -1 } },
+      vertexShader: `varying vec2 artworkUv;
+        void main() { artworkUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: `uniform sampler2D artwork; uniform float progress; varying vec2 artworkUv;
+        void main() {
+          vec4 pixel = texture2D(artwork, artworkUv);
+          float band = pow(max(0.0, 1.0 - abs(artworkUv.x + artworkUv.y * 0.18 - progress) / 0.12), 2.0);
+          gl_FragColor = vec4(pixel.rgb * vec3(1.0, 0.88, 0.62), pixel.a * band * 0.24);
+        }`,
+      transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+    });
+    const sweep = new THREE.Mesh(geometry, sweepMaterial);
+    sweep.position.z = 0.01;
+    sweep.visible = false;
+    heroGroup.add(sweep);
     let disposed = false;
     let textureReady = false;
     const texture = new THREE.TextureLoader().load("/brand/ab-hero-monogram.webp", (loaded) => {
       if (disposed) return;
       loaded.colorSpace = THREE.SRGBColorSpace;
       material.map = loaded;
+      sweepMaterial.uniforms.artwork.value = loaded;
       material.needsUpdate = true;
       textureReady = true;
       renderStaticFrame();
@@ -95,7 +114,36 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     let inputListenersAttached = false;
     let nextRenderTime = 0;
     let lastFrameTime = 0;
-    let introProgress = prefersReducedMotion ? 1 : 0;
+    let seen = false;
+    try { seen = sessionStorage.getItem(SEEN_KEY) === "1"; } catch { /* storage is optional */ }
+    let introProgress = prefersReducedMotion || seen ? 1 : 0;
+    const particleGeometry = new THREE.BufferGeometry();
+    const particleMaterial = new THREE.PointsMaterial({
+      size: isTablet ? 0.018 : 0.014, transparent: true, opacity: 0,
+      vertexColors: true, blending: THREE.AdditiveBlending, depthWrite: false,
+    });
+    const points = new THREE.Points(particleGeometry, particleMaterial);
+    points.frustumCulled = false;
+    heroGroup.add(points);
+    let particles: Particle[] = [];
+    let positions = new Float32Array(0);
+    let particlesReady = introProgress === 1;
+    if (!particlesReady) {
+      void import("./film/logo-particles").then(({ logoParticles }) => {
+        if (disposed) return;
+        particles = buildParticles(logoParticles, isTablet ? 450 : 900);
+        positions = new Float32Array(particles.length * 3);
+        const colours = new Float32Array(particles.length * 3);
+        const palette = ["#a87a2c", "#d1a64c", "#efc96a", "#fff1cf", "#d21736"];
+        particles.forEach((particle, index) => {
+          new THREE.Color(palette[particle.col]).toArray(colours, index * 3);
+        });
+        particleGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        particleGeometry.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+        particlesReady = true;
+        startLoop();
+      }).catch(() => { introProgress = 1; particlesReady = true; startLoop(); });
+    }
 
     let mouseX = 0;
     let mouseY = 0;
@@ -106,10 +154,9 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     const frameInterval = 1000 / (isMobile || isTablet ? 30 : 60);
 
     const handleMouseMove = (event: MouseEvent) => {
-      const windowHalfX = window.innerWidth / 2;
-      const windowHalfY = window.innerHeight / 2;
-      targetMouseX = (event.clientX - windowHalfX) / windowHalfX;
-      targetMouseY = (event.clientY - windowHalfY) / windowHalfY;
+      const bounds = container.getBoundingClientRect();
+      targetMouseX = THREE.MathUtils.clamp((event.clientX - bounds.left) / bounds.width * 2 - 1, -1, 1);
+      targetMouseY = THREE.MathUtils.clamp((event.clientY - bounds.top) / bounds.height * 2 - 1, -1, 1);
       startLoop();
     };
 
@@ -144,7 +191,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     };
 
     const animate = (timestamp: number) => {
-      if (!isVisible || prefersReducedMotion) {
+      if (!isVisible || document.hidden || prefersReducedMotion || !textureReady || !particlesReady) {
         stopLoop();
         return;
       }
@@ -170,11 +217,33 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       }
       lastFrameTime = timestamp;
       const settle = 1 - Math.pow(1 - introProgress, 3);
+      const elapsed = introProgress * INTRO_MS / 1000;
+      material.opacity = introProgress === 1 ? 1 : 0.2 + 0.8 * glide(clamp01((elapsed - 1.7) / 1.5));
+      particleMaterial.opacity = clamp01(elapsed / 0.5) * (1 - clamp01((elapsed - 2.7) / 1.4));
+      points.visible = introProgress < 1;
+      sweep.visible = elapsed > 2.8 && elapsed < 4.3;
+      sweepMaterial.uniforms.progress.value = -0.2 + clamp01((elapsed - 2.8) / 1.5) * 1.6;
+      if (points.visible && particles.length) {
+        particles.forEach((particle, index) => {
+          const assembly = glide(clamp01((elapsed - particle.t0) / particle.du));
+          const x = (particle.tx - 0.5) * 4.8;
+          const y = (0.5 - particle.ty) * (4.8 * 792 / 936);
+          positions[index * 3] = particle.sx * 7 * (1 - assembly) + x * assembly;
+          positions[index * 3 + 1] = particle.sy * 5 * (1 - assembly) + y * assembly;
+          positions[index * 3 + 2] = (particle.sz / 900) * (1 - assembly) + 0.02;
+        });
+        particleGeometry.attributes.position.needsUpdate = true;
+      }
+      if (!seen) {
+        seen = true;
+        try { sessionStorage.setItem(SEEN_KEY, "1"); } catch { /* storage is optional */ }
+      }
       heroGroup.rotation.x = REST_PITCH + mouseY * 0.035;
       heroGroup.rotation.y = REST_YAW - (1 - settle) * 0.08 + mouseX * 0.07;
       heroGroup.position.y = -scrollFactor * 0.12;
       camera.position.x = mouseX * 0.12;
       camera.position.y = -mouseY * 0.12;
+      camera.position.z = 6.8 + (1 - settle) * 0.24;
       camera.lookAt(scene.position);
 
       renderer.render(scene, camera);
@@ -182,7 +251,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     };
 
     const startLoop = () => {
-      if (isRunning || !isVisible || prefersReducedMotion) return;
+      if (isRunning || !isVisible || document.hidden || prefersReducedMotion || !textureReady || !particlesReady) return;
       isRunning = true;
       nextRenderTime = 0;
       animationFrameId = requestAnimationFrame(animate);
@@ -205,6 +274,10 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
     const handleMotionChange = (event: MediaQueryListEvent) => {
       prefersReducedMotion = event.matches;
       if (prefersReducedMotion) {
+        introProgress = 1;
+        material.opacity = 1;
+        points.visible = false;
+        sweep.visible = false;
         stopLoop();
         renderStaticFrame();
       } else {
@@ -308,6 +381,9 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
 
       disposed = true;
       texture.dispose();
+      particleGeometry.dispose();
+      particleMaterial.dispose();
+      sweepMaterial.dispose();
       geometry.dispose();
       material.dispose();
       renderer.dispose();

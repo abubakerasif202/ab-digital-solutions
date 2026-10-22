@@ -1,0 +1,22 @@
+[
+  {
+    "name": "mobile navigation opens",
+    "pass": true
+  },
+  {
+    "name": "Escape closes menu and restores focus",
+    "pass": true
+  },
+  {
+    "name": "portfolio navigation reaches case study",
+    "pass": true
+  },
+  {
+    "name": "no JavaScript retains hero and CTAs",
+    "pass": true
+  },
+  {
+    "name": "no JavaScript retains direct contact fallback",
+    "pass": true
+  }
+]

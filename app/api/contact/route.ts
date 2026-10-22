@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { siteConfig } from "../../site-config";
-import { withinRateLimit } from "./rate-limit";
+import { RATE_LIMIT_RETRY_SECONDS, withinRateLimit } from "./rate-limit";
 import { contactBudgets, contactServices } from "../../contact-options";
 
 export const runtime = "nodejs";
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
     || request.headers.get("x-real-ip")?.trim()
     || "unknown";
-  if (!await withinRateLimit(clientIp)) return NextResponse.json({ error: "Too many enquiries. Please wait a few minutes or contact us directly." }, { status: 429 });
+  if (!await withinRateLimit(clientIp)) return NextResponse.json({ error: "Too many enquiries. Please wait a few minutes or contact us directly." }, { status: 429, headers: { "Retry-After": String(RATE_LIMIT_RETRY_SECONDS), "Cache-Control": "no-store" } });
   const contentLength = Number(request.headers.get("content-length") || 0);
   if (!Number.isFinite(contentLength) || contentLength < 0 || contentLength > MAX_BODY_BYTES) {
     return NextResponse.json({ error: "This enquiry is too large." }, { status: 413 });

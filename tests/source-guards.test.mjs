@@ -132,7 +132,7 @@ test("premium motion remains present while mobile rendering is constrained", asy
   assert.match(experience, /if \(constrainedDevice\) \{\s*setMode\("fallback"\)/);
   assert.match(experience, /else if \(tabletQuery\.matches\)/);
   assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.25\)/);
-  assert.doesNotMatch(canvas, /TorusKnotGeometry|particleCount|PointsMaterial/);
+  assert.doesNotMatch(canvas, /TorusKnotGeometry|Math\.random/);
   assert.match(canvas, /ab-hero-monogram\.webp/);
   assert.match(canvas, /new THREE\.PlaneGeometry\(/);
   assert.match(styles, /\.service-card\s*\{\s*min-height: 0;/);
@@ -306,10 +306,10 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   assert.match(intro, /prefers-reduced-motion/);
 
   assert.match(pointerFx, /pointer: fine/);
-  assert.match(pointerFx, /closest\("\[data-tilt\]"\)/);
+  assert.match(pointerFx, /closest\("\[data-tilt\], \[data-magnetic\]"\)/);
   assert.match(pointerFx, /Math\.min\(4, motionTokens\.tilt\.maxDegrees\)/);
   assert.match(pointerFx, /finePointer\.matches && !reducedMotion\.matches/);
-  assert.doesNotMatch(pointerFx, /cursor-ring|cursor-dot|data-magnetic|style\.translate/);
+  assert.doesNotMatch(pointerFx, /cursor-ring|cursor-dot|style\.translate/);
   assert.match(pointerFx, /visibilitychange/);
   assert.doesNotMatch(styles, /cursor:\s*none/);
 

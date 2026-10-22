@@ -49,8 +49,24 @@ export function BrandFilmPlayer({ poster, sources, chapters, duration, title }: 
   // The <video> mounts after the first user gesture, so playback may begin immediately.
   useEffect(() => {
     if (!src) return;
-    videoRef.current?.play().catch(() => setPlaying(false));
+    videoRef.current?.play().catch(() => { setPlaying(false); setLoading(false); });
   }, [src]);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const pause = () => videoRef.current?.pause();
+    const visibility = () => { if (document.hidden) pause(); };
+    const observer = "IntersectionObserver" in window
+      ? new IntersectionObserver(([entry]) => { if (!entry?.isIntersecting) pause(); }) : undefined;
+    observer?.observe(root);
+    document.addEventListener("visibilitychange", visibility);
+    return () => {
+      observer?.disconnect();
+      document.removeEventListener("visibilitychange", visibility);
+      pause();
+    };
+  }, []);
 
   const start = (at = 0) => {
     const video = videoRef.current;
@@ -61,17 +77,24 @@ export function BrandFilmPlayer({ poster, sources, chapters, duration, title }: 
       setSrc(chooseSource());
       return;
     }
-    video.currentTime = at;
+    if (failed) {
+      pendingStartRef.current = at;
+      setFailed(false);
+      setLoading(true);
+      video.load();
+    } else {
+      video.currentTime = at;
+    }
     setEnded(false);
-    video.play().catch(() => setPlaying(false));
+    video.play().catch(() => { setPlaying(false); setLoading(false); });
   };
 
   const toggle = () => {
     const video = videoRef.current;
-    if (!video || !src) return start(0);
+    if (!video || !src || failed) return start(0);
     if (video.ended) return start(0);
     if (video.paused) {
-      video.play().catch(() => setPlaying(false));
+      video.play().catch(() => { setPlaying(false); setLoading(false); });
       return;
     }
     video.pause();
@@ -83,14 +106,14 @@ export function BrandFilmPlayer({ poster, sources, chapters, duration, title }: 
     video.currentTime = to;
     setTime(to);
     setEnded(false);
-    if (video.paused) video.play().catch(() => setPlaying(false));
+    if (video.paused) video.play().catch(() => { setPlaying(false); setLoading(false); });
   };
 
   const fullscreen = () => {
     const root = rootRef.current as FullscreenRoot | null;
     const video = videoRef.current as FullscreenVideo | null;
-    if (document.fullscreenElement) { void document.exitFullscreen(); return; }
-    if (root?.requestFullscreen) void root.requestFullscreen();
+    if (document.fullscreenElement) { void document.exitFullscreen().catch(() => {}); return; }
+    if (root?.requestFullscreen) void root.requestFullscreen().catch(() => { video?.webkitEnterFullscreen?.(); });
     else if (video?.webkitEnterFullscreen) video.webkitEnterFullscreen();
     else root?.webkitRequestFullscreen?.();
   };
@@ -135,13 +158,13 @@ export function BrandFilmPlayer({ poster, sources, chapters, duration, title }: 
             type="button"
             className="film-big-play"
             onClick={() => (ended ? start(0) : toggle())}
-            aria-label={ended ? `Replay ${title}` : started ? `Resume ${title}` : `Play ${title}`}
+            aria-label={failed ? `Try again: ${title}` : ended ? `Replay ${title}` : started ? `Resume ${title}` : `Play the film: ${title}`}
           >
             <span className="film-big-play-ring" aria-hidden="true">
               {loading ? <span className="film-spinner" /> : ended ? <ReplayGlyph /> : <PlayGlyph />}
             </span>
             <span className="film-big-play-label" aria-hidden="true">
-              {loading ? "Loading" : ended ? "Replay" : started ? "Resume" : "Play the film"}
+              {loading ? "Loading" : failed ? "Try again" : ended ? "Replay" : started ? "Resume" : "Play the film"}
             </span>
           </button>
         )}

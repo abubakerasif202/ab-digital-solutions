@@ -49,7 +49,7 @@
   pointer-events: none;
 }
 .logo-reveal-mark { position: relative; width: 75%; aspect-ratio: 882 / 779; margin-left: 3%; }
-.logo-reveal-mark img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; will-change: transform, opacity; }
+.logo-reveal-mark img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .logo-reveal-sweep { opacity: 0; }
 .logo-reveal-word { width: 100%; height: auto; display: block; }
 .logo-reveal-replay {
@@ -139,10 +139,6 @@
   animation: film-spin 800ms linear infinite;
 }
 @keyframes film-spin { to { rotate: 360deg; } }
-@media (prefers-reduced-motion: no-preference) {
-  .film-player[data-state="idle"] .film-big-play-ring { animation: film-pulse 2.8s var(--ease-lux, ease) infinite; }
-}
-@keyframes film-pulse { 70% { box-shadow: 0 0 0 18px rgba(209, 166, 76, 0); } 100% { box-shadow: 0 0 0 0 rgba(209, 166, 76, 0); } }
 
 .film-status {
   position: absolute;
@@ -232,4 +228,17 @@
 @media (prefers-reduced-motion: reduce) {
   .film-big-play-ring, .film-stage::after, .logo-reveal-replay { transition: none; }
   .film-spinner { animation-duration: 2.4s; }
+}
+
+/* Controls stay visible and reachable without relying on hover. */
+.film-player :is(button, input):focus-visible,
+.logo-reveal-replay:focus-visible {
+  outline: 2px solid var(--gilt-bright);
+  outline-offset: 4px;
+}
+.brand-film-video { align-self: center; }
+.film-stage { box-shadow: 0 20px 64px rgba(0, 0, 0, 0.24); }
+@media (max-width: 430px) {
+  .film-controls { gap: 4px; }
+  .film-scrub { min-width: 32px; }
 }
