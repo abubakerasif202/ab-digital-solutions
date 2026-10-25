@@ -1,7 +1,9 @@
 import { test, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
 const { POST } = await import("../app/api/analytics/route.ts");
-const keys = ["CLICKHOUSE_URL", "CLICKHOUSE_USER", "CLICKHOUSE_PASSWORD", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE"];
+// Upstash is managed here too: a build environment that exposes real store
+// credentials must not route the limiter through the mocked fetch.
+const keys = ["CLICKHOUSE_URL", "CLICKHOUSE_USER", "CLICKHOUSE_PASSWORD", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"];
 const saved = new Map(keys.map((key) => [key, process.env[key]]));
 const originalFetch = globalThis.fetch;
 let writes;
@@ -12,6 +14,8 @@ beforeEach(() => {
   process.env.CLICKHOUSE_PASSWORD = "mock-password";
   process.env.CLICKHOUSE_DATABASE = "default";
   process.env.CLICKHOUSE_TABLE = "web_events";
+  delete process.env.UPSTASH_REDIS_REST_URL;
+  delete process.env.UPSTASH_REDIS_REST_TOKEN;
   globalThis.fetch = async (url, init) => { writes.push(JSON.parse(init.body)); return new Response(null, { status: 200 }); };
 });
 afterEach(() => {
@@ -57,7 +61,6 @@ test("analytics writes are rate limited per client address", async () => {
 });
 
 test("analytics rate limit survives a Redis outage without per-request store calls", async () => {
-  const saved = [process.env.UPSTASH_REDIS_REST_URL, process.env.UPSTASH_REDIS_REST_TOKEN];
   process.env.UPSTASH_REDIS_REST_URL = "https://redis.example.test";
   process.env.UPSTASH_REDIS_REST_TOKEN = "mock-token";
   const errorLog = console.error;
@@ -75,8 +78,5 @@ test("analytics rate limit survives a Redis outage without per-request store cal
     assert.equal(writes.length, 5);
   } finally {
     console.error = errorLog;
-    for (const [i, name] of ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"].entries()) {
-      if (saved[i] === undefined) delete process.env[name]; else process.env[name] = saved[i];
-    }
   }
 });
