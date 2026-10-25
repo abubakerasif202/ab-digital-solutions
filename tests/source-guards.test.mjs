@@ -432,7 +432,7 @@ test("Vercel configuration uses the Next.js production build", async () => {
   assert.equal(vercelConfig.buildCommand, "npm run build");
   assert.match(packageJson.scripts.build, /next build$/);
   assert.equal(packageJson.scripts.verify, "npm run lint && npm run typecheck && npm test");
-  assert.equal(packageJson.scripts.lint, "eslint . --ignore-pattern dist --ignore-pattern .next");
+  assert.equal(packageJson.scripts.lint, "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern test-results --ignore-pattern .remember");
   assert.equal(packageJson.scripts.typecheck, "node scripts/typecheck.mjs");
   assert.match(await read("../scripts/typecheck.mjs"), /next[\\/]dist[\\/]bin[\\/]next/);
   assert.match(nextConfig, /const isDevelopment = process\.env\.NODE_ENV === "development"/);

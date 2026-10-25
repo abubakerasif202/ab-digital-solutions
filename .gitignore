@@ -46,3 +46,6 @@ next-env.d.ts
 /test-results/
 
 kimi-export-session_*.md
+
+# Extracted reference snapshot of an earlier build (kept locally, never committed)
+/ab-digital-solutions/
