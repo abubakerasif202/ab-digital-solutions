@@ -44,3 +44,39 @@ test("chunked oversized payload is rejected even without content-length", async 
   assert.equal(response.status, 413);
   assert.equal(writes.length, 0);
 });
+
+test("analytics writes are rate limited per client address", async () => {
+  const headers = { "x-forwarded-for": "203.0.113.77" };
+  let limited = 0;
+  for (let i = 0; i < 305; i += 1) {
+    const response = await POST(request({ event_name: "page_view", path: "/" }, headers));
+    if (response.status === 429) limited += 1;
+  }
+  assert.equal(limited, 5);
+  assert.equal(writes.length, 300);
+});
+
+test("analytics rate limit survives a Redis outage without per-request store calls", async () => {
+  const saved = [process.env.UPSTASH_REDIS_REST_URL, process.env.UPSTASH_REDIS_REST_TOKEN];
+  process.env.UPSTASH_REDIS_REST_URL = "https://redis.example.test";
+  process.env.UPSTASH_REDIS_REST_TOKEN = "mock-token";
+  const errorLog = console.error;
+  console.error = () => {};
+  let storeCalls = 0;
+  globalThis.fetch = async (url, init) => {
+    if (String(url).includes("redis.example.test")) { storeCalls += 1; throw new Error("store down"); }
+    writes.push(JSON.parse(init.body));
+    return new Response(null, { status: 200 });
+  };
+  try {
+    const headers = { "x-forwarded-for": "203.0.113.88" };
+    for (let i = 0; i < 5; i += 1) assert.equal((await POST(request({ event_name: "page_view", path: "/" }, headers))).status, 204);
+    assert.equal(storeCalls, 1);
+    assert.equal(writes.length, 5);
+  } finally {
+    console.error = errorLog;
+    for (const [i, name] of ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"].entries()) {
+      if (saved[i] === undefined) delete process.env[name]; else process.env[name] = saved[i];
+    }
+  }
+});

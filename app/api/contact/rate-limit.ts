@@ -2,13 +2,26 @@ import { createHash } from "node:crypto";
 
 type MemoryEntry = { count: number; resetAt: number };
 
-const requests = new Map<string, MemoryEntry>();
+// `storeBackoffMs` (optional) skips the shared store for that long after it fails,
+// so a Redis outage costs one slow request per window instead of one per request.
+export type RateLimitPolicy = { scope: string; windowMs: number; maxRequests: number; storeBackoffMs?: number };
+
+// One bounded table per scope, so a flood against one endpoint can never fill
+// the table and lock visitors out of another.
+const memoryStores = new Map<string, Map<string, MemoryEntry>>();
+const storeBackoffUntil = new Map<string, number>();
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS = 5;
 const MAX_MEMORY_KEYS = 5000;
 export const RATE_LIMIT_RETRY_SECONDS = WINDOW_MS / 1000;
+const CONTACT_POLICY: RateLimitPolicy = { scope: "contact", windowMs: WINDOW_MS, maxRequests: MAX_REQUESTS };
 
-function memoryRateLimit(key: string) {
+function memoryRateLimit(key: string, policy: RateLimitPolicy) {
+  let requests = memoryStores.get(policy.scope);
+  if (!requests) {
+    requests = new Map<string, MemoryEntry>();
+    memoryStores.set(policy.scope, requests);
+  }
   const now = Date.now();
   if (requests.size > 500) {
     for (const [storedKey, entry] of requests) {
@@ -19,17 +32,17 @@ function memoryRateLimit(key: string) {
   const current = requests.get(key);
   if (!current || current.resetAt <= now) {
     if (!current && requests.size >= MAX_MEMORY_KEYS) return false;
-    requests.set(key, { count: 1, resetAt: now + WINDOW_MS });
+    requests.set(key, { count: 1, resetAt: now + policy.windowMs });
     return true;
   }
 
   current.count += 1;
-  return current.count <= MAX_REQUESTS;
+  return current.count <= policy.maxRequests;
 }
 
 // Atomic transaction: increment and first-request expiry cannot interleave.
-async function upstashRateLimit(key: string, url: string, token: string) {
-  const redisKey = `contact-rate:${key}`;
+async function upstashRateLimit(key: string, url: string, token: string, policy: RateLimitPolicy) {
+  const redisKey = `${policy.scope}-rate:${key}`;
   const response = await fetch(`${url.replace(/\/$/, "")}/multi-exec`, {
     method: "POST",
     headers: {
@@ -38,7 +51,7 @@ async function upstashRateLimit(key: string, url: string, token: string) {
     },
     body: JSON.stringify([
       ["INCR", redisKey],
-      ["PEXPIRE", redisKey, WINDOW_MS, "NX"],
+      ["PEXPIRE", redisKey, policy.windowMs, "NX"],
     ]),
     signal: AbortSignal.timeout(3_000),
     cache: "no-store",
@@ -55,7 +68,7 @@ async function upstashRateLimit(key: string, url: string, token: string) {
   if (typeof count !== "number" || !Number.isSafeInteger(count) || count < 1 || (expiry !== 0 && expiry !== 1)) {
     throw new Error("rate-limit-store-invalid-response");
   }
-  return count <= MAX_REQUESTS;
+  return count <= policy.maxRequests;
 }
 
 let warnedMissingConfig = false;
@@ -65,9 +78,11 @@ function isProduction() {
     || (!process.env.VERCEL_ENV && process.env.NODE_ENV === "production");
 }
 
-export async function withinRateLimit(clientIp: string) {
+export async function withinRateLimit(clientIp: string, policy: RateLimitPolicy = CONTACT_POLICY) {
   // Keep raw visitor addresses out of both Redis and the bounded local store.
+  // The scope keeps each endpoint's budget separate in both stores.
   const key = createHash("sha256").update(clientIp).digest("hex");
+  const memoryKey = `${policy.scope}:${key}`;
   const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
   const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
 
@@ -77,12 +92,14 @@ export async function withinRateLimit(clientIp: string) {
     if (isProduction() && !warnedMissingConfig) {
       warnedMissingConfig = true;
       console.error(
-        "Contact rate limiting is running on the per-instance fallback: "
+        `${policy.scope} rate limiting is running on the per-instance fallback: `
         + "UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN are not configured.",
       );
     }
-    return memoryRateLimit(key);
+    return memoryRateLimit(memoryKey, policy);
   }
+
+  if ((storeBackoffUntil.get(policy.scope) ?? 0) > Date.now()) return memoryRateLimit(memoryKey, policy);
 
   try {
     const endpoint = new URL(url);
@@ -90,13 +107,14 @@ export async function withinRateLimit(clientIp: string) {
       || endpoint.search || endpoint.hash || endpoint.pathname !== "/") {
       throw new Error("rate-limit-store-invalid-url");
     }
-    return await upstashRateLimit(key, url, token);
+    return await upstashRateLimit(key, url, token, policy);
   } catch {
+    if (policy.storeBackoffMs) storeBackoffUntil.set(policy.scope, Date.now() + policy.storeBackoffMs);
     // Log the failure class only; never surface store details to the client.
     console.error(
-      "Shared contact rate limit unavailable; using per-instance fallback:",
+      `Shared ${policy.scope} rate limit unavailable; using per-instance fallback:`,
       "Store request failed or returned an invalid result.",
     );
-    return memoryRateLimit(key);
+    return memoryRateLimit(memoryKey, policy);
   }
 }

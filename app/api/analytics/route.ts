@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { clickHouseConfigured, insertAnalyticsEvent } from "../../lib/clickhouse";
+import { withinRateLimit, type RateLimitPolicy } from "../contact/rate-limit";
 
 export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 4_096;
+// Generous for real browsing (a page view plus up to six web vitals per page)
+// while capping what one address can write into the analytics table.
+const ANALYTICS_RATE_POLICY: RateLimitPolicy = { scope: "analytics", windowMs: 10 * 60 * 1000, maxRequests: 300, storeBackoffMs: 30_000 };
 const allowedEvents = new Set(["page_view", "cta_click", "web_vital", "project_enquiry"]);
 const allowedMetrics = new Set(["CLS", "FCP", "FID", "INP", "LCP", "TTFB"]);
 const allowedRatings = new Set(["", "good", "needs-improvement", "poor"]);
@@ -46,6 +50,15 @@ export async function POST(request: NextRequest) {
 
   if (!clickHouseConfigured()) {
     return new NextResponse(null, { status: 204 });
+  }
+
+  // Same client-IP precedence as the contact route (Vercel overwrites these headers).
+  const clientIp = request.headers.get("x-vercel-forwarded-for")?.split(",")[0]?.trim()
+    || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    || request.headers.get("x-real-ip")?.trim()
+    || "unknown";
+  if (!await withinRateLimit(clientIp, ANALYTICS_RATE_POLICY)) {
+    return new NextResponse(null, { status: 429, headers: { "Retry-After": "600", "Cache-Control": "no-store" } });
   }
 
   let payload: Payload;
