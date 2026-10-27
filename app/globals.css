@@ -3063,3 +3063,34 @@ h1 em {
   .contact-section { --cv-size: 1990px; }
   .site-footer { --cv-size: 1690px; }
 }
+
+/* The three remaining below-the-fold bands (services, film, stack) join the same
+   deferral. Heights are medians measured per tier, content-box only. */
+.ruby-band,
+.brand-film-section,
+.stack-section {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto var(--cv-size, 900px);
+}
+
+.ruby-band { --cv-size: 648px; }
+.brand-film-section { --cv-size: 831px; }
+.stack-section { --cv-size: 1058px; }
+
+@media (max-width: 1100px) {
+  .ruby-band { --cv-size: 835px; }
+  .brand-film-section { --cv-size: 690px; }
+  .stack-section { --cv-size: 1008px; }
+}
+
+@media (max-width: 960px) {
+  .ruby-band { --cv-size: 858px; }
+  .brand-film-section { --cv-size: 1154px; }
+  .stack-section { --cv-size: 1534px; }
+}
+
+@media (max-width: 720px) {
+  .ruby-band { --cv-size: 1676px; }
+  .brand-film-section { --cv-size: 974px; }
+  .stack-section { --cv-size: 1711px; }
+}
