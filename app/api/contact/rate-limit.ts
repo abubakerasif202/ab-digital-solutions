@@ -4,7 +4,9 @@ type MemoryEntry = { count: number; resetAt: number };
 
 // `storeBackoffMs` (optional) skips the shared store for that long after it fails,
 // so a Redis outage costs one slow request per window instead of one per request.
-export type RateLimitPolicy = { scope: string; windowMs: number; maxRequests: number; storeBackoffMs?: number };
+// `failOpenWhenFull` (optional) admits new addresses once the local table is full instead of
+// rejecting them, so a flood of distinct addresses cannot lock out genuine low-risk traffic.
+export type RateLimitPolicy = { scope: string; windowMs: number; maxRequests: number; storeBackoffMs?: number; failOpenWhenFull?: boolean };
 
 // One bounded table per scope, so a flood against one endpoint can never fill
 // the table and lock visitors out of another.
@@ -31,7 +33,7 @@ function memoryRateLimit(key: string, policy: RateLimitPolicy) {
 
   const current = requests.get(key);
   if (!current || current.resetAt <= now) {
-    if (!current && requests.size >= MAX_MEMORY_KEYS) return false;
+    if (!current && requests.size >= MAX_MEMORY_KEYS) return Boolean(policy.failOpenWhenFull);
     requests.set(key, { count: 1, resetAt: now + policy.windowMs });
     return true;
   }
