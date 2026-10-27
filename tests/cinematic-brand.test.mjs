@@ -91,9 +91,7 @@ test("brand intro is brief, non-blocking and once per session", async () => {
   assert.doesNotMatch(styles, /overflow: hidden|hero-actions|site-header/);
   assert.ok(Number(/maxMs:\s*(\d+)/.exec(config)?.[1]) <= 1500);
 });
-test("intro media assets exist and are web-sized", async () => {
-  const video = await stat(new URL("../public/video/ab-web-studio-intro.mp4", import.meta.url));
-  const poster = await stat(new URL("../public/video/ab-web-studio-intro-poster.webp", import.meta.url));
-  assert.ok(video.size > 100_000 && video.size < 4_000_000);
-  assert.ok(poster.size > 5_000 && poster.size < 200_000);
+test("the retired intro video is not shipped", async () => {
+  // The intro is poster-only (no <video>); its mp4 was unreferenced dead weight.
+  await assert.rejects(stat(new URL("../public/video/ab-web-studio-intro.mp4", import.meta.url)), { code: "ENOENT" });
 });

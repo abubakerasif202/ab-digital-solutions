@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { clickHouseConfigured, insertAnalyticsEvent } from "../../lib/clickhouse";
 import { withinRateLimit, type RateLimitPolicy } from "../contact/rate-limit";
 
@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 const MAX_BODY_BYTES = 4_096;
 // Generous for real browsing (a page view plus up to six web vitals per page)
 // while capping what one address can write into the analytics table.
-const ANALYTICS_RATE_POLICY: RateLimitPolicy = { scope: "analytics", windowMs: 10 * 60 * 1000, maxRequests: 300, storeBackoffMs: 30_000 };
+const ANALYTICS_RATE_POLICY: RateLimitPolicy = { scope: "analytics", windowMs: 10 * 60 * 1000, maxRequests: 300, storeBackoffMs: 30_000, failOpenWhenFull: true };
 const allowedEvents = new Set(["page_view", "cta_click", "web_vital", "project_enquiry"]);
 const allowedMetrics = new Set(["CLS", "FCP", "FID", "INP", "LCP", "TTFB"]);
 const allowedRatings = new Set(["", "good", "needs-improvement", "poor"]);
@@ -105,22 +105,32 @@ export async function POST(request: NextRequest) {
   }
   if (!allowedRatings.has(metricRating)) return new NextResponse(null, { status: 400 });
 
+  const writeEvent = async () => {
+    try {
+      await insertAnalyticsEvent({
+        event_name: eventName as "page_view" | "cta_click" | "web_vital" | "project_enquiry",
+        path,
+        label: textValue(payload, "label", 160),
+        metric_name: metricName,
+        metric_value: metricValue,
+        metric_rating: metricRating,
+        navigation_type: textValue(payload, "navigation_type", 40),
+        user_agent: request.headers.get("user-agent")?.slice(0, 300) || "",
+      });
+    } catch (error) {
+      console.error(
+        "ClickHouse analytics write failed:",
+        error instanceof Error ? error.message : "unknown error",
+      );
+    }
+  };
+
+  // The beacon needs no result, so respond first and write after. Outside a
+  // request scope (unit tests) after() throws; write inline there.
   try {
-    await insertAnalyticsEvent({
-      event_name: eventName as "page_view" | "cta_click" | "web_vital" | "project_enquiry",
-      path,
-      label: textValue(payload, "label", 160),
-      metric_name: metricName,
-      metric_value: metricValue,
-      metric_rating: metricRating,
-      navigation_type: textValue(payload, "navigation_type", 40),
-      user_agent: request.headers.get("user-agent")?.slice(0, 300) || "",
-    });
-  } catch (error) {
-    console.error(
-      "ClickHouse analytics write failed:",
-      error instanceof Error ? error.message : "unknown error",
-    );
+    after(writeEvent);
+  } catch {
+    await writeEvent();
   }
 
   return new NextResponse(null, { status: 204 });

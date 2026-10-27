@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { siteConfig } from "../../site-config";
 import { RATE_LIMIT_RETRY_SECONDS, withinRateLimit } from "./rate-limit";
@@ -7,6 +8,26 @@ export const runtime = "nodejs";
 
 type ContactPayload = Record<string, unknown>;
 const MAX_BODY_BYTES = 12_000;
+const IDEMPOTENCY_BUCKET_MS = 10 * 60 * 1000;
+
+const SUBMISSION_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// Resend keys must be unique per request and expire after 24 hours. The key binds the
+// client's per-submission id to the whole validated enquiry, so retries of one
+// submission collapse into one email while an edited resend gets a fresh key (reusing
+// a key with a changed payload would be rejected). Clients without an id fall back to
+// the payload plus a ten-minute bucket.
+function deliveryKey(submissionId: string, fields: unknown[]) {
+  const scope = SUBMISSION_ID_PATTERN.test(submissionId)
+    ? submissionId.toLowerCase()
+    : `legacy-${Math.floor(Date.now() / IDEMPOTENCY_BUCKET_MS)}`;
+  return `contact-${createHash("sha256").update(JSON.stringify([scope, fields])).digest("hex")}`;
+}
+
+// One stable, PII-free line so a log drain or alert rule can match `contact_delivery_failed`.
+function logDeliveryFailure(reason: string) {
+  console.error(JSON.stringify({ event: "contact_delivery_failed", reason }));
+}
 const allowedServices = new Set<string>(contactServices);
 const allowedBudgets = new Set<string>(["", ...contactBudgets]);
 const allowedTimelines = new Set(["", "As soon as possible", "Within 1 month", "Within 2–3 months", "Just exploring"]);
@@ -118,6 +139,7 @@ export async function POST(request: NextRequest) {
   const budget = singleLine(payload, "budget", 100);
   const timeline = singleLine(payload, "timeline", 100);
   const message = value(payload, "message", 4000);
+  const submissionId = value(payload, "submissionId", 64);
   if (!fullName || !message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: "Please complete your name, email and project details." }, { status: 400 });
   }
@@ -143,11 +165,12 @@ export async function POST(request: NextRequest) {
     `Services: ${services.join(", ")}`, `Approx. budget: ${budget || "Not selected"}`,
     `Ideal timeline: ${timeline || "Not selected"}`, "", "Project details:", message,
   ];
+  const idempotencyKey = deliveryKey(submissionId, [fullName, email, phone, business, services, budget, timeline, message]);
   let response: Response;
   try {
     response = await fetch("https://api.resend.com/emails", {
       method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": idempotencyKey },
       body: JSON.stringify({
         from: process.env.CONTACT_FROM_EMAIL || "AB Web Studio <admin@abwebstudio.com.au>",
         to: [process.env.CONTACT_TO_EMAIL?.trim() || siteConfig.email],
@@ -158,17 +181,24 @@ export async function POST(request: NextRequest) {
       signal: AbortSignal.timeout(10_000),
     });
   } catch {
+    logDeliveryFailure("request-failed");
     return NextResponse.json({ error: `Email delivery is temporarily unavailable. Please email ${siteConfig.email}.` }, { status: 502 });
   }
+  // Resend answers 409 when the same key is still in flight (a concurrent duplicate)
+  // or was reused with a different payload; neither may be reported as a new send.
+  if (response.status === 409) {
+    logDeliveryFailure("provider-idempotency-conflict");
+    return NextResponse.json({ error: "Your enquiry is already being sent. Please wait a moment before trying again." }, { status: 409 });
+  }
   if (!response.ok) {
-    console.error("Contact delivery failed", response.status);
+    logDeliveryFailure(`provider-status-${response.status}`);
     return NextResponse.json({ error: `We could not send your enquiry. Please email ${siteConfig.email}.` }, { status: 502 });
   }
   // A successful HTTP status alone does not establish provider acceptance.
   const delivery: unknown = await response.json().catch(() => null);
   if (!delivery || typeof delivery !== "object" || !("id" in delivery)
     || typeof delivery.id !== "string" || !delivery.id.trim()) {
-    console.error("Contact delivery returned no acceptance identifier");
+    logDeliveryFailure("no-acceptance-id");
     return NextResponse.json({ error: `We could not confirm delivery. Please email ${siteConfig.email} before resending.` }, { status: 502 });
   }
   return NextResponse.json({ ok: true });

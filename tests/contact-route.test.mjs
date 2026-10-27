@@ -80,6 +80,7 @@ test("valid enquiry is delivered through Resend and returns ok", async () => {
   const { url, init } = fetchCalls[0];
   assert.equal(url, "https://api.resend.com/emails");
   assert.equal(init.headers.Authorization, "Bearer test-resend-key");
+  assert.match(init.headers["Idempotency-Key"], /^contact-[0-9a-f]{64}$/);
   const sent = JSON.parse(init.body);
   assert.equal(sent.reply_to, "sender@example.com");
   assert.equal(sent.subject, "Website enquiry from Test Sender");
@@ -367,4 +368,101 @@ test("insecure store configuration never receives credentials", async () => {
   assert.equal(response.status, 200);
   assert.equal(fetchCalls.length, 1);
   assert.equal(fetchCalls[0].url, "https://api.resend.com/emails");
+});
+
+const SUBMISSION_A = "7b0f6f58-1d4f-4b6e-9a53-0c2f3b8d9a11";
+const SUBMISSION_B = "e1a2b3c4-d5e6-4f70-8a9b-0c1d2e3f4a5b";
+
+async function submit(overrides = {}) {
+  const response = await POST(contactRequest(validPayload(overrides), { "x-real-ip": nextIp() }));
+  return { response, key: fetchCalls.at(-1)?.init.headers["Idempotency-Key"] };
+}
+
+test("a retried submission reuses one idempotency key", async () => {
+  const first = await submit({ submissionId: SUBMISSION_A });
+  const retry = await submit({ submissionId: SUBMISSION_A });
+  assert.equal(first.response.status, 200);
+  assert.match(first.key, /^contact-[0-9a-f]{64}$/);
+  assert.equal(retry.key, first.key);
+});
+
+test("concurrent duplicate clicks carry the same key", async () => {
+  const responses = await Promise.all([
+    POST(contactRequest(validPayload({ submissionId: SUBMISSION_A }), { "x-real-ip": nextIp() })),
+    POST(contactRequest(validPayload({ submissionId: SUBMISSION_A }), { "x-real-ip": nextIp() })),
+  ]);
+  assert.deepEqual(responses.map((response) => response.status), [200, 200]);
+  assert.equal(fetchCalls.length, 2);
+  assert.equal(fetchCalls[0].init.headers["Idempotency-Key"], fetchCalls[1].init.headers["Idempotency-Key"]);
+});
+
+test("every enquiry field and the submission id change the key", async () => {
+  const base = (await submit({ submissionId: SUBMISSION_A })).key;
+  const variants = [
+    { submissionId: SUBMISSION_B },
+    { budget: "" },
+    { timeline: "Just exploring" },
+    { phone: "0411 111 111" },
+    { business: "Other Pty Ltd" },
+    { fullName: "Someone Else" },
+    { email: "other@example.com" },
+    { message: "A different brief." },
+    { services: ["Website design & development", "SEO & local visibility"] },
+  ];
+  const keys = new Set([base]);
+  for (const variant of variants) {
+    const { response, key } = await submit({ submissionId: SUBMISSION_A, ...variant });
+    assert.equal(response.status, 200);
+    keys.add(key);
+  }
+  assert.equal(keys.size, variants.length + 1);
+});
+
+test("provider conflict and server errors are never reported as sent", async () => {
+  fetchResponder = () => new Response(JSON.stringify({ name: "concurrent_idempotent_requests" }), { status: 409 });
+  const conflict = await POST(contactRequest(validPayload({ submissionId: SUBMISSION_A }), { "x-real-ip": nextIp() }));
+  assert.equal(conflict.status, 409);
+  assert.notEqual((await conflict.json()).ok, true);
+
+  fetchResponder = () => new Response("{}", { status: 500 });
+  const failed = await POST(contactRequest(validPayload({ submissionId: SUBMISSION_A }), { "x-real-ip": nextIp() }));
+  assert.equal(failed.status, 502);
+
+  fetchResponder = () => { throw new Error("network down"); };
+  const unreachable = await POST(contactRequest(validPayload({ submissionId: SUBMISSION_A }), { "x-real-ip": nextIp() }));
+  assert.equal(unreachable.status, 502);
+});
+
+test("a malformed submission id falls back safely and validation still applies", async () => {
+  const fallback = await submit({ submissionId: "not-a-uuid" });
+  assert.equal(fallback.response.status, 200);
+  assert.match(fallback.key, /^contact-[0-9a-f]{64}$/);
+  const invalid = await POST(contactRequest(validPayload({ submissionId: SUBMISSION_A, email: "bad" }), { "x-real-ip": nextIp() }));
+  assert.equal(invalid.status, 400);
+});
+
+test("exhausting the analytics budget never blocks contact submissions", async () => {
+  const { POST: analytics } = await import("../app/api/analytics/route.ts");
+  process.env.CLICKHOUSE_URL = "https://clickhouse.example.test";
+  process.env.CLICKHOUSE_USER = "user";
+  process.env.CLICKHOUSE_PASSWORD = "pass";
+  try {
+    const ip = nextIp();
+    let limited = 0;
+    for (let index = 0; index < 305; index += 1) {
+      const response = await analytics(new Request("https://www.abwebstudio.com.au/api/analytics", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-real-ip": ip },
+        body: JSON.stringify({ event_name: "page_view", path: "/" }),
+      }));
+      if (response.status === 429) limited += 1;
+    }
+    assert.ok(limited > 0);
+    const contact = await POST(contactRequest(validPayload({ submissionId: SUBMISSION_A }), { "x-real-ip": ip }));
+    assert.equal(contact.status, 200);
+  } finally {
+    delete process.env.CLICKHOUSE_URL;
+    delete process.env.CLICKHOUSE_USER;
+    delete process.env.CLICKHOUSE_PASSWORD;
+  }
 });

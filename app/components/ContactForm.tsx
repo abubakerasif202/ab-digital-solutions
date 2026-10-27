@@ -19,6 +19,9 @@ const SERVICES_ERROR_ID = "services-error";
 export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
   const titleId = useId();
   const sendingRef = useRef(false);
+  // One identifier per submission attempt, reused when the visitor retries after a
+  // failure so the server can deduplicate; replaced only after a confirmed send.
+  const submissionIdRef = useRef<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formStatus, setFormStatus] = useState("");
   const [formState, setFormState] = useState<FormState>("idle");
@@ -45,7 +48,8 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
     setFormStatus("Sending your enquiry…");
     // Checkbox choices travel as one `services` array, not repeated `service` keys.
     const fields = Object.fromEntries([...formData.entries()].filter(([key]) => key !== "service"));
-    const payload = { ...fields, services };
+    submissionIdRef.current ??= crypto.randomUUID();
+    const payload = { ...fields, services, submissionId: submissionIdRef.current };
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15_000);
 
@@ -63,6 +67,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
         throw new Error(error);
       }
       form.reset();
+      submissionIdRef.current = null;
       setFieldErrors({});
       if (!fields.company) trackEnquirySuccess();
       setFormState("success");
