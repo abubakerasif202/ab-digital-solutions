@@ -64,3 +64,38 @@
 @media (max-width: 900px) { .introduction { padding-top: 38px; } .introduction > p { max-width: 160px; font-size: 12px; } .directory { gap: 40px; grid-template-columns: 1fr; padding-block: 70px; } .directoryIntro { max-width: 520px; } .previewInner { gap: 28px; } .areaNav button { padding-inline: 6px; font-size: 11px; } .areaNav button span { margin-right: 6px; } }
 @media (max-width: 600px) { .introduction { padding: 32px 22px 24px; display: block; } .introduction > p { max-width: none; margin-top: 16px; } .introduction > p br { display: none; } .introduction h1 { font-size: 43px; } .stage { min-height: 570px; height: 72svh; max-height: 720px; } .poster { object-position: 58% center; } .stageTop { left: 18px; right: 18px; top: 18px; } .edition { font-size: 8px; max-width: 130px; line-height: 1.8; } .entry { left: 24px; top: 49%; } .entry h2 { font-size: 62px; } .entry > p:not(.kicker) { max-width: 280px; } .controls { padding-inline: 16px; } .areaNav { grid-template-columns: repeat(2, 1fr); } .areaNav button { padding: 16px 8px; min-height: 54px; font-size: 11px; } .areaNav button span { margin-right: 12px; } .secondaryControls { gap: 8px 16px; font-size: 10px; padding-block: 8px; } .secondaryControls > span { max-width: 130px; } .accessNote { padding-inline: 22px; font-size: 10px; } .sceneCaption { left: 18px; right: 18px; bottom: 18px; flex-direction: column; font-size: 9px; } .panel { top: auto; bottom: 70px; max-height: 48%; right: 14px; width: calc(100% - 28px); padding: 18px 22px; } .panel h2 { font-size: 33px; } .panelTop .kicker { letter-spacing: .08em; } .loading { left: 14px; right: 14px; top: 76px; bottom: auto; gap: 8px; justify-content: space-between; padding: 8px 12px; } .loading p { font-size: 10px; } .directoryItems { grid-template-columns: 1fr; gap: 28px; } .previewInner { grid-template-columns: 1fr; padding-block: 44px; } .previewArt { order: -1; } }
 @media (prefers-reduced-motion: reduce) { .primary { transition: none; } }
+
+@media (max-width: 699px) {
+  .previewInner { gap: 24px; }
+  .previewArt { order: 0; border-radius: 120px 120px 4px 4px; overflow: hidden; }
+  .previewCopy h2 { font-size: clamp(34px, 8vw, 48px); }
+  .loading { flex-wrap: wrap; }
+  .panel { border-radius: 20px 20px 4px 4px; max-height: 40%; bottom: 64px; }
+  .secondaryControls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .secondaryControls button, .secondaryControls a { min-height: 44px; margin: 0; display: flex; align-items: center; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .stage { height: 90svh; min-height: 320px; }
+  .panel { width: 42%; top: 70px; bottom: 48px; max-height: none; padding: 14px; }
+}
+.previewArt::before { content: "AB"; position: absolute; top: 24px; left: 24px; color: #e2c58c; font: 400 44px var(--font-display), serif; z-index: 1; }
+.previewArt { background: #171314; }
+.previewArt img { opacity: .85; }
+.previewArt span { padding: 12px; background: #111315; min-height: 44px; display: flex; align-items: center; }
+.previewCopy h2 { text-wrap: balance; }
+.previewArt:hover img { opacity: 1; }
+.previewArt span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #d8bb83; margin-right: 10px; animation: entrance-pulse 2s ease-in-out 3; }
+@keyframes entrance-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .previewArt span::before { animation: none; } }
+.panel[data-collapsed="true"] { top: auto; height: auto; }
+.panel > .smallButton { margin-bottom: 12px; }
+/* Keep the entrance eyebrow below the fixed site navigation. */
+.previewInner { padding-top: 112px; }
+@media (max-width: 600px) { .previewInner { padding-top: 100px; } }
+/* The document already reserves header space with scroll-padding-top. */
+@media (max-width: 699px), (max-width: 999px) and (max-height: 500px) {
+  .stage { scroll-margin-top: 0; }
+}
+@media (max-width: 999px) and (max-height: 500px) and (orientation: landscape) {
+  .stage { height: calc(100svh - var(--header-height, 80px) - 24px); min-height: 0; max-height: none; }
+}

@@ -14,7 +14,7 @@ export function SiteHeader() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   // Keep speculative route assets off the homepage's initial rendering path.
-  const prefetchNavigation = pathname !== "/" || menuOpen;
+  const prefetchNavigation = (pathname !== "/" && pathname !== "/studio") || menuOpen;
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
@@ -237,7 +237,7 @@ export function SiteHeader() {
       <a className="skip-link" href="#main-content">Skip to content</a>
       <header className={`site-header${scrolled ? " is-scrolled" : ""}`} id="top">
         <div className="container nav-wrap">
-          <Link className="brand" href="/" aria-label="AB Web Studio home">
+          <Link prefetch={prefetchNavigation} className="brand" href="/" aria-label="AB Web Studio home">
             <ABBrandImage decorative eager />
           </Link>
 
@@ -263,7 +263,7 @@ export function SiteHeader() {
           >
             <Link href="/work" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
             <Link href="/services" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
-            <Link href="/#process" onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
+            <Link href="/#process" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
             <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
             <Link href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("contact")} aria-current={navLinkCurrent("contact")}>Contact</Link>
             <a className="nav-phone" href={`tel:${siteConfig.phoneInternational}`} onClick={handleNavLinkClick}>{siteConfig.phoneDisplay}</a>
@@ -274,7 +274,7 @@ export function SiteHeader() {
         </div>
       </header>
       {mobileCtaVisible && !menuOpen ? (
-        <Link className="mobile-project-cta" href={pathname === "/" ? "#contact" : "/contact"}>
+        <Link prefetch={prefetchNavigation} className="mobile-project-cta" href={pathname === "/" ? "#contact" : "/contact"}>
           Start a project <ArrowIcon />
         </Link>
       ) : null}

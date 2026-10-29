@@ -34,7 +34,7 @@ for (const width of [390, 768, 1440]) {
     await enter(page); await expect(page.locator("canvas")).toHaveCount(1);
     await page.waitForTimeout(1800);
     await page.screenshot({ path: `${output}/${width}-studio.png` });
-    for (const [label, heading] of [["Reception", "Ideas start here."], ["Portfolio gallery", "Work with purpose."], ["Services atelier", "Considered. Connected."], ["Consultation lounge", "Let’s make it happen."]]) {
+    for (const [label, heading] of [["Reception", "Ideas start here."], ["Portfolio gallery", "Work with purpose."], ["Services atelier", "Considered. Connected."], ["Consultation lounge", "Let’s Build Something Extraordinary."]]) {
       await space(page, label);
       await expect(page.locator("#studio-panel-heading")).toHaveText(heading);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -62,11 +62,15 @@ for (const width of [390, 768, 1440]) {
     await expect(page.getByRole("button", { name: "Pause tour" })).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(page.getByRole("button", { name: "Guided tour", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Guided tour", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Pause tour", exact: true })).toBeVisible();
+  await page.screenshot({ path: "qa/studio-v3/after/guided-tour.png" });
+  await page.getByRole("button", { name: "Pause tour", exact: true }).click();
     await page.getByRole("button", { name: "Use still view" }).click();
     await expect(page.locator("canvas")).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Enter the Studio" })).toBeFocused();
     await space(page, "Consultation lounge");
-    await page.locator("aside").getByRole("link", { name: "Get a Quote" }).click();
+    await page.locator("aside").getByRole("link", { name: "Start Your Project" }).click();
     await expect(page).toHaveURL(/\/contact$/); await expect(page.locator("form")).toBeVisible();
     expect(errors).toEqual([]);
   });
@@ -122,7 +126,7 @@ test("model load failure recovers even after Skip Intro", async ({ page }) => {
   await page.getByRole("button", { name: "Enter the Studio" }).click();
   const skip = page.getByRole("button", { name: "Skip Intro" }); if (await skip.isVisible()) await page.keyboard.press("Escape");
   await expect(mode(page)).toHaveAttribute("data-mode", "failed", { timeout: 25000 });
-  await space(page, "Consultation lounge"); await expect(page.locator("aside").getByRole("link", { name: "Get a Quote" })).toHaveAttribute("href", "/contact");
+  await space(page, "Consultation lounge"); await expect(page.locator("aside").getByRole("link", { name: "Start Your Project" })).toHaveAttribute("href", "/contact");
 });
 
 test("server HTML works without JavaScript; homepage preview loads no model", async ({ browser, page }) => {
@@ -134,8 +138,8 @@ test("server HTML works without JavaScript; homepage preview loads no model", as
   await staticPage.screenshot({ path: `${output}/390-no-javascript.png`, fullPage: true });
   expect(await staticPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await context.close();
   const models = []; page.on("request", (request) => { if (/\.glb/.test(request.url())) models.push(request.url()); });
-  await page.goto("/"); await expect(page.getByRole("heading", { name: "Come on in. Look around." })).toBeAttached();
-  await expect(page.getByRole("link", { name: "Explore the Studio", exact: false }).first()).toHaveAttribute("href", "/studio"); expect(models).toEqual([]);
+  await page.goto("/"); await expect(page.getByRole("heading", { name: /Don.t Just Visit Our Website.*Step Inside Our Studio/ })).toBeAttached();
+  await expect(page.getByRole("link", { name: "Enter Our 3D Studio", exact: true }).first()).toHaveAttribute("href", "/studio"); expect(models).toEqual([]);
 });
 
 test("touch orbit changes view and vertical swipe scrolls the page", async ({ browser }) => {
@@ -143,6 +147,7 @@ test("touch orbit changes view and vertical swipe scrolls the page", async ({ br
   const page = await context.newPage(); await intercept(page); await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio" }).tap();
   await expect(mode(page)).toHaveAttribute("data-mode", /intro|explore/, { timeout: 30000 });
+  await page.getByRole("button", { name: "Start Exploring", exact: true }).click();
   await expect(mode(page)).toHaveAttribute("data-mode", "explore", { timeout: 10000 });
   await page.locator("canvas").scrollIntoViewIfNeeded(); await page.waitForTimeout(2500);
   const client = await context.newCDPSession(page), bounds = await page.locator("canvas").boundingBox();
@@ -204,13 +209,13 @@ test("guided tour visits four spaces and finishes with a genuine quote link", as
   for (const name of ["Reception", "Portfolio gallery", "Services atelier", "Consultation lounge"]) {
     await expect(caption).toContainText(name, { timeout: 9000 });
   }
-  await expect(page.locator("#studio-panel-heading")).toHaveText("Let’s make it happen.", { timeout: 9000 });
-  await expect(page.locator("aside").getByRole("link", { name: "Get a Quote" })).toHaveAttribute("href", "/contact");
+  await expect(page.locator("#studio-panel-heading")).toHaveText("Let’s Build Something Extraordinary.", { timeout: 9000 });
+  await expect(page.locator("aside").getByRole("link", { name: "Start Your Project" })).toHaveAttribute("href", "/contact");
 });
 
 test("quote journey preserves form validation, successful submission and recoverable errors", async ({ page }) => {
   await page.goto("/studio", { waitUntil: "networkidle" }); await space(page, "Consultation lounge");
-  await page.locator("aside").getByRole("link", { name: "Get a Quote" }).click();
+  await page.locator("aside").getByRole("link", { name: "Start Your Project" }).click();
   let response = { status: 503, body: { ok: false, error: "Email is temporarily unavailable. Please try again." } };
   const payloads = [];
   await page.route("**/api/contact", (route) => {
@@ -301,4 +306,49 @@ test("reset view restores the establishing camera after orbit without reloading 
   await writeFile("qa/gilt-ruby/reset-original.png", original);
   await writeFile("qa/gilt-ruby/reset-restored.png", await canvas.screenshot());
   expect(models.length).toBe(requests);
+});
+
+test("welcome separates exploration from tour and details collapse accessibly", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/studio");
+  await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
+  await expect(mode(page)).toHaveAttribute("data-mode", "intro", { timeout: 30000 });
+  await page.getByRole("button", { name: "Start Exploring", exact: true }).click();
+  await expect(mode(page)).toHaveAttribute("data-mode", "explore");
+  await expect(page.getByRole("button", { name: "Guided tour", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Guided tour", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Pause tour", exact: true })).toBeVisible();
+  await page.screenshot({ path: "qa/studio-v3/after/guided-tour.png" });
+  await page.getByRole("button", { name: "Pause tour", exact: true }).click();
+  await page.getByRole("button", { name: "Next Room", exact: true }).click();
+  await expect(page.locator("#studio-panel-heading")).toHaveText("Work with purpose.");
+  await page.getByRole("button", { name: "Collapse details" }).click();
+  await expect(page.locator("#studio-panel-content")).toBeHidden();
+  await page.getByRole("button", { name: "Expand details" }).click();
+  await expect(page.locator("#studio-panel-content")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Previous Room", exact: true }).click();
+  await expect(page.locator("#studio-panel-heading")).toHaveText("Ideas start here.");
+});
+
+test("initial phone landscape caps DPR and all requested layouts stay within viewport", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+  const page = await context.newPage(); await intercept(page);
+  await page.goto("/studio"); await enter(page);
+  await expect.poll(() => page.locator("canvas").evaluate(canvas => canvas.width / canvas.clientWidth)).toBeLessThanOrEqual(1.01);
+  await page.waitForTimeout(1900);
+  const landscapeStage = await mode(page).boundingBox();
+  expect(landscapeStage.y + landscapeStage.height).toBeLessThanOrEqual(391);
+  await page.screenshot({ path: "qa/studio-v3/after/initial-landscape.png" });
+  for (const width of [320, 360, 375, 390, 430, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button", { name: "Reception" }).click();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    for (const button of await page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button").all()) {
+      const bounds = await button.boundingBox();
+      expect(bounds.width).toBeGreaterThanOrEqual(44); expect(bounds.height).toBeGreaterThanOrEqual(44);
+    }
+    await page.keyboard.press("Escape");
+  }
+  await context.close();
 });

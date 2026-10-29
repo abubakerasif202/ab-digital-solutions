@@ -23,6 +23,13 @@ const shots: Record<Area, { position: [number,number,number]; target: [number,nu
   consultation: { position: [11,3.5,12.8], target: [5.5,1,4] },
 };
 
+const mobileShots: typeof shots = {
+  reception: { position: [-.5,1.8,8.2], target: [-5,1.9,3] },
+  gallery: { position: [-5,1.75,1], target: [-5,1.8,-5] },
+  services: { position: [5.5,1.75,1.8], target: [5.5,1.5,-4] },
+  consultation: { position: [2.5,1.8,7.5], target: [5.6,1.5,4.3] },
+};
+
 // Three's scene is an imperative GPU resource, not React state.
 function attachEnvironment(scene: THREE.Scene, texture: THREE.Texture) {
   const previous = scene.environment;
@@ -51,9 +58,14 @@ function Lighting() {
   </>;
 }
 
+function setLens(camera: THREE.Camera, fov: number) {
+  if (camera instanceof THREE.PerspectiveCamera) { camera.fov = fov; camera.updateProjectionMatrix(); }
+}
+
 function CameraRig({ state, visible, onManual }: { state: StudioState; visible: boolean; onManual: () => void }) {
   const controls = useRef<OrbitControlsImpl>(null);
   const { invalidate, camera, size, gl } = useThree();
+  const mobile = size.width < 700 || (size.height < 500 && size.width < 1000);
   const moving = useRef(true);
   const targetPosition = useRef(new THREE.Vector3());
   const targetLook = useRef(new THREE.Vector3());
@@ -64,7 +76,7 @@ function CameraRig({ state, visible, onManual }: { state: StudioState; visible: 
   const targetLens = useRef(new THREE.Vector2());
   useEffect(() => {
     const overview = state.mode === "intro" || state.mode === "loading" || (!state.panel && !state.tour);
-    const shot = overview ? { position: [19,15,24] as [number,number,number], target: [0,.2,0] as [number,number,number] } : shots[state.area];
+    const shot = mobile ? mobileShots[state.area] : overview ? { position: [19,15,24] as [number,number,number], target: [0,.2,0] as [number,number,number] } : shots[state.area];
     if (camera instanceof THREE.PerspectiveCamera) {
       const view = camera.view;
       startLens.current.set(view?.enabled ? view.offsetX / view.fullWidth : 0, view?.enabled ? view.offsetY / view.fullHeight : 0);
@@ -73,14 +85,15 @@ function CameraRig({ state, visible, onManual }: { state: StudioState; visible: 
     }
     targetPosition.current.set(...shot.position);
     // A narrower viewport uses a wider establishing view, retaining all rooms.
-    if (size.width < 700) targetPosition.current.multiplyScalar(overview ? 1.38 : 1.2);
+    if (mobile && state.mode === "loading") targetPosition.current.z += 2;
+    setLens(camera, mobile ? (size.height > size.width ? 80 : 52) : 42);
     targetLook.current.set(...shot.target);
     startPosition.current.copy(camera.position);
     startLook.current.copy(controls.current?.target ?? new THREE.Vector3());
     started.current = performance.now();
     moving.current = true;
     invalidate();
-  }, [state.area, state.shot, state.mode, state.panel, state.tour, size.width, size.height, visible, camera, invalidate]);
+  }, [state.area, state.shot, state.mode, state.panel, state.tour, size.width, size.height, mobile, visible, camera, invalidate]);
   useFrame(() => {
     if (!visible || state.manual || !moving.current || !controls.current) return;
     // Wall-clock progress keeps a cinematic move bounded on slower GPUs too.
@@ -98,7 +111,7 @@ function CameraRig({ state, visible, onManual }: { state: StudioState; visible: 
     moving.current = progress < 1;
     if (moving.current) invalidate();
   });
-  return <OrbitControls ref={controls} domElement={gl.domElement} makeDefault enableDamping={false} enablePan={false} enableZoom minDistance={5} maxDistance={48} minPolarAngle={.3} maxPolarAngle={Math.PI/2.08} rotateSpeed={.55} zoomSpeed={.7} enabled={visible} onStart={onManual} />;
+  return <OrbitControls ref={controls} domElement={gl.domElement} makeDefault enableDamping={false} enablePan={false} enableZoom minDistance={mobile ? 2.5 : 5} maxDistance={48} minPolarAngle={.3} maxPolarAngle={mobile ? 1.8 : Math.PI/2.08} rotateSpeed={.55} zoomSpeed={.7} enabled={visible} onStart={onManual} />;
 }
 
 function GoldDust({ animate }: { animate: boolean }) {
@@ -117,12 +130,13 @@ export default function StudioScene({ state, projects, visible, onReady, onFailu
   state: StudioState; projects: StudioProject[]; visible: boolean;
   onReady: () => void; onFailure: () => void; onSelect: (area: Area) => void; onProject: (index: number) => void; onService: (index: number) => void; onManual: () => void;
 }) {
-  const animate = visible && state.mode === "intro";
+  const mobile = typeof window !== "undefined" && (window.innerWidth < 768 || (window.innerWidth < 1000 && window.innerHeight < 500));
+  const animate = false;
   const portal = useRef<HTMLDivElement>(null);
   return <div className="ab-spatial-canvas" style={{ position: "absolute", inset: 0, zIndex: 0 }}>
     <style>{`.ab-spatial-hotspot{display:flex;align-items:center;gap:8px;white-space:nowrap;min-height:44px;padding:6px 13px 6px 7px;border:1px solid #c4a56f88;background:#101619e8;color:#f1e2c2;font:11px var(--font-sans),sans-serif;cursor:pointer;box-shadow:0 4px 16px #0005}.ab-spatial-hotspot span{display:grid;place-items:center;width:25px;height:25px;border:1px solid #d4b67888;border-radius:50%;color:#e9cc96;font-size:17px}.ab-spatial-hotspot:hover{background:#3a3020;border-color:#efd49c}.ab-spatial-canvas canvas{touch-action:pan-y!important}`}</style>
     <div ref={portal} style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }} />
-    <Canvas frameloop={visible ? "demand" : "never"} dpr={[1, typeof window !== "undefined" && window.innerWidth < 768 ? 1 : 1.5]} camera={{ position: [24,19,30], fov: 42, near: .1, far: 120 }} gl={{ antialias: typeof window !== "undefined" && window.innerWidth >= 768, powerPreference: "low-power", alpha: false }} fallback={<p>3D unavailable. Explore the studio using the space buttons below.</p>} onCreated={({ gl, scene }) => {
+    <Canvas frameloop={visible ? "demand" : "never"} dpr={[1, mobile ? 1 : 1.5]} camera={{ position: mobile ? [-.5,1.8,10.2] : [24,19,30], fov: 42, near: .1, far: 120 }} gl={{ antialias: !mobile, powerPreference: "low-power", alpha: false }} fallback={<p>3D unavailable. Explore the studio using the space buttons below.</p>} onCreated={({ gl, scene }) => {
       gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.05;
       scene.background = new THREE.Color("#10171c");
     }}>

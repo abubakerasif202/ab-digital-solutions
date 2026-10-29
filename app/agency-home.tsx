@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { PageTransition } from "./components/motion/PageTransition";
 import { ContactForm } from "./components/ContactForm";
-import { Hero3DExperience } from "./components/Hero3DExperience";
 import { LiveTicker } from "./components/LiveTicker";
 import { findProject, projects, type Project } from "./project-data";
 import { findService } from "./services/service-data";
@@ -97,9 +96,10 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
       <PageTransition>
       <main id="main-content" className="cinematic-home">
-        <section className="stage-hero" aria-labelledby="hero-heading">
+        <VirtualStudioPreview />
+        <section className="stage-hero studio-supporting-hero" aria-labelledby="hero-heading">
           <div className="stage-hero-art" aria-hidden="true">
-            <Hero3DExperience />
+
             <span className="stage-ring stage-ring--outer" />
             <span className="stage-ring stage-ring--inner" />
           </div>
@@ -167,7 +167,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
         <BrandFilmSection />
 
-        <VirtualStudioPreview />
 
         <section className="section ruby-band" id="services" aria-labelledby="services-heading">
           <div className="container">

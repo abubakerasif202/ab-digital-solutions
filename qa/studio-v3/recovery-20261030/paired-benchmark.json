@@ -1,0 +1,168 @@
+{
+  "capturedAt": "2026-10-29T18:57:48.244Z",
+  "conditions": "Local production Chromium, software WebGL, DPR1, cold cache, 4x CPU, 40ms latency, 10Mbps down, 5Mbps up. Redraw counts cover resize transition, not a single frame. Not physical-device results.",
+  "samples": [
+    {
+      "phase": "before",
+      "width": 390,
+      "run": 1,
+      "activationMs": 3990.199999999255,
+      "mode": "intro",
+      "transferBytes": 344878,
+      "idleDraws": 0
+    },
+    {
+      "phase": "after",
+      "width": 390,
+      "run": 1,
+      "activationMs": 4074.2999999988824,
+      "mode": "intro",
+      "transferBytes": 342953,
+      "idleDraws": 0
+    },
+    {
+      "phase": "before",
+      "width": 390,
+      "run": 2,
+      "activationMs": 3739.60000000149,
+      "mode": "intro",
+      "transferBytes": 457786,
+      "idleDraws": 0
+    },
+    {
+      "phase": "after",
+      "width": 390,
+      "run": 2,
+      "activationMs": 3575.0999999996275,
+      "mode": "intro",
+      "transferBytes": 342953,
+      "idleDraws": 0
+    },
+    {
+      "phase": "before",
+      "width": 390,
+      "run": 3,
+      "activationMs": 3879.800000000745,
+      "mode": "intro",
+      "transferBytes": 457786,
+      "idleDraws": 0
+    },
+    {
+      "phase": "after",
+      "width": 390,
+      "run": 3,
+      "activationMs": 3727.0999999996275,
+      "mode": "intro",
+      "transferBytes": 342953,
+      "idleDraws": 0
+    },
+    {
+      "phase": "before",
+      "width": 768,
+      "run": 1,
+      "activationMs": 3794,
+      "mode": "intro",
+      "transferBytes": 457786,
+      "idleDraws": 0
+    },
+    {
+      "phase": "after",
+      "width": 768,
+      "run": 1,
+      "activationMs": 4215.4000000003725,
+      "mode": "intro",
+      "transferBytes": 363431,
+      "idleDraws": 0
+    },
+    {
+      "phase": "before",
+      "width": 768,
+      "run": 2,
+      "activationMs": 4017.4000000003725,
+      "mode": "intro",
+      "transferBytes": 457786,
+      "idleDraws": 128
+    },
+    {
+      "phase": "after",
+      "width": 768,
+      "run": 2,
+      "activationMs": 4050.699999999255,
+      "mode": "intro",
+      "transferBytes": 363431,
+      "idleDraws": 0
+    },
+    {
+      "phase": "before",
+      "width": 768,
+      "run": 3,
+      "activationMs": 4749.699999999255,
+      "mode": "intro",
+      "transferBytes": 457786,
+      "idleDraws": 0
+    },
+    {
+      "phase": "after",
+      "width": 768,
+      "run": 3,
+      "activationMs": 3533.5999999996275,
+      "mode": "intro",
+      "transferBytes": 363431,
+      "idleDraws": 0
+    },
+    {
+      "phase": "before",
+      "width": 1440,
+      "run": 1,
+      "activationMs": 4387.4000000003725,
+      "mode": "intro",
+      "transferBytes": 457786,
+      "idleDraws": 0
+    },
+    {
+      "phase": "after",
+      "width": 1440,
+      "run": 1,
+      "activationMs": 4256.4000000003725,
+      "mode": "intro",
+      "transferBytes": 342953,
+      "idleDraws": 128
+    },
+    {
+      "phase": "before",
+      "width": 1440,
+      "run": 2,
+      "activationMs": 5218.5,
+      "mode": "intro",
+      "transferBytes": 457786,
+      "idleDraws": 0
+    },
+    {
+      "phase": "after",
+      "width": 1440,
+      "run": 2,
+      "activationMs": 4005.5,
+      "mode": "intro",
+      "transferBytes": 342953,
+      "idleDraws": 0
+    },
+    {
+      "phase": "before",
+      "width": 1440,
+      "run": 3,
+      "activationMs": 4270.89999999851,
+      "mode": "intro",
+      "transferBytes": 457786,
+      "idleDraws": 0
+    },
+    {
+      "phase": "after",
+      "width": 1440,
+      "run": 3,
+      "activationMs": 4391.299999998882,
+      "mode": "intro",
+      "transferBytes": 341753,
+      "idleDraws": 128
+    }
+  ]
+}
