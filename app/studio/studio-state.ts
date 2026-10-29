@@ -9,7 +9,7 @@ export type StudioState = {
   shot: number;
 };
 export type StudioEvent =
-  | { type: "enter" | "ready" | "skip" | "fail" | "static" | "close" | "manual" | "tour" }
+  | { type: "enter" | "ready" | "skip" | "fail" | "static" | "close" | "manual" | "tour" | "reset" }
   | { type: "select"; area: Area }
   | { type: "advance" };
 
@@ -28,6 +28,7 @@ export function studioReducer(state: StudioState, event: StudioEvent): StudioSta
     case "select": return { ...state, mode: (state.mode === "intro" || state.mode === "loading") ? "explore" : state.mode, area: event.area, panel: true, tour: false, manual: false, shot: state.shot + 1 };
     case "close": return { ...state, panel: false, tour: false };
     case "manual": return { ...state, mode: (state.mode === "intro" || state.mode === "loading") ? "explore" : state.mode, manual: true, tour: false };
+    case "reset": return { ...state, panel: false, tour: false, manual: false, shot: state.shot + 1 };
     case "tour": return { ...state, mode: "explore", area: state.tour ? state.area : "reception", tour: !state.tour, panel: false, manual: state.tour, shot: state.shot + 1 };
     case "advance": {
       if (!state.tour) return state;

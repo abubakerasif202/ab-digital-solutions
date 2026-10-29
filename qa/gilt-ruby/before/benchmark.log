@@ -1,0 +1,9 @@
+{"width":390,"run":1,"activationMs":8891.39999999851,"mode":"intro","transferBytes":343448,"idleDraws":0,"orbitFrames":{"count":6,"maxDraws":148,"maxTriangles":4722}}
+{"width":390,"run":2,"activationMs":9161.400000000373,"mode":"intro","transferBytes":343448,"idleDraws":0}
+{"width":390,"run":3,"activationMs":9163.299999998882,"mode":"intro","transferBytes":343448,"idleDraws":0}
+{"width":768,"run":1,"activationMs":9696.5,"mode":"intro","transferBytes":343448,"idleDraws":0,"orbitFrames":{"count":7,"maxDraws":155,"maxTriangles":4806}}
+{"width":768,"run":2,"activationMs":9665,"mode":"intro","transferBytes":343448,"idleDraws":0}
+{"width":768,"run":3,"activationMs":8728.699999999255,"mode":"intro","transferBytes":343448,"idleDraws":0}
+{"width":1440,"run":1,"activationMs":19728.89999999851,"mode":"intro","transferBytes":343448,"idleDraws":0,"orbitFrames":{"count":7,"maxDraws":155,"maxTriangles":4806}}
+{"width":1440,"run":2,"activationMs":10432.200000001118,"mode":"intro","transferBytes":343448,"idleDraws":0}
+{"width":1440,"run":3,"activationMs":10708.200000001118,"mode":"intro","transferBytes":343448,"idleDraws":0}

@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-10-29T12:41:58.738Z",
+  "baseline": "bc56f2141ec0855b734198a6d8e049bad2101ac2",
+  "testMarker": "AB-STUDIO-QA-20261029-GILT-RUBY",
+  "submissions": 1,
+  "device": "Desktop Chromium; not physical Safari",
+  "httpStatus": 200,
+  "response": {
+    "ok": true
+  },
+  "formStatus": "ENQUIRY RECEIVED\nThanks — your enquiry has been sent. We’ll come back with a practical next step shortly."
+}

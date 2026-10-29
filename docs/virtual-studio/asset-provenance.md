@@ -31,3 +31,11 @@ The capture script uses Playwright Chromium, or `CHROMIUM_PATH` where provided;
 it uses `/usr/bin/chromium` when available. Captures do not contact project sites
 or send real enquiries. Rebuild after changing the poster before release to
 avoid retaining a previous Next Image derivative in the local cache.
+
+## Gilt & Ruby refinement
+
+The beveled ruby armchairs, brass pedestal bases, reception bench and planter are
+original procedural compositions in `Spaces.tsx`. Marble veining and directional
+brass roughness are deterministic 256 × 256 canvas maps in `Materials.tsx`, shared
+across surfaces and disposed when the scene unmounts. Wall fluting uses instancing.
+No new downloaded models, maps, HDRIs or postprocessing packages were introduced.

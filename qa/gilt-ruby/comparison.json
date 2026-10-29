@@ -1,0 +1,62 @@
+{
+  "capturedAt": "2026-10-29T14:14:37.817Z",
+  "comparison": [
+    {
+      "width": 390,
+      "beforeMedianMs": 9161.400000000373,
+      "afterMedianMs": 4639.5999999996275,
+      "changePercent": -49.35708516166264,
+      "beforeOrbit": {
+        "count": 6,
+        "maxDraws": 148,
+        "maxTriangles": 4722
+      },
+      "afterOrbit": {
+        "count": 7,
+        "maxDraws": 123,
+        "maxTriangles": 9602
+      },
+      "beforeActivationBytes": 343448,
+      "afterActivationBytes": 344878,
+      "maxIdleDraws": 0
+    },
+    {
+      "width": 768,
+      "beforeMedianMs": 9665,
+      "afterMedianMs": 4711.5999999996275,
+      "changePercent": -51.250905328508765,
+      "beforeOrbit": {
+        "count": 7,
+        "maxDraws": 155,
+        "maxTriangles": 4806
+      },
+      "afterOrbit": {
+        "count": 7,
+        "maxDraws": 128,
+        "maxTriangles": 9662
+      },
+      "beforeActivationBytes": 343448,
+      "afterActivationBytes": 344878,
+      "maxIdleDraws": 0
+    },
+    {
+      "width": 1440,
+      "beforeMedianMs": 10708.200000001118,
+      "afterMedianMs": 5257.800000000745,
+      "changePercent": -50.89931080853742,
+      "beforeOrbit": {
+        "count": 7,
+        "maxDraws": 155,
+        "maxTriangles": 4806
+      },
+      "afterOrbit": {
+        "count": 7,
+        "maxDraws": 128,
+        "maxTriangles": 9662
+      },
+      "beforeActivationBytes": 343448,
+      "afterActivationBytes": 344878,
+      "maxIdleDraws": 0
+    }
+  ]
+}

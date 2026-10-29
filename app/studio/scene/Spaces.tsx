@@ -1,8 +1,9 @@
 import { createContext, Suspense, useContext, useEffect, useMemo, useRef, useState, type RefObject } from "react";
-import { Html, useGLTF, useTexture } from "@react-three/drei";
+import { Html, RoundedBox, useGLTF, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { Block, MarbleBlock, brass } from "./Architecture";
+import { BrassMaterial, MarbleMaterial } from "./Materials";
 import type { Area } from "../studio-state";
 import type { StudioProject } from "../studio-data";
 
@@ -34,7 +35,9 @@ export function Reception({ animate, onSelect }: { animate: boolean; onSelect: (
     <Block position={[-5,.08,3.4]} size={[7,.08,5]} color="#171d20" roughness={.8} />
     <MarbleBlock position={[-5,.75,4]} size={[5.6,1.4,1.1]} />
     <Block position={[-5,.15,4.58]} size={[5.5,.09,.03]} color="#c2a166" metalness={.8} />
-    <Block position={[-5,1.48,4]} size={[5.8,.08,1.2]} color="#141a1c" metalness={.4} roughness={.2} />
+    <RoundedBox position={[-5,1.48,4]} args={[5.8,.12,1.3]} radius={.06} smoothness={1} bevelSegments={2}><MarbleMaterial /></RoundedBox>
+    <mesh position={[-5,.23,4.57]}><boxGeometry args={[5.3,.018,.02]} /><meshBasicMaterial color="#f4ce89" /></mesh>
+    <Bench position={[-8.6,0,5.9]} />
     <mesh position={[-5,2.45,2.6]}><torusGeometry args={[2,.055,8,48,Math.PI]} /><meshStandardMaterial {...brass} /></mesh>
     {[-7,-3].map((x) => <Block key={x} position={[x,1.3,2.6]} size={[.11,2.6,.11]} color="#bca06b" metalness={.8} />)}
     <Sculpture animate={animate} />
@@ -83,20 +86,32 @@ export function Services({ onSelect, onService }: { onSelect: (area: Area) => vo
 
 function Chair({ position, rotation = 0 }: { position: [number,number,number]; rotation?: number }) {
   return <group position={position} rotation={[0,rotation,0]}>
-    <Block position={[0,.53,0]} size={[1.05,.25,1.05]} color="#632333" roughness={.95} />
-    <Block position={[0,1,-.48]} size={[1.05,.95,.17]} color="#762e40" roughness={.95} />
-    {[-.4,.4].flatMap((x) => [-.35,.35].map((z) => <Block key={`${x}-${z}`} position={[x,.23,z]} size={[.055,.46,.055]} color="#b49a67" metalness={.7} />))}
+    <RoundedBox position={[0,.64,0]} args={[1.12,.28,1.08]} radius={.12} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#672333" roughness={.88} /></RoundedBox>
+    <RoundedBox position={[0,1.08,-.43]} rotation={[-.12,0,0]} args={[1.22,1.02,.24]} radius={.11} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#792c40" roughness={.88} /></RoundedBox>
+    {[-.57,.57].map(x => <RoundedBox key={x} position={[x,.91,0]} args={[.17,.36,.88]} radius={.08} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#672333" roughness={.88} /></RoundedBox>)}
+    <mesh position={[0,.3,0]}><cylinderGeometry args={[.075,.075,.58,12]} /><BrassMaterial /></mesh>
+    <mesh position={[0,.035,0]}><cylinderGeometry args={[.49,.52,.06,24]} /><BrassMaterial /></mesh>
+  </group>;
+}
+function Bench({ position }: { position: [number,number,number] }) {
+  return <group position={position} rotation={[0,.3,0]}>
+    <RoundedBox position={[0,.58,0]} args={[2.2,.3,.85]} radius={.12} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#652335" roughness={.9} /></RoundedBox>
+    {[-.85,.85].map(x => <mesh key={x} position={[x,.24,0]}><boxGeometry args={[.06,.48,.65]} /><BrassMaterial /></mesh>)}
   </group>;
 }
 export function Consultation({ onSelect }: { onSelect: (area: Area) => void }) {
   return <group>
     <mesh position={[5.6,.08,4.3]} rotation={[-Math.PI/2,0,0]}><circleGeometry args={[3.4,48]} /><meshStandardMaterial color="#32272a" roughness={1} /></mesh>
-    <mesh position={[5.6,1.13,4.3]}><cylinderGeometry args={[1.8,1.8,.14,48]} /><meshStandardMaterial color="#c8c0af" metalness={.1} roughness={.28} /></mesh>
+    <mesh position={[5.6,1.13,4.3]}><cylinderGeometry args={[1.8,1.8,.14,48]} /><MarbleMaterial /></mesh>
     <mesh position={[5.6,.56,4.3]}><cylinderGeometry args={[.42,.7,1.02,24]} /><meshStandardMaterial {...brass} /></mesh>
     {[0,1,2,3].map((i) => { const angle = i * Math.PI/2; return <Chair key={i} position={[5.6+Math.sin(angle)*2.45,0,4.3+Math.cos(angle)*2.45]} rotation={angle+Math.PI} />; })}
     <mesh position={[5.6,1.4,4.3]}><cylinderGeometry args={[.12,.2,.45,12]} /><meshStandardMaterial {...brass} /></mesh>
     <mesh position={[5.6,3.8,4.3]} rotation={[Math.PI/2,0,0]}><torusGeometry args={[1.5,.045,8,48]} /><meshBasicMaterial color="#ffe1a6" /></mesh>
     {[4.6,6.6].map((x) => <Block key={x} position={[x,4.2,4.3]} size={[.015,.8,.015]} color="#bca06b" metalness={.8} />)}
+    <group position={[8.8,0,6.8]}>
+      <mesh position={[0,.4,0]}><cylinderGeometry args={[.36,.27,.8,20]} /><meshStandardMaterial color="#1d2020" roughness={.65} /></mesh>
+      <mesh position={[0,1.15,0]} scale={[.65,1,.65]}><sphereGeometry args={[.6,12,8]} /><meshStandardMaterial color="#26392c" roughness={.9} /></mesh>
+    </group>
     <Hotspot area="consultation" label="Let’s talk" position={[5.6,.4,7.3]} onSelect={onSelect} />
   </group>;
 }
