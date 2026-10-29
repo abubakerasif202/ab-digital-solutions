@@ -1,0 +1,273 @@
+{
+  "capturedAt": "2026-10-29T12:11:10.942Z",
+  "base": "http://localhost:3100",
+  "browser": "154.0.8037.57",
+  "conditions": "Local production Next.js; Chromium headless; cold per-context cache; DPR 1; 4× CPU; 40ms RTT; 10Mbps down/5Mbps up; three runs per route/width; software WebGL for activation. No scores or field INP. unexpectedShiftTotal is the cumulative observed unexpected layout shift, not the maximum CLS session window. Analytics intercepted. Initial pages measured before scrolling or 3D intent.",
+  "samples": [
+    {
+      "width": 390,
+      "route": "/",
+      "run": 1,
+      "lcp": 984,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 372,
+      "transferBytes": 434855,
+      "modelRequests": 0,
+      "canvasCount": 1
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "run": 2,
+      "lcp": 900,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 338,
+      "transferBytes": 434855,
+      "modelRequests": 0,
+      "canvasCount": 1
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "run": 3,
+      "lcp": 928,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 317,
+      "transferBytes": 434855,
+      "modelRequests": 0,
+      "canvasCount": 1
+    },
+    {
+      "width": 390,
+      "route": "/studio",
+      "run": 1,
+      "lcp": 816,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 238,
+      "transferBytes": 502514,
+      "modelRequests": 0,
+      "canvasCount": 0
+    },
+    {
+      "width": 390,
+      "route": "/studio",
+      "run": 2,
+      "lcp": 736,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 266,
+      "transferBytes": 502514,
+      "modelRequests": 0,
+      "canvasCount": 0
+    },
+    {
+      "width": 390,
+      "route": "/studio",
+      "run": 3,
+      "lcp": 728,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 206,
+      "transferBytes": 502514,
+      "modelRequests": 0,
+      "canvasCount": 0
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "run": 1,
+      "lcp": 948,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 309,
+      "transferBytes": 482558,
+      "modelRequests": 0,
+      "canvasCount": 1
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "run": 2,
+      "lcp": 1024,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 330,
+      "transferBytes": 482558,
+      "modelRequests": 0,
+      "canvasCount": 1
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "run": 3,
+      "lcp": 976,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 495,
+      "transferBytes": 482558,
+      "modelRequests": 0,
+      "canvasCount": 1
+    },
+    {
+      "width": 768,
+      "route": "/studio",
+      "run": 1,
+      "lcp": 792,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 300,
+      "transferBytes": 504778,
+      "modelRequests": 0,
+      "canvasCount": 0
+    },
+    {
+      "width": 768,
+      "route": "/studio",
+      "run": 2,
+      "lcp": 784,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 318,
+      "transferBytes": 504778,
+      "modelRequests": 0,
+      "canvasCount": 0
+    },
+    {
+      "width": 768,
+      "route": "/studio",
+      "run": 3,
+      "lcp": 772,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 222,
+      "transferBytes": 504778,
+      "modelRequests": 0,
+      "canvasCount": 0
+    },
+    {
+      "width": 1440,
+      "route": "/",
+      "run": 1,
+      "lcp": 1096,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 363,
+      "transferBytes": 493709,
+      "modelRequests": 0,
+      "canvasCount": 1
+    },
+    {
+      "width": 1440,
+      "route": "/",
+      "run": 2,
+      "lcp": 1008,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 311,
+      "transferBytes": 493709,
+      "modelRequests": 0,
+      "canvasCount": 1
+    },
+    {
+      "width": 1440,
+      "route": "/",
+      "run": 3,
+      "lcp": 1012,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 382,
+      "transferBytes": 493709,
+      "modelRequests": 0,
+      "canvasCount": 1
+    },
+    {
+      "width": 1440,
+      "route": "/studio",
+      "run": 1,
+      "lcp": 804,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 232,
+      "transferBytes": 516983,
+      "modelRequests": 0,
+      "canvasCount": 0
+    },
+    {
+      "width": 1440,
+      "route": "/studio",
+      "run": 2,
+      "lcp": 720,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 173,
+      "transferBytes": 516983,
+      "modelRequests": 0,
+      "canvasCount": 0
+    },
+    {
+      "width": 1440,
+      "route": "/studio",
+      "run": 3,
+      "lcp": 860,
+      "unexpectedShiftTotal": 0,
+      "longTaskMs": 309,
+      "transferBytes": 516983,
+      "modelRequests": 0,
+      "canvasCount": 0
+    }
+  ],
+  "activation": [
+    {
+      "width": 390,
+      "elapsedMs": 9089.5,
+      "mode": "intro",
+      "transferBytes": 343448,
+      "modelRequests": 1
+    },
+    {
+      "width": 768,
+      "elapsedMs": 9888.099999999627,
+      "mode": "intro",
+      "transferBytes": 343448,
+      "modelRequests": 1
+    },
+    {
+      "width": 1440,
+      "elapsedMs": 10511.699999999255,
+      "mode": "intro",
+      "transferBytes": 343448,
+      "modelRequests": 1
+    }
+  ],
+  "summary": [
+    {
+      "width": 390,
+      "route": "/",
+      "medianLcpMs": 928,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 434855
+    },
+    {
+      "width": 390,
+      "route": "/studio",
+      "medianLcpMs": 736,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 502514
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "medianLcpMs": 976,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 482558
+    },
+    {
+      "width": 768,
+      "route": "/studio",
+      "medianLcpMs": 784,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 504778
+    },
+    {
+      "width": 1440,
+      "route": "/",
+      "medianLcpMs": 1012,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 493709
+    },
+    {
+      "width": 1440,
+      "route": "/studio",
+      "medianLcpMs": 804,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 516983
+    }
+  ]
+}

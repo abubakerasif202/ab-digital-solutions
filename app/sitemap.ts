@@ -20,6 +20,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${siteConfig.url}/studio`,
+      lastModified: "2026-10-29",
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${siteConfig.url}/work`,
       lastModified: WORK_LAST_MODIFIED,
       changeFrequency: "monthly",

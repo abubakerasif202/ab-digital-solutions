@@ -58,7 +58,7 @@ export function Reveal({ as = "div", variant = "fade-up", delay = 0, className, 
   }, []);
 
   const delayStyle = delay ? ({ "--reveal-delay": `${delay}ms`, ...style } as CSSProperties) : style;
-  const Tag = as as ElementType<HTMLAttributes<HTMLElement> & { ref?: Ref<HTMLElement> }>;
+  const Tag = as as ElementType<HTMLAttributes<HTMLElement> & { ref?: Ref<HTMLElement> }, RevealTag>;
   return (
     <Tag ref={ref} className={className ? `reveal ${className}` : "reveal"} data-reveal-variant={variant} style={delayStyle} {...rest}>
       {children}

@@ -1,0 +1,87 @@
+/ 390px run 1: LCP 984ms
+/ 390px run 2: LCP 900ms
+/ 390px run 3: LCP 928ms
+/studio 390px run 1: LCP 816ms
+/studio 390px run 2: LCP 736ms
+/studio 390px run 3: LCP 728ms
+/ 768px run 1: LCP 948ms
+/ 768px run 2: LCP 1024ms
+/ 768px run 3: LCP 976ms
+/studio 768px run 1: LCP 792ms
+/studio 768px run 2: LCP 784ms
+/studio 768px run 3: LCP 772ms
+/ 1440px run 1: LCP 1096ms
+/ 1440px run 2: LCP 1008ms
+/ 1440px run 3: LCP 1012ms
+/studio 1440px run 1: LCP 804ms
+/studio 1440px run 2: LCP 720ms
+/studio 1440px run 3: LCP 860ms
+{
+  "summary": [
+    {
+      "width": 390,
+      "route": "/",
+      "medianLcpMs": 928,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 434855
+    },
+    {
+      "width": 390,
+      "route": "/studio",
+      "medianLcpMs": 736,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 502514
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "medianLcpMs": 976,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 482558
+    },
+    {
+      "width": 768,
+      "route": "/studio",
+      "medianLcpMs": 784,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 504778
+    },
+    {
+      "width": 1440,
+      "route": "/",
+      "medianLcpMs": 1012,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 493709
+    },
+    {
+      "width": 1440,
+      "route": "/studio",
+      "medianLcpMs": 804,
+      "maxUnexpectedShiftTotal": 0,
+      "medianTransferBytes": 516983
+    }
+  ],
+  "activation": [
+    {
+      "width": 390,
+      "elapsedMs": 9089.5,
+      "mode": "intro",
+      "transferBytes": 343448,
+      "modelRequests": 1
+    },
+    {
+      "width": 768,
+      "elapsedMs": 9888.099999999627,
+      "mode": "intro",
+      "transferBytes": 343448,
+      "modelRequests": 1
+    },
+    {
+      "width": 1440,
+      "elapsedMs": 10511.699999999255,
+      "mode": "intro",
+      "transferBytes": 343448,
+      "modelRequests": 1
+    }
+  ]
+}
