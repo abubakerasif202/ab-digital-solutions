@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { mkdir } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import * as THREE from "three";
 const output = "qa/virtual-studio";
 const mode = (page) => page.locator("[data-mode]");
@@ -38,6 +38,12 @@ for (const width of [390, 768, 1440]) {
       await space(page, label);
       await expect(page.locator("#studio-panel-heading")).toHaveText(heading);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      if (width === 390) {
+        const sheet = await page.locator("aside[aria-labelledby='studio-panel-heading']").boundingBox();
+        const stage = await mode(page).boundingBox();
+        expect(sheet.height).toBeLessThanOrEqual(stage.height * .49);
+        expect(sheet.y).toBeGreaterThan(stage.y + stage.height * .35);
+      }
       if (label === "Portfolio gallery") {
         await expect(page.locator("#studio-project option")).toHaveCount(16);
         await page.locator("#studio-project").selectOption("1");
@@ -264,4 +270,35 @@ test("studio and portfolio panel pass automated accessibility checks", async ({ 
   const scan = () => page.evaluate(async () => (await window.axe.run("main", { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] } })).violations.map(({ id, nodes }) => ({ id, elements: nodes.map((node) => node.target) })));
   expect(await scan()).toEqual([]);
   await space(page, "Portfolio gallery"); expect(await scan()).toEqual([]);
+});
+
+
+test("reset view restores the establishing camera after orbit without reloading assets", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  const models = [];
+  page.on("request", request => { if (/\.glb/.test(request.url())) models.push(request.url()); });
+  await page.goto("/studio", { waitUntil: "networkidle" }); await enter(page);
+  await page.waitForTimeout(2300);
+  await expect(page.locator('[class*="sceneCaption"]')).toContainText("Swipe up to scroll");
+  const canvas = page.locator("canvas");
+  let original = await canvas.screenshot();
+  await expect.poll(async () => {
+    const next = await canvas.screenshot();
+    const stable = next.equals(original);
+    original = next;
+    return stable;
+  }, { intervals: [300, 500, 1000], timeout: 10000 }).toBe(true);
+  const bounds = await canvas.boundingBox();
+  await page.mouse.move(bounds.x + bounds.width * .5, bounds.y + bounds.height * .5);
+  await page.mouse.down(); await page.mouse.move(bounds.x + bounds.width * .7, bounds.y + bounds.height * .5, { steps: 6 }); await page.mouse.up();
+  await page.waitForTimeout(300);
+  expect((await canvas.screenshot()).equals(original)).toBe(false);
+  const requests = models.length;
+  await page.getByRole("button", { name: "Reset view", exact: true }).click();
+  await page.waitForTimeout(2300);
+  // Wait for the actual rendered endpoint rather than a fixed GPU deadline.
+  await expect.poll(async () => (await canvas.screenshot()).equals(original), { intervals: [300, 500, 1000], timeout: 10000 }).toBe(true);
+  await writeFile("qa/gilt-ruby/reset-original.png", original);
+  await writeFile("qa/gilt-ruby/reset-restored.png", await canvas.screenshot());
+  expect(models.length).toBe(requests);
 });

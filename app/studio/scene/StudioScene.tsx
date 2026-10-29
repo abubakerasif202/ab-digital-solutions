@@ -6,6 +6,8 @@ import { OrbitControls, useGLTF, useTexture } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { MaterialLibrary } from "./Materials";
+import { cameraProgress } from "./camera-motion";
 import { Architecture } from "./Architecture";
 import { Consultation, Gallery, HotspotPortalContext, Ready, Reception, Services } from "./Spaces";
 import type { Area, StudioState } from "../studio-state";
@@ -15,10 +17,10 @@ import type { StudioProject } from "../studio-data";
 useGLTF.preload("/studio/ab-monogram.glb", false, false);
 
 const shots: Record<Area, { position: [number,number,number]; target: [number,number,number] }> = {
-  reception: { position: [2,6.3,13], target: [-4,1.4,3] },
-  gallery: { position: [-1,6.5,6.5], target: [-5,1.5,-4.5] },
-  services: { position: [13,6.5,6], target: [5.5,1.2,-4] },
-  consultation: { position: [13,7,13], target: [5.5,1,4] },
+  reception: { position: [1,3.5,11.8], target: [-4,1.4,3] },
+  gallery: { position: [-1,3.6,5.8], target: [-5,1.5,-4.5] },
+  services: { position: [12,3.6,4.8], target: [5.5,1.2,-4] },
+  consultation: { position: [11,3.5,12.8], target: [5.5,1,4] },
 };
 
 // Three's scene is an imperative GPU resource, not React state.
@@ -34,15 +36,15 @@ function Lighting() {
   useEffect(() => {
     const generator = new THREE.PMREMGenerator(gl);
     const room = new RoomEnvironment();
-    const environment = generator.fromScene(room, .04, .1, 100);
+    const environment = generator.fromScene(room, .04, .1, 100, { size: 128 });
     const detach = attachEnvironment(scene, environment.texture);
     invalidate();
     return () => { detach(); environment.dispose(); generator.dispose(); room.dispose(); };
   }, [gl, scene, invalidate]);
   return <>
-    <ambientLight intensity={.35} color="#d0d7df" />
+    <ambientLight intensity={.3} color="#e4d9cd" />
     <directionalLight position={[3,12,8]} intensity={1.8} color="#ffe2ae" />
-    <directionalLight position={[-8,8,-6]} intensity={.8} color="#9fb9cc" />
+    <directionalLight position={[-8,8,-6]} intensity={.65} color="#c4c7d6" />
     <pointLight position={[-5,4,3]} intensity={24} distance={9} color="#ffd28a" />
     <pointLight position={[5,4,-4]} intensity={22} distance={10} color="#ffc67b" />
     <pointLight position={[5.6,3.5,4.3]} intensity={20} distance={8} color="#ffdca5" />
@@ -58,9 +60,17 @@ function CameraRig({ state, visible, onManual }: { state: StudioState; visible: 
   const startPosition = useRef(new THREE.Vector3());
   const startLook = useRef(new THREE.Vector3());
   const started = useRef(0);
+  const startLens = useRef(new THREE.Vector2());
+  const targetLens = useRef(new THREE.Vector2());
   useEffect(() => {
     const overview = state.mode === "intro" || state.mode === "loading" || (!state.panel && !state.tour);
     const shot = overview ? { position: [19,15,24] as [number,number,number], target: [0,.2,0] as [number,number,number] } : shots[state.area];
+    if (camera instanceof THREE.PerspectiveCamera) {
+      const view = camera.view;
+      startLens.current.set(view?.enabled ? view.offsetX / view.fullWidth : 0, view?.enabled ? view.offsetY / view.fullHeight : 0);
+      // Frame the room above the mobile sheet or beside desktop copy.
+      targetLens.current.set(state.panel && size.width >= 700 ? .13 : 0, state.panel && size.width < 700 ? .16 : 0);
+    }
     targetPosition.current.set(...shot.position);
     // A narrower viewport uses a wider establishing view, retaining all rooms.
     if (size.width < 700) targetPosition.current.multiplyScalar(overview ? 1.38 : 1.2);
@@ -70,14 +80,20 @@ function CameraRig({ state, visible, onManual }: { state: StudioState; visible: 
     started.current = performance.now();
     moving.current = true;
     invalidate();
-  }, [state.area, state.shot, state.mode, state.panel, state.tour, size.width, visible, camera, invalidate]);
+  }, [state.area, state.shot, state.mode, state.panel, state.tour, size.width, size.height, visible, camera, invalidate]);
   useFrame(() => {
     if (!visible || state.manual || !moving.current || !controls.current) return;
     // Wall-clock progress keeps a cinematic move bounded on slower GPUs too.
     const progress = Math.min(1, (performance.now() - started.current) / 1700);
-    const eased = 1 - Math.pow(1 - progress, 3);
+    const eased = cameraProgress(progress);
     camera.position.lerpVectors(startPosition.current, targetPosition.current, eased);
     controls.current.target.lerpVectors(startLook.current, targetLook.current, eased);
+    if (camera instanceof THREE.PerspectiveCamera) {
+      const x = THREE.MathUtils.lerp(startLens.current.x, targetLens.current.x, eased);
+      const y = THREE.MathUtils.lerp(startLens.current.y, targetLens.current.y, eased);
+      if (x || y) camera.setViewOffset(size.width, size.height, x * size.width, y * size.height, size.width, size.height);
+      else camera.clearViewOffset();
+    }
     controls.current.update();
     moving.current = progress < 1;
     if (moving.current) invalidate();
@@ -114,7 +130,7 @@ export default function StudioScene({ state, projects, visible, onReady, onFailu
       <Lighting />
       <CameraRig state={state} visible={visible} onManual={onManual} />
       <HotspotPortalContext.Provider value={portal}>
-      <Suspense fallback={null}>
+      <Suspense fallback={null}><MaterialLibrary>
         <Architecture />
         <Reception animate={animate} onSelect={onSelect} />
         <Gallery projects={projects} onSelect={onSelect} onProject={onProject} />
@@ -122,7 +138,7 @@ export default function StudioScene({ state, projects, visible, onReady, onFailu
         <Consultation onSelect={onSelect} />
         <GoldDust animate={animate} />
         <Ready onReady={onReady} />
-      </Suspense>
+      </MaterialLibrary></Suspense>
       </HotspotPortalContext.Provider>
     </Canvas>
   </div>;

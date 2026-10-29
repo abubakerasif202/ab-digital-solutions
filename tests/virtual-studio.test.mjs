@@ -63,3 +63,14 @@ test("explicit navigation or orbit cancels an unfinished introduction", () => {
   const intro = studioReducer(loading, { type: "ready" });
   assert.equal(studioReducer(intro, { type: "manual" }).mode, "explore");
 });
+
+
+test("reset view recovers from manual navigation and clears tour and panel", () => {
+  const state = { ...initialStudioState, mode: "explore", panel: true, tour: true, manual: true, shot: 5 };
+  const reset = studioReducer(state, { type: "reset" });
+  assert.equal(reset.panel, false);
+  assert.equal(reset.tour, false);
+  assert.equal(reset.manual, false);
+  assert.equal(reset.shot, 6);
+  assert.equal(reset.mode, "explore");
+});

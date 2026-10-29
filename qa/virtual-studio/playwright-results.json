@@ -55,7 +55,7 @@
         "testMatch": "**/*.spec.mjs",
         "timeout": 180000,
         "use": {
-          "baseURL": "http://localhost:3100",
+          "baseURL": "http://127.0.0.1:3100",
           "browserName": "chromium",
           "actionTimeout": 10000,
           "navigationTimeout": 30000,
@@ -122,12 +122,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 33041,
+                  "duration": 30509,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:02:42.997Z",
+                  "startTime": "2026-10-29T14:05:34.407Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -156,12 +156,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 41206,
+                  "duration": 40306,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:03:16.320Z",
+                  "startTime": "2026-10-29T14:06:05.176Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -190,12 +190,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 57226,
+                  "duration": 53907,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:03:57.545Z",
+                  "startTime": "2026-10-29T14:06:45.511Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -224,12 +224,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 14422,
+                  "duration": 8880,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:04:54.808Z",
+                  "startTime": "2026-10-29T14:07:39.436Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -239,7 +239,7 @@
           ],
           "id": "30d6307a03ad69bf4948-cdfcb209d475b9034ae5",
           "file": "virtual-studio.spec.mjs",
-          "line": 69,
+          "line": 75,
           "column": 1
         },
         {
@@ -258,12 +258,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 14218,
+                  "duration": 10920,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:05:09.245Z",
+                  "startTime": "2026-10-29T14:07:48.339Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -273,7 +273,7 @@
           ],
           "id": "30d6307a03ad69bf4948-944b426b0dcc25f5ffcf",
           "file": "virtual-studio.spec.mjs",
-          "line": 83,
+          "line": 89,
           "column": 1
         },
         {
@@ -292,12 +292,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8352,
+                  "duration": 8283,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:05:23.480Z",
+                  "startTime": "2026-10-29T14:07:59.294Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -307,7 +307,7 @@
           ],
           "id": "30d6307a03ad69bf4948-8e02229ea55696d6f27c",
           "file": "virtual-studio.spec.mjs",
-          "line": 91,
+          "line": 97,
           "column": 1
         },
         {
@@ -326,12 +326,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2191,
+                  "duration": 2179,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:05:31.849Z",
+                  "startTime": "2026-10-29T14:08:07.603Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -341,7 +341,7 @@
           ],
           "id": "30d6307a03ad69bf4948-a5153dce965f5146f49d",
           "file": "virtual-studio.spec.mjs",
-          "line": 114,
+          "line": 120,
           "column": 1
         },
         {
@@ -360,12 +360,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2588,
+                  "duration": 2456,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:05:34.055Z",
+                  "startTime": "2026-10-29T14:08:09.803Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -375,7 +375,7 @@
           ],
           "id": "30d6307a03ad69bf4948-5c1b122c6ef6d22f5b3e",
           "file": "virtual-studio.spec.mjs",
-          "line": 122,
+          "line": 128,
           "column": 1
         },
         {
@@ -394,12 +394,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 21347,
+                  "duration": 18277,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:05:36.664Z",
+                  "startTime": "2026-10-29T14:08:12.316Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -409,7 +409,7 @@
           ],
           "id": "30d6307a03ad69bf4948-65ba340b537bed5e326d",
           "file": "virtual-studio.spec.mjs",
-          "line": 135,
+          "line": 141,
           "column": 1
         },
         {
@@ -428,12 +428,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 29657,
+                  "duration": 27671,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:05:58.037Z",
+                  "startTime": "2026-10-29T14:08:30.624Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -443,7 +443,7 @@
           ],
           "id": "30d6307a03ad69bf4948-1bfd86917b70def74f8a",
           "file": "virtual-studio.spec.mjs",
-          "line": 171,
+          "line": 177,
           "column": 1
         },
         {
@@ -462,12 +462,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 47211,
+                  "duration": 44635,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:06:27.713Z",
+                  "startTime": "2026-10-29T14:08:58.320Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -477,7 +477,7 @@
           ],
           "id": "30d6307a03ad69bf4948-208899395d4c5edcbabb",
           "file": "virtual-studio.spec.mjs",
-          "line": 194,
+          "line": 200,
           "column": 1
         },
         {
@@ -496,12 +496,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3853,
+                  "duration": 4444,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:07:14.947Z",
+                  "startTime": "2026-10-29T14:09:42.981Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -511,7 +511,7 @@
           ],
           "id": "30d6307a03ad69bf4948-31c9264fb9248985e153",
           "file": "virtual-studio.spec.mjs",
-          "line": 205,
+          "line": 211,
           "column": 1
         },
         {
@@ -530,12 +530,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 21056,
+                  "duration": 17748,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:07:18.818Z",
+                  "startTime": "2026-10-29T14:09:47.452Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -545,7 +545,7 @@
           ],
           "id": "30d6307a03ad69bf4948-2ab01f60c60823aae92c",
           "file": "virtual-studio.spec.mjs",
-          "line": 229,
+          "line": 235,
           "column": 1
         },
         {
@@ -564,12 +564,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 31266,
+                  "duration": 23279,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:07:39.896Z",
+                  "startTime": "2026-10-29T14:10:05.236Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -579,7 +579,7 @@
           ],
           "id": "30d6307a03ad69bf4948-5e6e46c2522ad7050380",
           "file": "virtual-studio.spec.mjs",
-          "line": 242,
+          "line": 248,
           "column": 1
         },
         {
@@ -598,12 +598,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2458,
+                  "duration": 2197,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T12:08:11.185Z",
+                  "startTime": "2026-10-29T14:10:28.560Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -613,7 +613,41 @@
           ],
           "id": "30d6307a03ad69bf4948-260f792a16f2f19adb2b",
           "file": "virtual-studio.spec.mjs",
-          "line": 259,
+          "line": 265,
+          "column": 1
+        },
+        {
+          "title": "reset view restores the establishing camera after orbit without reloading assets",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 14093,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T14:10:30.785Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "30d6307a03ad69bf4948-ac07e240d5ecd2a1b0ad",
+          "file": "virtual-studio.spec.mjs",
+          "line": 276,
           "column": 1
         }
       ]
@@ -621,9 +655,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-29T12:02:42.299Z",
-    "duration": 331559.144,
-    "expected": 15,
+    "startTime": "2026-10-29T14:05:33.803Z",
+    "duration": 311308.941,
+    "expected": 16,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

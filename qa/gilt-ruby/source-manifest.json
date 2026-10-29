@@ -1,0 +1,63 @@
+{
+  "baseline": "bc56f2141ec0855b734198a6d8e049bad2101ac2",
+  "node": "v22.23.4",
+  "chromium": "Chromium 154.0.8037.57 built on Debian GNU/Linux 13 (trixie)",
+  "files": {
+    "app/studio/scene/Architecture.tsx": {
+      "bytes": 4290,
+      "sha256": "1be3b817ab5cfcb712009842fd743859de51222836c56f26760c1301dfe7b768"
+    },
+    "app/studio/scene/Materials.tsx": {
+      "bytes": 2018,
+      "sha256": "962fcfea9731546190aaa66e0429d0968d1927212db366cd974c2859c530c316"
+    },
+    "app/studio/scene/Spaces.tsx": {
+      "bytes": 8647,
+      "sha256": "2eecc23bbdf19306ae4fe3ab667de4e30382075dd8d80763d7d102742c4b961c"
+    },
+    "app/studio/scene/StudioScene.tsx": {
+      "bytes": 9633,
+      "sha256": "15c6c501ce65410f26c80d4d54333c225538b4af5e23ac394d11e0b2c9ccd9b6"
+    },
+    "app/studio/scene/camera-motion.ts": {
+      "bytes": 289,
+      "sha256": "4159c271ad4517181f9205dcafa042d13915d00e8198416b1ac50a258c1dc6d8"
+    },
+    "app/studio/StudioExperience.tsx": {
+      "bytes": 12463,
+      "sha256": "aba8abbc99dc2b61395e49dd71b6ad948ae1ed753e904055e8ca50b1ae7acffa"
+    },
+    "app/studio/studio-state.ts": {
+      "bytes": 2416,
+      "sha256": "b9fcc2241421465e95f6fb5ed0a41d056f938a58909edfd3360b10eb775c0909"
+    },
+    "app/studio/studio.module.css": {
+      "bytes": 9649,
+      "sha256": "02e9964d3895ec6892bd473c4f842428b07e2d72d374b02d091e49a59dfc77c7"
+    },
+    "public/studio/studio-poster.png": {
+      "bytes": 260852,
+      "sha256": "d4811cee68e9f07b4f9b4e57d0758b98241d24e66e554b9580b9b02936e8e359"
+    },
+    "public/studio/ab-monogram.glb": {
+      "bytes": 58476,
+      "sha256": "65ccdf843b1c44ea45b4aa203f0a97c3a3790135fcc89fd75eeae087135e6c9b"
+    },
+    "tests/e2e/virtual-studio.spec.mjs": {
+      "bytes": 21207,
+      "sha256": "254dd2d87ba5019cbbc157d6b3ebdcd96da064cac467be608627ee83492611a6"
+    },
+    "tests/studio-camera.test.mjs": {
+      "bytes": 778,
+      "sha256": "452fa625d0fa15b3a4a9336b1d434fd229099ab3538c0c6e4f05298071af3588"
+    },
+    "tests/virtual-studio.test.mjs": {
+      "bytes": 3978,
+      "sha256": "a0441800ab87edefc6860b6272b9ad84cf71c9b45243c5075364029310a4e41b"
+    },
+    "scripts/gilt-ruby-benchmark.mjs": {
+      "bytes": 5633,
+      "sha256": "d4af3e8c8f8c408794c4de7b3a4eb6b6db01b2965ea46b94a96ef249f3075d47"
+    }
+  }
+}

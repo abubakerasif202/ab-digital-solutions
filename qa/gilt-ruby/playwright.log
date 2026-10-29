@@ -1,0 +1,25 @@
+
+Running 16 tests using 1 worker
+
+(node:25062) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `ab-node22 --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/e2e/virtual-studio.spec.mjs:24:3 › content, controls and screenshots at 390px (30.5s)
+  ✓   2 tests/e2e/virtual-studio.spec.mjs:24:3 › content, controls and screenshots at 768px (40.3s)
+  ✓   3 tests/e2e/virtual-studio.spec.mjs:24:3 › content, controls and screenshots at 1440px (53.9s)
+  ✓   4 tests/e2e/virtual-studio.spec.mjs:75:1 › keyboard enters, skips, opens and closes without trapping focus (8.9s)
+  ✓   5 tests/e2e/virtual-studio.spec.mjs:89:1 › WebGL context loss preserves HTML functionality (10.9s)
+  ✓   6 tests/e2e/virtual-studio.spec.mjs:97:1 › no WebGL, reduced motion and slow connections keep usable fallback (8.3s)
+  ✓   7 tests/e2e/virtual-studio.spec.mjs:120:1 › model load failure recovers even after Skip Intro (2.2s)
+  ✓   8 tests/e2e/virtual-studio.spec.mjs:128:1 › server HTML works without JavaScript; homepage preview loads no model (2.5s)
+  ✓   9 tests/e2e/virtual-studio.spec.mjs:141:1 › touch orbit changes view and vertical swipe scrolls the page (18.3s)
+  ✓  10 tests/e2e/virtual-studio.spec.mjs:177:1 › idle rendering stops; physical display opens its project; wheel scrolls (27.7s)
+  ✓  11 tests/e2e/virtual-studio.spec.mjs:200:1 › guided tour visits four spaces and finishes with a genuine quote link (44.6s)
+  ✓  12 tests/e2e/virtual-studio.spec.mjs:211:1 › quote journey preserves form validation, successful submission and recoverable errors (4.4s)
+  ✓  13 tests/e2e/virtual-studio.spec.mjs:235:1 › existing public routes retain metadata and responsive navigation (17.7s)
+  ✓  14 tests/e2e/virtual-studio.spec.mjs:248:1 › retry recovers a failed model request and repeated entry has clean teardown (23.3s)
+  ✓  15 tests/e2e/virtual-studio.spec.mjs:265:1 › studio and portfolio panel pass automated accessibility checks (2.2s)
+  ✓  16 tests/e2e/virtual-studio.spec.mjs:276:1 › reset view restores the establishing camera after orbit without reloading assets (14.1s)
+
+  Slow test file: tests/e2e/virtual-studio.spec.mjs (5.2m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  16 passed (5.2m)

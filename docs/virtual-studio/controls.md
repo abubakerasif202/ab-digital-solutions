@@ -28,6 +28,10 @@ The existing main-site navigation remains available above the experience.
   never trap focus. Room selection frames the studio below the sticky header.
 - **Get a Quote** uses the existing `/contact` form. There is no new form,
   enquiry API, pricing or delivery provider.
+- **Reset view** restores the establishing camera after orbit or zoom without
+  loading the model again. On phones, content opens in a shorter bottom sheet
+  with the selected space framed above it. Swipe vertically within the sheet
+  to read its content, or outside it to scroll the page.
 - **Use still view** releases the canvas and returns to the poster. **Exit
   Studio** goes to the existing homepage. Ordinary site navigation also works.
 - Reduced-motion preferences, Save-Data and 2G connections default to the
