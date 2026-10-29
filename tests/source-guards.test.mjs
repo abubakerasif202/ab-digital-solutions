@@ -299,7 +299,7 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   assert.match(homepage, /stage-scroll-cue/);
   assert.match(homepage, /process-rail-fill/);
   assert.doesNotMatch(homepage, /project-ghost-index/);
-  assert.match(homepage, /<Hero3DExperience \/>/);
+  assert.match(homepage, /<VirtualStudioPreview \/>/);
 
 
   assert.match(intro, /sessionStorage/);

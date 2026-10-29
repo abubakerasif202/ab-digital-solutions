@@ -281,3 +281,10 @@
   .stage-ring--outer { inset: 4% 0; }
   .cinematic-home .stage-title { font-size: clamp(2.35rem, 11.5vw, 3.6rem); }
 }
+
+/* The interactive entrance leads; this retains the agency's service proposition. */
+.studio-supporting-hero.stage-hero { min-height: 0; }
+.studio-supporting-hero .stage-hero-art, .studio-supporting-hero .stage-hero-top,
+.studio-supporting-hero .stage-bar, .studio-supporting-hero .hero-marquee { display: none; }
+.studio-supporting-hero .stage-hero-body { padding-block: 48px; }
+.studio-supporting-hero .stage-title { font-size: clamp(32px, 4vw, 60px); }

@@ -1,0 +1,14 @@
+
+Running 3 tests using 1 worker
+
+(node:20744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests\e2e\virtual-studio.spec.mjs:182:1 › idle rendering stops; physical display opens its project; wheel scrolls (25.1s)
+(node:21392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 tests\e2e\virtual-studio.spec.mjs:182:1 › idle rendering stops; physical display opens its project; wheel scrolls (23.4s)
+(node:30464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 tests\e2e\virtual-studio.spec.mjs:182:1 › idle rendering stops; physical display opens its project; wheel scrolls (24.3s)
+
+  3 passed (1.3m)
