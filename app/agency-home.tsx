@@ -16,6 +16,7 @@ import { ProcessTimeline } from "./components/motion/ProcessTimeline";
 import { StackLedger } from "./components/StackLedger";
 import { EnquirySection } from "./components/studio/EnquirySection";
 import { StudioAbout } from "./components/studio/StudioAbout";
+import { VirtualStudioPreview } from "./components/studio/VirtualStudioPreview";
 
 const services = [
   {
@@ -165,6 +166,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         <PortfolioSection />
 
         <BrandFilmSection />
+
+        <VirtualStudioPreview />
 
         <section className="section ruby-band" id="services" aria-labelledby="services-heading">
           <div className="container">

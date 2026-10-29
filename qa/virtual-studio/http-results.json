@@ -1,0 +1,220 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au",
+    "h1Count": 1
+  },
+  {
+    "path": "/studio",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/studio",
+    "h1Count": 1
+  },
+  {
+    "path": "/work",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work",
+    "h1Count": 1
+  },
+  {
+    "path": "/services",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/services",
+    "h1Count": 1
+  },
+  {
+    "path": "/about",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/about",
+    "h1Count": 1
+  },
+  {
+    "path": "/contact",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/contact",
+    "h1Count": 1
+  },
+  {
+    "path": "/privacy",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/privacy",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/jufaja-homes",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/jufaja-homes",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/milestone-renovate",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/milestone-renovate",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/aftab-sons-transport",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/aftab-sons-transport",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/247-inventory-system",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/247-inventory-system",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/adelaide-wholesale-tyres",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/adelaide-wholesale-tyres",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/247-truck-tyre-services",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/247-truck-tyre-services",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/maple-rentals",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/maple-rentals",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/gala-rentals",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/gala-rentals",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/zq-removals",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/zq-removals",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/decent-development",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/decent-development",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/milestone-development",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/milestone-development",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/4-point-concrete",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/4-point-concrete",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/1st-class-express",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/1st-class-express",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/hf-removals-adelaide",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/hf-removals-adelaide",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/cheap-adelaide-removalist",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/cheap-adelaide-removalist",
+    "h1Count": 1
+  },
+  {
+    "path": "/work/fresh-stop",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/work/fresh-stop",
+    "h1Count": 1
+  },
+  {
+    "path": "/services/web-design-sydney",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/services/web-design-sydney",
+    "h1Count": 1
+  },
+  {
+    "path": "/services/ecommerce-website-development",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/services/ecommerce-website-development",
+    "h1Count": 1
+  },
+  {
+    "path": "/services/seo-local-visibility",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/services/seo-local-visibility",
+    "h1Count": 1
+  },
+  {
+    "path": "/services/branding-content",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/services/branding-content",
+    "h1Count": 1
+  },
+  {
+    "path": "/services/digital-marketing",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/services/digital-marketing",
+    "h1Count": 1
+  },
+  {
+    "path": "/services/website-maintenance",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "canonical": "https://www.abwebstudio.com.au/services/website-maintenance",
+    "h1Count": 1
+  },
+  {
+    "path": "/sitemap.xml",
+    "status": 200,
+    "type": "application/xml"
+  },
+  {
+    "path": "/studio/ab-monogram.glb",
+    "status": 200,
+    "type": "model/gltf-binary"
+  },
+  {
+    "path": "/studio/studio-poster.png",
+    "status": 200,
+    "type": "image/png"
+  }
+]
