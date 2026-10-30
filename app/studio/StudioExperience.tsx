@@ -32,11 +32,16 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const enterButton = useRef<HTMLButtonElement>(null);
   const skipButton = useRef<HTMLButtonElement>(null);
   const panelWasOpen = useRef(false);
-  const active = state.mode === "loading" || state.mode === "intro" || state.mode === "explore";
+  const active = state.mode === "loading" || state.mode === "arrival" || state.mode === "intro" || state.mode === "explore";
   const onFailure = useCallback(() => dispatch({ type: "fail" }), []);
   const onReady = useCallback(() => { setSceneReady(true); dispatch({ type: "ready" }); }, []);
   const onSelect = useCallback((area: Area) => { setSheetExpanded(true); dispatch({ type: "select", area }); }, []);
   const onManual = useCallback(() => dispatch({ type: "manual" }), []);
+  const onArrive = useCallback(() => dispatch({ type: "arrive" }), []);
+  const onView = (type: "tour" | "entrance" | "reset") => {
+    stage.current?.scrollIntoView({ block: "start", behavior: "instant" });
+    dispatch({ type });
+  };
 
   useEffect(() => {
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -105,14 +110,14 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   return <section className={styles.experience} aria-label="Interactive virtual studio" onKeyDown={(event) => {
     if (event.key === "Escape") {
       if (state.panel) dispatch({ type: "close" });
-      else if (state.mode === "intro" || state.mode === "loading") dispatch({ type: "skip" });
+      else if (state.mode === "intro" || state.mode === "loading" || state.mode === "arrival") dispatch({ type: "skip" });
       else if (state.tour) dispatch({ type: "manual" });
     }
   }}>
     <noscript><p className={styles.accessNote}>JavaScript is off. <a href="#studio-content">Explore the projects, services and contact links below.</a></p></noscript>
     <div className={styles.stage} ref={stage} data-mode={state.mode}>
       <Image src="/studio/studio-poster.png" alt="An original cutaway studio with brass architecture, a reception monogram, project gallery and ruby meeting lounge" fill sizes="(max-width: 768px) 100vw, 1440px" className={styles.poster} priority />
-      {active && <SceneBoundary onFailure={onFailure}><StudioScene state={state} projects={projects.slice(0, 3)} visible={visible} onReady={onReady} onFailure={onFailure} onSelect={onSelect} onProject={(index) => { setProjectIndex(index); onSelect("gallery"); }} onService={(index) => { setServiceIndex(index); onSelect("services"); }} onManual={onManual} /></SceneBoundary>}
+      {active && <SceneBoundary onFailure={onFailure}><StudioScene state={state} projects={projects.slice(0, 3)} visible={visible} onReady={onReady} onFailure={onFailure} onSelect={onSelect} onProject={(index) => { setProjectIndex(index); onSelect("gallery"); }} onService={(index) => { setServiceIndex(index); onSelect("services"); }} onManual={onManual} onArrive={onArrive} /></SceneBoundary>}
       <div className={styles.stageTop}><span className={styles.edition}>AB / THE VIRTUAL STUDIO</span><Link prefetch={false} href="/" className={styles.smallButton}>Exit Studio <StudioArrow /></Link></div>
       {!active ? <div className={styles.entry}>
         <p className={styles.kicker}>An independent perspective</p><h2>Make yourself<br /><em>at home.</em></h2>
@@ -120,12 +125,15 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
         {!policy && <button ref={enterButton} type="button" className={styles.primary} onClick={enter}>{state.mode === "failed" ? "Try 3D again" : "Enter the Studio"} <StudioArrow /></button>}
         <a href="#studio-content" className={styles.textLink}>Explore without 3D ↓</a>
       </div> : null}
-      {(state.mode === "loading" || state.mode === "intro") && <div className={styles.loading}>
-        <p role="status">{state.mode === "loading" ? "Preparing your studio…" : "Welcome Inside AB Web Studio"}</p>
-        {state.mode === "intro" && <button type="button" className={styles.primary} onClick={() => dispatch({ type: "skip" })}>Start Exploring</button>}
-        <button ref={skipButton} type="button" className={styles.smallButton} onClick={() => dispatch({ type: "skip" })}>Skip Intro</button>
+      {(state.mode === "loading" || state.mode === "arrival" || state.mode === "intro") && <div className={styles.loading} data-stage={state.mode}>
+        <p role="status">{state.mode === "loading" ? "Preparing your studio…" : state.mode === "arrival" ? "Arriving in Sydney…" : "Welcome Inside AB Web Studio"}</p>
+        {state.mode === "intro" && <p className={styles.welcome}>“Welcome to AB Web Studio. Feel free to explore.”</p>}
+        <div className={styles.loadingActions}>
+          {state.mode === "intro" && <><button type="button" className={styles.primary} onClick={() => dispatch({ type: "skip" })}>Start Exploring</button><button type="button" className={styles.smallButton} onClick={() => dispatch({ type: "tour" })}>Take Guided Tour</button></>}
+          <button ref={skipButton} type="button" className={styles.smallButton} onClick={() => dispatch({ type: "skip" })}>Skip Intro</button>
+        </div>
       </div>}
-      {active && <div className={styles.sceneCaption}><span>{String(areaOrder.indexOf(state.area) + 1).padStart(2, "0")} / {areaLabels[state.area]}</span><span>{state.tour ? "Guided tour · 6.5s per space" : "Drag sideways to orbit · Pinch to zoom · Swipe up to scroll"}</span></div>}
+      {active && <div className={styles.sceneCaption}><span>{state.outside ? "Sydney / Studio entrance" : state.mode === "arrival" ? "Sydney / Arrival" : `${String(areaOrder.indexOf(state.area) + 1).padStart(2, "0")} / ${areaLabels[state.area]}`}</span><span>{state.tour ? "Guided tour · 6.5s per space" : "Drag sideways to orbit · Pinch to zoom · Swipe up to scroll"}</span></div>}
       {state.panel && <aside className={styles.panel} data-collapsed={!sheetExpanded} aria-labelledby="studio-panel-heading">
         <div className={styles.panelTop}><p className={styles.kicker}>Inside / {areaLabels[state.area]}</p><button type="button" onClick={() => dispatch({ type: "close" })} aria-label="Close studio panel">Close ×</button></div>
         <button type="button" className={styles.smallButton} aria-expanded={sheetExpanded} aria-controls="studio-panel-content" onClick={() => setSheetExpanded(value => !value)}>{sheetExpanded ? "Collapse details" : "Expand details"}</button>
@@ -146,8 +154,8 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
       </aside>}
     </div>
     <div className={styles.controls}>
-      <nav className={styles.areaNav} aria-label="Studio spaces">{areaOrder.map((area, index) => <button ref={(node) => { areaButtons.current[area] = node; }} key={area} type="button" aria-pressed={state.area === area && (active || state.panel)} aria-controls={state.panel ? "studio-panel-heading" : undefined} onClick={() => onSelect(area)}><span>{String(index + 1).padStart(2, "0")}</span>{areaLabels[area]}</button>)}</nav>
-      <div className={styles.secondaryControls}>{active ? <><button type="button" onClick={() => onSelect(areaOrder[(areaOrder.indexOf(state.area) + 3) % 4])}>Previous Room</button><button type="button" onClick={() => onSelect(areaOrder[(areaOrder.indexOf(state.area) + 1) % 4])}>Next Room</button><button type="button" onClick={() => dispatch({ type: "tour" })}>{state.tour ? "Pause tour" : "Guided tour"} <span aria-hidden="true">{state.tour ? "Ⅱ" : "▷"}</span></button><button type="button" onClick={() => dispatch({ type: "reset" })}>Reset view</button><button type="button" onClick={() => { dispatch({ type: "static" }); setTimeout(() => enterButton.current?.focus({ preventScroll: true }), 0); }}>Use still view</button></> : <span>Explore at your own pace</span>}<Link prefetch={false} href="/contact">Get a Quote <StudioArrow /></Link></div>
+      <nav className={styles.areaNav} aria-label="Studio spaces">{areaOrder.map((area, index) => <button ref={(node) => { areaButtons.current[area] = node; }} key={area} type="button" aria-pressed={!state.outside && state.area === area && (active || state.panel)} aria-controls={state.panel ? "studio-panel-heading" : undefined} onClick={() => onSelect(area)}><span>{String(index + 1).padStart(2, "0")}</span>{areaLabels[area]}</button>)}</nav>
+      <div className={styles.secondaryControls}>{active ? <><button type="button" onClick={() => onSelect(areaOrder[(areaOrder.indexOf(state.area) + 3) % 4])}>Previous Room</button><button type="button" onClick={() => onSelect(areaOrder[(areaOrder.indexOf(state.area) + 1) % 4])}>Next Room</button><button type="button" onClick={() => onView("tour")}>{state.tour ? "Pause tour" : "Guided tour"} <span aria-hidden="true">{state.tour ? "Ⅱ" : "▷"}</span></button><button type="button" onClick={() => onView("entrance")}>Back to entrance</button><button type="button" onClick={() => onView("reset")}>Reset view</button><button type="button" onClick={() => { dispatch({ type: "static" }); setTimeout(() => enterButton.current?.focus({ preventScroll: true }), 0); }}>Use still view</button></> : <span>Explore at your own pace</span>}<Link prefetch={false} href="/contact">Get a Quote <StudioArrow /></Link></div>
     </div>
     <p className={styles.accessNote} role="status">{state.mode === "failed" ? "3D unavailable. All content is available using the space buttons or below." : policy || "No sound. No scroll lock. Use the space buttons with a keyboard; Escape closes a panel or pauses the tour."}</p>
   </section>;
