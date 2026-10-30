@@ -1,0 +1,691 @@
+{
+  "capturedAt": "2026-10-30T16:44:03.195Z",
+  "phase": "v4",
+  "sourceCommit": "working-tree-9736d63cede335d8c9e33556b10b352a176ecbcbbb9f83f6780668a0a62ed4c2",
+  "node": "v22.23.1",
+  "platform": "win32",
+  "browserVersion": "156.0.8078.4",
+  "conditions": "Local production Chromium, software WebGL, DPR1, cold cache, 4x CPU, 40ms latency, 10Mbps down, 5Mbps up. Active frame records are instrumented RAF callbacks that submitted draws. No physical-device claims.",
+  "samples": [
+    {
+      "width": 390,
+      "run": 1,
+      "activationMs": 7380.39999999851,
+      "mode": "arrival",
+      "transferBytes": 376863,
+      "success": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvasPixels": [
+        390,
+        718
+      ],
+      "activeDrawsPer1200ms": 565,
+      "activeDrawWindowMs": 2417.39999999851,
+      "activeFrames": [
+        {
+          "time": 24524.9,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 24891.6,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 25308.3,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 25691.5,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 26141.5,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 26541.5,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 26958.1,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 27341.5,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 27774.7,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 28158,
+          "draws": 113,
+          "triangles": 38602
+        }
+      ],
+      "activeWindowMs": 4208.5,
+      "restedDrawsPer3s": 0,
+      "restWindowMs": 3005,
+      "drawsAfterWake1500ms": 1015,
+      "wakeWindowMs": 2842.800000000745,
+      "orbitFrames": {
+        "count": 14,
+        "maxDraws": 114,
+        "maxTriangles": 38604
+      },
+      "orbitRawFrames": [
+        {
+          "time": 81854.1,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 82220.8,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 82587.3,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 82970.6,
+          "draws": 114,
+          "triangles": 38604
+        },
+        {
+          "time": 83353.9,
+          "draws": 114,
+          "triangles": 38604
+        },
+        {
+          "time": 83720.6,
+          "draws": 114,
+          "triangles": 38604
+        },
+        {
+          "time": 84070.7,
+          "draws": 113,
+          "triangles": 38592
+        },
+        {
+          "time": 84470.5,
+          "draws": 113,
+          "triangles": 38592
+        },
+        {
+          "time": 84853.8,
+          "draws": 113,
+          "triangles": 38592
+        },
+        {
+          "time": 85237.2,
+          "draws": 113,
+          "triangles": 38592
+        },
+        {
+          "time": 85670.4,
+          "draws": 113,
+          "triangles": 38592
+        },
+        {
+          "time": 86070.5,
+          "draws": 113,
+          "triangles": 38592
+        },
+        {
+          "time": 86420.4,
+          "draws": 113,
+          "triangles": 38592
+        },
+        {
+          "time": 86855.4,
+          "draws": 113,
+          "triangles": 38592
+        },
+        {
+          "time": 87337,
+          "draws": 113,
+          "triangles": 38592
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "run": 2,
+      "activationMs": 8741.5,
+      "mode": "arrival",
+      "transferBytes": 376863,
+      "success": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvasPixels": [
+        390,
+        718
+      ],
+      "activeDrawsPer1200ms": 565,
+      "activeDrawWindowMs": 1851.699999999255,
+      "activeFrames": [
+        {
+          "time": 21695.6,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 22045.6,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 22395.5,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 22762.2,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 23128.9,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 23512.1,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 23895.5,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 24262.1,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 24645.3,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 24662,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 25012,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 25378.6,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 25762,
+          "draws": 113,
+          "triangles": 38602
+        }
+      ],
+      "activeWindowMs": 4561.300000000745
+    },
+    {
+      "width": 390,
+      "run": 3,
+      "activationMs": 8497.39999999851,
+      "mode": "arrival",
+      "transferBytes": 372969,
+      "success": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvasPixels": [
+        390,
+        718
+      ],
+      "activeDrawsPer1200ms": 452,
+      "activeDrawWindowMs": 1933.7000000029802,
+      "activeFrames": [
+        {
+          "time": 25433.5,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 25800.2,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 26183.5,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 26566.9,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 26933.5,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 27300.1,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 27700.1,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 28083.4,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 28450,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 28816.6,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 29216.7,
+          "draws": 113,
+          "triangles": 38602
+        },
+        {
+          "time": 29583.3,
+          "draws": 113,
+          "triangles": 38602
+        }
+      ],
+      "activeWindowMs": 4641
+    },
+    {
+      "width": 768,
+      "run": 1,
+      "activationMs": 6817,
+      "mode": "arrival",
+      "transferBytes": 394649,
+      "success": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvasPixels": [
+        768,
+        535
+      ],
+      "activeDrawsPer1200ms": 508,
+      "activeDrawWindowMs": 1774.699999999255,
+      "activeFrames": [
+        {
+          "time": 21797.8,
+          "draws": 254,
+          "triangles": 60368
+        },
+        {
+          "time": 22564.4,
+          "draws": 254,
+          "triangles": 60368
+        },
+        {
+          "time": 23381,
+          "draws": 254,
+          "triangles": 60368
+        },
+        {
+          "time": 24180.9,
+          "draws": 254,
+          "triangles": 60368
+        },
+        {
+          "time": 24964.2,
+          "draws": 254,
+          "triangles": 60368
+        }
+      ],
+      "activeWindowMs": 4335.199999999255,
+      "restedDrawsPer3s": 0,
+      "restWindowMs": 3028.7000000029802,
+      "drawsAfterWake1500ms": 2016,
+      "wakeWindowMs": 5764.300000000745,
+      "orbitFrames": {
+        "count": 9,
+        "maxDraws": 252,
+        "maxTriangles": 60120
+      },
+      "orbitRawFrames": [
+        {
+          "time": 82126.6,
+          "draws": 252,
+          "triangles": 60120
+        },
+        {
+          "time": 83059.8,
+          "draws": 252,
+          "triangles": 60120
+        },
+        {
+          "time": 83926.5,
+          "draws": 252,
+          "triangles": 60120
+        },
+        {
+          "time": 84826.4,
+          "draws": 252,
+          "triangles": 60120
+        },
+        {
+          "time": 85726.4,
+          "draws": 252,
+          "triangles": 60120
+        },
+        {
+          "time": 86659.6,
+          "draws": 252,
+          "triangles": 60120
+        },
+        {
+          "time": 87572.9,
+          "draws": 252,
+          "triangles": 60120
+        },
+        {
+          "time": 88559.5,
+          "draws": 252,
+          "triangles": 60120
+        },
+        {
+          "time": 89576.2,
+          "draws": 252,
+          "triangles": 60120
+        },
+        {
+          "time": 90626,
+          "draws": 252,
+          "triangles": 60120
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "run": 2,
+      "activationMs": 7968.199999999255,
+      "mode": "arrival",
+      "transferBytes": 372969,
+      "success": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvasPixels": [
+        768,
+        535
+      ],
+      "activeDrawsPer1200ms": 761,
+      "activeDrawWindowMs": 1223.3999999985099,
+      "activeFrames": [
+        {
+          "time": 28190.6,
+          "draws": 250,
+          "triangles": 59056
+        },
+        {
+          "time": 29040.5,
+          "draws": 250,
+          "triangles": 58832
+        },
+        {
+          "time": 29957.1,
+          "draws": 249,
+          "triangles": 58608
+        },
+        {
+          "time": 30840.4,
+          "draws": 249,
+          "triangles": 58608
+        }
+      ],
+      "activeWindowMs": 4758.5
+    },
+    {
+      "width": 768,
+      "run": 3,
+      "activationMs": 13588.699999999255,
+      "mode": "arrival",
+      "transferBytes": 397343,
+      "success": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvasPixels": [
+        768,
+        535
+      ],
+      "activeDrawsPer1200ms": 498,
+      "activeDrawWindowMs": 1566.3999999985099,
+      "activeFrames": [
+        {
+          "time": 42080.5,
+          "draws": 249,
+          "triangles": 58608
+        },
+        {
+          "time": 42980.5,
+          "draws": 249,
+          "triangles": 58608
+        },
+        {
+          "time": 44230.4,
+          "draws": 249,
+          "triangles": 58608
+        },
+        {
+          "time": 44913.7,
+          "draws": 249,
+          "triangles": 58608
+        },
+        {
+          "time": 45746.9,
+          "draws": 249,
+          "triangles": 58608
+        },
+        {
+          "time": 46563.6,
+          "draws": 249,
+          "triangles": 58608
+        }
+      ],
+      "activeWindowMs": 4947.89999999851
+    },
+    {
+      "width": 1440,
+      "run": 1,
+      "activationMs": 13315.300000000745,
+      "mode": "arrival",
+      "transferBytes": 372969,
+      "success": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvasPixels": [
+        1440,
+        708
+      ],
+      "activeDrawsPer1200ms": 254,
+      "activeDrawWindowMs": 3607.900000002235,
+      "activeFrames": [
+        {
+          "time": 47718.1,
+          "draws": 254,
+          "triangles": 60368
+        },
+        {
+          "time": 49501.3,
+          "draws": 252,
+          "triangles": 59836
+        },
+        {
+          "time": 51284.6,
+          "draws": 252,
+          "triangles": 59612
+        }
+      ],
+      "activeWindowMs": 5560,
+      "restedDrawsPer3s": 0,
+      "restWindowMs": 3019.900000002235,
+      "drawsAfterWake1500ms": 1520,
+      "wakeWindowMs": 8695.89999999851,
+      "orbitFrames": {
+        "count": 11,
+        "maxDraws": 252,
+        "maxTriangles": 59364
+      },
+      "orbitRawFrames": [
+        {
+          "time": 112879.9,
+          "draws": 252,
+          "triangles": 59364
+        },
+        {
+          "time": 112896.7,
+          "draws": 252,
+          "triangles": 59364
+        },
+        {
+          "time": 114646.5,
+          "draws": 252,
+          "triangles": 59364
+        },
+        {
+          "time": 118096.3,
+          "draws": 252,
+          "triangles": 59364
+        },
+        {
+          "time": 118363,
+          "draws": 252,
+          "triangles": 59364
+        },
+        {
+          "time": 120612.8,
+          "draws": 252,
+          "triangles": 59364
+        },
+        {
+          "time": 122562.6,
+          "draws": 252,
+          "triangles": 59364
+        },
+        {
+          "time": 124562.5,
+          "draws": 252,
+          "triangles": 59364
+        },
+        {
+          "time": 126579,
+          "draws": 252,
+          "triangles": 59364
+        },
+        {
+          "time": 128462.2,
+          "draws": 252,
+          "triangles": 59364
+        },
+        {
+          "time": 130612.1,
+          "draws": 252,
+          "triangles": 59364
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "run": 2,
+      "activationMs": 14630.199999999255,
+      "mode": "arrival",
+      "transferBytes": 372969,
+      "success": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvasPixels": [
+        1440,
+        708
+      ],
+      "activeDrawsPer1200ms": 254,
+      "activeDrawWindowMs": 3217.5,
+      "activeFrames": [
+        {
+          "time": 48776.1,
+          "draws": 254,
+          "triangles": 60368
+        },
+        {
+          "time": 51176,
+          "draws": 254,
+          "triangles": 60368
+        },
+        {
+          "time": 51192.7,
+          "draws": 254,
+          "triangles": 60368
+        }
+      ],
+      "activeWindowMs": 5136.10000000149
+    },
+    {
+      "width": 1440,
+      "run": 3,
+      "activationMs": 10711.199999999255,
+      "mode": "arrival",
+      "transferBytes": 372969,
+      "success": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvasPixels": [
+        1440,
+        708
+      ],
+      "activeDrawsPer1200ms": 508,
+      "activeDrawWindowMs": 2841.60000000149,
+      "activeFrames": [
+        {
+          "time": 34057.4,
+          "draws": 254,
+          "triangles": 60368
+        },
+        {
+          "time": 35774,
+          "draws": 254,
+          "triangles": 60368
+        },
+        {
+          "time": 37374,
+          "draws": 254,
+          "triangles": 60368
+        }
+      ],
+      "activeWindowMs": 4968.5
+    }
+  ],
+  "failedAttempts": [
+    {
+      "source": "benchmark-v4/benchmark.json",
+      "width": 1440,
+      "run": 3,
+      "success": false,
+      "error": "page.evaluate: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> C:/Users/abuba/AppData/Local/ms-playwright/chromium-1248/chrome-win64/chrome.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,AvoidCorsURLLoaderRestartOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --no-sandbox --enable-unsafe-swiftshader --use-angle=swiftshader --user-data-dir=C:\\Users\\abuba\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-EBvive --remote-debugging-pipe --no-startup-window\n<launched> pid=33912\n[pid=33912][err] [33912:5440:1031/033600.369:ERROR:chrome\\browser\\ui\\views\\user_education\\impl\\browser_user_education_interface_impl.cc:186] Attempting to show IPH IPH_ExtensionsZeroStatePromo before browser initialization complete; IPH will not be shown.\n[pid=33912][err] [33912:5440:1031/033812.578:ERROR:chrome\\browser\\ui\\views\\user_education\\impl\\browser_user_education_interface_impl.cc:186] Attempting to show IPH IPH_ExtensionsZeroStatePromo before browser initialization complete; IPH will not be shown.\n[pid=33912][err] [33912:31072:1031/034157.128:ERROR:components\\system_cpu\\cpu_probe_win.cc:120] PdhCollectQueryData failed: Error (0x13D) while retrieving error. (0x800007D5)\n[pid=33912][err] [33912:31072:1031/034210.138:ERROR:components\\system_cpu\\cpu_probe_win.cc:134] PdhGetFormattedCounterValue failed: Error (0x13D) while retrieving error. (0xC0000BC6)\n[pid=33912][err] [33912:5440:1031/034215.950:ERROR:chrome\\browser\\ui\\views\\user_education\\impl\\browser_user_education_interface_impl.cc:186] Attempting to show IPH IPH_ExtensionsZeroStatePromo before browser initialization complete; IPH will not be shown."
+    }
+  ],
+  "retrySource": "benchmark-v4-desktop-retry/benchmark.json"
+}

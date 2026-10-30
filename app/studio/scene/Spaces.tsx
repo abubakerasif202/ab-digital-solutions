@@ -33,11 +33,14 @@ function Sculpture({ animate }: { animate: boolean }) {
 export function Reception({ animate, onSelect }: { animate: boolean; onSelect: (area: Area) => void }) {
   return <group>
     <Block position={[-5,.08,3.4]} size={[7,.08,5]} color="#171d20" roughness={.8} />
-    <MarbleBlock position={[-5,.75,4]} size={[5.6,1.4,1.1]} />
-    <Block position={[-5,.15,4.58]} size={[5.5,.09,.03]} color="#c2a166" metalness={.8} />
-    <RoundedBox position={[-5,1.48,4]} args={[5.8,.12,1.3]} radius={.06} smoothness={1} bevelSegments={2}><MarbleMaterial /></RoundedBox>
-    <mesh position={[-5,.23,4.57]}><boxGeometry args={[5.3,.018,.02]} /><meshBasicMaterial color="#f4ce89" /></mesh>
+    <MarbleBlock position={[-5,.46,4.25]} size={[5.6,.88,.6]} />
+    <Block position={[-5,.15,4.56]} size={[5.5,.09,.03]} color="#c2a166" metalness={.8} />
+    <RoundedBox position={[-5,.94,4.25]} args={[5.8,.12,.9]} radius={.06} smoothness={1} bevelSegments={2}><MarbleMaterial /></RoundedBox>
+    <mesh position={[-5,.23,4.55]}><boxGeometry args={[5.3,.018,.02]} /><meshBasicMaterial color="#f4ce89" /></mesh>
     <Bench position={[-8.6,0,5.9]} />
+    {/* Staff-side work shelf: the receptionist’s keyboard and monitor sit here, hidden from visitors by the counter. */}
+    <Block position={[-5.6,.755,3.52]} size={[4.4,.05,.85]} color="#2b2f31" metalness={.3} roughness={.45} />
+    {[-7.6,-3.6].map((x) => <Block key={x} position={[x,.38,3.52]} size={[.05,.76,.8]} color="#bca06b" metalness={.8} />)}
     <mesh position={[-5,2.45,2.6]}><torusGeometry args={[2,.055,8,48,Math.PI]} /><meshStandardMaterial {...brass} /></mesh>
     {[-7,-3].map((x) => <Block key={x} position={[x,1.3,2.6]} size={[.11,2.6,.11]} color="#bca06b" metalness={.8} />)}
     <Sculpture animate={animate} />

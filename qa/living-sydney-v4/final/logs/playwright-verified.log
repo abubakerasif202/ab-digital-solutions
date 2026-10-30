@@ -1,0 +1,24 @@
+﻿
+Running 19 tests using 1 worker
+
+  Ô£ô   1 tests\e2e\virtual-studio.spec.mjs:30:3 ÔÇ║ content, controls and screenshots at 390px (14.0s)
+  Ô£ô   2 tests\e2e\virtual-studio.spec.mjs:30:3 ÔÇ║ content, controls and screenshots at 768px (8.5s)
+  Ô£ô   3 tests\e2e\virtual-studio.spec.mjs:30:3 ÔÇ║ content, controls and screenshots at 1440px (10.9s)
+  Ô£ô   4 tests\e2e\virtual-studio.spec.mjs:85:1 ÔÇ║ keyboard enters, skips, opens and closes without trapping focus (1.6s)
+  Ô£ô   5 tests\e2e\virtual-studio.spec.mjs:99:1 ÔÇ║ WebGL context loss preserves HTML functionality (3.1s)
+  Ô£ô   6 tests\e2e\virtual-studio.spec.mjs:107:1 ÔÇ║ no WebGL, reduced motion and slow connections keep usable fallback (7.7s)
+  Ô£ô   7 tests\e2e\virtual-studio.spec.mjs:130:1 ÔÇ║ model load failure recovers even after Skip Intro (1.8s)
+  Ô£ô   8 tests\e2e\virtual-studio.spec.mjs:138:1 ÔÇ║ server HTML works without JavaScript; homepage preview loads no model (1.9s)
+  Ô£ô   9 tests\e2e\virtual-studio.spec.mjs:151:1 ÔÇ║ touch orbit changes view and vertical swipe scrolls the page (9.6s)
+  Ô£ô  10 tests\e2e\virtual-studio.spec.mjs:188:1 ÔÇ║ idle rendering stops; physical display opens its project; wheel scrolls (57.8s)
+  Ô£ô  11 tests\e2e\virtual-studio.spec.mjs:215:1 ÔÇ║ guided tour visits four spaces and finishes with a genuine quote link (29.0s)
+  Ô£ô  12 tests\e2e\virtual-studio.spec.mjs:226:1 ÔÇ║ quote journey preserves form validation, successful submission and recoverable errors (3.6s)
+  Ô£ô  13 tests\e2e\virtual-studio.spec.mjs:250:1 ÔÇ║ existing public routes retain metadata and responsive navigation (26.3s)
+  Ô£ô  14 tests\e2e\virtual-studio.spec.mjs:263:1 ÔÇ║ retry recovers a failed model request and repeated entry has clean teardown (19.5s)
+  Ô£ô  15 tests\e2e\virtual-studio.spec.mjs:280:1 ÔÇ║ studio and portfolio panel pass automated accessibility checks (1.8s)
+  Ô£ô  16 tests\e2e\virtual-studio.spec.mjs:291:1 ÔÇ║ reset view restores the establishing camera after orbit without reloading assets (9.7s)
+  Ô£ô  17 tests\e2e\virtual-studio.spec.mjs:323:1 ÔÇ║ welcome separates exploration from tour and details collapse accessibly (16.4s)
+  Ô£ô  18 tests\e2e\virtual-studio.spec.mjs:346:1 ÔÇ║ initial phone landscape caps DPR and all requested layouts stay within viewport (8.6s)
+  Ô£ô  19 tests\e2e\virtual-studio.spec.mjs:368:1 ÔÇ║ phone camera controls return the scene to view and label the exterior correctly (3.6s)
+
+  19 passed (4.0m)

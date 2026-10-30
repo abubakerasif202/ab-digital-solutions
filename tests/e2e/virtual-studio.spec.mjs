@@ -1,7 +1,13 @@
 import { test, expect } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as THREE from "three";
-const output = "qa/virtual-studio";
+import sharp from "sharp";
+const output = process.env.QA_OUT || "qa/virtual-studio";
+test.beforeAll(() => {
+  if (!["localhost", "127.0.0.1"].includes(new URL(process.env.QA_BASE_URL || "http://127.0.0.1:3100").hostname)) {
+    throw new Error("Studio QA must run locally; contact submissions are intercepted.");
+  }
+});
 const mode = (page) => page.locator("[data-mode]");
 async function intercept(page) {
   await page.route("**/api/analytics", (route) => route.fulfill({ status: 204 }));
@@ -9,7 +15,7 @@ async function intercept(page) {
 }
 async function enter(page) {
   await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
-  await expect(mode(page)).toHaveAttribute("data-mode", /intro|explore/, { timeout: 30000 });
+  await expect(mode(page)).toHaveAttribute("data-mode", /arrival|intro|explore/, { timeout: 30000 });
   const skip = page.getByRole("button", { name: "Skip Intro", exact: true });
   if (await skip.isVisible()) await page.keyboard.press("Escape");
   await expect(mode(page)).toHaveAttribute("data-mode", "explore");
@@ -64,7 +70,7 @@ for (const width of [390, 768, 1440]) {
     await expect(page.getByRole("button", { name: "Guided tour", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Guided tour", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pause tour", exact: true })).toBeVisible();
-  await page.screenshot({ path: "qa/studio-v3/after/guided-tour.png" });
+  await page.screenshot({ path: `${output}/guided-tour.png` });
   await page.getByRole("button", { name: "Pause tour", exact: true }).click();
     await page.getByRole("button", { name: "Use still view" }).click();
     await expect(page.locator("canvas")).toHaveCount(0);
@@ -146,8 +152,8 @@ test("touch orbit changes view and vertical swipe scrolls the page", async ({ br
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   const page = await context.newPage(); await intercept(page); await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio" }).tap();
-  await expect(mode(page)).toHaveAttribute("data-mode", /intro|explore/, { timeout: 30000 });
-  await page.getByRole("button", { name: "Start Exploring", exact: true }).click();
+  await expect(mode(page)).toHaveAttribute("data-mode", /arrival|intro|explore/, { timeout: 30000 });
+  await page.getByRole("button", { name: "Skip Intro", exact: true }).click();
   await expect(mode(page)).toHaveAttribute("data-mode", "explore", { timeout: 10000 });
   await page.locator("canvas").scrollIntoViewIfNeeded(); await page.waitForTimeout(2500);
   const client = await context.newCDPSession(page), bounds = await page.locator("canvas").boundingBox();
@@ -187,11 +193,15 @@ test("idle rendering stops; physical display opens its project; wheel scrolls", 
       const original = proto[name]; proto[name] = function(...args) { window.__studioDraws++; return original.apply(this,args); };
     }
   });
-  await page.goto("/studio", { waitUntil: "networkidle" }); await enter(page); await page.waitForTimeout(5000);
-  const start = await page.evaluate(() => window.__studioDraws); await page.waitForTimeout(1200);
+  await page.goto("/studio", { waitUntil: "networkidle" }); await enter(page);
+  // Ambient traffic and people animate while the visitor is active, then the world rests: no timers, no draws.
+  await page.waitForTimeout(48000);
+  const start = await page.evaluate(() => window.__studioDraws); await page.waitForTimeout(2500);
   expect(await page.evaluate(() => window.__studioDraws)).toBe(start);
+  await page.mouse.move(5, 5); await page.mouse.move(25, 25); await page.waitForTimeout(800);
+  expect(await page.evaluate(() => window.__studioDraws)).toBeGreaterThan(start);
   const bounds = await page.locator("canvas").boundingBox();
-  const camera = new THREE.PerspectiveCamera(42, bounds.width/bounds.height, .1, 120);
+  const camera = new THREE.PerspectiveCamera(42, bounds.width/bounds.height, .1, 560);
   camera.position.set(19,15,24); camera.lookAt(0,.2,0); camera.updateMatrixWorld();
   const point = new THREE.Vector3(-4.9,2.45,-4.87).project(camera);
   await page.mouse.click(bounds.x+(point.x+1)/2*bounds.width, bounds.y+(1-point.y)/2*bounds.height);
@@ -286,25 +296,27 @@ test("reset view restores the establishing camera after orbit without reloading 
   await page.waitForTimeout(2300);
   await expect(page.locator('[class*="sceneCaption"]')).toContainText("Swipe up to scroll");
   const canvas = page.locator("canvas");
-  let original = await canvas.screenshot();
-  await expect.poll(async () => {
-    const next = await canvas.screenshot();
-    const stable = next.equals(original);
-    original = next;
-    return stable;
-  }, { intervals: [300, 500, 1000], timeout: 10000 }).toBe(true);
+  // Ambient traffic and people keep a few pixels moving, so compare views by similarity, not byte equality.
+  const similarity = async (a, b) => {
+    const [x, y] = await Promise.all([a, b].map((png) => sharp(png).resize(195).raw().toBuffer()));
+    let same = 0;
+    for (let i = 0; i < x.length; i++) if (Math.abs(x[i] - y[i]) < 14) same++;
+    return same / x.length;
+  };
+  await page.waitForTimeout(1500);
+  const original = await canvas.screenshot();
   const bounds = await canvas.boundingBox();
   await page.mouse.move(bounds.x + bounds.width * .5, bounds.y + bounds.height * .5);
   await page.mouse.down(); await page.mouse.move(bounds.x + bounds.width * .7, bounds.y + bounds.height * .5, { steps: 6 }); await page.mouse.up();
   await page.waitForTimeout(300);
-  expect((await canvas.screenshot()).equals(original)).toBe(false);
+  expect(await similarity(await canvas.screenshot(), original)).toBeLessThan(.9);
   const requests = models.length;
   await page.getByRole("button", { name: "Reset view", exact: true }).click();
   await page.waitForTimeout(2300);
   // Wait for the actual rendered endpoint rather than a fixed GPU deadline.
-  await expect.poll(async () => (await canvas.screenshot()).equals(original), { intervals: [300, 500, 1000], timeout: 10000 }).toBe(true);
-  await writeFile("qa/gilt-ruby/reset-original.png", original);
-  await writeFile("qa/gilt-ruby/reset-restored.png", await canvas.screenshot());
+  await expect.poll(async () => similarity(await canvas.screenshot(), original), { intervals: [300, 500, 1000], timeout: 10000 }).toBeGreaterThan(.93);
+  await writeFile(`${output}/reset-original.png`, original);
+  await writeFile(`${output}/reset-restored.png`, await canvas.screenshot());
   expect(models.length).toBe(requests);
 });
 
@@ -318,7 +330,7 @@ test("welcome separates exploration from tour and details collapse accessibly", 
   await expect(page.getByRole("button", { name: "Guided tour", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Guided tour", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pause tour", exact: true })).toBeVisible();
-  await page.screenshot({ path: "qa/studio-v3/after/guided-tour.png" });
+  await page.screenshot({ path: `${output}/guided-tour.png` });
   await page.getByRole("button", { name: "Pause tour", exact: true }).click();
   await page.getByRole("button", { name: "Next Room", exact: true }).click();
   await expect(page.locator("#studio-panel-heading")).toHaveText("Work with purpose.");
@@ -339,7 +351,7 @@ test("initial phone landscape caps DPR and all requested layouts stay within vie
   await page.waitForTimeout(1900);
   const landscapeStage = await mode(page).boundingBox();
   expect(landscapeStage.y + landscapeStage.height).toBeLessThanOrEqual(391);
-  await page.screenshot({ path: "qa/studio-v3/after/initial-landscape.png" });
+  await page.screenshot({ path: `${output}/initial-landscape.png` });
   for (const width of [320, 360, 375, 390, 430, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button", { name: "Reception" }).click();
@@ -351,4 +363,22 @@ test("initial phone landscape caps DPR and all requested layouts stay within vie
     await page.keyboard.press("Escape");
   }
   await context.close();
+});
+
+test("phone camera controls return the scene to view and label the exterior correctly", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/studio", { waitUntil: "networkidle" });
+  await enter(page);
+  const top = () => mode(page).evaluate(element => element.getBoundingClientRect().top);
+  for (const name of ["Back to entrance", "Reset view", "Guided tour"]) {
+    const control = page.getByRole("button", { name, exact: true });
+    await control.scrollIntoViewIfNeeded();
+    await control.click();
+    await expect.poll(top).toBeGreaterThanOrEqual(0);
+    await expect.poll(top).toBeLessThan(110);
+    if (name === "Back to entrance") {
+      await expect(page.locator('[class*="sceneCaption"]')).toContainText("Sydney / Studio entrance");
+      await expect(page.getByRole("navigation", { name: "Studio spaces" }).locator('[aria-pressed="true"]')).toHaveCount(0);
+    }
+  }
 });

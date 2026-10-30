@@ -1,0 +1,456 @@
+[
+  {
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "errors": [],
+    "captures": [
+      {
+        "file": "390x844-arrival-0.png",
+        "elapsedMs": 1451,
+        "mode": "arrival"
+      },
+      {
+        "file": "390x844-arrival-2.png",
+        "elapsedMs": 3388,
+        "mode": "arrival"
+      },
+      {
+        "file": "390x844-arrival-4.png",
+        "elapsedMs": 5638,
+        "mode": "arrival"
+      },
+      {
+        "file": "390x844-arrival-6.png",
+        "elapsedMs": 7078,
+        "mode": "arrival"
+      },
+      {
+        "file": "390x844-arrival-8.png",
+        "elapsedMs": 10113,
+        "mode": "arrival"
+      },
+      {
+        "file": "390x844-arrival-10.png",
+        "elapsedMs": 11943,
+        "mode": "arrival"
+      },
+      {
+        "file": "390x844-arrival-12.png",
+        "elapsedMs": 14014,
+        "mode": "arrival"
+      },
+      {
+        "file": "390x844-arrival-15.png",
+        "elapsedMs": 17005,
+        "mode": "intro"
+      },
+      {
+        "file": "390x844-welcome.png",
+        "elapsedMs": 19391,
+        "mode": "intro"
+      },
+      {
+        "file": "390x844-reception-panel.png",
+        "elapsedMs": 28920,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-gallery-panel.png",
+        "elapsedMs": 36485,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-services-panel.png",
+        "elapsedMs": 44042,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-consultation-panel.png",
+        "elapsedMs": 52015,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-street-motion-0.png",
+        "elapsedMs": 58883,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-street-motion-1.png",
+        "elapsedMs": 65095,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-street-motion-2.png",
+        "elapsedMs": 72485,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-street-motion-3.png",
+        "elapsedMs": 79469,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-street-motion-4.png",
+        "elapsedMs": 86223,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-street-motion-5.png",
+        "elapsedMs": 92293,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-reception-motion-0.png",
+        "elapsedMs": 102022,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-reception-motion-1.png",
+        "elapsedMs": 106697,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-reception-motion-2.png",
+        "elapsedMs": 111109,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-reception-motion-3.png",
+        "elapsedMs": 115459,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-staff-motion-0.png",
+        "elapsedMs": 122593,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-staff-motion-1.png",
+        "elapsedMs": 127945,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-staff-motion-2.png",
+        "elapsedMs": 133138,
+        "mode": "explore"
+      },
+      {
+        "file": "390x844-staff-motion-3.png",
+        "elapsedMs": 138264,
+        "mode": "explore"
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "overflow": false,
+    "errors": [],
+    "captures": [
+      {
+        "file": "1440x1000-arrival-0.png",
+        "elapsedMs": 5489,
+        "mode": "arrival"
+      },
+      {
+        "file": "1440x1000-arrival-2.png",
+        "elapsedMs": 12212,
+        "mode": "arrival"
+      },
+      {
+        "file": "1440x1000-arrival-4.png",
+        "elapsedMs": 21012,
+        "mode": "intro"
+      },
+      {
+        "file": "1440x1000-arrival-6.png",
+        "elapsedMs": 32451,
+        "mode": "intro"
+      },
+      {
+        "file": "1440x1000-arrival-8.png",
+        "elapsedMs": 47268,
+        "mode": "intro"
+      },
+      {
+        "file": "1440x1000-arrival-10.png",
+        "elapsedMs": 48725,
+        "mode": "intro"
+      },
+      {
+        "file": "1440x1000-arrival-12.png",
+        "elapsedMs": 49056,
+        "mode": "intro"
+      },
+      {
+        "file": "1440x1000-arrival-15.png",
+        "elapsedMs": 49337,
+        "mode": "intro"
+      },
+      {
+        "file": "1440x1000-welcome.png",
+        "elapsedMs": 49595,
+        "mode": "intro"
+      },
+      {
+        "file": "1440x1000-reception-panel.png",
+        "elapsedMs": 64624,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-gallery-panel.png",
+        "elapsedMs": 80119,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-services-panel.png",
+        "elapsedMs": 99693,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-consultation-panel.png",
+        "elapsedMs": 115513,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-street-motion-0.png",
+        "elapsedMs": 134273,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-street-motion-1.png",
+        "elapsedMs": 146916,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-street-motion-2.png",
+        "elapsedMs": 159301,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-street-motion-3.png",
+        "elapsedMs": 173567,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-street-motion-4.png",
+        "elapsedMs": 178152,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-street-motion-5.png",
+        "elapsedMs": 182294,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-reception-motion-0.png",
+        "elapsedMs": 195512,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-reception-motion-1.png",
+        "elapsedMs": 207087,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-reception-motion-2.png",
+        "elapsedMs": 218664,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-reception-motion-3.png",
+        "elapsedMs": 233068,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-staff-motion-0.png",
+        "elapsedMs": 253988,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-staff-motion-1.png",
+        "elapsedMs": 267017,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-staff-motion-2.png",
+        "elapsedMs": 278823,
+        "mode": "explore"
+      },
+      {
+        "file": "1440x1000-staff-motion-3.png",
+        "elapsedMs": 290955,
+        "mode": "explore"
+      }
+    ]
+  },
+  {
+    "width": 320,
+    "height": 844,
+    "overflow": false,
+    "errors": [],
+    "captures": [
+      {
+        "file": "320x844-reception-panel.png",
+        "elapsedMs": 4352,
+        "mode": "explore"
+      },
+      {
+        "file": "320x844-gallery-panel.png",
+        "elapsedMs": 9432,
+        "mode": "explore"
+      },
+      {
+        "file": "320x844-services-panel.png",
+        "elapsedMs": 15367,
+        "mode": "explore"
+      },
+      {
+        "file": "320x844-consultation-panel.png",
+        "elapsedMs": 21670,
+        "mode": "explore"
+      }
+    ]
+  },
+  {
+    "width": 360,
+    "height": 844,
+    "overflow": false,
+    "errors": [],
+    "captures": [
+      {
+        "file": "360x844-reception-panel.png",
+        "elapsedMs": 5201,
+        "mode": "explore"
+      },
+      {
+        "file": "360x844-gallery-panel.png",
+        "elapsedMs": 9760,
+        "mode": "explore"
+      },
+      {
+        "file": "360x844-services-panel.png",
+        "elapsedMs": 15074,
+        "mode": "explore"
+      },
+      {
+        "file": "360x844-consultation-panel.png",
+        "elapsedMs": 21029,
+        "mode": "explore"
+      }
+    ]
+  },
+  {
+    "width": 375,
+    "height": 844,
+    "overflow": false,
+    "errors": [],
+    "captures": [
+      {
+        "file": "375x844-reception-panel.png",
+        "elapsedMs": 4302,
+        "mode": "explore"
+      },
+      {
+        "file": "375x844-gallery-panel.png",
+        "elapsedMs": 9048,
+        "mode": "explore"
+      },
+      {
+        "file": "375x844-services-panel.png",
+        "elapsedMs": 14558,
+        "mode": "explore"
+      },
+      {
+        "file": "375x844-consultation-panel.png",
+        "elapsedMs": 19326,
+        "mode": "explore"
+      }
+    ]
+  },
+  {
+    "width": 430,
+    "height": 844,
+    "overflow": false,
+    "errors": [],
+    "captures": [
+      {
+        "file": "430x844-reception-panel.png",
+        "elapsedMs": 5963,
+        "mode": "explore"
+      },
+      {
+        "file": "430x844-gallery-panel.png",
+        "elapsedMs": 11041,
+        "mode": "explore"
+      },
+      {
+        "file": "430x844-services-panel.png",
+        "elapsedMs": 16314,
+        "mode": "explore"
+      },
+      {
+        "file": "430x844-consultation-panel.png",
+        "elapsedMs": 21055,
+        "mode": "explore"
+      }
+    ]
+  },
+  {
+    "width": 768,
+    "height": 1000,
+    "overflow": false,
+    "errors": [],
+    "captures": [
+      {
+        "file": "768x1000-reception-panel.png",
+        "elapsedMs": 7350,
+        "mode": "explore"
+      },
+      {
+        "file": "768x1000-gallery-panel.png",
+        "elapsedMs": 15660,
+        "mode": "explore"
+      },
+      {
+        "file": "768x1000-services-panel.png",
+        "elapsedMs": 23518,
+        "mode": "explore"
+      },
+      {
+        "file": "768x1000-consultation-panel.png",
+        "elapsedMs": 31660,
+        "mode": "explore"
+      }
+    ]
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "overflow": false,
+    "errors": [],
+    "captures": [
+      {
+        "file": "844x390-reception-panel.png",
+        "elapsedMs": 5870,
+        "mode": "explore"
+      },
+      {
+        "file": "844x390-gallery-panel.png",
+        "elapsedMs": 10270,
+        "mode": "explore"
+      },
+      {
+        "file": "844x390-services-panel.png",
+        "elapsedMs": 15297,
+        "mode": "explore"
+      },
+      {
+        "file": "844x390-consultation-panel.png",
+        "elapsedMs": 19656,
+        "mode": "explore"
+      }
+    ]
+  }
+]
