@@ -82,7 +82,7 @@ Ambient movement legitimately submits draws while active. After45s without input
 
 ## Git and release
 
-Implementation commit and draft PR: PENDING final lint/diff review. Branch: `feat/living-sydney-v4`. Parent: `4534dfa2ae70c8c3f1f717ee0c3baf79b9377e0f`.
+Implementation and evidence commit: `2059503`. Branch: `feat/living-sydney-v4`; parent / V3 rollback: `4534dfa2ae70c8c3f1f717ee0c3baf79b9377e0f`. Draft PR: PENDING creation. The final report is recorded in a follow-up documentation commit.
 
 Unrelated pre-existing AGENTS, skill, agent configuration and historical QA changes were excluded from selective staging. V3 rollback source remains available. The staged file manifest is `qa/living-sydney-v4/final/changed-files.txt`; branch and implementation commit will be recorded after the commit. Production remains V3; no live state is claimed from a local build or Git action.
 
