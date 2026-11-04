@@ -438,3 +438,19 @@
   .gr-cs-hero-media .browser-frame { animation: gr-cs-enter 1100ms var(--ease-lux, ease) 220ms both; }
 }
 @keyframes gr-cs-enter { from { opacity: 0; translate: 0 24px; } to { opacity: 1; translate: 0 0; } }
+
+.gr-wi-live-link { margin-top: 20px; min-height: 44px; }
+/* Scroll-linked image motion stays compositor-only and optional. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .gr-cs--wild-pest .gr-cs-pan img {
+      animation: project-image-drift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+    @keyframes project-image-drift {
+      from { transform: scale(1.035) translateY(-1%); }
+      to { transform: scale(1.035) translateY(1%); }
+    }
+  }
+}

@@ -32,7 +32,7 @@ test("destination helpers retain a graceful unavailable-site state", () => {
 
 test("Fresh Stop is the approved sixteenth project on its published custom domain", () => {
   const project = findProject("fresh-stop");
-  assert.equal(projects.length, 16);
+  assert.equal(projects.length, 18);
   assert.equal(projects[15], project);
   assert.equal(project.url, "https://www.freshstop.com.au/");
   assert.equal(project.displayUrl, "freshstop.com.au");
@@ -45,4 +45,27 @@ test("Fresh Stop is the approved sixteenth project on its published custom domai
   assert.match(project.solution, /enquiry rather than a confirmed order/);
   assert.match(project.solution, /email and WhatsApp/);
   assert.doesNotMatch(JSON.stringify(project), /fresh-stop\.vercel\.app|Stripe|inventory synchronisation/i);
+});
+
+test("Wild Pest Solutions publishes a real screenshot gallery and NSW case study", async () => {
+  const { existsSync } = await import("node:fs");
+  const project = findProject("wild-pest-solutions");
+  assert.equal(project.url, "https://wildpestsolutions.com.au/");
+  assert.equal(project.region, "New South Wales, Australia");
+  assert.equal(project.headline, "Digital Experiences Built for the Wild.");
+  assert.equal(projectVisitLabel(project), "Visit Live Website");
+  assert.equal(project.gallery.length, 3);
+  for (const shot of [{ src: project.image }, ...project.gallery]) {
+    assert.ok(existsSync(`public${shot.src}`), shot.src);
+  }
+  assert.equal(project.gallery[0].aspectRatio, "390 / 844");
+  assert.doesNotMatch(JSON.stringify(project), /conversion uplift|award-winning|testimonial/i);
+});
+
+test("Pept Up Labs records catalogue capabilities without unverified outcomes", () => {
+  const project = findProject("pept-up-labs");
+  assert.equal(project.url, "https://peptuplabs.com.au/");
+  assert.equal(projectVisitLabel(project), "Visit Live Website");
+  assert.match(project.solution, /laboratory research/);
+  assert.doesNotMatch(project.solution, /proven efficacy|increased conversions|certified purity/i);
 });

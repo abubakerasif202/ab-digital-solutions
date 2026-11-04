@@ -1,0 +1,15 @@
+import { chromium } from '@playwright/test';
+import sharp from 'sharp';
+const b = await chromium.launch({headless:true});
+const p = await b.newPage({viewport:{width:1440,height:1000}});
+await p.goto('https://peptuplabs.com.au/',{waitUntil:'domcontentloaded',timeout:60000});
+await p.evaluate(() => document.fonts.ready);
+await p.waitForTimeout(5000);
+console.log((await p.locator('body').innerText()).slice(0,18000));
+console.log(await p.locator('a').evaluateAll(as=>as.map(a=>({text:a.textContent,href:a.getAttribute('href')})).filter(a=>a.text?.trim()).slice(0,65)));
+await p.screenshot({path:'qa/wild-pest-solutions/peptup-desktop.png'});
+await sharp('qa/wild-pest-solutions/peptup-desktop.png').webp({quality:90}).toFile('public/site/ab-digital-premium/assets/ab-portfolio-pept-up-labs-desktop.webp');
+await p.setViewportSize({width:390,height:844});
+await p.screenshot({path:'qa/wild-pest-solutions/peptup-mobile.png'});
+await sharp('qa/wild-pest-solutions/peptup-mobile.png').webp({quality:90}).toFile('public/site/ab-digital-premium/assets/ab-portfolio-pept-up-labs-mobile.webp');
+await b.close();

@@ -2,6 +2,8 @@ import { assetBase } from "./site-config";
 
 export type Project = {
   slug: string;
+  headline?: string;
+  region?: string;
   name: string;
   category: string;
   sector: string;
@@ -27,6 +29,7 @@ export type ProjectShot = {
   src: string;
   alt: string;
   caption: string;
+  aspectRatio?: string;
 };
 
 export const projects = [
@@ -437,6 +440,60 @@ export const projects = [
     seoTitle: "Fresh Stop — Grocery Catalogue Website Case Study",
     seoDescription:
       "Fresh Stop's Sydney grocery catalogue website by AB Web Studio: indicative prices, cart-based enquiries, wholesale pathways and home delivery contact options.",
+  },
+  {
+    slug: "wild-pest-solutions",
+    name: "Wild Pest Solutions",
+    category: "Web Design & Development",
+    sector: "Environmental & Wildlife Management",
+    region: "New South Wales, Australia",
+    headline: "Digital Experiences Built for the Wild.",
+    description: "A distinctive digital presence for Wild Pest Solutions, connecting NSW landowners with responsible feral animal management services.",
+    overview: "Wild Pest Solutions provides feral animal management services throughout New South Wales. The website presents its specialist services, regional coverage and property enquiry process through a professional, accessible digital experience.",
+    solution: "An earthy visual direction pairs Australian landscape and wildlife imagery with strong typography and spacious layouts. Species-led service navigation helps landowners explore relevant information, while regional coverage and a clear property enquiry pathway guide the next step. Responsive layouts carry that hierarchy from desktop to mobile.",
+    url: "https://wildpestsolutions.com.au/",
+    displayUrl: "wildpestsolutions.com.au",
+    image: `${assetBase}/ab-portfolio-wild-pest-solutions-desktop.webp`,
+    alt: "Wild Pest Solutions desktop homepage presenting feral animal management for NSW landowners",
+    tags: ["Web Design", "Responsive Layouts", "Service Navigation", "Property Enquiries"],
+    keyFeatures: [
+      "Species-led feral animal management service navigation",
+      "Australian landscape and wildlife visual storytelling",
+      "NSW regional coverage information",
+      "Property enquiry and contact pathways",
+    ],
+    techStack: [],
+    ctaLabel: "Visit Live Website",
+    seoTitle: "Wild Pest Solutions Website Project",
+    seoDescription: "Explore the Wild Pest Solutions website project by AB Web Studio, showcasing a professional digital presence for NSW feral animal management.",
+    gallery: [
+      { src: `${assetBase}/ab-portfolio-wild-pest-solutions-mobile.webp`, alt: "Wild Pest Solutions homepage at a 390 pixel mobile viewport", caption: "The homepage, designed for smaller screens.", aspectRatio: "390 / 844" },
+      { src: `${assetBase}/ab-portfolio-wild-pest-solutions-services.webp`, alt: "Wild Pest Solutions species-led services section", caption: "Service navigation organised around invasive species.", aspectRatio: "1440 / 1000" },
+      { src: `${assetBase}/ab-portfolio-wild-pest-solutions-contact.webp`, alt: "Wild Pest Solutions property assistance enquiry page", caption: "A clear starting point for property enquiries.", aspectRatio: "1440 / 1000" },
+    ],
+  },
+  {
+    slug: "pept-up-labs",
+    name: "Pept Up Labs",
+    category: "Web Design & Development",
+    sector: "E-commerce",
+    headline: "Precision Meets a Distinctive Digital Experience.",
+    description: "A bold product catalogue for Pept Up Labs, bringing single vials, bulk collections and laboratory accessories into a clear, responsive interface.",
+    overview: "Pept Up Labs presents a catalogue of laboratory research products and accessories. The website helps visitors browse collections, compare available variants and prices in Australian dollars, and find product and order support.",
+    solution: "An electric-blue and cyan palette, dark backgrounds and oversized typography establish a distinctive visual identity. Product artwork anchors the homepage, while collection navigation, strength selection and quick-view controls organise a detailed catalogue. Mobile layouts preserve the hierarchy and direct access to support. The published site identifies its products as intended for laboratory research, not human consumption or therapeutic use.",
+    url: "https://peptuplabs.com.au/",
+    displayUrl: "peptuplabs.com.au",
+    image: `${assetBase}/ab-portfolio-pept-up-labs-desktop.webp`,
+    alt: "Pept Up Labs desktop homepage with electric-blue branding and product catalogue navigation",
+    tags: ["Catalogue Design", "Product Navigation", "Responsive UI", "Brand Experience"],
+    keyFeatures: ["Single-vial, ten-vial bulk pack and accessory collections", "Product strength selection and AUD price presentation", "Quick-view product controls", "Email and WhatsApp support pathways"],
+    techStack: [],
+    ctaLabel: "Visit Live Website",
+    seoTitle: "Pept Up Labs Website Project",
+    seoDescription: "Explore the Pept Up Labs website project by AB Web Studio: distinctive catalogue design, responsive product navigation and a bold visual identity.",
+    gallery: [
+      { src: `${assetBase}/ab-portfolio-pept-up-labs-mobile.webp`, alt: "Pept Up Labs product catalogue homepage on mobile", caption: "The catalogue experience on a smaller screen.", aspectRatio: "390 / 844" },
+    ],
   },
 ] as const satisfies readonly Project[];
 

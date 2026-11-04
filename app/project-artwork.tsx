@@ -9,6 +9,7 @@ type Props = {
 
 /** Intrinsic proportions of the supplied public desktop captures. */
 export function projectArtworkRatio(project: Project): string {
+  if (["wild-pest-solutions", "pept-up-labs"].includes(project.slug)) return "1440 / 1000";
   if (project.slug === "jufaja-homes") return "16 / 9";
   if (project.slug === "adelaide-wholesale-tyres") return "1440 / 986";
   if (project.slug === "milestone-renovate") return "1440 / 900";

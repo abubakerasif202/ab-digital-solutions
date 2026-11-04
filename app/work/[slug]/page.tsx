@@ -90,11 +90,11 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
 
   const number = String(currentIndex + 1).padStart(2, "0");
   const total = String(projects.length).padStart(2, "0");
-  const approachHeading = `${project.tags[0]} for ${project.name}`;
+  const approachHeading = project.headline ?? `${project.tags[0]} for ${project.name}`;
   // Three presentations share one system so consecutive case studies never
   // feel identical: live software gets a dark system frame, websites
   // alternate between a cinematic full-width hero and an editorial split.
-  const variant = softwareProject ? "system" : currentIndex % 2 === 0 ? "cinematic" : "split";
+  const variant = project.slug === "wild-pest-solutions" ? "cinematic" : softwareProject ? "system" : currentIndex % 2 === 0 ? "cinematic" : "split";
   const destinationLabel = projectDestinationLabel(project);
   const visitLabel = `${projectVisitLabel(project)} — ${project.name} (opens in a new tab)`;
 
@@ -102,7 +102,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className={`content-page case-study-page gr-cs gr-cs--${variant}`} id="main-content">
+      <main className={`content-page case-study-page gr-cs gr-cs--${variant}${project.slug === "wild-pest-solutions" ? " gr-cs--wild-pest" : ""}`} id="main-content">
         <header className="container gr-cs-hero">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -140,7 +140,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           <Reveal className="case-study-meta gr-cs-meta">
             <div><span>Sector</span><strong>{project.sector}</strong></div>
             <div><span>Category</span><strong>{formatCategory(project.category)}</strong></div>
-            <div><span>Stack</span><strong>{project.techStack.join(" · ")}</strong></div>
+            <div><span>{project.region ? "Region" : project.techStack.length ? "Stack" : "Focus"}</span><strong>{project.region ?? (project.techStack.length ? project.techStack.join(" · ") : project.tags[0])}</strong></div>
             <div>
               <span>{destinationLabel}</span>
               <a href={project.url} target="_blank" rel="noopener noreferrer" data-cursor="VISIT" aria-label={`${project.displayUrl} (opens in a new tab)`}>
@@ -190,7 +190,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                 <div className="sidebar-tags">
                   {project.tags.map((tag) => <span key={tag} className="project-tag-pill">{tag}</span>)}
                 </div>
-                <h3>Project technology</h3>
+                {project.techStack.length > 0 ? <h3>Project technology</h3> : null}
                 <div className="sidebar-tech">
                   {project.techStack.map((tech) => <span key={tech} className="tech-pill">{tech}</span>)}
                 </div>
@@ -219,12 +219,12 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           </Reveal>
           <p className="gr-cs-pan-caption">{softwareProject ? "Public sign-in capture only. Internal records remain private." : `Desktop homepage capture · ${project.displayUrl}`}</p>
           {project.gallery ? (
-            <ul className="gr-cs-gallery" aria-label={`${project.name} tool screens`}>
+            <ul className="gr-cs-gallery" aria-label={`${project.name} website screens`}>
               {project.gallery.map((shot, idx) => (
                 <li key={shot.src}>
                   <Reveal as="div" delay={idx * 110}>
                     <figure>
-                    <div className="gr-cs-gallery-frame" style={{ aspectRatio: projectArtworkRatio(project) }}>
+                    <div className="gr-cs-gallery-frame" style={{ aspectRatio: shot.aspectRatio ?? projectArtworkRatio(project) }}>
                       <Image src={shot.src} alt={shot.alt} fill loading="lazy" sizes="(max-width: 860px) 100vw, 33vw" />
                     </div>
                     <figcaption>{shot.caption}</figcaption>
@@ -283,7 +283,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
         <aside className="gr-final-cta" aria-label="Start your project">
           <Reveal className="container gr-final-cta-inner">
             <p className="eyebrow">Have a project in mind?</p>
-            <h2>Let&apos;s create a digital experience with a clear <span className="accent-serif">commercial purpose.</span></h2>
+            <h2>{project.slug === "wild-pest-solutions" ? <>Let&apos;s build something <span className="accent-serif">exceptional.</span></> : <>Let&apos;s create a digital experience with a clear <span className="accent-serif">commercial purpose.</span></>}</h2>
             <div className="content-actions">
               <Link className="button button-primary" href="/contact" data-magnetic>
                 Get a Website Quote <ArrowIcon />

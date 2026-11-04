@@ -167,11 +167,12 @@ function WorkIndexCard({ project, type }: { project: Project; type: BlockType })
             <p className="gr-wi-description">{project.description}</p>
             <p className="gr-wi-stack">{project.techStack.join(" · ")}</p>
             <span className="gr-wi-cta">
-              View case study <ArrowIcon />
+              {["wild-pest-solutions", "pept-up-labs"].includes(project.slug) ? "View Project" : "View case study"} <ArrowIcon />
             </span>
           </div>
         </div>
       </Link>
+      {["wild-pest-solutions", "pept-up-labs"].includes(project.slug) ? <a className="button button-ghost gr-wi-live-link" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit Live Website — ${project.name} (opens in a new tab)`}>Visit Live Website <ArrowIcon /></a> : null}
     </article>
   );
 }
