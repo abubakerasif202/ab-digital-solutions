@@ -10,7 +10,7 @@ import type { KangarooPose } from "./sim/kangaroo-behavior";
 type Vec = [number, number, number];
 
 /** Procedural red kangaroo (about 1.5 m standing) built from shared unit spheres; faces +z in its own frame. */
-function createKangarooRig() {
+export function createKangarooRig() {
   const sphere = new THREE.SphereGeometry(1, 14, 10);
   const mats = {
     fur: new THREE.MeshStandardMaterial({ color: "#a4573a", roughness: 0.92 }),
@@ -52,10 +52,13 @@ function createKangarooRig() {
   blob(head, mats.cream, [0.03, 0.02, 0.09], [0, -0.04, 0.12]);
   blob(head, mats.black, [0.022, 0.02, 0.022], [0, -0.002, 0.24]);
   const ears = [1, -1].map((m) => {
-    blob(head, mats.black, [0.011, 0.012, 0.011], [m * 0.05, 0.035, 0.07]);
-    const ear = group(head, m * 0.035, 0.07, -0.02, "YXZ");
-    blob(ear, mats.fur, [0.027, 0.095, 0.014], [0, 0.09, 0]);
-    blob(ear, mats.inner, [0.017, 0.075, 0.008], [0, 0.085, 0.008]);
+    blob(head, mats.black, [0.016, 0.018, 0.016], [m * 0.052, 0.036, 0.075]);
+    blob(head, mats.cream, [0.0055, 0.0055, 0.0055], [m * 0.056, 0.043, 0.088]);
+    blob(head, mats.dark, [0.022, 0.008, 0.026], [m * 0.05, 0.06, 0.07]);
+    const ear = group(head, m * 0.038, 0.07, -0.02, "YXZ");
+    blob(ear, mats.fur, [0.034, 0.125, 0.017], [0, 0.115, 0]);
+    blob(ear, mats.inner, [0.022, 0.1, 0.01], [0, 0.11, 0.009]);
+    blob(ear, mats.dark, [0.026, 0.03, 0.014], [0, 0.225, 0]);
     return ear;
   });
   const arms = [1, -1].map((m) => {

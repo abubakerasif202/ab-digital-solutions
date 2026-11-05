@@ -16,7 +16,8 @@ import { Exterior } from "../world/Exterior";
 import { Landmarks, skyFog } from "../world/Landmarks";
 import { Traffic } from "../world/Traffic";
 import { Pedestrians } from "../world/Pedestrians";
-import { Kangaroo } from "../world/Kangaroo";
+import { Wildlife } from "../world/wildlife/Wildlife";
+import { mobileWildlifeShots, wildlifeShots } from "../world/sim/wildlife";
 import { Receptionist } from "../world/characters/Receptionist";
 import { StudioStaff } from "../world/characters/StudioStaff";
 import { worldState } from "../world/worldState";
@@ -101,7 +102,7 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
   const limit = (free: boolean) => {
     const c = controls.current;
     if (!c) return;
-    c.minDistance = free ? 0 : mobile ? 2.5 : 5;
+    c.minDistance = free ? 0 : state.animal ? 1.2 : mobile ? 2.5 : 5;
     c.maxDistance = free ? 1e4 : 48;
     c.minPolarAngle = free ? 0 : .3;
     c.maxPolarAngle = free ? Math.PI : mobile ? 1.8 : Math.PI / 2.08;
@@ -120,6 +121,7 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
     if (state.mode === "loading" && !state.resume) { const first = arrivalPose(0, portrait, baseFov); shot = { position: first.position, target: first.target }; }
     else if (state.mode === "intro") shot = mobile ? mobileShots.reception : welcomeShot;
     else if (state.outside) shot = mobile ? mobileEntranceShot : entranceShot;
+    if (state.animal && state.mode !== "loading" && state.mode !== "intro") shot = (mobile ? mobileWildlifeShots : wildlifeShots)[state.animal];
     if (camera instanceof THREE.PerspectiveCamera) {
       const view = camera.view;
       startLens.current.set(view?.enabled ? view.offsetX / view.fullWidth : 0, view?.enabled ? view.offsetY / view.fullHeight : 0);
@@ -133,7 +135,7 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
     started.current = performance.now();
     moving.current = true;
     invalidate();
-  }, [state.area, state.shot, state.mode, state.panel, state.tour, state.outside, state.overview, state.resume, size.width, size.height, mobile, portrait, baseFov, visible, camera, invalidate]);
+  }, [state.area, state.animal, state.shot, state.mode, state.panel, state.tour, state.outside, state.overview, state.resume, size.width, size.height, mobile, portrait, baseFov, visible, camera, invalidate]);
   useFrame(() => {
     const visitor = worldState.visitor;
     visitor.x = camera.position.x; visitor.y = camera.position.y; visitor.z = camera.position.z;
@@ -242,7 +244,7 @@ export default function StudioScene({ state, projects, selectedProject, visible,
         <Exterior />
         <Traffic />
         <Pedestrians />
-        <Kangaroo />
+        <Wildlife />
         <Receptionist greeting={greeting} />
         <StudioStaff />
         <Ready onReady={onReady} />
