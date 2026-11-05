@@ -27,7 +27,9 @@ function Sculpture({ animate }: { animate: boolean }) {
     elapsed.current += Math.min(delta,.05);
     group.current.rotation.y = Math.sin(elapsed.current * .8) * .12;
   });
-  return <group ref={group} position={[-5,2.35,3.1]}><primitive object={model} /></group>;
+  // The monogram is roughly 3.2 x 1.8 m at source scale. At half size and raised behind the arch it
+  // stays recognisable as a feature wall mark without hiding the counter, receptionist or gallery route.
+  return <group ref={group} position={[-5,2.95,2.25]} scale={.4}><primitive object={model} /></group>;
 }
 
 export function Reception({ animate, onSelect }: { animate: boolean; onSelect: (area: Area) => void }) {
@@ -53,21 +55,30 @@ function DisplayImage({ image }: { image: string }) {
   // Do not mutate or dispose Drei's shared cache textures here.
   return <mesh position={[0,0,.13]}><planeGeometry args={[3.4,2.33]} /><meshBasicMaterial map={texture} toneMapped={false} /></mesh>;
 }
-function ProjectDisplay({ project, position, onOpen }: { project: StudioProject; position: [number,number,number]; onOpen: () => void }) {
+function ProjectDisplay({ project, position, selected, onOpen }: { project: StudioProject; position: [number,number,number]; selected: boolean; onOpen: () => void }) {
   const [hover, setHover] = useState(false);
   return <group position={position}>
     <Block position={[0,-1.5,0]} size={[.09,1,.09]} color="#ad9361" metalness={.8} />
     <Block position={[0,-2,.1]} size={[1,.05,.65]} color="#423e34" metalness={.6} />
     <mesh onClick={(event) => { event.stopPropagation(); onOpen(); }} onPointerOver={() => setHover(true)} onPointerOut={() => setHover(false)}>
-      <boxGeometry args={[3.65,2.58,.22]} /><meshStandardMaterial color={hover ? "#e1c18a" : "#9a8055"} metalness={.75} roughness={.3} />
+      <boxGeometry args={[3.65,2.58,.22]} />
+      <meshStandardMaterial color={selected ? "#f0d49a" : hover ? "#e1c18a" : "#9a8055"} emissive={selected ? "#6b4f1c" : "#000000"} emissiveIntensity={selected ? .55 : 0} metalness={.75} roughness={.3} />
     </mesh>
     <Suspense fallback={null}><DisplayImage image={`/studio/screens/${project.slug}.webp`} /></Suspense>
+    {/* A brass plinth light marks the selected frame without relying on colour alone. */}
+    {selected && <Block position={[0,-1.45,.14]} size={[1.6,.035,.02]} color="#f4ce89" metalness={.4} />}
   </group>;
 }
-export function Gallery({ projects, onSelect, onProject }: { projects: StudioProject[]; onSelect: (area: Area) => void; onProject: (index: number) => void }) {
+const FRAMES = 3;
+export function galleryWindowStart(selected: number, total: number) {
+  return Math.min(Math.max(selected - 1, 0), Math.max(total - FRAMES, 0));
+}
+/** Three physical frames slide over the whole portfolio, so at most three textures are live at once. */
+export function Gallery({ projects, selected, onSelect, onProject }: { projects: StudioProject[]; selected: number; onSelect: (area: Area) => void; onProject: (index: number) => void }) {
+  const start = galleryWindowStart(selected, projects.length);
   return <group>
     <Block position={[-5,.13,-4.5]} size={[10,.22,5.3]} color="#171d20" />
-    {projects.map((project, index) => <ProjectDisplay key={project.slug} project={project} position={[-8.7 + index*3.8,2.45,-5]} onOpen={() => onProject(index)} />)}
+    {projects.slice(start, start + FRAMES).map((project, offset) => <ProjectDisplay key={project.slug} project={project} position={[-8.7 + offset*3.8,2.45,-5]} selected={start + offset === selected} onOpen={() => onProject(start + offset)} />)}
     <Hotspot area="gallery" label="Portfolio" position={[-5,.5,-1.6]} onSelect={onSelect} />
   </group>;
 }
@@ -77,7 +88,7 @@ export function Services({ onSelect, onService }: { onSelect: (area: Area) => vo
     {[0,1,2,3].map((index) => <group key={index} position={[2.2 + index*2.2,0,-4.4]}>
       <MarbleBlock position={[0,.5,0]} size={[1.35,1,1.35]} />
       <Block position={[0,1.03,0]} size={[1.4,.05,1.4]} color="#a38a5e" metalness={.8} />
-      <mesh position={[0,1.9,0]} rotation={[.3,index*.45,.2]} onClick={(event) => { event.stopPropagation(); onService(index); }}>
+      <mesh position={[0,1.8,0]} scale={.78} rotation={[.3,index*.45,.2]} onClick={(event) => { event.stopPropagation(); onService(index); }}>
         {index === 0 ? <boxGeometry args={[.9,.9,.9]} /> : index === 1 ? <torusGeometry args={[.53,.13,8,24]} /> : index === 2 ? <octahedronGeometry args={[.7,0]} /> : <icosahedronGeometry args={[.65,0]} />}
         <meshStandardMaterial color={index === 2 ? "#812d40" : "#c2a16b"} metalness={.72} roughness={.22} />
       </mesh>
@@ -111,10 +122,6 @@ export function Consultation({ onSelect }: { onSelect: (area: Area) => void }) {
     <mesh position={[5.6,1.4,4.3]}><cylinderGeometry args={[.12,.2,.45,12]} /><meshStandardMaterial {...brass} /></mesh>
     <mesh position={[5.6,3.8,4.3]} rotation={[Math.PI/2,0,0]}><torusGeometry args={[1.5,.045,8,48]} /><meshBasicMaterial color="#ffe1a6" /></mesh>
     {[4.6,6.6].map((x) => <Block key={x} position={[x,4.2,4.3]} size={[.015,.8,.015]} color="#bca06b" metalness={.8} />)}
-    <group position={[8.8,0,6.8]}>
-      <mesh position={[0,.4,0]}><cylinderGeometry args={[.36,.27,.8,20]} /><meshStandardMaterial color="#1d2020" roughness={.65} /></mesh>
-      <mesh position={[0,1.15,0]} scale={[.65,1,.65]}><sphereGeometry args={[.6,12,8]} /><meshStandardMaterial color="#26392c" roughness={.9} /></mesh>
-    </group>
     <Hotspot area="consultation" label="Let’s talk" position={[5.6,.4,7.3]} onSelect={onSelect} />
   </group>;
 }

@@ -31,8 +31,10 @@ useGLTF.preload("/studio/ab-monogram.glb", false, false);
 const shots: Record<Area, { position: [number,number,number]; target: [number,number,number] }> = {
   reception: { position: [-1.4,1.85,6.8], target: [-5.8,1.35,2.9] },
   gallery: { position: [-1,2.3,1], target: [-5,1.8,-5] },
-  services: { position: [9.5,2.3,-.8], target: [5.5,1.5,-4] },
-  consultation: { position: [2,2.2,7], target: [5.6,1.2,4.3] },
+  // Frontal view of all four pedestals (x 2.2 to 8.8), clear of the lounge chairs behind the camera.
+  services: { position: [5.5,2.3,1.9], target: [5.5,1.35,-4.4] },
+  // Pulled back and raised so the table, chairs and the harbour view read together.
+  consultation: { position: [1.6,2.5,8.4], target: [5.6,1.1,4.3] },
 };
 
 const mobileShots: typeof shots = {
@@ -50,7 +52,7 @@ const welcomeShot = { position: [-1.4, 1.62, 6.6] as [number,number,number], tar
 function attachEnvironment(scene: THREE.Scene, texture: THREE.Texture) {
   const previous = scene.environment;
   scene.environment = texture;
-  scene.environmentIntensity = .45;
+  scene.environmentIntensity = .6;
   return () => { scene.environment = previous; };
 }
 
@@ -111,16 +113,18 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
       invalidate();
       return;
     }
-    const overview = state.mode === "loading" || (!state.panel && !state.tour && !state.outside && state.mode !== "intro");
+    // The whole-studio overview only frames the first exploration. After a room is chosen, closing details,
+    // Reset view and the tour all keep that room in frame; Back to entrance is the only street view.
+    const overview = (state.mode === "loading" && !state.resume) || (state.overview && !state.panel && !state.tour && !state.outside && state.mode !== "intro");
     let shot = mobile ? mobileShots[state.area] : overview ? { position: [19,15,24] as [number,number,number], target: [0,.2,0] as [number,number,number] } : shots[state.area];
-    if (state.mode === "loading") { const first = arrivalPose(0, portrait, baseFov); shot = { position: first.position, target: first.target }; }
+    if (state.mode === "loading" && !state.resume) { const first = arrivalPose(0, portrait, baseFov); shot = { position: first.position, target: first.target }; }
     else if (state.mode === "intro") shot = mobile ? mobileShots.reception : welcomeShot;
     else if (state.outside) shot = mobile ? mobileEntranceShot : entranceShot;
     if (camera instanceof THREE.PerspectiveCamera) {
       const view = camera.view;
       startLens.current.set(view?.enabled ? view.offsetX / view.fullWidth : 0, view?.enabled ? view.offsetY / view.fullHeight : 0);
-      // Frame the room above the mobile sheet or beside desktop copy.
-      targetLens.current.set(state.panel && size.width >= 700 ? .13 : 0, state.panel && size.width < 700 ? .16 : 0);
+      // Frame the room beside the desktop panel. On mobile the details sit below the scene, so no offset is needed.
+      targetLens.current.set(state.panel && size.width >= 700 && size.height >= 480 ? .13 : 0, 0);
     }
     targetPosition.current.set(...shot.position);
     targetLook.current.set(...shot.target);
@@ -129,7 +133,7 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
     started.current = performance.now();
     moving.current = true;
     invalidate();
-  }, [state.area, state.shot, state.mode, state.panel, state.tour, state.outside, size.width, size.height, mobile, portrait, baseFov, visible, camera, invalidate]);
+  }, [state.area, state.shot, state.mode, state.panel, state.tour, state.outside, state.overview, state.resume, size.width, size.height, mobile, portrait, baseFov, visible, camera, invalidate]);
   useFrame(() => {
     const visitor = worldState.visitor;
     visitor.x = camera.position.x; visitor.y = camera.position.y; visitor.z = camera.position.z;
@@ -193,8 +197,8 @@ function readCapabilities(): Tier {
   return pickTier({ cores: nav.hardwareConcurrency, memoryGb: nav.deviceMemory, coarsePointer: matchMedia("(pointer: coarse)").matches, saveData: nav.connection?.saveData });
 }
 
-export default function StudioScene({ state, projects, visible, onReady, onFailure, onSelect, onProject, onService, onManual, onArrive }: {
-  state: StudioState; projects: StudioProject[]; visible: boolean;
+export default function StudioScene({ state, projects, selectedProject, visible, onReady, onFailure, onSelect, onProject, onService, onManual, onArrive }: {
+  state: StudioState; projects: StudioProject[]; selectedProject: number; visible: boolean;
   onReady: () => void; onFailure: () => void; onSelect: (area: Area) => void; onProject: (index: number) => void; onService: (index: number) => void; onManual: () => void; onArrive: () => void;
 }) {
   const mobile = typeof window !== "undefined" && (window.innerWidth < 768 || (window.innerWidth < 1000 && window.innerHeight < 500));
@@ -230,7 +234,7 @@ export default function StudioScene({ state, projects, visible, onReady, onFailu
         <Facade />
         <Ground />
         <Reception animate={animate} onSelect={onSelect} />
-        <Gallery projects={projects} onSelect={onSelect} onProject={onProject} />
+        <Gallery projects={projects} selected={selectedProject} onSelect={onSelect} onProject={onProject} />
         <Services onSelect={onSelect} onService={onService} />
         <Consultation onSelect={onSelect} />
         <GoldDust animate={animate} />
@@ -264,5 +268,5 @@ function ContextGuard({ onFailure }: { onFailure: () => void }) {
 
 export function resetStudioResources(projects: StudioProject[]) {
   useGLTF.clear("/studio/ab-monogram.glb");
-  for (const project of projects.slice(0, 3)) useTexture.clear(`/studio/screens/${project.slug}.webp`);
+  for (const project of projects) useTexture.clear(`/studio/screens/${project.slug}.webp`);
 }

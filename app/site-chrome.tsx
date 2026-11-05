@@ -103,9 +103,12 @@ export function SiteHeader() {
   useEffect(() => {
     const mobileViewport = window.matchMedia("(max-width: 720px)");
     const eligibleRoute = pathname !== "/privacy";
+    // Sections that already carry their own enquiry actions (and need the screen to themselves) opt in
+    // with data-conversion-area, so the sticky button never covers them.
     const conversionAreas = [
       document.getElementById("contact"),
       document.querySelector(".site-footer"),
+      ...Array.from(document.querySelectorAll("[data-conversion-area]")),
     ].filter((element): element is Element => element !== null);
     const visibleConversionAreas = new Set<Element>();
     const observedConversionAreas = new Set<Element>();
@@ -226,6 +229,7 @@ export function SiteHeader() {
   // the scroll-spy marks the in-page section being read instead.
   const routeSection = pathname.startsWith("/work") ? "work"
     : pathname.startsWith("/services") ? "services"
+    : pathname.startsWith("/studio") ? "studio"
     : pathname.startsWith("/about") ? "about"
     : pathname.startsWith("/contact") ? "contact"
     : null;
@@ -263,6 +267,7 @@ export function SiteHeader() {
           >
             <Link href="/work" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
             <Link href="/services" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
+            <Link href="/studio" prefetch={false} onClick={handleNavLinkClick} className={navLinkClass("studio")} aria-current={navLinkCurrent("studio")}>Studio</Link>
             <Link href="/#process" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
             <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
             <Link href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("contact")} aria-current={navLinkCurrent("contact")}>Contact</Link>

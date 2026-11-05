@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ArrowIcon } from "../icons";
 import { siteConfig } from "../site-config";
@@ -25,6 +25,17 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formStatus, setFormStatus] = useState("");
   const [formState, setFormState] = useState<FormState>("idle");
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // A link such as /contact?service=E-commerce%20solutions starts the form with that service
+  // selected. Only exact matches from the known service list are applied; anything else is ignored.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("service");
+    const match = contactServices.find((service) => service === requested);
+    if (!match) return;
+    formRef.current?.querySelectorAll<HTMLInputElement>('input[name="service"]').forEach((input) => { input.checked = input.value === match; });
+  }, []);
 
   const clearError = (key: string) => setFieldErrors((current) => (current[key] ? { ...current, [key]: "" } : current));
 
@@ -87,7 +98,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
     [help, fieldErrors[id] ? `${id}-error` : undefined].filter(Boolean).join(" ") || undefined;
 
   return (
-    <form className="contact-form enquiry-form" data-state={formState} method="post" action="/api/contact" onSubmit={handleSubmit}
+    <form ref={formRef} className="contact-form enquiry-form" data-state={formState} method="post" action="/api/contact" onSubmit={handleSubmit}
       aria-labelledby={titleId}
       onInvalidCapture={(event) => {
         const field = event.target;
