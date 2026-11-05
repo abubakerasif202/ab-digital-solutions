@@ -200,3 +200,49 @@
   .stage { height: calc(100svh - var(--header-height, 80px) - 24px); min-height: 0; max-height: none; }
   .experience[data-panel="true"] .stage { height: calc(100svh - var(--header-height, 80px) - 24px); min-height: 0; }
 }
+
+/* ---- V6: wildlife, sound and "Meet the locals" ---- */
+.extras { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 24px; padding: 8px 0; border-bottom: 1px solid #c5aa7826; }
+.localsToggle, .soundToggle { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px; border: 1px solid #c5aa7855; background: transparent; color: #e4ca99; font: 12px var(--font-sans), sans-serif; cursor: pointer; }
+.localsToggle[aria-expanded="true"], .soundToggle[aria-pressed="true"] { background: #d8bb8318; border-color: #d8bb83; color: #f4f1ea; }
+.soundToggle:disabled { opacity: .5; cursor: not-allowed; }
+.soundDot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #c5aa78; }
+.soundDot[data-live="true"] { background: #d8bb83; border-color: #d8bb83; }
+.sound { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; }
+.volume { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 11px; color: #b4b0a8; }
+.volume input { width: 120px; min-height: 44px; accent-color: #d8bb83; cursor: pointer; }
+.volume input:disabled { opacity: .45; cursor: not-allowed; }
+.soundNote { font-size: 11px; line-height: 1.5; color: #a49f96; max-width: 34ch; }
+
+.locals { display: grid; grid-template-columns: auto 1fr; gap: 12px 28px; align-items: start; padding: 14px 0 18px; border-bottom: 1px solid #c5aa7826; }
+.locals[hidden] { display: none; }
+.localsChoices { display: grid; gap: 6px; }
+.localsChoices button { min-height: 44px; padding: 8px 16px; border: 1px solid #8e7954; background: #181b1d; color: #f1e2c2; font: 12px var(--font-sans), sans-serif; text-align: left; cursor: pointer; }
+.localsChoices button[aria-pressed="true"] { background: #d8bb83; border-color: #d8bb83; color: #141312; font-weight: 600; }
+.localsCard h3 { font: 400 24px/1.2 var(--font-display), serif; margin: 0 0 6px; color: #f4f1ea; }
+.localsCard p { margin: 0 0 12px; font-size: 13px; line-height: 1.7; color: #c1bdb4; max-width: 62ch; }
+.localsActions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-bottom: 12px; }
+.check { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 12px; color: #c1bdb4; cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: #d8bb83; }
+.localsCaption { min-height: 1.7em; color: #e9d7b0 !important; font-style: italic; }
+.localsCaption strong { font-style: normal; color: #d8bb83; font-weight: 600; }
+.muted { color: #a49f96; font-style: normal; }
+
+/* Speech bubble: bottom-left of the 3D view, clear of the room panel (right) and the top controls. */
+.bubble { position: absolute; left: 32px; bottom: 56px; z-index: 3; display: flex; align-items: flex-start; gap: 4px; max-width: min(340px, calc(100% - 64px)); padding: 10px 6px 10px 16px; border: 1px solid #d8bb8399; border-radius: 16px 16px 16px 2px; background: #101314f2; box-shadow: 0 8px 28px #0008; color: #f4f1ea; animation: bubble-in .22s ease-out; }
+.bubble p { margin: 0; font-size: 13px; line-height: 1.5; padding-top: 6px; }
+.bubble strong { color: #d8bb83; font-weight: 600; margin-right: 6px; }
+.bubble button { flex: none; min-width: 44px; min-height: 44px; border: 0; background: transparent; color: #cfc7b8; font-size: 20px; cursor: pointer; }
+@keyframes bubble-in { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .bubble { animation: none; } }
+@media (max-width: 699px) {
+  .extras { display: grid; gap: 4px; }
+  .localsToggle { justify-content: space-between; }
+  .sound { display: grid; grid-template-columns: 1fr; }
+  .volume input { flex: 1; width: auto; }
+  .locals { grid-template-columns: 1fr; }
+  .localsChoices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .localsChoices button { padding-inline: 8px; text-align: center; }
+  .bubble { left: 12px; right: 12px; max-width: none; bottom: 46px; }
+}
+@media (max-height: 500px) and (orientation: landscape) { .bubble { bottom: 40px; left: 18px; } }

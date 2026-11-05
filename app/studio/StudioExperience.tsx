@@ -4,11 +4,17 @@ import { StudioArrow } from "./StudioArrow";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { Component, useCallback, useEffect, useReducer, useRef, useState, type ReactNode } from "react";
+import { Component, useCallback, useEffect, useReducer, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { areaLabels, areaOrder, initialStudioState, studioReducer, type Area } from "./studio-state";
 import { featuredServiceIndexes, type StudioProject, type StudioService } from "./studio-data";
 import { ConsultationPanel, GalleryPanel, ReceptionPanel, ServicesPanel } from "./StudioPanels";
+import { StudioAudio, type Cue } from "./audio/studio-audio";
+import { LocalBubble, LocalsPanel, SoundControls, type Caption } from "./StudioWildlife";
+import { animals, cooldownReady, createLinePicker, REACTION_COOLDOWN_MS, type AnimalId } from "./world/sim/wildlife";
+import { onAnimalPicked, requestReaction } from "./world/wildlife-bus";
 import styles from "./studio.module.css";
+
+const KANGAROO_BEATS = ["wave", "tilt", "hop"] as const;
 
 const StudioScene = dynamic(() => import("./scene/StudioScene"), { ssr: false });
 
@@ -42,6 +48,17 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const skipButton = useRef<HTMLButtonElement>(null);
   const optionsButton = useRef<HTMLButtonElement>(null);
   const panelWasOpen = useRef(false);
+  const localsButton = useRef<HTMLButtonElement>(null);
+  const [audio] = useState(() => new StudioAudio());
+  const sound = useSyncExternalStore(audio.subscribe, audio.getSnapshot, audio.getSnapshot);
+  const [localsOpen, setLocalsOpen] = useState(false);
+  const [selectedAnimal, setSelectedAnimal] = useState<AnimalId>("kangaroo");
+  const [bubblesOn, setBubblesOn] = useState(true);
+  const [caption, setCaption] = useState<Caption | null>(null);
+  const [pickers] = useState(() => ({ kangaroo: createLinePicker(animals.kangaroo.lines, 11), koala: createLinePicker(animals.koala.lines, 23), cockatoo: createLinePicker(animals.cockatoo.lines, 37) }));
+  const lastReaction = useRef<Record<AnimalId, number>>({ kangaroo: 0, koala: 0, cockatoo: 0 });
+  const kangarooBeat = useRef(0);
+  const welcomed = useRef(false);
   const active = state.mode === "loading" || state.mode === "arrival" || state.mode === "intro" || state.mode === "explore";
   const pendingIntro = state.mode === "loading" || state.mode === "arrival" || state.mode === "intro";
   const onFailure = useCallback(() => dispatch({ type: "fail" }), []);
@@ -50,7 +67,48 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const onManual = useCallback(() => dispatch({ type: "manual" }), []);
   const onArrive = useCallback(() => dispatch({ type: "arrive" }), []);
   const showStage = () => stage.current?.scrollIntoView({ block: "start", behavior: "instant" });
-  const onView = (type: "tour" | "tourStop" | "entrance" | "reset") => { showStage(); dispatch({ type }); };
+  const onView = (type: "tour" | "tourStop" | "entrance" | "reset") => { showStage(); if (type === "tour") audio.play("select"); dispatch({ type }); };
+  const dismissCaption = useCallback(() => setCaption(null), []);
+
+  // One path for every way of greeting an animal: its button, the 3D model, and the room it lives in.
+  const interact = useCallback((id: AnimalId) => {
+    const now = performance.now();
+    if (!cooldownReady(lastReaction.current[id], now, REACTION_COOLDOWN_MS)) return;
+    lastReaction.current[id] = now;
+    let kind: string | undefined;
+    let cue: Cue = id === "kangaroo" ? "hop" : id;
+    if (id === "kangaroo") { kind = KANGAROO_BEATS[kangarooBeat.current++ % KANGAROO_BEATS.length]; cue = kind === "hop" ? "hop" : "select"; }
+    requestReaction(id, kind);
+    audio.play(cue);
+    setSelectedAnimal(id);
+    setCaption({ id, text: pickers[id](), key: now });
+  }, [audio, pickers]);
+  const pickAnimal = (id: AnimalId) => {
+    setSelectedAnimal(id);
+    audio.play("select");
+    if (active) { showStage(); dispatch({ type: "animal", id }); }
+  };
+  const toggleSound = async () => {
+    if (sound.enabled) { audio.setEnabled(false); return; }
+    audio.setEnabled(true);
+    await audio.resume();
+    audio.play("select");
+  };
+
+  useEffect(() => { audio.attach(); return () => audio.dispose(); }, [audio]);
+  useEffect(() => onAnimalPicked(interact), [interact]);
+  // Soft welcome chime once the studio opens; a returning 3D view does not repeat it.
+  useEffect(() => {
+    if (state.mode === "loading") { welcomed.current = state.resume; return; }
+    if ((state.mode === "intro" || state.mode === "explore") && !welcomed.current) { welcomed.current = true; audio.play("welcome"); }
+  }, [state.mode, state.resume, audio]);
+  const frameKey = `${state.area}|${state.outside}|${state.animal}`;
+  const lastFrame = useRef(frameKey);
+  useEffect(() => {
+    if (lastFrame.current === frameKey) return;
+    lastFrame.current = frameKey;
+    if (state.mode === "explore") audio.play("transition");
+  }, [frameKey, state.mode, audio]);
 
   useEffect(() => {
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -94,6 +152,7 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || event.defaultPrevented || document.body.classList.contains("nav-open")) return;
       if (optionsOpen) { setOptionsOpen(false); optionsButton.current?.focus({ preventScroll: true }); }
+      else if (localsOpen) { setLocalsOpen(false); localsButton.current?.focus({ preventScroll: true }); }
       else if (state.panel) dispatch({ type: "close" });
       else if (pendingIntro) dispatch({ type: "skip" });
       else if (state.tour) dispatch({ type: "tour" });
@@ -102,7 +161,7 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [optionsOpen, state.panel, state.tour, pendingIntro]);
+  }, [optionsOpen, localsOpen, state.panel, state.tour, pendingIntro]);
 
   useEffect(() => {
     if (state.panel) {
@@ -144,7 +203,7 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     : touch ? "Drag sideways to look around · Pinch to zoom · Swipe up or down to scroll the page" : "Drag to look around · Use the room buttons to move · The page scrolls as normal";
   const modeNote = state.mode === "failed" ? "3D is unavailable on this device. Every room, project and service is still available with the room buttons."
     : policy ? policy
-    : active ? "No sound and no scroll lock. Escape closes room details or pauses the tour."
+    : active ? "No scroll lock. Escape closes room details or pauses the tour. Sound can be switched off above."
     : "Still view: choose a room to see its details. Switch to 3D view whenever you like.";
 
   return <section className={styles.experience} aria-label="Interactive virtual studio" data-conversion-area data-panel={state.panel} data-view={active ? "3d" : "still"}>
@@ -168,10 +227,16 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
         </div>}
       </div>}
       {active && <div className={styles.sceneCaption}><span>{state.outside ? "Sydney / Studio entrance" : state.mode === "arrival" ? "Sydney / Arrival" : `${String(roomNumber).padStart(2, "0")} / ${areaLabels[state.area]}`}</span><span>{hint}</span></div>}
+      {active && bubblesOn && <LocalBubble caption={caption} onDismiss={dismissCaption} />}
       {!active && (state.panel || state.still) && <div className={styles.sceneCaption}><span>{String(roomNumber).padStart(2, "0")} / {areaLabels[state.area]}</span><span>Still view</span></div>}
     </div>
     <div className={styles.controls}>
       <nav className={styles.areaNav} aria-label="Studio rooms">{areaOrder.map((area, index) => <button ref={(node) => { areaButtons.current[area] = node; }} key={area} type="button" aria-pressed={!state.outside && state.area === area && (active || state.panel)} onClick={() => onSelect(area)}><span>{String(index + 1).padStart(2, "0")}</span>{areaLabels[area]}</button>)}</nav>
+      <div className={styles.extras}>
+        <button ref={localsButton} type="button" className={styles.localsToggle} aria-expanded={localsOpen} aria-controls="studio-locals" onClick={() => setLocalsOpen((open) => !open)}>Meet the locals <span aria-hidden="true">{localsOpen ? "−" : "+"}</span></button>
+        <SoundControls sound={sound} onToggle={toggleSound} onVolume={(volume) => { audio.setVolume(volume); audio.play("select"); }} />
+      </div>
+      <LocalsPanel open={localsOpen} selected={selectedAnimal} caption={caption} bubbles={bubblesOn} active={active} onPick={pickAnimal} onInteract={interact} onBubbles={setBubblesOn} />
       <div className={styles.secondaryControls}>
         {active && (state.tourActive
           ? <div className={styles.tour} role="group" aria-label="Guided tour">
