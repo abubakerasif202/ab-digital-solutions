@@ -9,11 +9,64 @@ test("studio only enters after intent and late loading cannot restart a skipped 
   state = studioReducer(state, { type: "skip" });
   assert.equal(studioReducer(state, { type: "ready" }).mode, "explore");
 });
-test("manual input cancels a tour; stale tour ticks cannot move the camera", () => {
+test("manual input pauses a tour; stale tour ticks cannot move the camera", () => {
   let state = studioReducer({ ...initialStudioState, mode: "explore" }, { type: "tour" });
   state = studioReducer(state, { type: "manual" });
   assert.equal(state.tour, false);
+  assert.equal(state.tourActive, true);
   assert.equal(studioReducer(state, { type: "advance" }), state);
+});
+test("tour pauses, resumes from the current room and stops cleanly", () => {
+  let state = studioReducer({ ...initialStudioState, mode: "explore" }, { type: "tour" });
+  state = studioReducer(state, { type: "advance" });
+  assert.equal(state.area, "gallery");
+  const paused = studioReducer(state, { type: "tour" });
+  assert.equal(paused.tour, false);
+  assert.equal(paused.tourActive, true);
+  assert.equal(studioReducer(paused, { type: "advance" }), paused);
+  const resumed = studioReducer(paused, { type: "tour" });
+  assert.equal(resumed.tour, true);
+  assert.equal(resumed.area, "gallery");
+  const stopped = studioReducer(resumed, { type: "tourStop" });
+  assert.equal(stopped.tour, false);
+  assert.equal(stopped.tourActive, false);
+  assert.equal(stopped.area, "gallery");
+});
+test("choosing a room interrupts the tour and ends it", () => {
+  const touring = studioReducer({ ...initialStudioState, mode: "explore" }, { type: "tour" });
+  const chosen = studioReducer(touring, { type: "select", area: "services" });
+  assert.equal(chosen.tour, false);
+  assert.equal(chosen.tourActive, false);
+  assert.equal(chosen.area, "services");
+  assert.equal(chosen.panel, true);
+});
+test("still view keeps the selected room and returning to 3D skips the arrival film", () => {
+  const exploring = studioReducer({ ...initialStudioState, mode: "explore" }, { type: "select", area: "gallery" });
+  const still = studioReducer(exploring, { type: "static" });
+  assert.equal(still.mode, "static");
+  assert.equal(still.still, true);
+  assert.equal(still.area, "gallery");
+  assert.equal(still.panel, true);
+  const loading = studioReducer(still, { type: "enter", keep: true });
+  assert.equal(loading.mode, "loading");
+  assert.equal(loading.area, "gallery");
+  assert.equal(loading.panel, true);
+  const ready = studioReducer(loading, { type: "ready" });
+  assert.equal(ready.mode, "explore");
+  assert.equal(ready.resume, false);
+  assert.equal(ready.area, "gallery");
+});
+test("reset re-frames the room while back to entrance leaves it; the two never coincide", () => {
+  const inRoom = { ...initialStudioState, mode: "explore", area: "services", panel: true, overview: false, shot: 3 };
+  const reset = studioReducer(inRoom, { type: "reset" });
+  assert.equal(reset.area, "services");
+  assert.equal(reset.panel, true);
+  assert.equal(reset.outside, false);
+  const outside = studioReducer(inRoom, { type: "entrance" });
+  assert.equal(outside.outside, true);
+  assert.equal(outside.panel, false);
+  assert.equal(outside.area, "services");
+  assert.equal(studioReducer(outside, { type: "reset" }).outside, false);
 });
 test("tour visits all four areas and ends with usable consultation content", () => {
   let state = studioReducer({ ...initialStudioState, mode: "explore" }, { type: "tour" });
@@ -29,7 +82,10 @@ test("failure and leaving release interaction state; content remains selectable"
   const failed = studioReducer({ ...initialStudioState, tour: true }, { type: "fail" });
   assert.equal(failed.tour, false);
   assert.equal(studioReducer(failed, { type: "select", area: "gallery" }).panel, true);
-  assert.deepEqual(studioReducer(failed, { type: "static" }), { ...initialStudioState, shot: 1 });
+  const still = studioReducer(failed, { type: "static" });
+  assert.equal(still.mode, "static");
+  assert.equal(still.still, true);
+  assert.equal(still.tour, false);
 });
 
 test("original small GLB is valid and studio content uses canonical destinations", async () => {
@@ -45,14 +101,22 @@ test("original small GLB is valid and studio content uses canonical destinations
   assert.equal(poster.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
   assert.equal(poster.readUInt32BE(16), 1440);
   assert.equal(poster.readUInt32BE(20), 900);
-  for (const project of projects.slice(0, 3)) {
+  // Every project can be shown on a gallery frame, so each needs a small display texture.
+  for (const project of projects) {
     const screen = await readFile(new URL(`../public/studio/screens/${project.slug}.webp`, import.meta.url));
     assert.equal(screen.toString("ascii", 8, 12), "WEBP");
     assert.ok(screen.length < 32000);
   }
   assert.deepEqual(studioProjects.map((project) => project.slug), projects.map((project) => project.slug));
-  assert.equal(studioServices.length, 4);
-  assert.equal(studioServices[3].href, "/contact");
+  assert.ok(studioProjects.some((project) => project.slug === "wild-pest-solutions"));
+  assert.ok(studioProjects.some((project) => project.slug === "pept-up-labs"));
+  // Services come from the real catalogue plus custom business systems; every destination is an existing route.
+  const { servicePages } = await import("../app/services/service-data.ts");
+  const { contactServices } = await import("../app/contact-options.ts");
+  assert.equal(studioServices.length, servicePages.length + 1);
+  for (const page of servicePages) assert.ok(studioServices.some((service) => service.href === `/services/${page.slug}`));
+  assert.ok(studioServices.some((service) => service.title === "Custom business systems" && projects.some((project) => `/work/${project.slug}` === service.href)));
+  for (const service of studioServices) assert.ok(contactServices.includes(service.contactService), service.title);
 });
 
 test("explicit navigation or orbit cancels an unfinished introduction", () => {
@@ -65,10 +129,11 @@ test("explicit navigation or orbit cancels an unfinished introduction", () => {
 });
 
 
-test("reset view recovers from manual navigation and clears tour and panel", () => {
-  const state = { ...initialStudioState, mode: "explore", panel: true, tour: true, manual: true, shot: 5 };
+test("reset view recovers from manual navigation, pauses the tour and keeps the open room", () => {
+  const state = { ...initialStudioState, mode: "explore", panel: true, tour: true, tourActive: true, manual: true, shot: 5 };
   const reset = studioReducer(state, { type: "reset" });
-  assert.equal(reset.panel, false);
+  assert.equal(reset.panel, true);
+  assert.equal(reset.area, state.area);
   assert.equal(reset.tour, false);
   assert.equal(reset.manual, false);
   assert.equal(reset.shot, 6);

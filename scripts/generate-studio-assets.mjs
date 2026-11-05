@@ -27,14 +27,14 @@ const glb = await new GLTFExporter().parseAsync(sculpture, { binary: true });
 await writeFile("public/studio/ab-monogram.glb", Buffer.from(glb));
 console.log(`Original monogram: ${glb.byteLength} bytes`);
 
-// GPU-sized derivatives of the first three canonical project screenshots.
+// GPU-sized derivatives of every canonical project screenshot, cropped to the gallery frame's 3.4 x 2.33 aspect.
 // Resolve the same extensionless TS imports used by the repository's tests.
 const { register } = await import("node:module");
 register("../tests/ts-hooks.mjs", import.meta.url);
 const { projects } = await import("../app/project-data.ts");
 const { default: sharp } = await import("sharp");
 await mkdir("public/studio/screens", { recursive: true });
-for (const project of projects.slice(0, 3)) {
-  await sharp(`public${project.image}`).resize({ width: 512, withoutEnlargement: true }).webp({ quality: 82 }).toFile(`public/studio/screens/${project.slug}.webp`);
+for (const project of projects) {
+  await sharp(`public${project.image}`).resize({ width: 512, height: 351, fit: "cover", position: "top" }).webp({ quality: 74 }).toFile(`public/studio/screens/${project.slug}.webp`);
 }
-console.log("Created three 512px display textures from canonical portfolio images.");
+console.log(`Created ${projects.length} 512px display textures from canonical portfolio images.`);

@@ -16,12 +16,16 @@ async function intercept(page) {
 async function enter(page) {
   await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
   await expect(mode(page)).toHaveAttribute("data-mode", /arrival|intro|explore/, { timeout: 30000 });
-  const skip = page.getByRole("button", { name: "Skip Intro", exact: true });
+  const skip = page.getByRole("button", { name: "Skip intro", exact: true });
   if (await skip.isVisible()) await page.keyboard.press("Escape");
   await expect(mode(page)).toHaveAttribute("data-mode", "explore");
 }
+async function openOptions(page) {
+  const toggle = page.getByRole("button", { name: "View options" });
+  if ((await toggle.getAttribute("aria-expanded")) !== "true") await toggle.click();
+}
 async function space(page, label) {
-  await page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button", { name: label }).click();
+  await page.getByRole("navigation", { name: "Studio rooms" }).getByRole("button", { name: label }).click();
   await expect(page.locator("#studio-panel-heading")).toBeFocused();
 }
 test.beforeEach(async ({ page }) => { await mkdir(output, { recursive: true }); await intercept(page); });
@@ -40,43 +44,47 @@ for (const width of [390, 768, 1440]) {
     await enter(page); await expect(page.locator("canvas")).toHaveCount(1);
     await page.waitForTimeout(1800);
     await page.screenshot({ path: `${output}/${width}-studio.png` });
-    for (const [label, heading] of [["Reception", "Ideas start here."], ["Portfolio gallery", "Work with purpose."], ["Services atelier", "Considered. Connected."], ["Consultation lounge", "Let’s Build Something Extraordinary."]]) {
+    for (const [label, heading] of [["Reception", "Ideas start here."], ["Portfolio gallery", "Work with purpose."], ["Services atelier", "What we can build for you."], ["Consultation lounge", "Tell us what you’re building."]]) {
       await space(page, label);
       await expect(page.locator("#studio-panel-heading")).toHaveText(heading);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
       if (width === 390) {
         const sheet = await page.locator("aside[aria-labelledby='studio-panel-heading']").boundingBox();
         const stage = await mode(page).boundingBox();
-        expect(sheet.height).toBeLessThanOrEqual(stage.height * .49);
-        expect(sheet.y).toBeGreaterThan(stage.y + stage.height * .35);
+        // Details sit below the scene as page content, never over it or in a nested scroller.
+        expect(sheet.y).toBeGreaterThanOrEqual(stage.y + stage.height - 1);
       }
       if (label === "Portfolio gallery") {
-        await expect(page.locator("#studio-project option")).toHaveCount(16);
+        await expect(page.locator("#studio-project option")).toHaveCount(18);
         await page.locator("#studio-project").selectOption("1");
-        await expect(page.getByRole("link", { name: "Open Project" })).toHaveAttribute("href", "/work/milestone-renovate");
+        await expect(page.getByRole("link", { name: "View case study" })).toHaveAttribute("href", "/work/milestone-renovate");
       }
       if (label === "Services atelier") {
-        await page.locator("#studio-service").selectOption("3");
-        await expect(page.getByRole("link", { name: "Discuss automation" })).toHaveAttribute("href", "/contact");
+        await page.getByRole("button", { name: "Custom business systems" }).click();
+        await expect(page.getByRole("link", { name: "See a business system" })).toHaveAttribute("href", "/work/247-inventory-system");
+        await page.getByRole("button", { name: "E-commerce Website Development" }).click();
+        await expect(page.getByRole("link", { name: "Enquire about this" })).toHaveAttribute("href", "/contact?service=E-commerce%20solutions");
       }
       await page.screenshot({ path: `${output}/${width}-${label.split(" ")[0].toLowerCase()}.png` });
       await page.keyboard.press("Escape");
       await expect(page.locator("aside[aria-labelledby='studio-panel-heading']")).toHaveCount(0);
-      await expect(page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button", { name: label })).toBeFocused();
+      await expect(page.getByRole("navigation", { name: "Studio rooms" }).getByRole("button", { name: label })).toBeFocused();
     }
     await page.getByRole("button", { name: "Guided tour", exact: true }).click();
     await expect(page.getByRole("button", { name: "Pause tour" })).toBeVisible();
     await page.keyboard.press("Escape");
-    await expect(page.getByRole("button", { name: "Guided tour", exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Guided tour", exact: true }).click();
+    // Escape pauses the tour; it can be resumed from the same room.
+    await expect(page.getByRole("button", { name: "Resume tour", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Resume tour", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pause tour", exact: true })).toBeVisible();
   await page.screenshot({ path: `${output}/guided-tour.png` });
   await page.getByRole("button", { name: "Pause tour", exact: true }).click();
-    await page.getByRole("button", { name: "Use still view" }).click();
+    await openOptions(page); await page.getByRole("button", { name: "Still view", exact: true }).click();
     await expect(page.locator("canvas")).toHaveCount(0);
-    await expect(page.getByRole("button", { name: "Enter the Studio" })).toBeFocused();
+    // Still view keeps the selected room open and moves focus to its details.
+    await expect(page.locator("#studio-panel-heading")).toBeFocused();
     await space(page, "Consultation lounge");
-    await page.locator("aside").getByRole("link", { name: "Start Your Project" }).click();
+    await page.locator("aside").getByRole("link", { name: "Start a project" }).click();
     await expect(page).toHaveURL(/\/contact$/); await expect(page.locator("form")).toBeVisible();
     expect(errors).toEqual([]);
   });
@@ -85,22 +93,22 @@ for (const width of [390, 768, 1440]) {
 test("keyboard enters, skips, opens and closes without trapping focus", async ({ page }) => {
   await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio" }).focus(); await page.keyboard.press("Enter");
-  const skip = page.getByRole("button", { name: "Skip Intro" }); await expect(skip).toBeVisible();
+  const skip = page.getByRole("button", { name: "Skip intro" }); await expect(skip).toBeVisible();
   await skip.focus(); await page.keyboard.press("Enter");
-  const gallery = page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button", { name: "Portfolio gallery" });
+  const gallery = page.getByRole("navigation", { name: "Studio rooms" }).getByRole("button", { name: "Portfolio gallery" });
   await gallery.focus(); await page.keyboard.press("Enter");
   await expect(page.locator("#studio-panel-heading")).toBeFocused();
-  await page.keyboard.press("Tab"); await expect(page.locator("#studio-project")).toBeFocused();
+  await page.keyboard.press("Tab"); await expect(page.getByRole("button", { name: "Previous project" })).toBeFocused();
   await page.keyboard.press("Escape"); await expect(gallery).toBeFocused();
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button", { name: "Services atelier" })).toBeFocused();
+  await expect(page.getByRole("navigation", { name: "Studio rooms" }).getByRole("button", { name: "Services atelier" })).toBeFocused();
 });
 
 test("WebGL context loss preserves HTML functionality", async ({ page }) => {
   await page.goto("/studio", { waitUntil: "networkidle" }); await enter(page);
   await page.locator("canvas").evaluate((canvas) => canvas.dispatchEvent(new Event("webglcontextlost", { cancelable: true })));
   await expect(mode(page)).toHaveAttribute("data-mode", "failed"); await expect(page.locator("canvas")).toHaveCount(0);
-  await space(page, "Portfolio gallery"); await expect(page.getByRole("link", { name: "Open Project" })).toBeVisible();
+  await space(page, "Portfolio gallery"); await expect(page.getByRole("link", { name: "View case study" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Try 3D again" })).toBeVisible();
 });
 
@@ -121,7 +129,7 @@ test("no WebGL, reduced motion and slow connections keep usable fallback", async
       await expect(mode(page)).toHaveAttribute("data-mode", "failed", { timeout: 25000 });
     } else await expect(page.getByRole("button", { name: "Enter the Studio" })).toHaveCount(0);
     await expect(page.locator("canvas")).toHaveCount(0); await space(page, "Services atelier");
-    await expect(page.locator("#studio-service option")).toHaveCount(4);
+    await expect(page.getByRole("list", { name: "Services" }).getByRole("button")).toHaveCount(7);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.screenshot({ path: `${output}/390-${fallback}.png` }); await context.close();
   }
@@ -130,9 +138,9 @@ test("no WebGL, reduced motion and slow connections keep usable fallback", async
 test("model load failure recovers even after Skip Intro", async ({ page }) => {
   await page.route("**/studio/ab-monogram.glb", (route) => route.abort()); await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio" }).click();
-  const skip = page.getByRole("button", { name: "Skip Intro" }); if (await skip.isVisible()) await page.keyboard.press("Escape");
+  const skip = page.getByRole("button", { name: "Skip intro" }); if (await skip.isVisible()) await page.keyboard.press("Escape");
   await expect(mode(page)).toHaveAttribute("data-mode", "failed", { timeout: 25000 });
-  await space(page, "Consultation lounge"); await expect(page.locator("aside").getByRole("link", { name: "Start Your Project" })).toHaveAttribute("href", "/contact");
+  await space(page, "Consultation lounge"); await expect(page.locator("aside").getByRole("link", { name: "Start a project" })).toHaveAttribute("href", "/contact");
 });
 
 test("server HTML works without JavaScript; homepage preview loads no model", async ({ browser, page }) => {
@@ -153,7 +161,7 @@ test("touch orbit changes view and vertical swipe scrolls the page", async ({ br
   const page = await context.newPage(); await intercept(page); await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio" }).tap();
   await expect(mode(page)).toHaveAttribute("data-mode", /arrival|intro|explore/, { timeout: 30000 });
-  await page.getByRole("button", { name: "Skip Intro", exact: true }).click();
+  await page.getByRole("button", { name: "Skip intro", exact: true }).click();
   await expect(mode(page)).toHaveAttribute("data-mode", "explore", { timeout: 10000 });
   await page.locator("canvas").scrollIntoViewIfNeeded(); await page.waitForTimeout(2500);
   const client = await context.newCDPSession(page), bounds = await page.locator("canvas").boundingBox();
@@ -220,12 +228,12 @@ test("guided tour visits four spaces and finishes with a genuine quote link", as
     await expect(caption).toContainText(name, { timeout: 9000 });
   }
   await expect(page.locator("#studio-panel-heading")).toHaveText("Let’s Build Something Extraordinary.", { timeout: 9000 });
-  await expect(page.locator("aside").getByRole("link", { name: "Start Your Project" })).toHaveAttribute("href", "/contact");
+  await expect(page.locator("aside").getByRole("link", { name: "Start a project" })).toHaveAttribute("href", "/contact");
 });
 
 test("quote journey preserves form validation, successful submission and recoverable errors", async ({ page }) => {
   await page.goto("/studio", { waitUntil: "networkidle" }); await space(page, "Consultation lounge");
-  await page.locator("aside").getByRole("link", { name: "Start Your Project" }).click();
+  await page.locator("aside").getByRole("link", { name: "Start a project" }).click();
   let response = { status: 503, body: { ok: false, error: "Email is temporarily unavailable. Please try again." } };
   const payloads = [];
   await page.route("**/api/contact", (route) => {
@@ -270,10 +278,10 @@ test("retry recovers a failed model request and repeated entry has clean teardow
   blocked = false; errors.length = 0;
   await page.getByRole("button", { name: "Try 3D again" }).click();
   await expect(mode(page)).toHaveAttribute("data-mode", /intro|explore/, { timeout: 25000 });
-  await page.getByRole("button", { name: "Use still view" }).click();
+  await openOptions(page); await page.getByRole("button", { name: "Still view", exact: true }).click();
   await expect(page.locator("canvas")).toHaveCount(0); await page.waitForTimeout(800);
   await enter(page);
-  await page.getByRole("button", { name: "Use still view" }).click(); await page.waitForTimeout(800);
+  await openOptions(page); await page.getByRole("button", { name: "Still view", exact: true }).click(); await page.waitForTimeout(800);
   expect(errors).toEqual([]);
 });
 
@@ -294,7 +302,7 @@ test("reset view restores the establishing camera after orbit without reloading 
   page.on("request", request => { if (/\.glb/.test(request.url())) models.push(request.url()); });
   await page.goto("/studio", { waitUntil: "networkidle" }); await enter(page);
   await page.waitForTimeout(2300);
-  await expect(page.locator('[class*="sceneCaption"]')).toContainText("Swipe up to scroll");
+  await expect(page.locator('[class*="sceneCaption"]')).toContainText(/scroll/i);
   const canvas = page.locator("canvas");
   // Ambient traffic and people keep a few pixels moving, so compare views by similarity, not byte equality.
   const similarity = async (a, b) => {
@@ -311,7 +319,8 @@ test("reset view restores the establishing camera after orbit without reloading 
   await page.waitForTimeout(300);
   expect(await similarity(await canvas.screenshot(), original)).toBeLessThan(.9);
   const requests = models.length;
-  await page.getByRole("button", { name: "Reset view", exact: true }).click();
+  await openOptions(page);
+  await page.getByRole("button", { name: /^Reset view/ }).click();
   await page.waitForTimeout(2300);
   // Wait for the actual rendered endpoint rather than a fixed GPU deadline.
   await expect.poll(async () => similarity(await canvas.screenshot(), original), { intervals: [300, 500, 1000], timeout: 10000 }).toBeGreaterThan(.93);
@@ -320,26 +329,23 @@ test("reset view restores the establishing camera after orbit without reloading 
   expect(models.length).toBe(requests);
 });
 
-test("welcome separates exploration from tour and details collapse accessibly", async ({ page }) => {
+test("welcome separates exploration from tour and details open under the scene", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/studio");
   await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
   await expect(mode(page)).toHaveAttribute("data-mode", "intro", { timeout: 30000 });
-  await page.getByRole("button", { name: "Start Exploring", exact: true }).click();
+  await page.getByRole("button", { name: "Start exploring", exact: true }).click();
   await expect(mode(page)).toHaveAttribute("data-mode", "explore");
   await expect(page.getByRole("button", { name: "Guided tour", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Guided tour", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pause tour", exact: true })).toBeVisible();
   await page.screenshot({ path: `${output}/guided-tour.png` });
   await page.getByRole("button", { name: "Pause tour", exact: true }).click();
-  await page.getByRole("button", { name: "Next Room", exact: true }).click();
+  await page.getByRole("button", { name: "Next room", exact: true }).click();
   await expect(page.locator("#studio-panel-heading")).toHaveText("Work with purpose.");
-  await page.getByRole("button", { name: "Collapse details" }).click();
-  await expect(page.locator("#studio-panel-content")).toBeHidden();
-  await page.getByRole("button", { name: "Expand details" }).click();
-  await expect(page.locator("#studio-panel-content")).toBeVisible();
+  await expect(page.locator("#studio-panel-heading")).toBeVisible();
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Previous Room", exact: true }).click();
+  await page.getByRole("button", { name: "Previous room", exact: true }).click();
   await expect(page.locator("#studio-panel-heading")).toHaveText("Ideas start here.");
 });
 
@@ -354,9 +360,9 @@ test("initial phone landscape caps DPR and all requested layouts stay within vie
   await page.screenshot({ path: `${output}/initial-landscape.png` });
   for (const width of [320, 360, 375, 390, 430, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button", { name: "Reception" }).click();
+    await page.getByRole("navigation", { name: "Studio rooms" }).getByRole("button", { name: "Reception" }).click();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    for (const button of await page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button").all()) {
+    for (const button of await page.getByRole("navigation", { name: "Studio rooms" }).getByRole("button").all()) {
       const bounds = await button.boundingBox();
       expect(bounds.width).toBeGreaterThanOrEqual(44); expect(bounds.height).toBeGreaterThanOrEqual(44);
     }
@@ -371,14 +377,15 @@ test("phone camera controls return the scene to view and label the exterior corr
   await enter(page);
   const top = () => mode(page).evaluate(element => element.getBoundingClientRect().top);
   for (const name of ["Back to entrance", "Reset view", "Guided tour"]) {
-    const control = page.getByRole("button", { name, exact: true });
+    if (name !== "Guided tour") await openOptions(page);
+    const control = name === "Guided tour" ? page.getByRole("button", { name, exact: true }) : page.getByRole("button", { name: new RegExp(`^${name}`) });
     await control.scrollIntoViewIfNeeded();
     await control.click();
     await expect.poll(top).toBeGreaterThanOrEqual(0);
     await expect.poll(top).toBeLessThan(110);
     if (name === "Back to entrance") {
       await expect(page.locator('[class*="sceneCaption"]')).toContainText("Sydney / Studio entrance");
-      await expect(page.getByRole("navigation", { name: "Studio spaces" }).locator('[aria-pressed="true"]')).toHaveCount(0);
+      await expect(page.getByRole("navigation", { name: "Studio rooms" }).locator('[aria-pressed="true"]')).toHaveCount(0);
     }
   }
 });

@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from "react";
 import { BrassMaterial, MarbleMaterial } from "./Materials";
 import * as THREE from "three";
 
-export const brass = { color: "#bca06b", metalness: 0.8, roughness: 0.28 };
+export const brass = { color: "#bca06b", metalness: 0.85, roughness: 0.22 };
 export const charcoal = { color: "#22272a", metalness: 0.18, roughness: 0.5 };
 
 export function Block({ position, size, color = "#202427", metalness = 0.15, roughness = 0.5 }: { position: [number, number, number]; size: [number, number, number]; color?: string; metalness?: number; roughness?: number }) {

@@ -7,6 +7,7 @@ import { ArrowIcon } from "./icons";
 const studioLinks = [
   ["/work", "Work"],
   ["/services", "Services"],
+  ["/studio", "Virtual Studio"],
   ["/#process", "Process"],
   ["/about", "About"],
   ["/contact", "Contact"],

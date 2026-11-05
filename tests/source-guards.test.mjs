@@ -90,7 +90,7 @@ test("every project ships a real preview image and routes visitors through a cas
   assert.doesNotMatch(portfolio, /href=\{project\.url\}/);
   assert.doesNotMatch(homepage, /href=\{project\.url\}/);
   assert.doesNotMatch(workPage, /href=\{project\.url\}/);
-  assert.doesNotMatch(workIndexBody, /href=\{project\.url\}/);
+  assert.match(workIndexBody, /href=\{project\.url\} target="_blank" rel="noopener noreferrer"/);
   assert.match(workIndexBody, /href=\{`\/work\/\$\{project\.slug\}`\}/);
   assert.match(caseStudy, /href=\{project\.url\}[\s\S]{0,120}target="_blank"[\s\S]{0,120}rel="noopener noreferrer"/);
   assert.match(caseStudy, /opens in a new tab/);
