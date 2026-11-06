@@ -153,9 +153,9 @@ function fakeAudio({ state = "suspended", resumeWorks = true } = {}) {
 }
 const memory = () => { const data = new Map(); return { getItem: (k) => data.get(k) ?? null, setItem: (k, v) => data.set(k, v), data }; };
 
-test("sound defaults to on at a gentle volume, remembers choices and survives bad stored data", () => {
+test("sound defaults to off at a gentle volume, remembers choices and survives bad stored data", () => {
   assert.deepEqual(parsePrefs(null), DEFAULT_PREFS);
-  assert.equal(DEFAULT_PREFS.enabled, true);
+  assert.equal(DEFAULT_PREFS.enabled, false);
   assert.ok(DEFAULT_PREFS.volume <= 0.4);
   assert.deepEqual(parsePrefs("{not json"), DEFAULT_PREFS);
   assert.deepEqual(parsePrefs('{"enabled":false,"volume":9}'), { enabled: false, volume: 1 });
@@ -177,16 +177,21 @@ test("audio stays silent until the browser allows it, then plays; mute persists 
   const audio = new StudioAudio({ storage, AudioContextCtor: blocked.Ctor, now: () => 0 });
   audio.attach();
   await audio.resume();
-  assert.equal(audio.getSnapshot().enabled, true);
-  assert.equal(audio.getSnapshot().status, "locked", "does not claim audio while blocked");
+  assert.equal(audio.getSnapshot().enabled, false);
+  assert.equal(audio.getSnapshot().status, "muted");
   assert.equal(audio.play("welcome"), false);
   assert.equal(blocked.log.oscillators, 0);
+  audio.setEnabled(true);
+  await audio.resume();
+  assert.equal(audio.getSnapshot().status, "locked", "does not claim audio while blocked");
+  assert.equal(audio.play("welcome"), false);
   audio.dispose();
 
   const open = fakeAudio();
   let clock = 0;
   const live = new StudioAudio({ storage, AudioContextCtor: open.Ctor, now: () => (clock += 5000) });
   live.attach();
+  live.setEnabled(true);
   await live.resume();
   assert.equal(live.getSnapshot().status, "ready");
   assert.equal(live.play("welcome"), true);

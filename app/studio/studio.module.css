@@ -246,3 +246,43 @@
   .bubble { left: 12px; right: 12px; max-width: none; bottom: 46px; }
 }
 @media (max-height: 500px) and (orientation: landscape) { .bubble { bottom: 40px; left: 18px; } }
+
+/* Chips sit on the photograph. Later than the 8px caption queries so 12px wins. */
+.edition,
+.sceneCaption span.hint {
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  padding: 3px 8px;
+  background: #121416d4;
+  color: #f4f1ea;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.stageTop { align-items: flex-start; gap: 8px; }
+.stageTop .edition { flex: 0 1 auto; min-width: 0; max-width: calc(100% - 10.5rem); }
+.sceneCaption span.hint { letter-spacing: .05em; }
+.live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.stage :focus-visible,
+.controls :focus-visible,
+.panel :focus-visible {
+  outline: 2px solid #f4f1ea;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px #121416;
+}
+.previewCopy .textLink { margin-bottom: 26px; }
+@media (max-width: 699px) {
+  .loading[data-stage="intro"] .welcome,
+  .tourCue { display: none; }
+}

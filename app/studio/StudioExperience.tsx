@@ -4,8 +4,9 @@ import { StudioArrow } from "./StudioArrow";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { Component, useCallback, useEffect, useReducer, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { Component, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState, useSyncExternalStore, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
 import { areaLabels, areaOrder, initialStudioState, studioReducer, type Area } from "./studio-state";
+import { ARRIVAL_SECONDS } from "./world/sim/arrival";
 import { featuredServiceIndexes, type StudioProject, type StudioService } from "./studio-data";
 import { ConsultationPanel, GalleryPanel, ReceptionPanel, ServicesPanel } from "./StudioPanels";
 import { StudioAudio, type Cue } from "./audio/studio-audio";
@@ -15,6 +16,8 @@ import { onAnimalPicked, requestReaction } from "./world/wildlife-bus";
 import styles from "./studio.module.css";
 
 const KANGAROO_BEATS = ["wave", "tilt", "hop"] as const;
+/** The 3D view counts as on screen while at least this many pixels of it are visible. */
+const MIN_STAGE_VISIBLE = 120;
 
 const StudioScene = dynamic(() => import("./scene/StudioScene"), { ssr: false });
 
@@ -42,6 +45,7 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [touch, setTouch] = useState(false);
   const stage = useRef<HTMLDivElement>(null);
+  const roomNav = useRef<HTMLElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const areaButtons = useRef<Partial<Record<Area, HTMLButtonElement | null>>>({});
   const enterButton = useRef<HTMLButtonElement>(null);
@@ -51,6 +55,8 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const localsButton = useRef<HTMLButtonElement>(null);
   const [audio] = useState(() => new StudioAudio());
   const sound = useSyncExternalStore(audio.subscribe, audio.getSnapshot, audio.getSnapshot);
+  const [hintOn, setHintOn] = useState(true);
+  const tabbing = useRef(false);
   const [localsOpen, setLocalsOpen] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalId>("kangaroo");
   const [bubblesOn, setBubblesOn] = useState(true);
@@ -63,11 +69,52 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const pendingIntro = state.mode === "loading" || state.mode === "arrival" || state.mode === "intro";
   const onFailure = useCallback(() => dispatch({ type: "fail" }), []);
   const onReady = useCallback(() => { setSceneReady(true); dispatch({ type: "ready" }); }, []);
-  const onSelect = useCallback((area: Area) => dispatch({ type: "select", area }), []);
-  const onManual = useCallback(() => dispatch({ type: "manual" }), []);
+  const onSelect = useCallback((area: Area) => { setHintOn(false); dispatch({ type: "select", area }); }, []);
+  const onRoomKey = (event: ReactKeyboardEvent<HTMLElement>) => {
+    const key = event.key;
+    const horizontal = key === "ArrowLeft" || key === "ArrowRight";
+    const vertical = key === "ArrowUp" || key === "ArrowDown";
+    if (!horizontal && !vertical) return;
+    if (vertical && window.innerWidth > 900) return;
+    event.preventDefault();
+    const index = areaOrder.indexOf(state.area);
+    const next = horizontal
+      ? (index + (key === "ArrowRight" ? 1 : areaOrder.length - 1)) % areaOrder.length
+      : Math.min(areaOrder.length - 1, Math.max(0, index + (key === "ArrowDown" ? 2 : -2)));
+    if (next === index) return;
+    tabbing.current = true;
+    onSelect(areaOrder[next]);
+  };
+  const onManual = useCallback(() => { setHintOn(false); dispatch({ type: "manual" }); }, []);
   const onArrive = useCallback(() => dispatch({ type: "arrive" }), []);
-  const showStage = () => stage.current?.scrollIntoView({ block: "start", behavior: "instant" });
-  const onView = (type: "tour" | "tourStop" | "entrance" | "reset") => { showStage(); if (type === "tour") audio.play("select"); dispatch({ type }); };
+  // Room changes bring the 3D view back only when it has actually left the screen, and never so far that the room tabs leave.
+  // Camera controls (entrance, reset, tour) also lift the view up under the fixed header when the page title is still above it.
+  const showStage = useCallback((align = false) => {
+    const node = stage.current;
+    if (!node) return;
+    const rect = node.getBoundingClientRect();
+    const margin = parseFloat(getComputedStyle(node).scrollMarginTop) || 0;
+    if (!align) {
+      if (rect.bottom > margin + MIN_STAGE_VISIBLE && rect.top < innerHeight - MIN_STAGE_VISIBLE) return;
+      let top = scrollY + rect.top - margin;
+      const bar = roomNav.current?.getBoundingClientRect();
+      if (bar) top = Math.min(top, scrollY + bar.bottom - innerHeight);
+      scrollTo({ top: Math.max(0, top), behavior: "instant" });
+      return;
+    }
+    const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 0;
+    const target = Math.max(margin, header);
+    if (Math.abs(rect.top - target) <= 8) return;
+    let top = scrollY + rect.top - target;
+    const bar = roomNav.current?.getBoundingClientRect();
+    if (bar) {
+      const minScroll = scrollY + bar.bottom - innerHeight;
+      const maxScroll = scrollY + Math.max(0, bar.top);
+      top = Math.min(Math.max(top, minScroll), maxScroll);
+    }
+    scrollTo({ top: Math.max(0, top), behavior: "instant" });
+  }, []);
+  const onView = (type: "tour" | "tourStop" | "entrance" | "reset") => { showStage(true); if (type === "tour") audio.play("select"); dispatch({ type }); };
   const dismissCaption = useCallback(() => setCaption(null), []);
 
   // One path for every way of greeting an animal: its button, the 3D model, and the room it lives in.
@@ -94,6 +141,23 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     await audio.resume();
     audio.play("select");
   };
+
+  // Opening or closing room details resizes the 3D view on small screens. Keep the room tabs where the visitor's eyes are.
+  const navTop = useRef<number | null>(null);
+  useEffect(() => {
+    const track = () => { navTop.current = roomNav.current?.getBoundingClientRect().top ?? null; };
+    track();
+    addEventListener("scroll", track, { passive: true });
+    addEventListener("resize", track);
+    return () => { removeEventListener("scroll", track); removeEventListener("resize", track); };
+  }, []);
+  useLayoutEffect(() => {
+    const node = roomNav.current;
+    if (!node || navTop.current === null) return;
+    const delta = node.getBoundingClientRect().top - navTop.current;
+    if (Math.abs(delta) > 1) scrollBy({ top: delta, behavior: "instant" });
+    navTop.current = node.getBoundingClientRect().top;
+  }, [state.panel]);
 
   useEffect(() => { audio.attach(); return () => audio.dispose(); }, [audio]);
   useEffect(() => onAnimalPicked(interact), [interact]);
@@ -166,11 +230,21 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   useEffect(() => {
     if (state.panel) {
       showStage();
-      heading.current?.focus({ preventScroll: true });
+      if (tabbing.current) {
+        tabbing.current = false;
+        areaButtons.current[state.area]?.focus({ preventScroll: true });
+      } else heading.current?.focus({ preventScroll: true });
     }
     else if (panelWasOpen.current) areaButtons.current[state.area]?.focus({ preventScroll: true });
     panelWasOpen.current = state.panel;
-  }, [state.panel, state.area]);
+  }, [state.panel, state.area, showStage]);
+
+  // The arrival film is wall-clock time. A stalled WebGL frame must not keep the visitor on "Arriving".
+  useEffect(() => {
+    if (state.mode !== "arrival") return;
+    const timer = setTimeout(() => dispatch({ type: "arrive" }), ARRIVAL_SECONDS * 1000);
+    return () => clearTimeout(timer);
+  }, [state.mode]);
 
   useEffect(() => {
     if (state.mode === "loading" && !state.resume) {
@@ -222,16 +296,20 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
         <p role="status">{state.mode === "loading" ? (state.resume ? "Returning to the 3D view…" : "Preparing your studio…") : state.mode === "arrival" ? "Arriving in Sydney…" : "Welcome inside AB Web Studio"}</p>
         {state.mode === "intro" && <p className={styles.welcome}>“Welcome to AB Web Studio. Feel free to explore.”</p>}
         {!(state.mode === "loading" && state.resume) && <div className={styles.loadingActions}>
-          {state.mode === "intro" && <><button type="button" className={styles.primary} onClick={() => dispatch({ type: "skip" })}>Start exploring</button><button type="button" className={styles.smallButton} onClick={() => dispatch({ type: "tour" })}>Take guided tour</button></>}
+          {state.mode === "intro" && <><button type="button" className={styles.primary} onClick={() => dispatch({ type: "skip" })}>Start exploring</button><button type="button" className={`${styles.smallButton} ${styles.tourCue}`} onClick={() => dispatch({ type: "tour" })}>Take guided tour</button></>}
           <button ref={skipButton} type="button" className={styles.smallButton} onClick={() => dispatch({ type: "skip" })}>Skip intro</button>
         </div>}
       </div>}
-      {active && <div className={styles.sceneCaption}><span>{state.outside ? "Sydney / Studio entrance" : state.mode === "arrival" ? "Sydney / Arrival" : `${String(roomNumber).padStart(2, "0")} / ${areaLabels[state.area]}`}</span><span>{hint}</span></div>}
+      {active && <div className={styles.sceneCaption}><span>{state.outside ? "Sydney / Studio entrance" : state.mode === "arrival" ? "Sydney / Arrival" : `${String(roomNumber).padStart(2, "0")} / ${areaLabels[state.area]}`}</span>{hintOn && <span className={styles.hint}>{hint}</span>}</div>}
       {active && bubblesOn && <LocalBubble caption={caption} onDismiss={dismissCaption} />}
       {!active && (state.panel || state.still) && <div className={styles.sceneCaption}><span>{String(roomNumber).padStart(2, "0")} / {areaLabels[state.area]}</span><span>Still view</span></div>}
     </div>
     <div className={styles.controls}>
-      <nav className={styles.areaNav} aria-label="Studio rooms">{areaOrder.map((area, index) => <button ref={(node) => { areaButtons.current[area] = node; }} key={area} type="button" aria-pressed={!state.outside && state.area === area && (active || state.panel)} onClick={() => onSelect(area)}><span>{String(index + 1).padStart(2, "0")}</span>{areaLabels[area]}</button>)}</nav>
+      <nav ref={roomNav} className={styles.areaNav} aria-label="Studio rooms" onKeyDown={onRoomKey}>{areaOrder.map((area, index) => {
+        const pressed = !state.outside && state.area === area && (active || state.panel);
+        return <button ref={(node) => { areaButtons.current[area] = node; }} key={area} type="button" aria-pressed={pressed} aria-current={pressed ? "true" : undefined} onClick={() => onSelect(area)}><span>{String(index + 1).padStart(2, "0")}</span>{areaLabels[area]}</button>;
+      })}</nav>
+      <p className={styles.live} aria-live="polite">{state.mode === "explore" && !state.outside ? `Now in ${areaLabels[state.area]}.` : ""}</p>
       <div className={styles.extras}>
         <button ref={localsButton} type="button" className={styles.localsToggle} aria-expanded={localsOpen} aria-controls="studio-locals" onClick={() => setLocalsOpen((open) => !open)}>Meet the locals <span aria-hidden="true">{localsOpen ? "−" : "+"}</span></button>
         <SoundControls sound={sound} onToggle={toggleSound} onVolume={(volume) => { audio.setVolume(volume); audio.play("select"); }} />

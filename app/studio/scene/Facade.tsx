@@ -1,13 +1,14 @@
 import { useMemo } from "react";
-import { useGLTF } from "@react-three/drei";
+import { monogramUrl } from "../studio-assets";
 import { Block } from "./Architecture";
+import { useStudioModel } from "./load-model";
 import { layout } from "../world/world-layout";
 
 const glass = { color: "#a9c4c6", transparent: true, opacity: .12, roughness: .08, metalness: .1, depthWrite: false } as const;
 
 // Front elevation of the studio: brass-framed glazing, an open entrance, canopy and the gold monogram.
 export function Facade() {
-  const { scene } = useGLTF("/studio/ab-monogram.glb", false, false);
+  const { scene } = useStudioModel(monogramUrl);
   const sign = useMemo(() => scene.clone(true), [scene]);
   const z = layout.facadeZ;
   const doorL = layout.door.x - layout.door.width / 2, doorR = layout.door.x + layout.door.width / 2;

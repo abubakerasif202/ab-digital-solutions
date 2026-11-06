@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 
+// This file is loaded in isolation by the security test, so it cannot import the app.
+// Keep this string identical to STUDIO_ASSET_REV in app/studio/studio-assets.ts.
+const STUDIO_ASSET_REV = "r2";
+
 const isDevelopment = process.env.NODE_ENV === "development";
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -55,6 +59,13 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920],
     imageSizes: [32, 64, 96, 128, 256, 384],
   },
+  async rewrites() {
+    // Versioned URLs are the cache key. The files stay at their stable public paths.
+    return [
+      { source: `/studio/${STUDIO_ASSET_REV}/ab-monogram.glb`, destination: "/studio/ab-monogram.glb" },
+      { source: `/studio/${STUDIO_ASSET_REV}/screens/:file`, destination: "/studio/screens/:file" },
+    ];
+  },
   async redirects() {
     // Retire the deleted legacy static concept. Paths are enumerated (not a
     // :path* wildcard) so the live portfolio assets under /assets keep serving.
@@ -76,6 +87,11 @@ const nextConfig: NextConfig = {
       { source: "/(.*)", headers: securityHeaders },
       {
         source: "/site/ab-digital-premium/assets/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        // Only the versioned studio URLs. The poster and unversioned files keep short caching.
+        source: `/studio/${STUDIO_ASSET_REV}/:path*`,
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
       // Film and brand files keep stable filenames, so they cannot be immutable:

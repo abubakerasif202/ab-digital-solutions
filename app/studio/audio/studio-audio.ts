@@ -1,8 +1,8 @@
 // Small synthesised sound palette for the virtual studio. Every cue is generated with Web Audio at play
 // time (no downloaded or sampled assets), so there is nothing to license and nothing to fetch.
 //
-// Rules this module enforces: sound is on by default but never claims to be playing until the browser has
-// actually allowed it; choice and volume persist; cues are rate-limited so repeat taps stay calm; wildlife
+// Rules this module enforces: sound is off by default and never claims to be playing until the visitor
+// switches it on and the browser has allowed it; choice and volume persist; cues are rate-limited so repeat taps stay calm; wildlife
 // cues never overlap; audio suspends while the page is hidden and the context closes on dispose().
 
 export type Cue = "welcome" | "transition" | "select" | "hop" | "koala" | "cockatoo";
@@ -11,7 +11,7 @@ export type SoundPrefs = { enabled: boolean; volume: number };
 export type SoundState = SoundPrefs & { status: SoundStatus };
 
 export const STORAGE_KEY = "ab-studio-sound-v1";
-export const DEFAULT_PREFS: SoundPrefs = { enabled: true, volume: 0.35 };
+export const DEFAULT_PREFS: SoundPrefs = { enabled: false, volume: 0.35 };
 /** Slider volume 1 maps to this master gain, so even the loudest setting stays comfortable. */
 export const MASTER_CEILING = 0.5;
 /** Cockatoo chirps are the brightest cue, so they get a lower ceiling again. */
@@ -21,7 +21,7 @@ export const WILDLIFE_CUES: readonly Cue[] = ["hop", "koala", "cockatoo"];
 export function clampVolume(value: number): number {
   return Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : DEFAULT_PREFS.volume;
 }
-/** Parses stored preferences defensively; anything unreadable falls back to the defaults (sound on, gentle volume). */
+/** Parses stored preferences defensively; anything unreadable falls back to the defaults (sound off, gentle volume). */
 export function parsePrefs(raw: string | null | undefined): SoundPrefs {
   if (!raw) return { ...DEFAULT_PREFS };
   try {

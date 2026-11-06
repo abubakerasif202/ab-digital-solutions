@@ -2,14 +2,16 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, useGLTF, useTexture } from "@react-three/drei";
+import { OrbitControls, PerformanceMonitor, useTexture } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { MaterialLibrary } from "./Materials";
 import { cameraProgress } from "./camera-motion";
 import { Architecture } from "./Architecture";
-import { Consultation, Gallery, HotspotPortalContext, Ready, Reception, Services } from "./Spaces";
+import { monogramUrl, screenTextureUrl } from "../studio-assets";
+import { Consultation, Gallery, HotspotPortalContext, HotspotsHiddenContext, Reception, Services } from "./Spaces";
+import { useStudioModel } from "./load-model";
 import { Facade, Ground } from "./Facade";
 import { SceneClock } from "../world/SceneClock";
 import { Exterior } from "../world/Exterior";
@@ -27,7 +29,7 @@ import type { Area, StudioState } from "../studio-state";
 import type { StudioProject } from "../studio-data";
 
 // This module is imported only after Enter; preload the small essential model.
-useGLTF.preload("/studio/ab-monogram.glb", false, false);
+useStudioModel.preload(monogramUrl);
 
 const shots: Record<Area, { position: [number,number,number]; target: [number,number,number] }> = {
   reception: { position: [-1.4,1.85,6.8], target: [-5.8,1.35,2.9] },
@@ -47,7 +49,8 @@ const mobileShots: typeof shots = {
 
 const entranceShot = { position: [-.5, 2.3, 16.8] as [number,number,number], target: [-.5, 2.4, 9] as [number,number,number] };
 const mobileEntranceShot = { position: [-.5, 2.1, 18] as [number,number,number], target: [-.5, 2.2, 9] as [number,number,number] };
-const welcomeShot = { position: [-1.4, 1.62, 6.6] as [number,number,number], target: [-5.8, 1.4, 2.9] as [number,number,number] };
+const welcomeShot = { position: [-1.4, 1.62, 6.6] as [number,number,number], target: [-5.8, 1.85, 2.9] as [number,number,number] };
+const overviewShot = { position: [10.5, 8.2, 14.5] as [number,number,number], target: [0, 1.4, 1] as [number,number,number] };
 
 // Three's scene is an imperative GPU resource, not React state.
 function attachEnvironment(scene: THREE.Scene, texture: THREE.Texture) {
@@ -117,7 +120,7 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
     // The whole-studio overview only frames the first exploration. After a room is chosen, closing details,
     // Reset view and the tour all keep that room in frame; Back to entrance is the only street view.
     const overview = (state.mode === "loading" && !state.resume) || (state.overview && !state.panel && !state.tour && !state.outside && state.mode !== "intro");
-    let shot = mobile ? mobileShots[state.area] : overview ? { position: [19,15,24] as [number,number,number], target: [0,.2,0] as [number,number,number] } : shots[state.area];
+    let shot = mobile ? mobileShots[state.area] : overview ? overviewShot : shots[state.area];
     if (state.mode === "loading" && !state.resume) { const first = arrivalPose(0, portrait, baseFov); shot = { position: first.position, target: first.target }; }
     else if (state.mode === "intro") shot = mobile ? mobileShots.reception : welcomeShot;
     else if (state.outside) shot = mobile ? mobileEntranceShot : entranceShot;
@@ -126,7 +129,7 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
       const view = camera.view;
       startLens.current.set(view?.enabled ? view.offsetX / view.fullWidth : 0, view?.enabled ? view.offsetY / view.fullHeight : 0);
       // Frame the room beside the desktop panel. On mobile the details sit below the scene, so no offset is needed.
-      targetLens.current.set(state.panel && size.width >= 700 && size.height >= 480 ? .13 : 0, 0);
+      targetLens.current.set(state.panel && size.width >= 700 && size.height >= 480 ? .2 : 0, 0);
     }
     targetPosition.current.set(...shot.position);
     targetLook.current.set(...shot.target);
@@ -194,6 +197,33 @@ function GoldDust({ animate }: { animate: boolean }) {
   return <points ref={ref}><bufferGeometry><bufferAttribute attach="attributes-position" args={[positions,3]} /></bufferGeometry><pointsMaterial color="#e8c47d" size={.035} transparent opacity={.55} depthWrite={false} /></points>;
 }
 
+type StudioPhase = "core" | "street" | "done";
+
+// compileAsync runs WebGLRenderer.compile() on the main thread before its GPU wait,
+// so it lengthens the enter freeze. Mount the street on the next frame and reveal
+// only after that frame, while the loading state is still up.
+function StudioWarmup({ phase, onPhase, onReady }: { phase: StudioPhase; onPhase: (phase: StudioPhase) => void; onReady: () => void }) {
+  const invalidate = useThree((state) => state.invalidate);
+  useEffect(() => {
+    if (phase !== "core") return;
+    const frame = requestAnimationFrame(() => onPhase("street"));
+    return () => cancelAnimationFrame(frame);
+  }, [phase, onPhase]);
+  useEffect(() => {
+    if (phase !== "street") return;
+    let second = 0;
+    const first = requestAnimationFrame(() => {
+      second = requestAnimationFrame(() => {
+        invalidate();
+        onReady();
+        onPhase("done");
+      });
+    });
+    return () => { cancelAnimationFrame(first); cancelAnimationFrame(second); };
+  }, [phase, invalidate, onPhase, onReady]);
+  return null;
+}
+
 function readCapabilities(): Tier {
   const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
   return pickTier({ cores: nav.hardwareConcurrency, memoryGb: nav.deviceMemory, coarsePointer: matchMedia("(pointer: coarse)").matches, saveData: nav.connection?.saveData });
@@ -208,14 +238,23 @@ export default function StudioScene({ state, projects, selectedProject, visible,
   const portal = useRef<HTMLDivElement>(null);
   const [tier, setTier] = useState<Tier>(readCapabilities);
   const [greetedShot, setGreetedShot] = useState(-1);
+  const [phase, setPhase] = useState<StudioPhase>("core");
+  const [dprCap, setDprCap] = useState(1.75);
   const quality = tierConfig[tier];
+  const pixelRatio = mobile ? dprCap : Math.min(dprCap, quality.dpr);
+  const crispScreens = state.area === "gallery" && !state.overview && !state.outside && state.mode !== "loading" && state.mode !== "arrival";
   const initialPose = arrivalPose(0, mobile && window.innerHeight > window.innerWidth, mobile ? 80 : 42);
   const greeting = state.mode === "intro" || (state.mode === "explore" && state.area === "reception" && !state.outside) || (state.mode === "arrival" && greetedShot === state.shot);
   const downgrade = useCallback(() => setTier((current) => (current === "high" ? "medium" : "low")), []);
+  const onDecline = useCallback(() => {
+    downgrade();
+    if (phase !== "done") return;
+    setDprCap((value) => Math.max(1, Math.round((value - 0.25) * 100) / 100));
+  }, [downgrade, phase]);
   return <div className="ab-spatial-canvas" style={{ position: "absolute", inset: 0, zIndex: 0 }}>
     <style>{`.ab-spatial-hotspot{display:flex;align-items:center;gap:8px;white-space:nowrap;min-height:44px;padding:6px 13px 6px 7px;border:1px solid #c4a56f88;background:#101619e8;color:#f1e2c2;font:11px var(--font-sans),sans-serif;cursor:pointer;box-shadow:0 4px 16px #0005}.ab-spatial-hotspot span{display:grid;place-items:center;width:25px;height:25px;border:1px solid #d4b67888;border-radius:50%;color:#e9cc96;font-size:17px}.ab-spatial-hotspot:hover{background:#3a3020;border-color:#efd49c}.ab-spatial-canvas canvas{touch-action:pan-y!important}`}</style>
     <div ref={portal} style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }} />
-    <Canvas frameloop={visible ? "demand" : "never"} dpr={[1, mobile ? 1 : quality.dpr]} camera={{ position: initialPose.position, fov: initialPose.fov, near: .1, far: 560 }} gl={{ antialias: !mobile && quality.antialias, powerPreference: "low-power", alpha: false }} fallback={<p>3D unavailable. Explore the studio using the space buttons below.</p>} onCreated={({ gl, scene }) => {
+    <Canvas frameloop={visible ? "demand" : "never"} dpr={[1, pixelRatio]} camera={{ position: initialPose.position, fov: initialPose.fov, near: .1, far: 560 }} gl={{ antialias: !mobile && quality.antialias, powerPreference: "low-power", alpha: false }} fallback={<p>3D unavailable. Explore the studio using the space buttons below.</p>} onCreated={({ gl, scene }) => {
       // Software rasterizers can expose many CPU cores and large texture limits. Start them at
       // the bounded tier immediately instead of waiting for a prolonged frame-time probe.
       const context = gl.getContext();
@@ -224,32 +263,38 @@ export default function StudioScene({ state, projects, selectedProject, visible,
       if (/swiftshader|llvmpipe|software|microsoft basic render/i.test(renderer)) setTier("low");
       gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.05;
       scene.background = new THREE.Color(skyFog);
-      scene.fog = new THREE.Fog(skyFog, 110, 540);
+      scene.fog = new THREE.Fog(skyFog, 42, 150);
     }}>
       <ContextGuard onFailure={onFailure} />
       <Lighting />
       <CameraRig state={state} visible={visible} onManual={onManual} onArrive={onArrive} onGreet={() => setGreetedShot(state.shot)} />
       <HotspotPortalContext.Provider value={portal}>
+      <HotspotsHiddenContext.Provider value={!!state.animal}>
+      <PerformanceMonitor onDecline={onDecline}>
       <SceneClock tier={tier} active={visible} onDowngrade={downgrade}>
       <Suspense fallback={null}><MaterialLibrary>
         <Architecture />
         <Facade />
         <Ground />
         <Reception animate={animate} onSelect={onSelect} />
-        <Gallery projects={projects} selected={selectedProject} onSelect={onSelect} onProject={onProject} />
+        <Gallery projects={projects} selected={selectedProject} crisp={crispScreens} onSelect={onSelect} onProject={onProject} />
         <Services onSelect={onSelect} onService={onService} />
         <Consultation onSelect={onSelect} />
         <GoldDust animate={animate} />
         <Landmarks />
-        <Exterior />
-        <Traffic />
-        <Pedestrians />
-        <Wildlife />
         <Receptionist greeting={greeting} />
-        <StudioStaff />
-        <Ready onReady={onReady} />
+        {phase !== "core" && <>
+          <Exterior />
+          <Traffic />
+          <Pedestrians />
+          <Wildlife />
+          <StudioStaff />
+        </>}
+        <StudioWarmup phase={phase} onPhase={setPhase} onReady={onReady} />
       </MaterialLibrary></Suspense>
       </SceneClock>
+      </PerformanceMonitor>
+      </HotspotsHiddenContext.Provider>
       </HotspotPortalContext.Provider>
     </Canvas>
   </div>;
@@ -269,6 +314,9 @@ function ContextGuard({ onFailure }: { onFailure: () => void }) {
 }
 
 export function resetStudioResources(projects: StudioProject[]) {
-  useGLTF.clear("/studio/ab-monogram.glb");
-  for (const project of projects) useTexture.clear(`/studio/screens/${project.slug}.webp`);
+  useStudioModel.clear(monogramUrl);
+  for (const project of projects) {
+    useTexture.clear(screenTextureUrl(project.slug, false));
+    useTexture.clear(screenTextureUrl(project.slug, true));
+  }
 }
