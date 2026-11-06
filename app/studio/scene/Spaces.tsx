@@ -1,24 +1,84 @@
-import { createContext, Suspense, useContext, useEffect, useMemo, useRef, useState, type RefObject } from "react";
-import { Html, RoundedBox, useGLTF, useTexture } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { createContext, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
+import { Html, RoundedBox, useTexture } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { monogramUrl, screenTextureUrl } from "../studio-assets";
 import { Block, MarbleBlock, brass } from "./Architecture";
+import { useStudioModel } from "./load-model";
 import { BrassMaterial, MarbleMaterial } from "./Materials";
 import type { Area } from "../studio-state";
 import type { StudioProject } from "../studio-data";
 
+/** Room labels step aside while an animal is framed, so they never cover it or swallow taps meant for it. */
+export const HotspotsHiddenContext = createContext(false);
 export const HotspotPortalContext = createContext<RefObject<HTMLDivElement | null> | undefined>(undefined);
+
+type HotspotSlot = { distance: number; x: number; y: number; occluded: boolean; frame: number };
+const hotspotSlots = new Map<string, HotspotSlot>();
+const hotspotRay = new THREE.Raycaster();
+const hotspotNdc = new THREE.Vector2();
+const hotspotA = new THREE.Vector3();
+const hotspotB = new THREE.Vector3();
+const hotspotC = new THREE.Vector3();
+const hotspotD = new THREE.Vector3();
 
 function Hotspot({ area, label, position, onSelect }: { area: Area; label: string; position: [number,number,number]; onSelect: (area: Area) => void }) {
   const portal = useContext(HotspotPortalContext);
+  const hiddenByAnimal = useContext(HotspotsHiddenContext);
+  const scene = useThree((state) => state.scene);
+  const button = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (hiddenByAnimal) hotspotSlots.delete(label);
+    return () => { hotspotSlots.delete(label); };
+  }, [hiddenByAnimal, label]);
+  const calculatePosition = useCallback((el: THREE.Object3D, camera: THREE.Camera, size: { width: number; height: number }) => {
+    const anchor = hotspotA.setFromMatrixPosition(el.matrixWorld);
+    const camPos = hotspotB.setFromMatrixPosition(camera.matrixWorld);
+    const behind = hotspotC.copy(anchor).sub(camPos).angleTo(camera.getWorldDirection(hotspotD)) > Math.PI / 2;
+    const distance = anchor.distanceTo(camPos);
+    const projected = hotspotC.copy(anchor).project(camera);
+    const rawX = projected.x * size.width / 2 + size.width / 2;
+    const rawY = -(projected.y * size.height / 2) + size.height / 2;
+    const wayOff = rawX < -size.width || rawX > size.width * 2 || rawY < -size.height || rawY > size.height * 2;
+    const marginX = Math.min(78, Math.max(36, size.width * 0.14), Math.max(8, size.width / 2 - 8));
+    const marginY = Math.min(28, Math.max(16, size.height * 0.06), Math.max(8, size.height / 2 - 8));
+    const x = Math.min(Math.max(rawX, marginX), size.width - marginX);
+    const y = Math.min(Math.max(rawY, marginY), size.height - marginY);
+    const previous = hotspotSlots.get(label);
+    const frame = (previous?.frame ?? 0) + 1;
+    let occluded = previous?.occluded ?? false;
+    if (!behind && !wayOff && frame % 4 === 1) {
+      hotspotNdc.set(projected.x, projected.y);
+      hotspotRay.setFromCamera(hotspotNdc, camera);
+      hotspotRay.far = distance;
+      const hits = hotspotRay.intersectObjects(scene.children, true);
+      occluded = hits.length > 0 && hits[0].distance + 0.2 < distance;
+      hotspotRay.far = Infinity;
+    }
+    hotspotSlots.set(label, { distance, x, y, occluded, frame });
+    let crowded = false;
+    if (!behind && !wayOff && !occluded) {
+      for (const [other, slot] of hotspotSlots) {
+        if (other !== label && slot.distance < distance && Math.hypot(slot.x - x, slot.y - y) < 92) crowded = true;
+      }
+    }
+    const hide = behind || wayOff || occluded || crowded;
+    const node = button.current;
+    if (node) {
+      node.style.visibility = hide ? "hidden" : "visible";
+      node.style.pointerEvents = hide ? "none" : "auto";
+    }
+    return [x, y] as [number, number];
+  }, [label, scene]);
+  if (hiddenByAnimal) return null;
   // Drei retains the pre-React-19 non-null RefObject signature; Html guards current.
-  return <Html portal={portal as RefObject<HTMLElement> | undefined} position={position} center zIndexRange={[10, 0]} style={{ pointerEvents: "auto" }}>
-    <button className="ab-spatial-hotspot" type="button" onClick={() => onSelect(area)} aria-label={`Explore ${label}`}><span aria-hidden="true">+</span>{label}</button>
+  return <Html portal={portal as RefObject<HTMLElement> | undefined} position={position} center zIndexRange={[10, 0]} calculatePosition={calculatePosition} style={{ pointerEvents: "auto" }}>
+    <button ref={button} className="ab-spatial-hotspot" type="button" onClick={() => onSelect(area)} aria-label={`Explore ${label}`}><span aria-hidden="true">+</span>{label}</button>
   </Html>;
 }
 
 function Sculpture({ animate }: { animate: boolean }) {
-  const { scene } = useGLTF("/studio/ab-monogram.glb", false, false);
+  const { scene } = useStudioModel(monogramUrl);
   const model = useMemo(() => scene.clone(true), [scene]);
   const group = useRef<THREE.Group>(null);
   const elapsed = useRef(0);
@@ -27,9 +87,8 @@ function Sculpture({ animate }: { animate: boolean }) {
     elapsed.current += Math.min(delta,.05);
     group.current.rotation.y = Math.sin(elapsed.current * .8) * .12;
   });
-  // The monogram is roughly 3.2 x 1.8 m at source scale. At half size and raised behind the arch it
-  // stays recognisable as a feature wall mark without hiding the counter, receptionist or gallery route.
-  return <group ref={group} position={[-5,2.95,2.25]} scale={.4}><primitive object={model} /></group>;
+  // The monogram is roughly 3.2 x 1.8 m at source scale. Raised and pulled forward so the brass arch frames the letters.
+  return <group ref={group} position={[-5, 3.15, 1.7]} scale={.4}><primitive object={model} /></group>;
 }
 
 export function Reception({ animate, onSelect }: { animate: boolean; onSelect: (area: Area) => void }) {
@@ -50,12 +109,25 @@ export function Reception({ animate, onSelect }: { animate: boolean; onSelect: (
   </group>;
 }
 
+/** Three.js textures are mutable GPU resources. Drei caches one instance per URL, so configure it and never dispose it. */
+function applyScreenSampling(map: THREE.Texture, anisotropy: number) {
+  map.colorSpace = THREE.SRGBColorSpace;
+  map.anisotropy = anisotropy;
+  map.generateMipmaps = true;
+  map.minFilter = THREE.LinearMipmapLinearFilter;
+  map.magFilter = THREE.LinearFilter;
+  map.needsUpdate = true;
+}
+
 function DisplayImage({ image }: { image: string }) {
   const texture = useTexture(image);
-  // Do not mutate or dispose Drei's shared cache textures here.
+  const gl = useThree((state) => state.gl);
+  useLayoutEffect(() => {
+    applyScreenSampling(texture, gl.capabilities.getMaxAnisotropy());
+  }, [texture, gl]);
   return <mesh position={[0,0,.13]}><planeGeometry args={[3.4,2.33]} /><meshBasicMaterial map={texture} toneMapped={false} /></mesh>;
 }
-function ProjectDisplay({ project, position, selected, onOpen }: { project: StudioProject; position: [number,number,number]; selected: boolean; onOpen: () => void }) {
+function ProjectDisplay({ project, position, selected, crisp, onOpen }: { project: StudioProject; position: [number,number,number]; selected: boolean; crisp: boolean; onOpen: () => void }) {
   const [hover, setHover] = useState(false);
   return <group position={position}>
     <Block position={[0,-1.5,0]} size={[.09,1,.09]} color="#ad9361" metalness={.8} />
@@ -64,7 +136,7 @@ function ProjectDisplay({ project, position, selected, onOpen }: { project: Stud
       <boxGeometry args={[3.65,2.58,.22]} />
       <meshStandardMaterial color={selected ? "#f0d49a" : hover ? "#e1c18a" : "#9a8055"} emissive={selected ? "#6b4f1c" : "#000000"} emissiveIntensity={selected ? .55 : 0} metalness={.75} roughness={.3} />
     </mesh>
-    <Suspense fallback={null}><DisplayImage image={`/studio/screens/${project.slug}.webp`} /></Suspense>
+    <Suspense fallback={null}><DisplayImage image={screenTextureUrl(project.slug, crisp)} /></Suspense>
     {/* A brass plinth light marks the selected frame without relying on colour alone. */}
     {selected && <Block position={[0,-1.45,.14]} size={[1.6,.035,.02]} color="#f4ce89" metalness={.4} />}
   </group>;
@@ -74,11 +146,11 @@ export function galleryWindowStart(selected: number, total: number) {
   return Math.min(Math.max(selected - 1, 0), Math.max(total - FRAMES, 0));
 }
 /** Three physical frames slide over the whole portfolio, so at most three textures are live at once. */
-export function Gallery({ projects, selected, onSelect, onProject }: { projects: StudioProject[]; selected: number; onSelect: (area: Area) => void; onProject: (index: number) => void }) {
+export function Gallery({ projects, selected, crisp, onSelect, onProject }: { projects: StudioProject[]; selected: number; crisp: boolean; onSelect: (area: Area) => void; onProject: (index: number) => void }) {
   const start = galleryWindowStart(selected, projects.length);
   return <group>
     <Block position={[-5,.13,-4.5]} size={[10,.22,5.3]} color="#171d20" />
-    {projects.slice(start, start + FRAMES).map((project, offset) => <ProjectDisplay key={project.slug} project={project} position={[-8.7 + offset*3.8,2.45,-5]} selected={start + offset === selected} onOpen={() => onProject(start + offset)} />)}
+    {projects.slice(start, start + FRAMES).map((project, offset) => <ProjectDisplay key={project.slug} project={project} position={[-8.7 + offset*3.8,2.45,-5]} selected={start + offset === selected} crisp={crisp} onOpen={() => onProject(start + offset)} />)}
     <Hotspot area="gallery" label="Portfolio" position={[-5,.5,-1.6]} onSelect={onSelect} />
   </group>;
 }
@@ -126,7 +198,4 @@ export function Consultation({ onSelect }: { onSelect: (area: Area) => void }) {
   </group>;
 }
 
-export function Ready({ onReady }: { onReady: () => void }) {
-  useEffect(() => { const frame = requestAnimationFrame(onReady); return () => cancelAnimationFrame(frame); }, [onReady]);
-  return null;
-}
+

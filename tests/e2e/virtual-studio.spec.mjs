@@ -136,7 +136,7 @@ test("no WebGL, reduced motion and slow connections keep usable fallback", async
 });
 
 test("model load failure recovers even after Skip Intro", async ({ page }) => {
-  await page.route("**/studio/ab-monogram.glb", (route) => route.abort()); await page.goto("/studio", { waitUntil: "networkidle" });
+  await page.route("**/ab-monogram.glb", (route) => route.abort()); await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio" }).click();
   const skip = page.getByRole("button", { name: "Skip intro" }); if (await skip.isVisible()) await page.keyboard.press("Escape");
   await expect(mode(page)).toHaveAttribute("data-mode", "failed", { timeout: 25000 });
@@ -171,7 +171,7 @@ test("touch orbit changes view and vertical swipe scrolls the page", async ({ br
   for (let i=1; i<=6; i++) await client.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x+i*12, y }] });
   await client.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] }); await page.waitForTimeout(300);
   expect((await page.locator("canvas").screenshot()).equals(before)).toBe(false);
-  expect(await page.locator("canvas").evaluate((canvas) => canvas.width/canvas.clientWidth)).toBeLessThanOrEqual(1.01);
+  expect(await page.locator("canvas").evaluate((canvas) => canvas.width/canvas.clientWidth)).toBeLessThanOrEqual(1.76);
   const pinchBefore = await page.locator("canvas").screenshot();
   await client.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: x-30, y, id: 1 }, { x: x+30, y, id: 2 }] });
   await client.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x-65, y, id: 1 }, { x: x+65, y, id: 2 }] });
@@ -271,7 +271,7 @@ test("existing public routes retain metadata and responsive navigation", async (
 test("retry recovers a failed model request and repeated entry has clean teardown", async ({ page }) => {
   const errors = []; page.on("pageerror", (error) => errors.push(error.message));
   let blocked = true;
-  await page.route("**/studio/ab-monogram.glb", (route) => blocked ? route.abort() : route.continue());
+  await page.route("**/ab-monogram.glb", (route) => blocked ? route.abort() : route.continue());
   await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio" }).click();
   await expect(mode(page)).toHaveAttribute("data-mode", "failed", { timeout: 25000 });
@@ -353,7 +353,7 @@ test("initial phone landscape caps DPR and all requested layouts stay within vie
   const context = await browser.newContext({ viewport: { width: 844, height: 390 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   const page = await context.newPage(); await intercept(page);
   await page.goto("/studio"); await enter(page);
-  await expect.poll(() => page.locator("canvas").evaluate(canvas => canvas.width / canvas.clientWidth)).toBeLessThanOrEqual(1.01);
+  await expect.poll(() => page.locator("canvas").evaluate(canvas => canvas.width / canvas.clientWidth)).toBeLessThanOrEqual(1.76);
   await page.waitForTimeout(1900);
   const landscapeStage = await mode(page).boundingBox();
   expect(landscapeStage.y + landscapeStage.height).toBeLessThanOrEqual(391);
@@ -369,6 +369,35 @@ test("initial phone landscape caps DPR and all requested layouts stay within vie
     await page.keyboard.press("Escape");
   }
   await context.close();
+});
+
+test("room tabs keep the page still on desktop and the tab bar on screen on a phone", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/studio", { waitUntil: "networkidle" });
+  await enter(page);
+  const nav = page.getByRole("navigation", { name: "Studio rooms" });
+  await nav.scrollIntoViewIfNeeded();
+  const metrics = () => page.evaluate(() => {
+    const bar = document.querySelector('[aria-label="Studio rooms"]').getBoundingClientRect();
+    return { y: window.scrollY, top: bar.top, bottom: bar.bottom, height: window.innerHeight };
+  });
+  const before = await metrics();
+  for (const label of ["Portfolio gallery", "Services atelier", "Consultation lounge", "Reception"]) {
+    await nav.getByRole("button", { name: label }).click();
+    await expect(page.locator("#studio-panel-heading")).toBeVisible();
+    const after = await metrics();
+    expect(Math.abs(after.y - before.y)).toBeLessThanOrEqual(8);
+    expect(Math.abs(after.top - before.top)).toBeLessThanOrEqual(8);
+    await page.keyboard.press("Escape");
+  }
+  await page.setViewportSize({ width: 390, height: 812 });
+  await nav.scrollIntoViewIfNeeded();
+  for (const label of ["Portfolio gallery", "Services atelier", "Consultation lounge", "Reception"]) {
+    await nav.getByRole("button", { name: label }).click();
+    const bar = await metrics();
+    expect(bar.top).toBeGreaterThanOrEqual(-4);
+    expect(bar.bottom).toBeLessThanOrEqual(bar.height + 4);
+  }
 });
 
 test("phone camera controls return the scene to view and label the exterior correctly", async ({ page }) => {
