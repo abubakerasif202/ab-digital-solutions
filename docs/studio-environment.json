@@ -1,0 +1,24 @@
+{
+  "three": "185",
+  "width": 384,
+  "height": 512,
+  "mapping": 306,
+  "type": 1016,
+  "format": 1023,
+  "colorSpace": "srgb-linear",
+  "minFilter": 1006,
+  "magFilter": 1006,
+  "flipY": false,
+  "generateMipmaps": false,
+  "visualEquivalence": {
+    "comparedChannels": 49152,
+    "maxDifference": 0,
+    "changedChannels": 0,
+    "surfaces": "brass spheres at roughness .05/.3/.8"
+  },
+  "source": "Three RoomEnvironment; PMREM.fromScene(room, .04, .1, 100, {size:128})",
+  "path": "public/studio/room-environment.bin",
+  "bytes": 1572880,
+  "sha256": "3f2c5543dc839f544baaf664cafacc9b2c0456d23a3de1e86a2f332fa55cfcce",
+  "browser": "157.0.8103.39"
+}
