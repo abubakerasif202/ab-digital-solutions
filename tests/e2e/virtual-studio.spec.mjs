@@ -227,7 +227,7 @@ test("guided tour visits four spaces and finishes with a genuine quote link", as
   for (const name of ["Reception", "Portfolio gallery", "Services atelier", "Consultation lounge"]) {
     await expect(caption).toContainText(name, { timeout: 9000 });
   }
-  await expect(page.locator("#studio-panel-heading")).toHaveText("Let’s Build Something Extraordinary.", { timeout: 9000 });
+  await expect(page.locator("#studio-panel-heading")).toHaveText("Tell us what you’re building.", { timeout: 9000 });
   await expect(page.locator("aside").getByRole("link", { name: "Start a project" })).toHaveAttribute("href", "/contact");
 });
 
@@ -280,8 +280,11 @@ test("retry recovers a failed model request and repeated entry has clean teardow
   await expect(mode(page)).toHaveAttribute("data-mode", /intro|explore/, { timeout: 25000 });
   await openOptions(page); await page.getByRole("button", { name: "Still view", exact: true }).click();
   await expect(page.locator("canvas")).toHaveCount(0); await page.waitForTimeout(800);
-  await enter(page);
+  await openOptions(page); await page.getByRole("button", { name: "3D view", exact: true }).click();
+  await expect(mode(page)).toHaveAttribute("data-mode", "explore");
+  await expect(page.locator("canvas")).toHaveCount(1);
   await openOptions(page); await page.getByRole("button", { name: "Still view", exact: true }).click(); await page.waitForTimeout(800);
+  await expect(page.locator("canvas")).toHaveCount(0);
   expect(errors).toEqual([]);
 });
 
@@ -417,4 +420,99 @@ test("phone camera controls return the scene to view and label the exterior corr
       await expect(page.getByRole("navigation", { name: "Studio rooms" }).locator('[aria-pressed="true"]')).toHaveCount(0);
     }
   }
+});
+
+test("warmup commits all seven stages before arrival and survives a delayed model", async ({ page }) => {
+  let delayedRequests = 0;
+  await page.route("**/ab-monogram.glb", async (route) => {
+    delayedRequests++;
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    await route.continue();
+  });
+  await page.addInitScript(() => {
+    window.__warmupStages = [];
+    window.__earlyArrival = false;
+    new MutationObserver(() => {
+      const phase = document.querySelector("[data-warmup]")?.getAttribute("data-warmup");
+      if (phase && window.__warmupStages.at(-1) !== phase) window.__warmupStages.push(phase);
+      if (document.querySelector("[data-mode]")?.getAttribute("data-mode") === "arrival" && phase !== "done") window.__earlyArrival = true;
+    }).observe(document, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-warmup", "data-mode"] });
+  });
+  await page.goto("/studio", { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
+  await expect(page.locator("[data-warmup]")).toHaveAttribute("data-warmup", "done", { timeout: 30000 });
+  expect(await page.evaluate(() => window.__warmupStages)).toEqual(["core", "interior", "exterior", "traffic", "pedestrians", "wildlife", "staff", "done"]);
+  expect(delayedRequests).toBeGreaterThan(0);
+  expect(await page.evaluate(() => window.__earlyArrival)).toBe(false);
+  await expect(mode(page)).toHaveAttribute("data-mode", /arrival|intro|explore/);
+});
+
+test("warmup waits for gallery textures before starting the arrival film", async ({ page }) => {
+  let release;
+  const pending = new Promise((resolve) => { release = resolve; });
+  let requests = 0;
+  await page.route("**/studio/*/screens/*.webp", async (route) => {
+    requests++;
+    await pending;
+    await route.continue();
+  });
+  try {
+    await page.goto("/studio", { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
+    await expect.poll(() => requests).toBeGreaterThan(0);
+    // A held resource, not an arbitrary slow-network delay, owns this gate.
+    await page.waitForTimeout(1000);
+    await expect(mode(page)).toHaveAttribute("data-mode", "loading");
+    await expect(page.locator("[data-warmup]")).toHaveAttribute("data-warmup", "interior");
+  } finally {
+    release();
+  }
+  await expect(page.locator("[data-warmup]")).toHaveAttribute("data-warmup", "done", { timeout: 30000 });
+  await expect(mode(page)).toHaveAttribute("data-mode", /arrival|intro|explore/);
+});
+
+test("pending shader compilation tears down safely and can re-enter", async ({ page }) => {
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.addInitScript(() => {
+    window.__holdStudioShaders = true; window.__studioShaderPolls = 0;
+    const original = WebGL2RenderingContext.prototype.getProgramParameter;
+    WebGL2RenderingContext.prototype.getProgramParameter = function (program, parameter) {
+      // KHR_parallel_shader_compile completion status; only this status is held.
+      if (parameter === 0x91b1) {
+        window.__studioShaderPolls++;
+        if (window.__holdStudioShaders) return false;
+      }
+      return original.call(this, program, parameter);
+    };
+  });
+  await page.goto("/studio", { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
+  await expect.poll(() => page.evaluate(() => window.__studioShaderPolls)).toBeGreaterThan(0);
+  await expect(mode(page)).toHaveAttribute("data-mode", "loading");
+  await page.keyboard.press("Escape");
+  await openOptions(page); await page.getByRole("button", { name: "Still view", exact: true }).click();
+  await expect(page.locator("canvas")).toHaveCount(0);
+  const polls = await page.evaluate(() => window.__studioShaderPolls);
+  await page.evaluate(() => { window.__holdStudioShaders = false; });
+  await page.waitForTimeout(800);
+  expect(await page.evaluate(() => window.__studioShaderPolls)).toBe(polls);
+  expect(errors).toEqual([]);
+  await openOptions(page); await page.getByRole("button", { name: "3D view", exact: true }).click();
+  await expect(page.locator("[data-warmup]")).toHaveAttribute("data-warmup", "done", { timeout: 30000 });
+  await expect(mode(page)).toHaveAttribute("data-mode", "explore");
+  expect(errors).toEqual([]);
+});
+
+test("failed baked environment recovers through the existing model retry", async ({ page }) => {
+  let blocked = true, requests = 0;
+  await page.route("**/room-environment.bin", (route) => { requests++; return blocked ? route.abort() : route.continue(); });
+  await page.goto("/studio", { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
+  await expect(mode(page)).toHaveAttribute("data-mode", "failed", { timeout: 25000 });
+  blocked = false;
+  await page.getByRole("button", { name: "Try 3D again" }).click();
+  await expect(page.locator("[data-warmup]")).toHaveAttribute("data-warmup", "done", { timeout: 30000 });
+  await expect(mode(page)).toHaveAttribute("data-mode", /arrival|intro|explore/);
+  expect(requests).toBeGreaterThan(1);
 });

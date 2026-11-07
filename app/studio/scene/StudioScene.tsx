@@ -1,24 +1,22 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { OrbitControls, PerformanceMonitor, useTexture } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { createStudioEnvironment } from "./environment";
 import { MaterialLibrary } from "./Materials";
 import { cameraProgress } from "./camera-motion";
 import { Architecture } from "./Architecture";
-import { monogramUrl, screenTextureUrl } from "../studio-assets";
-import { Consultation, Gallery, HotspotPortalContext, HotspotsHiddenContext, Reception, Services } from "./Spaces";
+import { environmentUrl, monogramUrl, screenTextureUrl } from "../studio-assets";
+import { Consultation, Gallery, galleryWindowStart, HotspotPortalContext, HotspotsHiddenContext, Reception, Services } from "./Spaces";
 import { useStudioModel } from "./load-model";
 import { Facade, Ground } from "./Facade";
 import { SceneClock } from "../world/SceneClock";
-import { Exterior } from "../world/Exterior";
+import { nextWarmupPhase, warmupPhases, prepareWarmupStage, yieldToBrowser, type StudioPhase } from "./warmup";
+import { compileStageShaders } from "./shader-warmup";
 import { Landmarks, skyFog } from "../world/Landmarks";
-import { Traffic } from "../world/Traffic";
-import { Pedestrians } from "../world/Pedestrians";
-import { Wildlife } from "../world/wildlife/Wildlife";
 import { mobileWildlifeShots, wildlifeShots } from "../world/sim/wildlife";
 import { Receptionist } from "../world/characters/Receptionist";
 import { StudioStaff } from "../world/characters/StudioStaff";
@@ -27,6 +25,11 @@ import { ARRIVAL_SECONDS, GREET_AT, SUMMON_KANGAROO_AT, arrivalPose } from "../w
 import { pickTier, tierConfig, type Tier } from "../world/sim/quality";
 import type { Area, StudioState } from "../studio-state";
 import type { StudioProject } from "../studio-data";
+
+const Wildlife = lazy(() => import("../world/wildlife/Wildlife").then((module) => ({ default: module.Wildlife })));
+const Exterior = lazy(() => import("../world/Exterior").then((module) => ({ default: module.Exterior })));
+const Traffic = lazy(() => import("../world/Traffic").then((module) => ({ default: module.Traffic })));
+const Pedestrians = lazy(() => import("../world/Pedestrians").then((module) => ({ default: module.Pedestrians })));
 
 // This module is imported only after Enter; preload the small essential model.
 useStudioModel.preload(monogramUrl);
@@ -60,16 +63,19 @@ function attachEnvironment(scene: THREE.Scene, texture: THREE.Texture) {
   return () => { scene.environment = previous; };
 }
 
-function Lighting() {
+function Lighting({ onReady }: { onReady: () => void }) {
   const { gl, scene, invalidate } = useThree();
+  const buffer = useLoader(THREE.FileLoader, environmentUrl, (loader) => loader.setResponseType("arraybuffer"));
+  const texture = useMemo(() => {
+    if (!(buffer instanceof ArrayBuffer)) throw new Error("Invalid Studio environment response");
+    return createStudioEnvironment(buffer);
+  }, [buffer]);
   useEffect(() => {
-    const generator = new THREE.PMREMGenerator(gl);
-    const room = new RoomEnvironment();
-    const environment = generator.fromScene(room, .04, .1, 100, { size: 128 });
-    const detach = attachEnvironment(scene, environment.texture);
+    const detach = attachEnvironment(scene, texture);
+    onReady();
     invalidate();
-    return () => { detach(); environment.dispose(); generator.dispose(); room.dispose(); };
-  }, [gl, scene, invalidate]);
+    return () => { detach(); texture.dispose(); };
+  }, [gl, scene, texture, invalidate, onReady]);
   return <>
     <ambientLight intensity={.3} color="#e4d9cd" />
     <directionalLight position={[3,12,8]} intensity={1.8} color="#ffe2ae" />
@@ -197,31 +203,64 @@ function GoldDust({ animate }: { animate: boolean }) {
   return <points ref={ref}><bufferGeometry><bufferAttribute attach="attributes-position" args={[positions,3]} /></bufferGeometry><pointsMaterial color="#e8c47d" size={.035} transparent opacity={.55} depthWrite={false} /></points>;
 }
 
-type StudioPhase = "core" | "street" | "done";
-
-// compileAsync runs WebGLRenderer.compile() on the main thread before its GPU wait,
-// so it lengthens the enter freeze. Mount the street on the next frame and reveal
-// only after that frame, while the loading state is still up.
-function StudioWarmup({ phase, onPhase, onReady }: { phase: StudioPhase; onPhase: (phase: StudioPhase) => void; onReady: () => void }) {
-  const invalidate = useThree((state) => state.invalidate);
+// Each committed stage renders before yielding construction of the next system.
+// Arrival starts only after every system visible in the film is ready.
+type WarmupCallbacks = { environmentReady: boolean; onFailure: () => void };
+function StudioWarmup({ phase, onPhase, onReady, environmentReady, onFailure, group }: { phase: StudioPhase; onPhase: (phase: StudioPhase) => void; onReady: () => void; group: RefObject<THREE.Group | null> } & WarmupCallbacks) {
+  const { gl, camera, scene, invalidate } = useThree();
   useEffect(() => {
-    if (phase !== "core") return;
-    const frame = requestAnimationFrame(() => onPhase("street"));
-    return () => cancelAnimationFrame(frame);
-  }, [phase, onPhase]);
-  useEffect(() => {
-    if (phase !== "street") return;
-    let second = 0;
-    const first = requestAnimationFrame(() => {
-      second = requestAnimationFrame(() => {
+    const root = group.current;
+    if (phase === "done" || !environmentReady || !root) return;
+    let cancelCompilation = () => {};
+    return prepareWarmupStage({
+      compile: () => {
+        const compilation = compileStageShaders(gl, root, camera, scene);
+        cancelCompilation = compilation.cancel;
+        return compilation.ready;
+      },
+      cancelCompile: () => cancelCompilation(),
+      reveal: () => { root.visible = true; invalidate(); },
+      onFailure,
+      advance: () => {
         invalidate();
-        onReady();
-        onPhase("done");
-      });
+        const next = nextWarmupPhase(phase);
+        onPhase(next);
+        if (next === "done") onReady();
+      },
+      yieldTask: () => {
+        const scheduler = (globalThis as typeof globalThis & { scheduler?: { yield: () => Promise<void> } }).scheduler;
+        return yieldToBrowser(scheduler);
+      },
     });
-    return () => { cancelAnimationFrame(first); cancelAnimationFrame(second); };
-  }, [phase, invalidate, onPhase, onReady]);
+  }, [phase, environmentReady, group, gl, camera, scene, invalidate, onPhase, onReady, onFailure]);
   return null;
+}
+// The marker commits only when this stage's lazy modules and textures resolve.
+// Earlier stages stay mounted while a later boundary is suspended.
+function WarmupStage({ name, phase, onPhase, onReady, children, ...preparation }: { name: StudioPhase; phase: StudioPhase; onPhase: (phase: StudioPhase) => void; onReady: () => void; children: ReactNode } & WarmupCallbacks) {
+  const group = useRef<THREE.Group>(null);
+  if (warmupPhases.indexOf(phase) < warmupPhases.indexOf(name)) return null;
+  return <Suspense fallback={null}>
+    {/* Hidden before the first draw; shader compilation traverses hidden materials. */}
+    <group ref={group} visible={false}>
+      {children}
+      {phase === name && <StudioWarmup group={group} phase={phase} onPhase={onPhase} onReady={onReady} {...preparation} />}
+    </group>
+  </Suspense>;
+}
+
+function GalleryTextureWarmup({ image }: { image: string }) {
+  // Match DisplayImage's singleton loader key, including retry/cache clearing.
+  useTexture(image);
+  return null;
+}
+
+function GalleryWarmup({ projects, selected }: { projects: StudioProject[]; selected: number }) {
+  const start = galleryWindowStart(selected, projects.length);
+  // ProjectDisplay keeps a local Suspense boundary for later image changes.
+  // Gate the initial three cached textures here so that boundary cannot allow
+  // the arrival film to begin with empty gallery screens.
+  return projects.slice(start, start + 3).map((project) => <GalleryTextureWarmup key={project.slug} image={screenTextureUrl(project.slug, false)} />);
 }
 
 function readCapabilities(): Tier {
@@ -239,6 +278,9 @@ export default function StudioScene({ state, projects, selectedProject, visible,
   const [tier, setTier] = useState<Tier>(readCapabilities);
   const [greetedShot, setGreetedShot] = useState(-1);
   const [phase, setPhase] = useState<StudioPhase>("core");
+  const [environmentReady, setEnvironmentReady] = useState(false);
+  const onEnvironmentReady = useCallback(() => setEnvironmentReady(true), []);
+  const preparation = { environmentReady, onFailure };
   const [dprCap, setDprCap] = useState(1.75);
   const quality = tierConfig[tier];
   const pixelRatio = mobile ? dprCap : Math.min(dprCap, quality.dpr);
@@ -247,11 +289,11 @@ export default function StudioScene({ state, projects, selectedProject, visible,
   const greeting = state.mode === "intro" || (state.mode === "explore" && state.area === "reception" && !state.outside) || (state.mode === "arrival" && greetedShot === state.shot);
   const downgrade = useCallback(() => setTier((current) => (current === "high" ? "medium" : "low")), []);
   const onDecline = useCallback(() => {
-    downgrade();
     if (phase !== "done") return;
+    downgrade();
     setDprCap((value) => Math.max(1, Math.round((value - 0.25) * 100) / 100));
   }, [downgrade, phase]);
-  return <div className="ab-spatial-canvas" style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+  return <div className="ab-spatial-canvas" data-warmup={phase} style={{ position: "absolute", inset: 0, zIndex: 0 }}>
     <style>{`.ab-spatial-hotspot{display:flex;align-items:center;gap:8px;white-space:nowrap;min-height:44px;padding:6px 13px 6px 7px;border:1px solid #c4a56f88;background:#101619e8;color:#f1e2c2;font:11px var(--font-sans),sans-serif;cursor:pointer;box-shadow:0 4px 16px #0005}.ab-spatial-hotspot span{display:grid;place-items:center;width:25px;height:25px;border:1px solid #d4b67888;border-radius:50%;color:#e9cc96;font-size:17px}.ab-spatial-hotspot:hover{background:#3a3020;border-color:#efd49c}.ab-spatial-canvas canvas{touch-action:pan-y!important}`}</style>
     <div ref={portal} style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }} />
     <Canvas frameloop={visible ? "demand" : "never"} dpr={[1, pixelRatio]} camera={{ position: initialPose.position, fov: initialPose.fov, near: .1, far: 560 }} gl={{ antialias: !mobile && quality.antialias, powerPreference: "low-power", alpha: false }} fallback={<p>3D unavailable. Explore the studio using the space buttons below.</p>} onCreated={({ gl, scene }) => {
@@ -266,34 +308,35 @@ export default function StudioScene({ state, projects, selectedProject, visible,
       scene.fog = new THREE.Fog(skyFog, 42, 150);
     }}>
       <ContextGuard onFailure={onFailure} />
-      <Lighting />
+      <Suspense fallback={null}><Lighting onReady={onEnvironmentReady} /></Suspense>
       <CameraRig state={state} visible={visible} onManual={onManual} onArrive={onArrive} onGreet={() => setGreetedShot(state.shot)} />
       <HotspotPortalContext.Provider value={portal}>
       <HotspotsHiddenContext.Provider value={!!state.animal}>
-      <PerformanceMonitor onDecline={onDecline}>
-      <SceneClock tier={tier} active={visible} onDowngrade={downgrade}>
-      <Suspense fallback={null}><MaterialLibrary>
-        <Architecture />
-        <Facade />
-        <Ground />
-        <Reception animate={animate} onSelect={onSelect} />
-        <Gallery projects={projects} selected={selectedProject} crisp={crispScreens} onSelect={onSelect} onProject={onProject} />
-        <Services onSelect={onSelect} onService={onService} />
-        <Consultation onSelect={onSelect} />
-        <GoldDust animate={animate} />
-        <Landmarks />
-        <Receptionist greeting={greeting} />
-        {phase !== "core" && <>
-          <Exterior />
-          <Traffic />
-          <Pedestrians />
-          <Wildlife />
-          <StudioStaff />
-        </>}
-        <StudioWarmup phase={phase} onPhase={setPhase} onReady={onReady} />
-      </MaterialLibrary></Suspense>
+      {phase === "done" && <PerformanceMonitor onDecline={onDecline} />}
+      <SceneClock tier={tier} active={visible && phase === "done"} onDowngrade={downgrade}>
+      <MaterialLibrary>
+        <WarmupStage name="core" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}>
+          <Architecture />
+          <Facade />
+          <Ground />
+          <GoldDust animate={animate} />
+          <Landmarks />
+        </WarmupStage>
+        <WarmupStage name="interior" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}>
+          {phase === "interior" && <GalleryWarmup projects={projects} selected={selectedProject} />}
+          <Reception animate={animate} onSelect={onSelect} />
+          <Gallery projects={projects} selected={selectedProject} crisp={crispScreens} onSelect={onSelect} onProject={onProject} />
+          <Services onSelect={onSelect} onService={onService} />
+          <Consultation onSelect={onSelect} />
+          <Receptionist greeting={greeting} />
+        </WarmupStage>
+        <WarmupStage name="exterior" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}><Exterior /></WarmupStage>
+        <WarmupStage name="traffic" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}><Traffic /></WarmupStage>
+        <WarmupStage name="pedestrians" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}><Pedestrians /></WarmupStage>
+        <WarmupStage name="wildlife" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}><Wildlife /></WarmupStage>
+        <WarmupStage name="staff" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}><StudioStaff /></WarmupStage>
+      </MaterialLibrary>
       </SceneClock>
-      </PerformanceMonitor>
       </HotspotsHiddenContext.Provider>
       </HotspotPortalContext.Provider>
     </Canvas>
@@ -314,6 +357,7 @@ function ContextGuard({ onFailure }: { onFailure: () => void }) {
 }
 
 export function resetStudioResources(projects: StudioProject[]) {
+  useLoader.clear(THREE.FileLoader, environmentUrl);
   useStudioModel.clear(monogramUrl);
   for (const project of projects) {
     useTexture.clear(screenTextureUrl(project.slug, false));

@@ -63,6 +63,7 @@ const nextConfig: NextConfig = {
     // Versioned URLs are the cache key. The files stay at their stable public paths.
     return [
       { source: `/studio/${STUDIO_ASSET_REV}/ab-monogram.glb`, destination: "/studio/ab-monogram.glb" },
+      { source: `/studio/${STUDIO_ASSET_REV}/room-environment.bin`, destination: "/studio/room-environment.bin" },
       { source: `/studio/${STUDIO_ASSET_REV}/screens/:file`, destination: "/studio/screens/:file" },
     ];
   },

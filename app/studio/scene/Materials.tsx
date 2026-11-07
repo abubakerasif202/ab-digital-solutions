@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, type ReactNode } from "react";
 import * as THREE from "three";
+import { createBlockResources } from "./block-resources";
 
 // Original deterministic 256px material maps. Shared by every surface, no downloads.
 function createMaps() {
@@ -28,10 +29,21 @@ function createMaps() {
   return { map, roughness };
 }
 const Maps = createContext<ReturnType<typeof createMaps> | null>(null);
+const Blocks = createContext<ReturnType<typeof createBlockResources> | null>(null);
+
+export function useBlockResources(color: string, metalness: number, roughness: number) {
+  const resources = useContext(Blocks);
+  if (!resources) throw new Error("Blocks need MaterialLibrary");
+  return resources.get(color, metalness, roughness);
+}
 export function MaterialLibrary({ children }: { children: ReactNode }) {
   const maps = useMemo(() => createMaps(), []);
-  useEffect(() => () => { maps.map.dispose(); maps.roughness.dispose(); }, [maps]);
-  return <Maps.Provider value={maps}>{children}</Maps.Provider>;
+  const blocks = useMemo(() => createBlockResources(), []);
+  useEffect(() => () => {
+    maps.map.dispose(); maps.roughness.dispose();
+    blocks.dispose();
+  }, [maps, blocks]);
+  return <Maps.Provider value={maps}><Blocks.Provider value={blocks}>{children}</Blocks.Provider></Maps.Provider>;
 }
 export function MarbleMaterial() {
   const maps = useContext(Maps);
