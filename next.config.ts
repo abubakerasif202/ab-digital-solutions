@@ -86,6 +86,11 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/(.*)", headers: securityHeaders },
+      // Social share images are crawled from page metadata; keep them out of the web index.
+      ...["/opengraph-image", "/work/:slug/opengraph-image"].map((source) => ({
+        source,
+        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+      })),
       {
         source: "/site/ab-digital-premium/assets/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],

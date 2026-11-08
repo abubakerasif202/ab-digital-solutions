@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   applicationName: siteConfig.name,
   title: {
-    default: "Web Design Sydney & Digital Agency | AB Web Studio",
+    default: "AB Web Studio | Web Design Studio in Sydney",
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,

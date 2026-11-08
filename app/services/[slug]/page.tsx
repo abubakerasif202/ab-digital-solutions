@@ -19,13 +19,16 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const service = findService((await params).slug);
   if (!service) return {};
+  // Search titles can target query intent while the on-page H1 keeps the service name.
+  const seoTitle = "seoTitle" in service ? service.seoTitle : service.title;
+  const description = "seoDescription" in service ? service.seoDescription : service.summary;
   return {
-    title: service.title,
-    description: service.summary,
+    title: seoTitle,
+    description,
     alternates: { canonical: `/services/${service.slug}` },
     openGraph: {
-      title: `${service.title} | ${siteConfig.name}`,
-      description: service.summary,
+      title: `${seoTitle} | ${siteConfig.name}`,
+      description,
       url: `/services/${service.slug}`,
       siteName: siteConfig.name,
       type: "website",
@@ -39,8 +42,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${service.title} | ${siteConfig.name}`,
-      description: service.summary,
+      title: `${seoTitle} | ${siteConfig.name}`,
+      description,
       images: ["/opengraph-image"],
     },
   };

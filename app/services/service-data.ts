@@ -2,6 +2,8 @@ export const servicePages = [
   {
     slug: "web-design-sydney",
     title: "Web Design Sydney",
+    seoTitle: "Web Design Sydney | Custom Business Websites",
+    seoDescription: "Custom website design and redesigns for Sydney businesses: responsive UX, accessible development and technical SEO built around genuine enquiries.",
     summary: "Premium, responsive websites designed around your customers, your offer and the enquiries your business needs.",
     intro: "Custom websites and website redesigns for Sydney and Australian businesses that need a clearer path from first visit to genuine enquiry.",
     detailTitle: "A website shaped around the decision your customer needs to make.",
@@ -52,6 +54,8 @@ export const servicePages = [
   {
     slug: "website-maintenance",
     title: "Website Maintenance & Support",
+    seoTitle: "Website Maintenance & Support Services",
+    seoDescription: "Ongoing website maintenance and support for Sydney and Australian businesses: content updates, framework upkeep, technical health checks and performance work.",
     summary: "Practical ongoing care that keeps your website current, secure and performing after launch.",
     intro: "Ongoing website care for Australian businesses that need their digital presence to stay current, dependable and useful after launch.",
     detailTitle: "Practical care for the website your business already depends on.",
