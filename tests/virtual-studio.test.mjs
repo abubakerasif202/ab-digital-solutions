@@ -133,12 +133,12 @@ test("original small GLB is valid and studio content uses canonical destinations
   assert.deepEqual(studioProjects.map((project) => project.slug), projects.map((project) => project.slug));
   assert.ok(studioProjects.some((project) => project.slug === "wild-pest-solutions"));
   assert.ok(studioProjects.some((project) => project.slug === "pept-up-labs"));
-  // Services come from the real catalogue plus custom business systems; every destination is an existing route.
+  // Services come from the real catalogue (custom business systems has its own page); every destination is an existing route.
   const { servicePages } = await import("../app/services/service-data.ts");
   const { contactServices } = await import("../app/contact-options.ts");
-  assert.equal(studioServices.length, servicePages.length + 1);
+  assert.equal(studioServices.length, servicePages.length);
   for (const page of servicePages) assert.ok(studioServices.some((service) => service.href === `/services/${page.slug}`));
-  assert.ok(studioServices.some((service) => service.title === "Custom business systems" && projects.some((project) => `/work/${project.slug}` === service.href)));
+  assert.ok(studioServices.some((service) => service.title === "Custom Software & Business Systems" && service.href === "/services/custom-software-business-systems"));
   for (const service of studioServices) assert.ok(contactServices.includes(service.contactService), service.title);
 });
 

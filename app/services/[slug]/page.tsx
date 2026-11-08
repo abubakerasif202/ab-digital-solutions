@@ -3,10 +3,10 @@ import Link from "next/link";
 import { PageTransition } from "../../components/motion/PageTransition";
 import { notFound } from "next/navigation";
 import { ProjectArtwork } from "../../project-artwork";
-import { findProject } from "../../project-data";
+import { findProject, projectDisplayDomain } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
-import { findService, servicePages, serviceDelivery } from "../service-data";
+import { findService, serviceContactHref, serviceDelivery, servicePages } from "../service-data";
 import { siteConfig } from "../../site-config";
 import { ArrowIcon } from "../../icons";
 
@@ -19,15 +19,15 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const service = findService((await params).slug);
   if (!service) return {};
-  // Search titles can target query intent while the on-page H1 keeps the service name.
-  const seoTitle = "seoTitle" in service ? service.seoTitle : service.title;
-  const description = "seoDescription" in service ? service.seoDescription : service.summary;
+  // Search titles carry the commercial and local intent; the SEO titles already end with the
+  // brand, so they bypass the layout title template instead of repeating it.
+  const { seoTitle, seoDescription: description } = service;
   return {
-    title: seoTitle,
+    title: { absolute: seoTitle },
     description,
     alternates: { canonical: `/services/${service.slug}` },
     openGraph: {
-      title: `${seoTitle} | ${siteConfig.name}`,
+      title: seoTitle,
       description,
       url: `/services/${service.slug}`,
       siteName: siteConfig.name,
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${seoTitle} | ${siteConfig.name}`,
+      title: seoTitle,
       description,
       images: ["/opengraph-image"],
     },
@@ -53,8 +53,14 @@ export default async function ServicePage({ params }: Props) {
   const service = findService((await params).slug);
   if (!service) notFound();
 
-  const featuredProject = findProject(service.featuredProject);
-  if (!featuredProject) throw new Error(`service: unknown featured project "${service.featuredProject}"`);
+  const proofProjects = service.proof.map(({ slug, role }) => {
+    const project = findProject(slug);
+    if (!project) throw new Error(`service ${service.slug}: unknown project "${slug}"`);
+    return { project, role };
+  });
+  const [primaryProof, ...supportingProof] = proofProjects;
+  const featuredProject = primaryProof.project;
+  const contactHref = serviceContactHref(service);
   const relatedMap: Record<string, string[]> = {
     "web-design-sydney": ["branding-content", "seo-local-visibility", "website-maintenance"],
     "ecommerce-website-development": ["digital-marketing", "web-design-sydney", "website-maintenance"],
@@ -62,6 +68,7 @@ export default async function ServicePage({ params }: Props) {
     "branding-content": ["web-design-sydney", "digital-marketing", "seo-local-visibility"],
     "digital-marketing": ["seo-local-visibility", "ecommerce-website-development", "branding-content"],
     "website-maintenance": ["web-design-sydney", "ecommerce-website-development", "seo-local-visibility"],
+    "custom-software-business-systems": ["web-design-sydney", "ecommerce-website-development", "website-maintenance"],
   };
 
   const relatedSlugs = relatedMap[service.slug] ?? [];
@@ -70,21 +77,7 @@ export default async function ServicePage({ params }: Props) {
     .filter((s): s is (typeof servicePages)[number] => Boolean(s));
   const delivery = serviceDelivery[service.slug];
   const process = delivery.steps.map(([title, copy], index) => [String(index + 1).padStart(2, "0"), title, copy]);
-  const faqs = [
-    { question: delivery.question, answer: delivery.answer },
-    {
-      question: "What happens before work begins?",
-      answer: "We start with a focused conversation about your business, audience, priorities and existing materials. You receive a clear recommended scope before committing to delivery.",
-    },
-    {
-      question: `How is ${service.title} priced?`,
-      answer: "Pricing is based on the agreed scope, complexity and delivery requirements. We provide a written proposal with inclusions, review points and costs before work starts.",
-    },
-    {
-      question: "Can you work with an existing website or brand?",
-      answer: "Yes. We can strengthen an existing foundation or recommend a clean rebuild when that is the more reliable and cost-effective path.",
-    },
-  ] as const;
+  const faqs = service.faqs;
 
   const schema = {
     "@context": "https://schema.org",
@@ -92,10 +85,15 @@ export default async function ServicePage({ params }: Props) {
       {
         "@type": "Service",
         name: service.title,
+        serviceType: service.title,
         description: service.summary,
         url: `${siteConfig.url}/services/${service.slug}`,
-        provider: { "@id": `${siteConfig.url}/#organization` },
-        areaServed: { "@type": "Country", name: "Australia" },
+        provider: { "@id": `${siteConfig.url}/#organization`, name: siteConfig.name, email: siteConfig.email },
+        areaServed: [
+          { "@type": "City", name: "Sydney" },
+          { "@type": "AdministrativeArea", name: "New South Wales" },
+          { "@type": "Country", name: "Australia" },
+        ],
       },
       {
         "@type": "BreadcrumbList",
@@ -132,10 +130,10 @@ export default async function ServicePage({ params }: Props) {
           <header className="service-hero">
             <div className="service-hero-copy">
               <p className="eyebrow">Digital services / Sydney</p>
-              <h1>{service.title}</h1>
+              <h1>{service.h1}</h1>
               <p className="content-lead">{service.intro}</p>
               <div className="content-actions">
-                <Link className="button button-primary" href="/contact">Start a Project <ArrowIcon /></Link>
+                <Link className="button button-primary" href={contactHref}>{service.ctaLabel} <ArrowIcon /></Link>
                 <Link className="button button-ghost" href="/work">View Our Work</Link>
               </div>
             </div>
@@ -169,7 +167,7 @@ export default async function ServicePage({ params }: Props) {
             <div>
               <h2 id="service-context-heading">{service.detailTitle}</h2>
               <p>{service.detail}</p>
-              <Link className="text-link" href="/about">Meet the Sydney studio <ArrowIcon /></Link>
+              <Link className="text-link" href={contactHref}>Discuss your {service.title} project <ArrowIcon /></Link>
             </div>
           </section>
 
@@ -188,11 +186,27 @@ export default async function ServicePage({ params }: Props) {
                 <span>View Case Study <ArrowIcon direction="right" /></span>
               </div>
               <div>
-                <p>{featuredProject.category}</p>
+                <p>{primaryProof.role}</p>
                 <h3>{featuredProject.name}</h3>
                 <span>{featuredProject.description}</span>
               </div>
             </Link>
+            <ul className="service-project-supporting" aria-label="More project experience">
+              {supportingProof.map(({ project, role }) => (
+                <li key={project.slug}>
+                  <Link href={`/work/${project.slug}`}>
+                    <span className="service-project-supporting-image">
+                      <ProjectArtwork project={project} sizes="(max-width: 900px) 92vw, 380px" />
+                    </span>
+                    <span className="service-project-supporting-copy">
+                      <small>{role}</small>
+                      <strong>{project.name}</strong>
+                      <span>{projectDisplayDomain(project)} <ArrowIcon direction="right" /></span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
 
           <section className="service-process" aria-labelledby="service-process-heading">
@@ -244,7 +258,7 @@ export default async function ServicePage({ params }: Props) {
             <h2 id="service-cta-heading">Let&apos;s turn the next digital decision into useful progress.</h2>
             <p>Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
             <div className="content-actions">
-              <Link className="button button-primary" href="/contact">Start a Project <ArrowIcon /></Link>
+              <Link className="button button-primary" href={contactHref}>{service.ctaLabel} <ArrowIcon /></Link>
               <Link className="button button-ghost" href="/work">View Our Work</Link>
             </div>
           </section>

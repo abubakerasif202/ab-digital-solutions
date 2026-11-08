@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ArrowIcon } from "../icons";
 import { siteConfig } from "../site-config";
-import { contactBudgets, contactServices } from "../contact-options";
+import { contactBudgets, contactScopedServices, contactScopeNote, contactServiceKeys, contactServices } from "../contact-options";
 import { trackEnquirySuccess } from "../lib/contact-analytics";
 
 type FormState = "idle" | "sending" | "success" | "error";
@@ -27,14 +27,33 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
   const [formState, setFormState] = useState<FormState>("idle");
 
   const formRef = useRef<HTMLFormElement>(null);
+  const [showScopeNote, setShowScopeNote] = useState(false);
 
-  // A link such as /contact?service=E-commerce%20solutions starts the form with that service
-  // selected. Only exact matches from the known service list are applied; anything else is ignored.
+  // Mirrors the checked service boxes into state so the budget helper note can react to them.
+  const syncScopeNote = () => {
+    const checked = Array.from(formRef.current?.querySelectorAll<HTMLInputElement>('input[name="service"]:checked') ?? []);
+    setShowScopeNote(checked.some((input) => contactScopedServices.includes(input.value)));
+  };
+
+  // A link such as /contact?service=ecommerce (a short key) or ?service=E-commerce%20solutions (the
+  // exact label) starts the form with that service selected. Anything unknown is ignored. The query is
+  // read on mount from the browser location rather than through the Next.js search-params hook, so static prerendering needs no Suspense boundary.
   useEffect(() => {
     const requested = new URLSearchParams(window.location.search).get("service");
-    const match = contactServices.find((service) => service === requested);
+    const keyed = requested && Object.hasOwn(contactServiceKeys, requested)
+      ? contactServiceKeys[requested as keyof typeof contactServiceKeys]
+      : undefined;
+    const match = keyed ?? contactServices.find((service) => service === requested);
     if (!match) return;
     formRef.current?.querySelectorAll<HTMLInputElement>('input[name="service"]').forEach((input) => { input.checked = input.value === match; });
+    syncScopeNote();
+    // Draw the eye to the preselected choice; motion is skipped for visitors who prefer reduced motion.
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    formRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+    const chips = formRef.current?.querySelector(".form-services");
+    chips?.classList.add("is-preselected");
+    const timer = window.setTimeout(() => chips?.classList.remove("is-preselected"), 2400);
+    return () => window.clearTimeout(timer);
   }, []);
 
   const clearError = (key: string) => setFieldErrors((current) => (current[key] ? { ...current, [key]: "" } : current));
@@ -78,6 +97,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
         throw new Error(error);
       }
       form.reset();
+      syncScopeNote();
       submissionIdRef.current = null;
       setFieldErrors({});
       if (!fields.company) trackEnquirySuccess();
@@ -108,7 +128,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
       }}
       onInput={(event) => {
         const field = event.target;
-        if (field instanceof HTMLInputElement && field.name === "service") clearError("services");
+        if (field instanceof HTMLInputElement && field.name === "service") { clearError("services"); syncScopeNote(); }
         else if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) clearError(field.id);
       }} aria-busy={formState === "sending"}>
       <noscript>
@@ -152,7 +172,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
         </div>
       </div>
 
-      <fieldset className="form-chips form-services" aria-describedby={fieldErrors.services ? SERVICES_ERROR_ID : undefined}>
+      <fieldset className={`form-chips form-services`} aria-describedby={fieldErrors.services ? SERVICES_ERROR_ID : undefined}>
         <legend>What do you need? <span className="form-req" aria-hidden="true">*</span><span className="sr-only"> (choose at least one)</span></legend>
         <div className="form-chip-row">
           {contactServices.map((service, index) => (
@@ -175,6 +195,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
             </label>
           ))}
         </div>
+        {showScopeNote && <p className="form-help form-scope-note" role="note">{contactScopeNote}</p>}
       </fieldset>
 
       <div className="form-field">

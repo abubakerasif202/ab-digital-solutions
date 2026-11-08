@@ -18,6 +18,7 @@
 - [E-commerce Solutions](https://www.abwebstudio.com.au/services/ecommerce-website-development): Mobile-first storefronts, catalogue management, and checkout integration.
 - [Branding & Website Content](https://www.abwebstudio.com.au/services/branding-content): Visual direction, brand positioning, and website copy.
 - [Digital Marketing](https://www.abwebstudio.com.au/services/digital-marketing): Landing page design, lead generation, and campaign strategy.
+- [Custom Software & Business Systems](https://www.abwebstudio.com.au/services/custom-software-business-systems): Role-protected web applications, inventory platforms and internal tools.
 - [Website Maintenance & Support](https://www.abwebstudio.com.au/services/website-maintenance): Ongoing support, technical health checks, and performance updates.
 - [Work & Case Studies](https://www.abwebstudio.com.au/work): Every portfolio project with its own case study.
 - [Services](https://www.abwebstudio.com.au/services): Index of all six services.

@@ -60,8 +60,8 @@ for (const width of [390, 768, 1440]) {
         await expect(page.getByRole("link", { name: "View case study" })).toHaveAttribute("href", "/work/milestone-renovate");
       }
       if (label === "Services atelier") {
-        await page.getByRole("button", { name: "Custom business systems" }).click();
-        await expect(page.getByRole("link", { name: "See a business system" })).toHaveAttribute("href", "/work/247-inventory-system");
+        await page.getByRole("button", { name: "Custom Software & Business Systems" }).click();
+        await expect(page.getByRole("link", { name: "Explore this service" })).toHaveAttribute("href", "/services/custom-software-business-systems");
         await page.getByRole("button", { name: "E-commerce Website Development" }).click();
         await expect(page.getByRole("link", { name: "Enquire about this" })).toHaveAttribute("href", "/contact?service=E-commerce%20solutions");
       }

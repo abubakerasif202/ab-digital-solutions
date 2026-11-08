@@ -324,7 +324,7 @@ export const projects = [
     sector: "Property & construction",
     description: "Capability-focused presentation for concrete and structural works.",
     overview:
-      "4 Point Concrete provides specialized concrete placement and structural civil services across commercial and industrial projects.",
+      "4 Point Concrete provides specialised concrete placement and structural civil services across commercial and industrial projects.",
     solution:
       "We created a concrete-services website with a clear services structure, project presentation and quote enquiry pathways. Concept imagery is labelled on the hosted showcase.",
     url: "https://4point-concrete-website.vercel.app/",
@@ -444,7 +444,7 @@ export const projects = [
   {
     slug: "wild-pest-solutions",
     name: "Wild Pest Solutions",
-    category: "Web Design & Development",
+    category: "Regional Services / Wildlife Management",
     sector: "Environmental & Wildlife Management",
     region: "New South Wales, Australia",
     headline: "Digital Experiences Built for the Wild.",
@@ -462,7 +462,7 @@ export const projects = [
       "NSW regional coverage information",
       "Property enquiry and contact pathways",
     ],
-    techStack: [],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "SEO Structure"],
     ctaLabel: "Visit Live Website",
     seoTitle: "Wild Pest Solutions Website Project",
     seoDescription: "Explore the Wild Pest Solutions website project by AB Web Studio, showcasing a professional digital presence for NSW feral animal management.",
@@ -475,7 +475,7 @@ export const projects = [
   {
     slug: "pept-up-labs",
     name: "Pept Up Labs",
-    category: "Web Design & Development",
+    category: "E-Commerce / Product Catalogue",
     sector: "E-commerce",
     headline: "Precision Meets a Distinctive Digital Experience.",
     description: "A bold product catalogue for Pept Up Labs, bringing single vials, bulk collections and laboratory accessories into a clear, responsive interface.",
@@ -487,7 +487,7 @@ export const projects = [
     alt: "Pept Up Labs desktop homepage with electric-blue branding and product catalogue navigation",
     tags: ["Catalogue Design", "Product Navigation", "Responsive UI", "Brand Experience"],
     keyFeatures: ["Single-vial, ten-vial bulk pack and accessory collections", "Product strength selection and AUD price presentation", "Quick-view product controls", "Email and WhatsApp support pathways"],
-    techStack: [],
+    techStack: ["React", "TypeScript", "Tailwind CSS", "Responsive UI"],
     ctaLabel: "Visit Live Website",
     seoTitle: "Pept Up Labs Website Project",
     seoDescription: "Explore the Pept Up Labs website project by AB Web Studio: distinctive catalogue design, responsive product navigation and a bold visual identity.",
@@ -547,6 +547,15 @@ export function projectVisitLabel(project: Project): string {
   if (project.destination === "unavailable") return "Check Project Website";
   if (project.destination === "hosted-showcase") return "View Website Showcase";
   return project.ctaLabel ?? "View Live Website";
+}
+
+/**
+ * Visible card label for a project's address. Raw `.vercel.app` hosts read as
+ * unfinished, so they show a commercial badge instead; `url` (the link target)
+ * is never changed.
+ */
+export function projectDisplayDomain(project: Pick<Project, "displayUrl">): string {
+  return project.displayUrl.endsWith(".vercel.app") ? "Interactive Showcase · Live Preview" : project.displayUrl;
 }
 
 /** Editorial label form of a category: "Mobility / Car rentals" → "Mobility · Car rentals". */

@@ -124,7 +124,7 @@ try {
       await page.type("#full-name", "Browser QA");
       await page.type("#email", "qa@example.invalid");
       await page.type("#message", "Mocked browser test only. No real delivery.");
-      await page.select("#budget", "Under $1,500");
+      await page.select("#budget", "$2,000–$4,000");
       const before = mockedRequests;
       const beforeLeads = analyticsEvents.filter((event) => event.event_name === "project_enquiry").length;
       await page.$eval(".contact-form", (form) => form.requestSubmit());
@@ -133,7 +133,7 @@ try {
       await page.$eval(".contact-form", (form) => form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
       await page.waitForSelector(`.form-status.${status === 200 ? "success" : "error"}`);
       const state = await page.evaluate(() => ({ name: document.querySelector("#full-name").value, budget: document.querySelector("#budget").value, successes: window.__qaSuccess }));
-      check(`${route} ${status} duplicate guard and success-only event`, mockedRequests === before + 1 && state.successes === (status === 200 ? 1 : 0) && state.name === (status === 200 ? "" : "Browser QA") && (status === 200 || state.budget === "Under $1,500"), state);
+      check(`${route} ${status} duplicate guard and success-only event`, mockedRequests === before + 1 && state.successes === (status === 200 ? 1 : 0) && state.name === (status === 200 ? "" : "Browser QA") && (status === 200 || state.budget === "$2,000–$4,000"), state);
       if (status === 200) await page.waitForFunction(() => window.__qaSuccess === 1);
       await new Promise((resolve) => setTimeout(resolve, 150));
       const leads = analyticsEvents.filter((event) => event.event_name === "project_enquiry").slice(beforeLeads);
@@ -223,7 +223,7 @@ try {
   await page.setJavaScriptEnabled(false);
   for (const route of ["/", "/work", "/contact"]) {
     await open(route);
-    const state = await page.evaluate(() => ({ heading: document.querySelector("h1")?.textContent.trim(), email: !!document.querySelector("a[href='mailto:admin@abwebstudio.com.au']"), projectCount: new Set([...document.querySelectorAll("a[href^='/work/']")].map((link) => link.getAttribute("href"))).size }));
+    const state = await page.evaluate(() => ({ heading: document.querySelector("h1")?.textContent.trim(), email: !!document.querySelector("a[href='mailto:enquiry@abwebstudio.com.au']"), projectCount: new Set([...document.querySelectorAll("a[href^='/work/']")].map((link) => link.getAttribute("href"))).size }));
     check(`No JavaScript ${route}`, !!state.heading && state.email && (route !== "/work" || state.projectCount === 14), state);
   }
   check("No console, exception or network failures", report.browserErrors.length === 0, report.browserErrors);

@@ -1,6 +1,6 @@
 import { projectDestinationLabel, projects, type Project } from "../project-data";
 import { servicePages } from "../services/service-data";
-import { contactServices } from "../contact-options";
+import { contactServiceKeys, contactServices } from "../contact-options";
 
 export const studioProjects = projects.map((project: Project) => ({
   slug: project.slug, name: project.name, sector: project.sector, description: project.description, image: project.image, alt: project.alt,
@@ -20,34 +20,15 @@ export type StudioService = {
   contactService: ContactService;
 };
 
-// Each service page maps to the contact-form option that describes the same work.
-const contactServiceBySlug: Record<(typeof servicePages)[number]["slug"], ContactService> = {
-  "web-design-sydney": "Website design & development",
-  "ecommerce-website-development": "E-commerce solutions",
-  "seo-local-visibility": "SEO & local visibility",
-  "branding-content": "Branding & content",
-  "digital-marketing": "Digital marketing",
-  "website-maintenance": "Website care & support",
-};
-
 export const studioServices: StudioService[] = servicePages.map((service) => ({
   title: service.title,
   description: service.summary,
   href: `/services/${service.slug}`,
   cta: "Explore this service",
   benefits: [...service.benefits],
-  contactService: contactServiceBySlug[service.slug],
+  // Each service page names the contact-form option that describes the same work.
+  contactService: contactServiceKeys[service.contactKey],
 }));
-// Custom business systems have no dedicated service page; the 247 Inventory System case study is the real example.
-studioServices.push({
-  title: "Custom business systems",
-  description: "Inventory, quoting, invoicing and staff tools built around how your business already works, alongside or after a public website.",
-  href: "/work/247-inventory-system",
-  cta: "See a business system",
-  benefits: ["Stock, sales and job workflows", "Secure staff access", "Scoped around your real process"],
-  contactService: "Custom software & business systems",
-});
-
 /** Services shown on the four 3D pedestals, by index into studioServices. */
 export const featuredServiceIndexes = [0, 1, 2, studioServices.length - 1] as const;
 

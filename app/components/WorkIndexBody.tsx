@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, type CSSProperties } from "react";
 import { flushSync } from "react-dom";
 import { ProjectArtwork, projectArtworkRatio } from "../project-artwork";
-import { formatCategory, isSoftwareProject, projectDestinationLabel, projects, sectors, type Project } from "../project-data";
+import { formatCategory, isSoftwareProject, projectDestinationLabel, projectDisplayDomain, projects, sectors, type Project } from "../project-data";
 import { ArrowIcon } from "../icons";
 
 const ALL_SECTORS = "All work";
@@ -146,7 +146,7 @@ function WorkIndexCard({ project, type }: { project: Project; type: BlockType })
     <article className="gr-wi-card" data-reveal style={cardStyle}>
       <Link className="gr-wi-link" href={`/work/${project.slug}`}>
         <div className="gr-wi-media gr-wi-media--framed">
-          <div className="gr-browser-bar" aria-hidden="true"><i /><i /><i /><span>{project.displayUrl}</span></div>
+          <div className="gr-browser-bar" aria-hidden="true"><i /><i /><i /><span>{projectDisplayDomain(project)}</span></div>
           <div
             className="gr-wi-image"
             style={{ aspectRatio: projectArtworkRatio(project), viewTransitionName: `project-${project.slug}` } as CardMotionStyle}
@@ -167,12 +167,11 @@ function WorkIndexCard({ project, type }: { project: Project; type: BlockType })
             <p className="gr-wi-description">{project.description}</p>
             <p className="gr-wi-stack">{project.techStack.join(" · ")}</p>
             <span className="gr-wi-cta">
-              {["wild-pest-solutions", "pept-up-labs"].includes(project.slug) ? "View Project" : "View case study"} <ArrowIcon />
+              View case study <ArrowIcon />
             </span>
           </div>
         </div>
       </Link>
-      {["wild-pest-solutions", "pept-up-labs"].includes(project.slug) ? <a className="button button-ghost gr-wi-live-link" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit Live Website — ${project.name} (opens in a new tab)`}>Visit Live Website <ArrowIcon /></a> : null}
     </article>
   );
 }
