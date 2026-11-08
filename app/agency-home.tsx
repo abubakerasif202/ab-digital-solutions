@@ -66,6 +66,14 @@ const services = [
       "Practical ongoing support for updates, technical health and continuous improvement after your site goes live.",
     details: ["Content updates", "Technical support", "Growth improvements"],
   },
+  {
+    number: "07",
+    slug: "custom-software-business-systems",
+    title: "Custom software & business systems",
+    description:
+      "Role-protected web applications, inventory platforms and internal tools built around the workflows your team runs every day.",
+    details: ["Inventory & purchasing", "Staff portals", "Integrations & automation"],
+  },
 ] as const;
 
 // Homepage rows must always point at a canonical service page, and each row

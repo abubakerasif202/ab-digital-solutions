@@ -403,3 +403,7 @@ body { background: var(--obsidian); color: var(--ivory); }
 .studio-crumbs a { color: var(--ivory-muted); text-decoration: none; }
 .studio-crumbs a:is(:hover, :focus-visible) { color: var(--ivory); }
 .studio-crumbs [aria-current] { color: var(--gilt); }
+
+.studio-footer-social { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+.studio-footer-profiles { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 0; padding: 0; list-style: none; }
+.studio-footer-profiles a { display: inline-flex; align-items: center; min-height: 44px; }

@@ -103,10 +103,7 @@ const structuredData = {
       telephone: siteConfig.phoneInternational,
       email: siteConfig.email,
       areaServed: { "@type": "Country", name: "Australia" },
-      sameAs: [
-        "https://github.com/abubakerasif202",
-        "https://www.linkedin.com/company/ab-digital-solutions",
-      ],
+      sameAs: Object.values(siteConfig.social).filter((url): url is string => Boolean(url)),
       address: {
         "@type": "PostalAddress",
         addressLocality: "Sydney",
@@ -131,6 +128,7 @@ const structuredData = {
           "E-commerce solutions",
           "Digital marketing",
           "Website care and support",
+          "Custom software and business systems",
         ].map((name) => ({
           "@type": "Offer",
           itemOffered: { "@type": "Service", name },

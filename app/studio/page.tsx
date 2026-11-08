@@ -8,7 +8,7 @@ import { studioProcess, studioProjects, studioServices } from "./studio-data";
 import { siteConfig } from "../site-config";
 import styles from "./studio.module.css";
 
-const description = "Step inside AB Web Studio. Explore an interactive architectural studio, real project case studies, websites, online stores, SEO, branding and custom business systems, then start a conversation.";
+const description = "Step inside AB Web Studio: an interactive architectural studio with real project case studies, websites, online stores, SEO and custom business systems.";
 export const metadata: Metadata = {
   title: "The Virtual Studio",
   description,
