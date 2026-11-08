@@ -17,13 +17,13 @@ export const siteConfig = {
   phoneDisplay: "0423 332 037",
   phoneInternational: "+61423332037",
   location: "Sydney, NSW, Australia",
-  // Only profiles with a confirmed URL are listed. Instagram has no URL yet, so it stays hidden
-  // until NEXT_PUBLIC_INSTAGRAM_URL is set. The Facebook link is the owner-supplied share URL.
+  // Only owner-confirmed profile URLs are listed (tracking parameters removed). Both can be
+  // overridden with NEXT_PUBLIC_FACEBOOK_URL / NEXT_PUBLIC_INSTAGRAM_URL. Facebook is a share link.
   social: {
     linkedin: "https://www.linkedin.com/company/ab-digital-solutions",
     github: "https://github.com/abubakerasif202",
     facebook: optionalUrl(process.env.NEXT_PUBLIC_FACEBOOK_URL) ?? "https://www.facebook.com/share/1CGfu8s7Az/",
-    instagram: optionalUrl(process.env.NEXT_PUBLIC_INSTAGRAM_URL),
+    instagram: optionalUrl(process.env.NEXT_PUBLIC_INSTAGRAM_URL) ?? "https://www.instagram.com/abubakarasif202",
   },
 } as const;
 
