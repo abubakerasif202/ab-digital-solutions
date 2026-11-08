@@ -32,7 +32,7 @@ test("destination helpers retain a graceful unavailable-site state", () => {
 
 test("Fresh Stop is the approved sixteenth project on its published custom domain", () => {
   const project = findProject("fresh-stop");
-  assert.equal(projects.length, 18);
+  assert.equal(projects.length, 19);
   assert.equal(projects[15], project);
   assert.equal(project.url, "https://www.freshstop.com.au/");
   assert.equal(project.displayUrl, "freshstop.com.au");
@@ -45,6 +45,15 @@ test("Fresh Stop is the approved sixteenth project on its published custom domai
   assert.match(project.solution, /enquiry rather than a confirmed order/);
   assert.match(project.solution, /email and WhatsApp/);
   assert.doesNotMatch(JSON.stringify(project), /fresh-stop\.vercel\.app|Stripe|inventory synchronisation/i);
+});
+
+test("On Call Trailers is listed as a live website with its real domain and preview image", () => {
+  const project = findProject("on-call-trailers");
+  assert.ok(project);
+  assert.equal(project.url, "https://oncalltrailers.com.au/");
+  assert.equal(project.displayUrl, "oncalltrailers.com.au");
+  assert.equal(projectDestinationLabel(project), "Live website");
+  assert.equal(project.image, "/site/ab-digital-premium/assets/ab-portfolio-on-call-trailers.webp");
 });
 
 test("Wild Pest Solutions publishes a real screenshot gallery and NSW case study", async () => {

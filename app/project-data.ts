@@ -495,6 +495,36 @@ export const projects = [
       { src: `${assetBase}/ab-portfolio-pept-up-labs-mobile.webp`, alt: "Pept Up Labs product catalogue homepage on mobile", caption: "The catalogue experience on a smaller screen.", aspectRatio: "390 / 844" },
     ],
   },
+  {
+    slug: "on-call-trailers",
+    name: "On Call Trailers",
+    category: "Trailer Hire / Local Services Website",
+    sector: "Trailer hire",
+    headline: "Ready to Move. Endless Possibilities.",
+    description:
+      "A trailer hire website for Sydney, presenting cage, motorcycle and car trailers with clear specifications, hire rates and booking pathways.",
+    overview:
+      "On Call Trailers hires galvanised cage box and motorcycle trailers from Haberfield, Sydney, with a car trailer available on enquiry. The business needed a site that helps customers choose the right trailer and book without confusion.",
+    solution:
+      "AB Web Studio built a responsive trailer hire website with a night-time Sydney skyline hero, fleet cards showing size, payload and towing weight, a side-by-side comparison table and a towing checklist. Booking routes straight to the live listing, while the car trailer uses an enquiry pathway until its details are confirmed. Customer reviews, pickup hours and a short FAQ sit alongside, and animations can be paused.",
+    url: "https://oncalltrailers.com.au/",
+    displayUrl: "oncalltrailers.com.au",
+    image: `${assetBase}/ab-portfolio-on-call-trailers.webp`,
+    alt: "On Call Trailers homepage with a galvanised cage trailer and a flatbed trailer in front of the Sydney Harbour Bridge at night",
+    tags: ["Website Design", "Trailer Hire", "Booking Journey", "Responsive Design"],
+    keyFeatures: [
+      "Fleet cards for cage, motorcycle and car trailers with size, payload and towing weight",
+      "Side-by-side trailer comparison table",
+      "Direct booking pathways, with enquiry-only handling for the car trailer",
+      "Towing checklist, pickup details and customer reviews",
+      "Pause control for page animations",
+    ],
+    techStack: ["Next.js", "React", "Responsive UI"],
+    ctaLabel: "Visit Live Website",
+    seoTitle: "On Call Trailers Website Project",
+    seoDescription:
+      "Explore the On Call Trailers website project by AB Web Studio: a Sydney trailer hire website with fleet comparison, towing guidance and clear booking pathways.",
+  },
 ] as const satisfies readonly Project[];
 
 export const sectors: readonly string[] = Array.from(new Set(projects.map((project) => project.sector)));

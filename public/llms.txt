@@ -49,6 +49,8 @@
 
 - [Pept Up Labs](https://peptuplabs.com.au/): Responsive laboratory research product catalogue with variant browsing and support pathways. Case study: https://www.abwebstudio.com.au/work/pept-up-labs.
 
+- [On Call Trailers](https://oncalltrailers.com.au/): Sydney trailer hire website with fleet comparison, towing guidance and direct booking pathways. Case study: https://www.abwebstudio.com.au/work/on-call-trailers.
+
 ## Contact & Authority Information
 
 - Studio Name: AB Web Studio
