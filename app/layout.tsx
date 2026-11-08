@@ -103,7 +103,8 @@ const structuredData = {
       telephone: siteConfig.phoneInternational,
       email: siteConfig.email,
       areaServed: { "@type": "Country", name: "Australia" },
-      sameAs: Object.values(siteConfig.social).filter((url): url is string => Boolean(url)),
+      // A Facebook share link is not a stable profile identifier, so it is kept out of sameAs.
+      sameAs: [siteConfig.social.linkedin, siteConfig.social.github, siteConfig.social.instagram].filter((url): url is string => Boolean(url)),
       address: {
         "@type": "PostalAddress",
         addressLocality: "Sydney",
