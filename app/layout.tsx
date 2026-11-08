@@ -141,7 +141,7 @@ const structuredData = {
       name: "Abubakar Asif",
       jobTitle: "Founder & Lead Developer",
       worksFor: { "@id": `${siteConfig.url}/#organization` },
-      sameAs: ["https://github.com/abubakerasif202"],
+      sameAs: [siteConfig.social.github, siteConfig.social.linkedin],
     },
     {
       "@type": "WebSite",
