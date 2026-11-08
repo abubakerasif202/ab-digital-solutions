@@ -97,7 +97,7 @@ try {
   await open("/about");
   check("Founder identity retained", await page.evaluate(() => document.body.textContent.includes("Abubakar Asif") && document.body.textContent.includes("Founder & Lead Developer")));
   await open("/contact");
-  check("Direct email, phone and WhatsApp retained", await page.evaluate(() => !!document.querySelector("a[href='mailto:admin@abwebstudio.com.au']") && !!document.querySelector("a[href='tel:+61423332037']") && [...document.querySelectorAll("a")].some((link) => /wa\.me\/61423332037/.test(link.href))));
+  check("Direct email, phone and WhatsApp retained", await page.evaluate(() => !!document.querySelector("a[href='mailto:enquiry@abwebstudio.com.au']") && !!document.querySelector("a[href='tel:+61423332037']") && [...document.querySelectorAll("a")].some((link) => /wa\.me\/61423332037/.test(link.href))));
   await open("/work");
   const filters = await page.$$(".work-index-filter");
   for (let index = 0; index < filters.length; index++) {
@@ -162,7 +162,7 @@ try {
       await page.type("#full-name", "Browser QA");
       await page.type("#email", "qa@example.invalid");
       await page.type("#message", "Mocked only. No production delivery.");
-      await page.select("#budget", "$3,000–$6,000");
+      await page.select("#budget", "$4,000–$8,000");
       await page.select("#timeline", "Within 1 month");
       await page.click(".form-service-option:last-child input");
       const formBefore = await page.$eval(".contact-form", (el) => Object.fromEntries(new FormData(el)));
@@ -200,7 +200,7 @@ try {
   await page.setJavaScriptEnabled(false);
   for (const route of ["/", "/work", "/contact"]) {
     await open(route);
-    const content = await page.evaluate(() => ({ heading: document.querySelector("h1")?.textContent.trim(), email: !!document.querySelector("a[href='mailto:admin@abwebstudio.com.au']"), projects: new Set([...document.querySelectorAll("a[href^='/work/']")].map((link) => link.getAttribute("href"))).size }));
+    const content = await page.evaluate(() => ({ heading: document.querySelector("h1")?.textContent.trim(), email: !!document.querySelector("a[href='mailto:enquiry@abwebstudio.com.au']"), projects: new Set([...document.querySelectorAll("a[href^='/work/']")].map((link) => link.getAttribute("href"))).size }));
     check(`${route} no-JavaScript semantic content and contact`, !!content.heading && content.email && (route !== "/work" || content.projects === 14), content);
   }
   for (const mode of ["coarse", "save-data", "context-loss"]) {

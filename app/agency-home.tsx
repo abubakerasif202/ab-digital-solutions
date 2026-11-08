@@ -96,7 +96,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
       <PageTransition>
       <main id="main-content" className="cinematic-home">
-        <VirtualStudioPreview />
         <section className="stage-hero studio-supporting-hero" aria-labelledby="hero-heading">
           <div className="stage-hero-art" aria-hidden="true">
 
@@ -164,6 +163,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         </section>
 
         <PortfolioSection />
+
+        <VirtualStudioPreview />
 
         <BrandFilmSection />
 

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 import { ArrowIcon, Glyph } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
-import { formatCategory, projectDestinationLabel, projects } from "../project-data";
+import { formatCategory, projectDestinationLabel, projectDisplayDomain, projects } from "../project-data";
 import { motionTokens } from "./motion/tokens";
 
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
@@ -138,7 +138,7 @@ export function ProjectShowcase() {
         <div className="showcase-browser">
       <div className="showcase-browser-bar" aria-hidden="true">
         <span className="showcase-browser-dots"><i /><i /><i /></span>
-        <span>{activeProject.displayUrl}</span>
+        <span>{projectDisplayDomain(activeProject)}</span>
         <span className="showcase-browser-status">{projectDestinationLabel(activeProject)}</span>
       </div>
       <div className="showcase-stage">
@@ -176,7 +176,7 @@ export function ProjectShowcase() {
           <span className="showcase-kicker">{String(activeSlide + 1).padStart(2, "0")} — Featured project</span>
           <strong>{activeProject.name}</strong>
           <span className="showcase-category">{formatCategory(activeProject.category)}</span>
-          <small className="showcase-url">{activeProject.displayUrl}</small>
+          <small className="showcase-url">{projectDisplayDomain(activeProject)}</small>
         </div>
         <div className="slider-controls">
           <button className="icon-control icon-control-prev" type="button" onClick={showPreviousSlide} aria-label="Previous project">

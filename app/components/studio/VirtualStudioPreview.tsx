@@ -16,7 +16,7 @@ export function VirtualStudioPreview() {
         <p>Walk through. Look around. Discover what&apos;s possible.</p>
       </div>
       <Link href="/studio" prefetch={false} className={styles.previewArt} aria-label="Explore AB Web Studio’s virtual studio">
-        <Image src="/studio/studio-poster.png" width={1440} height={900} sizes="(max-width: 600px) 100vw, 600px" priority alt="Original cutaway architecture of the AB virtual studio" />
+        <Image src="/studio/studio-poster.png" width={1440} height={900} sizes="(max-width: 600px) 100vw, 600px" loading="lazy" alt="Original cutaway architecture of the AB virtual studio" />
         <span aria-hidden="true">INTERACTIVE 3D / TAP TO ENTER ↗</span>
       </Link>
     </div>

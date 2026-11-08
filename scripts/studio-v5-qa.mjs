@@ -80,7 +80,7 @@ try {
     await roomButton("Services atelier").click();
     await page.getByRole("button", { name: "E-commerce Website Development" }).click();
     check(`${tag} service enquiry link carries validated service`, (await page.getByRole("link", { name: "Enquire about this" }).getAttribute("href")) === "/contact?service=E-commerce%20solutions");
-    check(`${tag} custom systems service listed`, await page.getByRole("button", { name: "Custom business systems" }).count() === 1);
+    check(`${tag} custom systems service listed`, await page.getByRole("button", { name: "Custom Software & Business Systems" }).count() === 1);
 
     // Consultation contact options.
     await roomButton("Consultation lounge").click();

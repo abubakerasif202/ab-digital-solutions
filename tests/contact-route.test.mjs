@@ -33,7 +33,7 @@ function validPayload(overrides = {}) {
     email: "sender@example.com",
     phone: "0400 000 000",
     service: "Website design & development",
-    budget: "$3,000–$6,000",
+    budget: "$4,000–$8,000",
     timeline: "Within 1 month",
     message: "I would like a new website for my business.",
     company: "",
@@ -239,12 +239,18 @@ test("shared rate-limit store failure falls back without leaking details", async
   assert.ok(!JSON.stringify(body).includes("upstash"), "client response must not mention the store");
 });
 
-test("starter budgets and custom software enquiries remain deliverable", async () => {
-  const response = await POST(contactRequest(validPayload({ budget: "Under $1,500", service: "Custom software & business systems" }), { "x-real-ip": nextIp() }));
+test("current budget tiers and custom software enquiries remain deliverable", async () => {
+  const response = await POST(contactRequest(validPayload({ budget: "$2,000–$4,000", service: "Custom software & business systems" }), { "x-real-ip": nextIp() }));
   assert.equal(response.status, 200);
   const sent = JSON.parse(fetchCalls[0].init.body);
-  assert.match(sent.text, /Under \$1,500/);
+  assert.match(sent.text, /\$2,000–\$4,000/);
   assert.match(sent.text, /Custom software & business systems/);
+});
+
+test("retired budget tiers are rejected", async () => {
+  const response = await POST(contactRequest(validPayload({ budget: "Under $1,500" }), { "x-real-ip": nextIp() }));
+  assert.equal(response.status, 400);
+  assert.equal(fetchCalls.length, 0);
 });
 
 test("multi-select services and the business field are delivered", async () => {

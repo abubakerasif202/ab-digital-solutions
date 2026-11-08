@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": idempotencyKey },
       body: JSON.stringify({
-        from: process.env.CONTACT_FROM_EMAIL || "AB Web Studio <admin@abwebstudio.com.au>",
+        from: process.env.CONTACT_FROM_EMAIL || `${siteConfig.name} <${siteConfig.email}>`,
         to: [process.env.CONTACT_TO_EMAIL?.trim() || siteConfig.email],
         reply_to: email,
         subject: `Website enquiry from ${fullName}`,

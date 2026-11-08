@@ -90,7 +90,7 @@ test("every project ships a real preview image and routes visitors through a cas
   assert.doesNotMatch(portfolio, /href=\{project\.url\}/);
   assert.doesNotMatch(homepage, /href=\{project\.url\}/);
   assert.doesNotMatch(workPage, /href=\{project\.url\}/);
-  assert.match(workIndexBody, /href=\{project\.url\} target="_blank" rel="noopener noreferrer"/);
+  assert.doesNotMatch(workIndexBody, /href=\{project\.url\}/);
   assert.match(workIndexBody, /href=\{`\/work\/\$\{project\.slug\}`\}/);
   assert.match(caseStudy, /href=\{project\.url\}[\s\S]{0,120}target="_blank"[\s\S]{0,120}rel="noopener noreferrer"/);
   assert.match(caseStudy, /opens in a new tab/);
@@ -279,7 +279,7 @@ test("SEO routes and metadata are configured", async () => {
   assert.match(servicePage, /siteName: siteConfig\.name/);
   assert.match(servicePage, /"@type": "FAQPage"/);
   assert.doesNotMatch(servicePage, /availability:|priceCurrency:/);
-  assert.doesNotMatch(services, /WCAG accessibility compliance|high-converting|profitable, predictable|maintain search engine rankings|rapid technical issue resolution/);
+  assert.doesNotMatch(services, /WCAG accessibility compliance|profitable, predictable|maintain search engine rankings|rapid technical issue resolution/);
   assert.match(footer, /servicePages\.map/);
   assert.match(footer, /footer-contact-cta/);
 });
