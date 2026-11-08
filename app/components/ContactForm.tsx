@@ -15,6 +15,7 @@ interface ContactFormProps {
 }
 
 const SERVICES_ERROR_ID = "services-error";
+const SERVICES_HELP_ID = "services-help";
 
 export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
   const titleId = useId();
@@ -128,7 +129,13 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
       }}
       onInput={(event) => {
         const field = event.target;
-        if (field instanceof HTMLInputElement && field.name === "service") { clearError("services"); syncScopeNote(); }
+        if (field instanceof HTMLInputElement && field.name === "service") {
+          syncScopeNote();
+          // Deselecting the last service raises the error straight away so it is announced in context.
+          const anyChecked = formRef.current?.querySelector('input[name="service"]:checked');
+          if (anyChecked) clearError("services");
+          else setFieldErrors((current) => ({ ...current, services: "Choose at least one service." }));
+        }
         else if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) clearError(field.id);
       }} aria-busy={formState === "sending"}>
       <noscript>
@@ -172,8 +179,9 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
         </div>
       </div>
 
-      <fieldset className={`form-chips form-services`} aria-describedby={fieldErrors.services ? SERVICES_ERROR_ID : undefined}>
-        <legend>What do you need? <span className="form-req" aria-hidden="true">*</span><span className="sr-only"> (choose at least one)</span></legend>
+      <fieldset className="form-chips form-services" aria-describedby={fieldErrors.services ? `${SERVICES_HELP_ID} ${SERVICES_ERROR_ID}` : SERVICES_HELP_ID}>
+        <legend>What do you need? <span className="form-req" aria-hidden="true">*</span><span className="sr-only"> (required)</span></legend>
+        <span className="sr-only" id={SERVICES_HELP_ID}>Choose at least one service. You can select more than one.</span>
         <div className="form-chip-row">
           {contactServices.map((service, index) => (
             <label className="form-chip" key={service}>

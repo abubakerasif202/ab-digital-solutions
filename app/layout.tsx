@@ -103,10 +103,7 @@ const structuredData = {
       telephone: siteConfig.phoneInternational,
       email: siteConfig.email,
       areaServed: { "@type": "Country", name: "Australia" },
-      sameAs: [
-        "https://github.com/abubakerasif202",
-        "https://www.linkedin.com/company/ab-digital-solutions",
-      ],
+      sameAs: [siteConfig.social.linkedin, siteConfig.social.github, siteConfig.social.facebook, siteConfig.social.instagram].filter((url): url is string => Boolean(url)),
       address: {
         "@type": "PostalAddress",
         addressLocality: "Sydney",
@@ -131,6 +128,7 @@ const structuredData = {
           "E-commerce solutions",
           "Digital marketing",
           "Website care and support",
+          "Custom software and business systems",
         ].map((name) => ({
           "@type": "Offer",
           itemOffered: { "@type": "Service", name },
@@ -143,7 +141,7 @@ const structuredData = {
       name: "Abubakar Asif",
       jobTitle: "Founder & Lead Developer",
       worksFor: { "@id": `${siteConfig.url}/#organization` },
-      sameAs: ["https://github.com/abubakerasif202"],
+      sameAs: [siteConfig.social.github, siteConfig.social.linkedin],
     },
     {
       "@type": "WebSite",
