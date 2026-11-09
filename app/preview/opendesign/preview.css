@@ -1,0 +1,135 @@
+/* OpenDesign "Gilt & Ruby" preview theme.
+   Scoped: every rule below sits under `.odp`, so nothing here can reach the live
+   homepage or any other route. Token overrides apply only inside the preview
+   wrapper, which is how the shared header, footer and enquiry form pick up the
+   preview palette without touching the site-wide tokens. */
+
+.odp {
+  --obsidian: #0a0a0d;
+  --surface: #17171b;
+  --surface-2: #211c20;
+  --ivory: #f6f0e7;
+  --ivory-muted: #c0b9b2;
+  --gilt: #c8a86b;
+  --gilt-bright: #e0be7e;
+  --ruby: #742d43;
+  --ruby-deep: #5e2336;
+  --ruby-mark: #a04661;
+  --ruby-text: #f59aa8;
+  --odp-line: #403a3b;
+  --odp-line-soft: #302b2f;
+  --odp-gap: clamp(16px, 2.4vw, 28px);
+  background: var(--obsidian);
+  color: var(--ivory);
+}
+.odp [hidden] { display: none !important; }
+.odp .odp-wrap { width: var(--container); margin-inline: auto; }
+.odp .odp-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.odp .odp-mono-label { font-family: var(--mono, "IBM Plex Mono", monospace); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.odp .odp-muted { color: var(--ivory-muted); }
+.odp .odp-eyebrow { color: var(--gilt); margin: 0; }
+.odp .odp-display { font-family: var(--display, "Bodoni Moda", Georgia, serif); font-weight: 400; letter-spacing: -.025em; line-height: 1.06; margin: 0; text-wrap: balance; }
+.odp .odp-display em { font-style: italic; color: var(--gilt); }
+.odp .odp-h2 { font-size: clamp(32px, 4.4vw, 56px); max-width: 18ch; }
+.odp .odp-lede { color: var(--ivory-muted); font-size: 1.125rem; max-width: 46ch; margin: 0; }
+
+/* Buttons and links */
+.odp .odp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 28px; border-radius: 9999px; border: 1px solid transparent; font: 600 15px/1 var(--sans, "Schibsted Grotesk", sans-serif); cursor: pointer; text-decoration: none; transition: background 180ms, color 180ms, border-color 180ms; }
+.odp .odp-btn--primary { background: var(--gilt); color: var(--obsidian); }
+.odp .odp-btn--primary:hover { background: var(--gilt-bright); }
+.odp .odp-btn--ghost { background: transparent; color: var(--ivory); border-color: #6b6264; }
+.odp .odp-btn--ghost:hover { border-color: var(--gilt); color: var(--gilt-bright); }
+.odp .odp-text-link { display: inline-block; padding: 12px 0; color: var(--gilt); border-bottom: 1px solid currentColor; text-decoration: none; }
+.odp .odp-text-link:hover { color: var(--gilt-bright); }
+.odp .odp-section-link { margin: 32px 0 0; }
+
+/* Hero */
+.odp .odp-hero { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 32px; min-height: 100svh; padding: calc(var(--header-height) + 40px) 0 80px; }
+.odp .odp-hero-copy { display: grid; gap: 24px; justify-items: start; }
+.odp .odp-hero .odp-display { font-size: clamp(44px, 6.4vw, 92px); }
+.odp .odp-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 8px; }
+.odp .odp-hero-art { position: relative; height: min(70vh, 560px); min-height: 450px; overflow: hidden; }
+.odp .odp-hero-art .hero-3d-bg-wrap { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 1; }
+.odp .odp-hero-art .hero-3d-fallback { min-height: 0; height: 100%; background: radial-gradient(closest-side at 50% 50%, rgba(116, 45, 67, .5), transparent 70%); }
+.odp .odp-hero-art .hero-3d-fallback::before,
+.odp .odp-hero-art .hero-3d-fallback::after { display: none; }
+.odp .odp-hero-art .hero-sculpture { width: 100%; height: 100%; object-fit: contain; }
+@media (max-width: 959px) {
+  .odp .odp-hero { grid-template-columns: 1fr; min-height: 0; padding-bottom: 56px; }
+  .odp .odp-hero-art { order: -1; min-height: 0; height: 300px; }
+}
+
+/* CSS monogram fallback (?fallback=css) */
+.odp .odp-mono-stage { position: absolute; inset: 0; display: grid; place-items: center; perspective: 1100px; }
+.odp .odp-mono-glow { position: absolute; inset: 8% 0; background: radial-gradient(closest-side, rgba(116, 45, 67, .55), transparent 70%); }
+.odp .odp-mono { --m: clamp(170px, 22vw, 300px); position: relative; width: var(--m); height: var(--m); transform-style: preserve-3d; transform: rotateX(-8deg) rotateY(24deg); }
+.odp .odp-mono-layer { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--display, "Bodoni Moda", Georgia, serif); font-weight: 600; font-size: calc(var(--m) * .93); line-height: 1; letter-spacing: -.06em; user-select: none; }
+.odp .odp-mono-layer.is-depth { color: var(--ruby); }
+.odp .odp-mono-layer.is-edge { color: #4a1c2b; }
+.odp .odp-mono-layer.is-face { background: linear-gradient(120deg, #f0d79b 0%, #c8a86b 45%, #8d7035 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--gilt); }
+@media (prefers-reduced-motion: no-preference) {
+  .odp .odp-mono { animation: odp-sway 9s ease-in-out infinite alternate; }
+}
+@keyframes odp-sway { from { transform: rotateX(-8deg) rotateY(6deg); } to { transform: rotateX(-5deg) rotateY(38deg); } }
+
+/* Harbour */
+.odp .odp-harbour { border-block: 1px solid var(--odp-line-soft); background: linear-gradient(180deg, var(--obsidian), var(--surface-2)); overflow: hidden; }
+.odp .odp-harbour svg { display: block; width: 100%; height: clamp(180px, 24vw, 320px); }
+
+/* Sections */
+.odp .odp-section { padding-block: clamp(64px, 9vw, 112px); }
+.odp .odp-section--work { background: var(--surface); border-block: 1px solid var(--odp-line-soft); }
+.odp .odp-head { display: grid; gap: 12px; margin-bottom: 48px; }
+
+/* Disciplines */
+.odp .odp-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--odp-gap); align-items: start; }
+.odp .odp-card { background: var(--surface); border: 1px solid var(--odp-line-soft); border-radius: 12px; transition: border-color 260ms, transform 260ms; }
+.odp .odp-card:hover, .odp .odp-card.is-open { border-color: #7d6a43; transform: translateY(-3px); }
+.odp .odp-card-heading { margin: 0; font: inherit; }
+.odp .odp-card-toggle { all: unset; box-sizing: border-box; display: grid; gap: 12px; width: 100%; min-height: 44px; padding: 32px 24px; position: relative; cursor: pointer; }
+.odp .odp-card-toggle:focus-visible { outline: 2px solid var(--gilt); outline-offset: -2px; border-radius: 12px; }
+.odp .odp-card-index { color: var(--gilt); }
+.odp .odp-card-title { font-family: var(--display, "Bodoni Moda", Georgia, serif); font-size: 30px; line-height: 1.15; letter-spacing: -.02em; padding-right: 40px; }
+.odp .odp-card-summary { color: var(--ivory-muted); font-weight: 400; }
+.odp .odp-plus { position: absolute; right: 24px; top: 32px; width: 28px; height: 28px; border: 1px solid var(--odp-line); border-radius: 50%; }
+.odp .odp-plus::before, .odp .odp-plus::after { content: ""; position: absolute; left: 8px; right: 8px; top: 13px; height: 1px; background: var(--gilt); transition: transform 180ms; }
+.odp .odp-plus::after { transform: rotate(90deg); }
+.odp .odp-card.is-open .odp-plus::after { transform: rotate(0); }
+.odp .odp-card-body { display: grid; gap: 24px; padding: 0 24px 32px; }
+.odp .odp-ticks { display: grid; gap: 12px; list-style: none; margin: 0; padding: 0; }
+.odp .odp-ticks li { position: relative; padding-left: 22px; color: #e8dfd4; }
+.odp .odp-ticks li::before { content: ""; position: absolute; left: 0; top: .8em; width: 10px; height: 1px; background: var(--gilt); }
+.odp .odp-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+@media (max-width: 959px) { .odp .odp-cards { grid-template-columns: 1fr; } }
+
+/* Work */
+.odp .odp-filters { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+.odp .odp-chip { min-height: 44px; padding: 0 18px; background: transparent; color: var(--ivory-muted); border: 1px solid #5a5254; border-radius: 9999px; font: 500 14px var(--sans, "Schibsted Grotesk", sans-serif); cursor: pointer; transition: color 180ms, border-color 180ms, background 180ms; }
+.odp .odp-chip:hover { color: var(--ivory); border-color: var(--gilt); }
+.odp .odp-chip.is-on { background: var(--ruby); color: var(--ivory); border-color: var(--ruby-mark); }
+.odp .odp-chip-count { margin-left: 6px; opacity: .8; font-variant-numeric: tabular-nums; }
+.odp .odp-projects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--odp-gap); list-style: none; margin: 0; padding: 0; }
+.odp .odp-work[data-collapsed="true"] [data-extra] { display: none; }
+.odp .odp-project { display: block; }
+.odp .odp-project-link { display: block; height: 100%; color: inherit; text-decoration: none; background: var(--obsidian); border: 1px solid var(--odp-line-soft); border-radius: 12px; overflow: hidden; transition: border-color 260ms, transform 260ms; }
+.odp .odp-project-link:hover { border-color: var(--gilt); transform: translateY(-3px); }
+.odp .odp-project-link:focus-visible { outline: 2px solid var(--gilt); outline-offset: 3px; }
+.odp .odp-thumb { position: relative; display: block; width: 100%; background: var(--surface-2); overflow: hidden; }
+.odp .odp-thumb img { object-fit: cover; object-position: left top; }
+.odp .odp-project-meta { display: grid; gap: 6px; padding: 16px 24px 24px; }
+.odp .odp-project-sector { color: var(--gilt); }
+.odp .odp-project-name { font-family: var(--display, "Bodoni Moda", Georgia, serif); font-size: 26px; line-height: 1.15; letter-spacing: -.02em; }
+.odp .odp-project-sum { color: var(--ivory-muted); font-size: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.odp .odp-project-status { color: #a9a19c; }
+.odp .odp-show-all { display: flex; justify-content: center; margin: 32px 0 0; }
+@media (max-width: 1099px) { .odp .odp-projects { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 599px) { .odp .odp-projects { grid-template-columns: minmax(0, 1fr); } }
+
+/* Process */
+.odp .odp-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--odp-gap); list-style: none; margin: 0; padding: 0; }
+.odp .odp-step { padding-top: 24px; border-top: 1px solid var(--gilt); }
+.odp .odp-step-index { color: var(--gilt); display: block; }
+.odp .odp-step h3 { font-family: var(--display, "Bodoni Moda", Georgia, serif); font-size: 32px; font-weight: 400; letter-spacing: -.02em; margin: 8px 0; }
+.odp .odp-step p { color: var(--ivory-muted); margin: 0; }
+@media (max-width: 959px) { .odp .odp-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 599px) { .odp .odp-steps { grid-template-columns: minmax(0, 1fr); } }

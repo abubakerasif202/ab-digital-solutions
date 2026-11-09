@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { HeroFallback } from "./HeroFallback";
 
 const Hero3DCanvas = dynamic(
@@ -14,7 +14,12 @@ const Hero3DCanvas = dynamic(
 
 type Hero3DMode = "fallback" | "mobile" | "tablet" | "desktop";
 
-export function Hero3DExperience() {
+/**
+ * `fallback` replaces the static artwork shown on phones, with reduced motion,
+ * on constrained devices and before the 3D scene is ready. The mode selection
+ * is unchanged; omit it to keep the approved image.
+ */
+export function Hero3DExperience({ fallback }: { fallback?: ReactNode } = {}) {
   const stageRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<Hero3DMode>("fallback");
 
@@ -114,7 +119,7 @@ export function Hero3DExperience() {
 
   return (
     <div ref={stageRef} className="hero-3d-bg-wrap" aria-hidden="true">
-      {mode === "fallback" ? <HeroFallback /> : <Hero3DCanvas quality={mode} />}
+      {mode === "fallback" ? (fallback ?? <HeroFallback />) : <Hero3DCanvas quality={mode} fallback={fallback} />}
     </div>
   );
 }
