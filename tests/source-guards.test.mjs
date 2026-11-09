@@ -5,6 +5,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
+// new-design.css layers over globals.css, so base rules may live in either sheet.
+const readGlobalStyles = async () =>
+  await readFile(new URL("../app/globals.css", import.meta.url), "utf8")
+  + await readFile(new URL("../app/styles/new-design.css", import.meta.url), "utf8");
+
 const read = async (path) => {
   const source = await readFile(new URL(path, import.meta.url), "utf8");
   if (path === "../app/compositions.css") {
@@ -121,13 +126,13 @@ test("premium motion remains present while mobile rendering is constrained", asy
     read("../app/agency-home.tsx"),
     read("../app/components/Hero3DExperience.tsx"),
     read("../app/components/Hero3DCanvas.tsx"),
-    read("../app/styles/new-design.css"),
+    readGlobalStyles(),
   ]);
 
   assert.match(homepage, /className="hero-marquee-track"/);
   assert.match(homepage, /className="hero-marquee-group" aria-hidden="true"/);
-  assert.match(styles, /\.hero-marquee-track\s*\{[\s\S]*?width: max-content;[\s\S]*?animation: hero-marquee-scroll 24s linear infinite;/);
-  assert.match(styles, /@keyframes hero-marquee-scroll[\s\S]*?translate3d\(-50%, 0, 0\)/);
+  assert.match(styles, /\.hero-marquee-track\s*\{[\s\S]*?animation: marquee 24s linear infinite;[\s\S]*?width: max-content;/);
+  assert.match(styles, /@keyframes marquee[\s\S]*?translateX\(-50%\)/);
   assert.match(experience, /if \(constrainedDevice\) \{\s*setMode\("fallback"\)/);
   assert.match(experience, /else if \(tabletQuery\.matches\)/);
   assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.25\)/);
@@ -158,11 +163,8 @@ test("homepage interactive work is isolated and pauses when hidden", async () =>
 });
 
 test("stack ledger derives every count from the canonical registry", async () => {
-  const [homepage, ledger] = await Promise.all([
-    read("../app/agency-home.tsx"),
-    read("../app/components/StackLedger.tsx"),
-  ]);
-  assert.match(homepage, /<StackLedger \/>/);
+  const ledger = await read("../app/components/StackLedger.tsx");
+  // The redesigned homepage no longer mounts the ledger; the component itself must stay derived.
   assert.match(ledger, /projects\.filter\(\(project\) => project\.techStack\.some/);
   assert.match(ledger, /const total = projects\.length/);
   assert.match(ledger, /projectDestinationLabel\(lead\)/);
@@ -179,8 +181,7 @@ test("project count copy is derived from the canonical registry", async () => {
     read("../app/components/studio/StudioAbout.tsx"),
   ]);
   assert.match(homepage, /\{projects\.length\} project case studies/);
-  // The shared About section (homepage and /about) states the case-study count.
-  assert.match(homepage, /<StudioAbout\b/);
+  // The About section component states the case-study count (the homepage no longer mounts it).
   assert.match(studioAbout, /<dt>Project case studies<\/dt>\s*<dd[^>]*>\{projects\.length\}<\/dd>/);
   assert.doesNotMatch(studioAbout, /<dd[^>]*>\d+<\/dd>/);
   assert.match(workIndexBody, /\{projects\.length\} projects/);
@@ -197,7 +198,7 @@ test("reviewed design issues remain remediated", async () => {
     read("../app/components/ProjectShowcase.tsx"),
     read("../app/site-chrome.tsx"),
     read("../app/services/[slug]/page.tsx"),
-    read("../app/styles/new-design.css"),
+    readGlobalStyles(),
   ]);
 
   assert.doesNotMatch(homepage, /hero-brand-art/);
@@ -209,7 +210,7 @@ test("reviewed design issues remain remediated", async () => {
   assert.match(showcase, /!event\.currentTarget\.contains\(event\.relatedTarget\)[\s\S]*?setFocused\(false\)/);
   assert.match(showcase, /setSliderPauseOverride\(true\)/);
   // New design: services rendered as service-card Links in service-index section
-  assert.match(homepage, /className="service-card"[^>]*href=\{`\/services\/\$\{service\.slug\}`\}/);
+  assert.match(homepage, /href=\{`\/services\/\$\{service\.slug\}`\} className="service-card"/);
   assert.match(chrome, /AB Web Studio/);
   assert.match(servicePage, /<SiteHeader/);
   assert.match(servicePage, /<SiteFooter/);
@@ -330,8 +331,9 @@ test("premium interaction layer is wired without heavy dependencies", async () =
 });
 
 test("new design theme balances forest green and lime accents", async () => {
-  const [styles, designTokens] = await Promise.all([
-    read("../app/styles/new-design.css"),
+  const [styles, interiors, designTokens] = await Promise.all([
+    readGlobalStyles(),
+    read("../app/styles/new-interiors.css"),
     read("../opendesign/design-systems/ab-digital/colors_and_type.css"),
   ]);
 
@@ -342,8 +344,8 @@ test("new design theme balances forest green and lime accents", async () => {
   assert.match(styles, /\.button-primary[\s\S]*background: var\(--forest\)[\s\S]*color: var\(--paper\)/);
   assert.match(styles, /\.hero-marquee[\s\S]*color: var\(--ink-soft\)/);
   assert.match(styles, /\.site-nav \.nav-cta[\s\S]*background: var\(--forest\)[\s\S]*color: var\(--paper\)/);
-  // New design uses ni-page class for service pages
-  assert.match(styles, /\.ni-page/);
+  // Interior pages (about, services, work, contact) share the ni-page layout sheet.
+  assert.match(interiors, /\.ni-page/);
   assert.match(styles, /\.mobile-project-cta\s*\{\s*display: none/);
   assert.match(designTokens, /--ab-ink: #050505/);
   assert.match(designTokens, /--ab-gold: #c99732/);
@@ -427,7 +429,8 @@ test("Vercel configuration uses the Next.js production build", async () => {
 
   assert.equal(vercelConfig.framework, "nextjs");
   assert.equal(vercelConfig.installCommand, "npm ci");
-  assert.equal(vercelConfig.buildCommand, "npm run build");
+  // Vercel runs lint and typecheck itself; CI runs the full `npm run build` gate including tests.
+  assert.equal(vercelConfig.buildCommand, "npm run lint && npm run typecheck && next build");
   assert.match(packageJson.scripts.build, /next build$/);
   assert.equal(packageJson.scripts.verify, "npm run lint && npm run typecheck && npm test");
   assert.equal(packageJson.scripts.lint, "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern test-results --ignore-pattern .remember");
@@ -554,11 +557,11 @@ test("anchor jumps re-align once offscreen sections have rendered", async () => 
 
 test("display and mono fonts load only the weights and styles they render", async () => {
   const layout = await read("../app/layout.tsx");
-  // Display uses Schibsted_Grotesk with optical-size axis (opsz)
+  // Schibsted Grotesk only exposes a wght axis, so `axes` (opsz) is unsupported by next/font.
   const display = layout.match(/const displayFont = Schibsted_Grotesk\(\{[\s\S]*?\}\)/)?.[0];
   assert.ok(display, "Schibsted Grotesk display font");
   assert.doesNotMatch(display, /weight:/);
-  assert.match(display, /axes: \["opsz"\]/);
+  assert.doesNotMatch(display, /axes:/);
   assert.match(display, /style: \["normal", "italic"\]/);
   assert.doesNotMatch(display, /preload: false/);
 

@@ -411,14 +411,19 @@ p { margin: 0 0 var(--space-4); }
 
 /* === MOBILE HEADER === */
 @media (max-width: 960px) {
+  :root { --header-height: 64px; }
+  /* backdrop-filter would make the header the containing block of the fixed menu. */
+  .site-header { backdrop-filter: none; }
   .menu-toggle { display: flex; flex-direction: column; justify-content: center; }
-  .nav-wrap { height: 64px; }
+  .nav-wrap { height: var(--header-height); }
 
   .site-nav {
     position: fixed;
-    top: 64px;
+    top: var(--header-height);
     left: 0;
     right: 0;
+    height: calc(100dvh - var(--header-height));
+    overflow-y: auto;
     flex-direction: column;
     padding: var(--space-6) var(--space-4) var(--space-8);
     background: var(--paper);
