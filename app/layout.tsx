@@ -147,12 +147,10 @@ const sansFont = Schibsted_Grotesk({
   variable: "--font-sans",
 });
 
-// Preload the display face for editorial headlines. The optical-size axis
-// keeps hairlines crisp from small cards to oversized hero.
+// Preload the display face for editorial headlines (same family, preloads weights).
 const displayFont = Schibsted_Grotesk({
   subsets: ["latin"],
   style: ["normal", "italic"],
-  axes: ["opsz"],
   display: "swap",
   variable: "--font-display",
 });

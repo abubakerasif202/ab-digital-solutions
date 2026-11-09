@@ -1,0 +1,139 @@
+/* Interior pages (about, services, work, contact).
+   Built on the tokens from new-design.css; loaded per page so it follows the global sheets. */
+
+.ni-page {
+  padding-top: calc(72px + var(--space-12));
+  padding-bottom: var(--space-20);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.ni-hero {
+  display: grid;
+  gap: var(--space-8);
+  padding-bottom: var(--space-12);
+  margin-bottom: var(--space-12);
+  border-bottom: 1px solid rgba(32, 37, 31, 0.12);
+}
+
+.ni-hero--split {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: end;
+}
+
+.ni-intro {
+  max-width: var(--container-narrow);
+  font-size: var(--fs-lg);
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.ni-brief {
+  padding: var(--space-6);
+  background: var(--white);
+  border: 1px solid rgba(32, 37, 31, 0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.ni-studio-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--forest);
+  color: var(--paper);
+  border-color: var(--forest-dark);
+}
+
+.ni-studio-card h2,
+.ni-studio-card h3,
+.ni-studio-card p { color: inherit; }
+
+.ni-monogram {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: var(--fs-6xl);
+  font-style: italic;
+  line-height: 1;
+  color: var(--lime);
+}
+
+/* Services index */
+.ni-services {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.ni-service {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-5);
+  padding: var(--space-6);
+  background: var(--white);
+  border: 1px solid rgba(32, 37, 31, 0.1);
+  border-radius: var(--radius-lg);
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.ni-service:hover {
+  box-shadow: var(--shadow-elevated);
+  transform: translateY(-2px);
+}
+
+.ni-number {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-3xl);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--forest);
+}
+
+/* Work index */
+.ni-work .portfolio-grid,
+.ni-work .work-grid {
+  gap: var(--space-6);
+}
+
+/* Contact */
+.ni-contact-header { max-width: var(--container-base); }
+
+.ni-contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: var(--space-10);
+  align-items: start;
+}
+
+.ni-contact-aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.ni-contact-details {
+  display: grid;
+  gap: var(--space-3);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+}
+
+.ni-contact-details a { color: var(--forest); }
+
+.ni-form-panel {
+  padding: var(--space-8);
+  background: var(--white);
+  border: 1px solid rgba(32, 37, 31, 0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+@media (max-width: 960px) {
+  .ni-page { padding-top: calc(64px + var(--space-8)); }
+  .ni-hero--split,
+  .ni-contact-grid { grid-template-columns: minmax(0, 1fr); }
+  .ni-form-panel { padding: var(--space-5); }
+}
+
+@media (max-width: 560px) {
+  .ni-service { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+}

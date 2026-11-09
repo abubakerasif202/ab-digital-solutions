@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { PageTransition } from "./components/motion/PageTransition";
 import { ContactForm } from "./components/ContactForm";
@@ -135,12 +136,13 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <div className="stage-hero-visual" aria-hidden="true">
                 <figure className="service-hero-visual">
                   <div className="service-hero-visual-frame">
-                    <img
+                    <Image
                       src={featuredProject.image}
                       alt={`${featuredProject.name} homepage`}
-                      loading="eager"
                       width={1348}
                       height={926}
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      preload
                     />
                   </div>
                   <figcaption>
@@ -181,12 +183,12 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             <div className="portfolio-grid">
               {projects.slice(0, 6).map((project) => (
                 <Link key={project.slug} href={`/work/${project.slug}`} className="portfolio-card" data-reveal>
-                  <img
+                  <Image
                     src={project.image}
                     alt={`${project.name} homepage`}
-                    loading="lazy"
                     width={1348}
                     height={926}
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   />
                   <div className="portfolio-card-overlay">
                     <span className="portfolio-card-sector">{project.sector}</span>
