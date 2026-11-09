@@ -1,4 +1,3 @@
-import { ABBrandImage } from "./components/brand/ABBrandImage";
 import Link from "next/link";
 import { siteConfig } from "./site-config";
 import { servicePages } from "./services/service-data";
@@ -26,10 +25,15 @@ const profileLinks = [
 export function SiteFooter({ currentYear }: { currentYear: number }) {
   return (
     <footer className="site-footer studio-footer">
+      <div className="studio-shell footer-opening">
+        <h2>Good things start<br />with a conversation.</h2>
+        <Link className="footer-opening-link" href="/contact">Let’s talk <ArrowIcon /></Link>
+      </div>
       <div className="studio-shell studio-footer-main">
         <div className="studio-footer-brand">
           <Link className="brand" href="/" aria-label="AB Web Studio home">
-            <ABBrandImage decorative />
+            <span className="identity-mark" aria-hidden="true">ab<span>.</span></span>
+            <span className="identity-name" aria-hidden="true">Web<br />Studio</span>
           </Link>
           <p>{siteConfig.description}</p>
           <Link className="footer-contact-cta button button-ghost" href="/contact">

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { StudioAbout } from "../components/studio/StudioAbout";
+import "../styles/new-interiors.css";
 import { PageTransition } from "../components/motion/PageTransition";
 import { ArrowIcon } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
@@ -70,14 +70,31 @@ export default function AboutPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page studio-page gr-about" id="main-content">
-        <nav className="studio-shell studio-crumbs" aria-label="Breadcrumb">
+      <main className="content-page studio-page gr-about ni-page" id="main-content">
+        <nav className="container content-breadcrumb" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <span aria-hidden="true">/</span>
           <span aria-current="page">About</span>
         </nav>
 
-        <StudioAbout headingAs="h1" index="01" />
+        <header className="container ni-hero ni-hero--split">
+          <div>
+            <p className="eyebrow">Independent thinking. Practical technology.</p>
+            <h1>Good design starts with your business.</h1>
+            <p className="content-lead">We are AB Web Studio, a Sydney digital studio creating websites and custom software for Australian businesses.</p>
+            <p className="ni-intro">We start with the people you need to reach, the work you do and the next step you want customers to take. Then we bring the design and development together.</p>
+            <Link className="button button-primary" href="/contact">Meet your next project partner <ArrowIcon /></Link>
+          </div>
+          <aside className="ni-brief ni-studio-card">
+            <p className="eyebrow">A little about us</p>
+            <span className="ni-monogram" aria-hidden="true">ab.</span>
+            <dl>
+              <div><dt>Founder &amp; Lead Developer</dt><dd>Abubakar Asif</dd></div>
+              <div><dt>Based in</dt><dd>{siteConfig.location}</dd></div>
+              <div><dt>Working with</dt><dd>Businesses Australia-wide</dd></div>
+            </dl>
+          </aside>
+        </header>
 
         <section className="container gr-about-approach" aria-labelledby="approach-heading">
           <div className="gr-section-head">

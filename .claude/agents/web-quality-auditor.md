@@ -1,6 +1,6 @@
 ---
 name: web-quality-auditor
-description: Audits the site for SEO, accessibility, performance, and Vercel-readiness. Use before a release or when asked for a site health check.
+description: Audits SEO, accessibility, performance, and Vercel-readiness. Use before releases.
 tools: Read, Grep, Glob, Bash
 model: inherit
 ---

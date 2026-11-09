@@ -1,28 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
+import { IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnchorSettle } from "./components/AnchorSettle";
-import { BrandIntro } from "./components/intro/BrandIntro";
-import { introGateScript } from "./components/intro/intro-gate";
-import { PointerFX } from "./components/PointerFX";
 import { siteConfig } from "./site-config";
 import { WebVitals } from "./web-vitals";
 import "./globals.css";
-import "./studio.css";
 import "./motion.css";
 import "./intro.css";
-import "./editorial.css";
-import "./gilt-ruby.css";
-import "./compositions.css";
-import "./studio-premium.css";
-import "./studio-pages.css";
-import "./gilt-ruby-stage.css";
-import "./premium-dev.css";
-// The studio system states the final word on tokens, chrome and shared sections.
-import "./styles/studio-system.css";
-import "./styles/studio-sections.css";
-import "./styles/studio-harmony.css";
-import "./styles/brand-film.css";
+import "./styles/new-design.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -85,8 +70,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#070708",
-  colorScheme: "dark",
+  themeColor: "#f5f3ed",
+  colorScheme: "light",
 };
 
 const structuredData = {
@@ -155,18 +140,16 @@ const structuredData = {
   ],
 };
 
-// Gilt & Ruby type system: a didone for display (it echoes the hairline/thick
-// strokes of the AB monogram), a grotesk for interface and body copy, and a
-// mono for micro labels and indices.
+// A single grotesk carries both expressive headlines and practical interface copy.
 const sansFont = Schibsted_Grotesk({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
 });
 
-// Preload the display faces for editorial headlines. The optical-size axis
-// keeps their hairlines crisp from small cards to the oversized hero.
-const displayFont = Bodoni_Moda({
+// Preload the display face for editorial headlines. The optical-size axis
+// keeps hairlines crisp from small cards to oversized hero.
+const displayFont = Schibsted_Grotesk({
   subsets: ["latin"],
   style: ["normal", "italic"],
   axes: ["opsz"],
@@ -186,12 +169,9 @@ const monoFont = IBM_Plex_Mono({
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-AU" data-scroll-behavior="smooth" className={`${sansFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
-      <body>
-        <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
-        <BrandIntro />
+      <body className="new-design">
         <WebVitals />
         <AnchorSettle />
-        <PointerFX />
         {children}
         <SpeedInsights />
         <script
