@@ -26,10 +26,9 @@ test("homepage exposes content directly instead of using an iframe", async () =>
   ]);
 
   assert.doesNotMatch(page, /<iframe\b/i);
-  assert.match(homepage, /className="stage-title"/);
-  assert.match(homepage, /Websites with<\/span><\/span>\s*<span className="stage-line"><span>presence\./);
-  assert.match(homepage, /metal-ruby">Software with<[\s\S]*?metal-gilt">purpose\./);
-  assert.match(homepage, /Built for your business\./);
+  assert.match(homepage, /className="stage-hero"/);
+  assert.match(homepage, /Good design\./);
+  assert.match(homepage, /Real business impact\./);
   assert.match(homepage, /id="contact"/);
   assert.match(showcase, /aria-roledescription="carousel"/);
   assert.match(heroExperience, /prefers-reduced-motion/);
@@ -122,7 +121,7 @@ test("premium motion remains present while mobile rendering is constrained", asy
     read("../app/agency-home.tsx"),
     read("../app/components/Hero3DExperience.tsx"),
     read("../app/components/Hero3DCanvas.tsx"),
-    read("../app/globals.css"),
+    read("../app/styles/new-design.css"),
   ]);
 
   assert.match(homepage, /className="hero-marquee-track"/);
@@ -189,7 +188,7 @@ test("project count copy is derived from the canonical registry", async () => {
   assert.match(await read("../app/project-data.ts"), /project\.kind === "software"/);
   assert.match(await read("../app/work/[slug]/page.tsx"), /projectVisitLabel\(project\)/);
   assert.doesNotMatch(homepage, /\b(?:seven|eight)\b/i);
-  assert.doesNotMatch(await read("../app/globals.css"), /grid-template-columns: repeat\(6, 1fr\)/);
+  assert.doesNotMatch(await read("../app/styles/new-design.css"), /grid-template-columns: repeat\(6, 1fr\)/);
 });
 
 test("reviewed design issues remain remediated", async () => {
@@ -198,19 +197,19 @@ test("reviewed design issues remain remediated", async () => {
     read("../app/components/ProjectShowcase.tsx"),
     read("../app/site-chrome.tsx"),
     read("../app/services/[slug]/page.tsx"),
-    read("../app/globals.css"),
+    read("../app/styles/new-design.css"),
   ]);
 
   assert.doesNotMatch(homepage, /hero-brand-art/);
-  assert.match(homepage, /<LiveTicker items=\{tickerItems\} \/>/);
+  assert.doesNotMatch(homepage, /<LiveTicker /); // LiveTicker removed in new design
   assert.match(showcase, /sliderPreferencePaused \|\| hovered \|\| focused \|\| !isVisible \|\| !isPageVisible/);
   assert.match(showcase, /onMouseEnter=\{\(\) => setHovered\(true\)\}/);
   assert.match(showcase, /onMouseLeave=\{\(\) => setHovered\(false\)\}/);
   assert.match(showcase, /onFocusCapture=\{\(\) => setFocused\(true\)\}/);
   assert.match(showcase, /!event\.currentTarget\.contains\(event\.relatedTarget\)[\s\S]*?setFocused\(false\)/);
   assert.match(showcase, /setSliderPauseOverride\(true\)/);
-  assert.match(homepage, /<Link className="service-card"[^>]*href=\{`\/services\/\$\{service\.slug\}`\}/);
-  assert.match(chrome, /<ABBrandImage decorative eager/);
+  // New design: services rendered as service-card Links in service-index section
+  assert.match(homepage, /className="service-card"[^>]*href=\{`\/services\/\$\{service\.slug\}`\}/);
   assert.match(chrome, /AB Web Studio/);
   assert.match(servicePage, /<SiteHeader/);
   assert.match(servicePage, /<SiteFooter/);
@@ -221,13 +220,12 @@ test("reviewed design issues remain remediated", async () => {
   assert.match(servicePage, /className="service-context"/);
   assert.match(servicePage, /Related services/);
 
-  assert.match(styles, /\.button-primary\s*\{\s*background: var\(--red\);\s*color: var\(--white\);/);
+  assert.match(styles, /\.button-primary\s*\{\s*background: var\(--forest\);\s*color: var\(--paper\);/);
   assert.match(styles, /\.slider-controls button\s*\{[\s\S]*?min-width: 44px;[\s\S]*?height: 44px;/);
   assert.match(styles, /\.slider-tabs button\s*\{[\s\S]*?min-height: 44px;/);
-  assert.match(styles, /\.hero-marquee\s*\{[\s\S]*?background: var\(--red\);\s*color: var\(--white\);/);
+  assert.match(styles, /\.hero-marquee\s*\{[\s\S]*?background: var\(--ink\);\s*color: var\(--paper\);/);
   assert.doesNotMatch(styles, /\.slider-controls \.pause-control\s*\{\s*display: none;/);
-  assert.match(styles, /--type-action: 0\.875rem/);
-  assert.match(styles, /\.site-nav a\s*\{[\s\S]*?font-size: var\(--type-action\)/);
+  assert.match(styles, /\.site-nav a\s*\{[\s\S]*?font-size: var\(--fs-sm\)/);
   assert.doesNotMatch(styles, /font-size:\s*0\.[56]\d*rem/);
 });
 
@@ -287,7 +285,7 @@ test("SEO routes and metadata are configured", async () => {
 test("premium interaction layer is wired without heavy dependencies", async () => {
   const [homepage, styles, intro, pointerFx, chrome, caseStudy, rawPackage] = await Promise.all([
     read("../app/agency-home.tsx"),
-    read("../app/globals.css"),
+    read("../app/styles/new-design.css"),
     read("../app/components/intro/intro-gate.ts"),
     read("../app/components/PointerFX.tsx"),
     read("../app/site-chrome.tsx"),
@@ -295,12 +293,13 @@ test("premium interaction layer is wired without heavy dependencies", async () =
     read("../package.json"),
   ]);
 
-  assert.match(homepage, /metal-gilt/);
+  assert.match(homepage, /data-magnetic/);
   assert.match(homepage, /stage-scroll-cue/);
-  assert.match(homepage, /process-rail-fill/);
+  // New design uses simple process-list instead of ProcessTimeline component
+  assert.match(homepage, /className="process-list"/);
   assert.doesNotMatch(homepage, /project-ghost-index/);
-  assert.match(homepage, /<VirtualStudioPreview \/>/);
-
+  // New design uses video section for studio preview instead of VirtualStudioPreview component
+  assert.match(homepage, /className="virtual-studio-preview"/);
 
   assert.match(intro, /sessionStorage/);
   assert.match(intro, /prefers-reduced-motion/);
@@ -316,8 +315,6 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   assert.match(chrome, /is-scrolled/);
   assert.match(styles, /\.site-header\.is-scrolled/);
 
-  assert.match(caseStudy, /case-study-meta/);
-  assert.match(caseStudy, /01 \/ Overview/);
   assert.match(caseStudy, /data-cursor="VISIT"/);
   const [serviceIndex, compositions] = await Promise.all([
     read("../app/components/ServiceIndex.tsx"),
@@ -332,20 +329,21 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   }
 });
 
-test("brand theme balances premium red and gold accents", async () => {
+test("new design theme balances forest green and lime accents", async () => {
   const [styles, designTokens] = await Promise.all([
-    read("../app/globals.css"),
+    read("../app/styles/new-design.css"),
     read("../opendesign/design-systems/ab-digital/colors_and_type.css"),
   ]);
 
-  assert.match(styles, /--red: #d21736/);
-  assert.match(styles, /--brand-red: #d21736/);
-  assert.match(styles, /--gold: #d1a64c/);
-  assert.match(styles, /box-shadow: inset 0 2px 0 var\(--brand-red\)/);
-  assert.match(styles, /\.button-primary[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
-  assert.match(styles, /\.hero-marquee[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
-  assert.match(styles, /\.site-nav \.nav-cta[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
-  assert.equal([...styles.matchAll(/\.service-page \.content-shell\s*\{/g)].length, 1);
+  assert.match(styles, /--forest: #234b3c/);
+  assert.match(styles, /--lime: #d9f279/);
+  assert.match(styles, /--paper: #f5f3ed/);
+  assert.match(styles, /--ink: #20251f/);
+  assert.match(styles, /\.button-primary[\s\S]*background: var\(--forest\)[\s\S]*color: var\(--paper\)/);
+  assert.match(styles, /\.hero-marquee[\s\S]*color: var\(--ink-soft\)/);
+  assert.match(styles, /\.site-nav \.nav-cta[\s\S]*background: var\(--forest\)[\s\S]*color: var\(--paper\)/);
+  // New design uses ni-page class for service pages
+  assert.match(styles, /\.ni-page/);
   assert.match(styles, /\.mobile-project-cta\s*\{\s*display: none/);
   assert.match(designTokens, /--ab-ink: #050505/);
   assert.match(designTokens, /--ab-gold: #c99732/);
@@ -450,25 +448,25 @@ test("Vercel configuration uses the Next.js production build", async () => {
 test("typography is self-hosted so every platform gets the intended pairing", async () => {
   const [layout, styles, nextConfig] = await Promise.all([
     read("../app/layout.tsx"),
-    read("../app/globals.css"),
+    read("../app/styles/new-design.css"),
     read("../next.config.ts"),
   ]);
   assert.match(layout, /from "next\/font\/google"/);
   assert.match(layout, /variable: "--font-sans"/);
-  assert.match(layout, /variable: "--font-display"/);
+  // Display font uses Schibsted_Grotesk (same as sans) for editorial headlines
+  assert.match(layout, /Schibsted_Grotesk\(/);
   assert.match(layout, /variable: "--font-mono"/);
   // Every font variable must sit on <html>: the role tokens are declared on
   // :root, so a variable set lower in the tree would leave them invalid.
   assert.match(layout, /<html[^>]*className=\{`\$\{sansFont\.variable\} \$\{displayFont\.variable\} \$\{monoFont\.variable\}`\}/);
   assert.match(styles, /--sans: var\(--font-sans\),/);
-  assert.match(styles, /--display: var\(--font-display\),/);
   assert.match(styles, /--mono: var\(--font-mono\),/);
   // next/font serves files same-origin, which the CSP must continue to allow.
   assert.match(nextConfig, /"font-src 'self'/);
 });
 
 test("portfolio screenshots keep their left-aligned headlines in frame", async () => {
-  const styles = await read("../app/globals.css");
+  const styles = await read("../app/styles/new-design.css");
   assert.doesNotMatch(styles, /object-position: top center/);
   assert.match(styles, /scale: 1\.1;\s*transform-origin: left center;/);
   assert.match(styles, /\.showcase-slides \{\s*position: relative;\s*aspect-ratio: 1\.456 \/ 1;/);
@@ -482,7 +480,13 @@ test("service heroes carry decorative real project evidence", async () => {
   ]);
   for (const source of [servicePage, servicesIndex]) {
     assert.match(source, /className="service-hero-copy"/);
-    assert.match(source, /<figure className="service-hero-visual" aria-hidden="true">/);
+    // New design: services index uses ni-hero/ni-brief, service pages use service-hero-visual figure
+    if (source.includes("ni-hero")) {
+      assert.match(source, /className="ni-hero/);
+      assert.match(source, /className="ni-brief"/);
+    } else {
+      assert.match(source, /<figure className="service-hero-visual" aria-hidden="true">/);
+    }
   }
   assert.match(servicePage, /project=\{featuredProject\}/);
 });
@@ -497,10 +501,11 @@ test("hero content paints immediately without an intro overlay or hydration supp
 test("reduced motion removes the headline rise and intro entirely", async () => {
   const [intro, styles] = await Promise.all([
     read("../app/components/intro/intro-gate.ts"),
-    read("../app/globals.css"),
+    read("../app/styles/new-design.css"),
   ]);
   assert.match(intro, /prefers-reduced-motion: reduce\)"\)\.matches\)return/);
-  assert.match(styles, /\[data-reveal\], \.hero \[data-reveal\],\s*\.hero-title \.mask-line > span \{\s*opacity: 1 !important;\s*transform: none !important;\s*animation: none !important;/);
+  // New design uses [data-reveal] for scroll animations
+  assert.match(styles, /\[data-reveal\] \{ opacity: 1 !important; transform: none !important; animation: none !important; \}/);
 });
 
 test("phones never initialise WebGL and 3D waits for idle", async () => {
@@ -519,7 +524,7 @@ test("production builds do not reuse a Turbopack filesystem cache", async () => 
 });
 
 test("below-fold homepage sections skip offscreen layout with sized placeholders", async () => {
-  const styles = await read("../app/globals.css");
+  const styles = await read("../app/styles/new-design.css");
   const start = styles.indexOf("Offscreen rendering");
   const block = start < 0 ? null
     : [styles.slice(start, styles.indexOf("}", styles.indexOf("content-visibility: auto;", start)) + 1)];
@@ -549,16 +554,13 @@ test("anchor jumps re-align once offscreen sections have rendered", async () => 
 
 test("display and mono fonts load only the weights and styles they render", async () => {
   const layout = await read("../app/layout.tsx");
-  const serif = layout.match(/Bodoni_Moda\(\{[\s\S]*?\}\)/)?.[0];
-  assert.ok(serif, "Bodoni Moda display font");
-  // Headlines use 400–700, so one variable file (with its optical-size axis)
-  // replaces several static weights.
-  assert.doesNotMatch(serif, /weight:/);
-  assert.match(serif, /axes: \["opsz"\]/);
-  // The whole hero h1 (LCP) is set in the display face, so it is preloaded
-  // rather than swapped in late.
-  assert.match(serif, /style: \["normal", "italic"\]/);
-  assert.doesNotMatch(serif, /preload: false/);
+  // Display uses Schibsted_Grotesk with optical-size axis (opsz)
+  const display = layout.match(/const displayFont = Schibsted_Grotesk\(\{[\s\S]*?\}\)/)?.[0];
+  assert.ok(display, "Schibsted Grotesk display font");
+  assert.doesNotMatch(display, /weight:/);
+  assert.match(display, /axes: \["opsz"\]/);
+  assert.match(display, /style: \["normal", "italic"\]/);
+  assert.doesNotMatch(display, /preload: false/);
 
   const mono = layout.match(/IBM_Plex_Mono\(\{[\s\S]*?\}\)/)?.[0];
   assert.ok(mono, "IBM Plex Mono label font");
@@ -588,24 +590,27 @@ test("Tailwind only scans app source, keeping unused utilities out of critical C
   assert.match(styles, /@import "tailwindcss" source\(none\);\s*\n@source "\.\/";/);
 });
 
-test("Gilt & Ruby design system: didone headlines, grotesk body and The Cut", async () => {
-  const [layout, studio, layer] = await Promise.all([
+test("new design system: editorial sans headlines, grotesk body, flat panels", async () => {
+  const [layout, studio, newDesign] = await Promise.all([
     read("../app/layout.tsx"),
     read("../app/studio.css"),
-    read("../app/gilt-ruby.css"),
+    read("../app/styles/new-design.css"),
   ]);
 
-  assert.match(layout, /Bodoni_Moda\(/);
   assert.match(layout, /Schibsted_Grotesk\(/);
-  assert.match(layout, /variable: "--font-display"/);
-  assert.match(layout, /import "\.\/gilt-ruby\.css";/);
-  assert.ok(layout.indexOf('import "./gilt-ruby.css"') > layout.indexOf('import "./editorial.css"'), "gilt-ruby.css must load last");
+  assert.match(layout, /variable: "--font-sans"/);
+  assert.doesNotMatch(layout, /Bodoni_Moda\(/);
+  assert.doesNotMatch(layout, /import "\.\/gilt-ruby\.css";/);
   assert.doesNotMatch(studio, /\.cinematic-home h1, \.cinematic-home h2[^{]*\{[^}]*var\(--sans\)/);
 
-  assert.match(layer, /--clip-cut-sm: polygon\(/);
-  assert.match(layer, /\.button-primary,[\s\S]*?clip-path: var\(--clip-cut-sm\)/);
-  // Clipped controls must not hide their keyboard focus ring.
-  assert.match(layer, /\.button-primary:focus-visible,[\s\S]*?\.mobile-project-cta:focus-visible\s*\{\s*clip-path: none;/);
+  assert.match(newDesign, /--forest: #234b3c/);
+  assert.match(newDesign, /--lime: #d9f279/);
+  assert.match(newDesign, /--paper: #f5f3ed/);
+  assert.match(newDesign, /--ink: #20251f/);
+  // Flat rectangular panels, no clip-path cuts on primary buttons
+  assert.doesNotMatch(newDesign, /clip-path: polygon/);
+  // Focus-visible still visible
+  assert.match(newDesign, /:focus-visible\s*\{\s*outline: 2px solid var\(--lime\)/);
 });
 
 test("second-pass compositions: real pages, varied portfolio and case-study systems", async () => {

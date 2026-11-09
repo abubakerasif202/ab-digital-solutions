@@ -18,8 +18,7 @@ test("brand variants are local accessible vectors and application icons are non-
 
 test("homepage showcases every live project and the Work page retains the full canonical registry", async () => {
   const [home, portfolio, work] = await Promise.all([read("../app/agency-home.tsx"), read("../app/components/PortfolioSection.tsx"), read("../app/components/WorkIndexBody.tsx")]);
-  assert.ok(home.indexOf("<PortfolioSection />") < home.indexOf('id="services"'));
-  // The showcase slider and the typographic index both draw from the canonical registry; nothing is curated away.
+  assert.ok(home.indexOf('id="work"') < home.indexOf('id="services"'));
   assert.match(portfolio, /<ProjectShowcase \/>/);
   assert.match(portfolio, /projects\.map\(\(project, i\)/);
   assert.match(work, /projects/);
@@ -27,7 +26,7 @@ test("homepage showcases every live project and the Work page retains the full c
 });
 
 test("studio motion supports static content, touch and reduced motion", async () => {
-  const [styles, pointer, canvas, page] = await Promise.all([read("../app/studio.css"), read("../app/components/PointerFX.tsx"), read("../app/components/Hero3DCanvas.tsx"), read("../app/page.tsx")]);
+  const [styles, pointer, canvas, page] = await Promise.all([read("../app/styles/new-design.css"), read("../app/components/PointerFX.tsx"), read("../app/components/Hero3DCanvas.tsx"), read("../app/page.tsx")]);
   assert.match(styles, /prefers-reduced-motion: reduce/);
   assert.match(pointer, /finePointer\.matches && !reducedMotion\.matches/);
   assert.match(canvas, /new THREE\.TextureLoader\(\)\.load\("\/brand\/ab-hero-monogram\.webp"/);
@@ -46,19 +45,16 @@ test("brand text files remain valid UTF-8 without mojibake", async () => {
 
 
 test("mobile header keeps fixed navigation independent of backdrop containment", async () => {
-  const [styles, harmony, layout] = await Promise.all([
-    read("../app/studio.css"),
-    read("../app/styles/studio-harmony.css"),
+  const [styles, layout] = await Promise.all([
+    read("../app/styles/new-design.css"),
     read("../app/layout.tsx"),
   ]);
   const mobile = styles.slice(styles.indexOf("@media (max-width: 960px)"));
   assert.match(mobile, /\.site-header \{ backdrop-filter: none;/);
   assert.match(mobile, /height: calc\(100dvh - var\(--header-height\)\)/);
-  // The final system layer must preserve this, after desktop glass is applied.
-  assert.ok(layout.indexOf('"./styles/studio-harmony.css"') > layout.indexOf('"./styles/studio-system.css"'));
-  assert.match(harmony, /@media \(max-width: 960px\)\s*\{\s*\.site-header,\s*\.site-header\.is-scrolled\s*\{ backdrop-filter: none;/);
+  // The new design system must load after globals.css
+  assert.ok(layout.indexOf('"./styles/new-design.css"') > layout.indexOf('"./globals.css"'));
 });
-
 
 test("static hero and WebGL preserve the supplied authentic artwork", async () => {
   const [fallback, canvas] = await Promise.all([read("../app/components/HeroFallback.tsx"), read("../app/components/Hero3DCanvas.tsx")]);

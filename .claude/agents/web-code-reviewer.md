@@ -1,6 +1,6 @@
 ---
 name: web-code-reviewer
-description: Reviews changes to this Next.js 16 / React 19 site for correctness, accessibility, responsive layout, performance, and repo conventions. Use after editing app/, tests/, or styles.
+description: Reviews site changes for correctness, a11y, layout, performance, and conventions. Use after editing app/, tests/, or styles.
 tools: Read, Grep, Glob, Bash
 model: inherit
 ---

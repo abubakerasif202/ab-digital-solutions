@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "od-design-system-project/v1",
+  "id": "ab-web-studio",
+  "name": "AB Web Studio — Gilt & Ruby",
+  "category": "Creative Agency & Luxury Digital Experiences",
+  "description": "Sydney premium digital studio: editorial black, antique gold, ruby, refined motion, accessibility and conversion-first web experiences.",
+  "source": {
+    "type": "local",
+    "path": "C:\\Users\\abuba\\open-design\\design-systems\\ab-web-studio"
+  },
+  "files": {
+    "design": "DESIGN.md",
+    "tokens": "tokens.css"
+  }
+}
