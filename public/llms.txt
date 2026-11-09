@@ -28,7 +28,7 @@
 
 ## Selected Portfolio (websites, hosted showcases and software)
 
-- [Jufaja Construction / Jufaja Homes](https://jufaja-homes-platform.vercel.app/): Construction / property — premium digital platform with home design navigation and dedicated enquiry pathways.
+- [Jufaja Construction / Jufaja Homes](https://www.jufajaconstructions.com.au/): Construction / property — premium digital platform with home design navigation and dedicated enquiry pathways.
 - [Aftab & Sons Transport](https://www.aftabandsons.com.au/): Transport & logistics — industrial identity, responsive interface and conversion-focused presentation for heavy-vehicle transport.
 - [247 Inventory System](https://247trucktyreservices.store/): Custom business software — role-protected inventory, purchasing, sales and finance platform for 24/7 Truck Tyre Services.
 - [Adelaide Wholesale Tyres](https://adelaidewholesaletyres.com.au/): E-commerce / wholesale — searchable wholesale tyre catalogue with enquiry workflows.
