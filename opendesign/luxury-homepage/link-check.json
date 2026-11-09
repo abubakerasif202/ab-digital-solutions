@@ -1,0 +1,141 @@
+{
+  "checkedAt": "2026-11-09",
+  "method": "Unauthenticated read-only GET with up to 5 redirects. Point-in-time observation; it does not verify a technology stack or current content.",
+  "results": [
+    {
+      "url": "https://www.jufajaconstructions.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.jufajaconstructions.com.au/",
+      "title": "JUFAJA Constructions | Home Designs & Building Enquiries",
+      "note": null
+    },
+    {
+      "url": "https://milestonerenovate.com/",
+      "status": 200,
+      "finalUrl": "https://milestonerenovate.com/",
+      "title": "Milestone Renovate | Thoughtful Home Renovations Sydney",
+      "note": null
+    },
+    {
+      "url": "https://www.aftabandsons.com.au/",
+      "status": 200,
+      "finalUrl": "https://aftabandsons.com.au/",
+      "title": "Aftab & Sons Transport | Australian Road & Interstate Freight",
+      "note": null
+    },
+    {
+      "url": "https://247trucktyreservices.store/",
+      "status": 200,
+      "finalUrl": "https://247trucktyreservices.store/login",
+      "title": "24/7 Inventory Operations",
+      "note": null
+    },
+    {
+      "url": "https://adelaidewholesaletyres.com.au/",
+      "status": 200,
+      "finalUrl": "https://adelaidewholesaletyres.com.au/",
+      "title": "Wholesale Tyres Adelaide | Bulk Tyres & Free Delivery | Adelaide Wholesale Tyres",
+      "note": null
+    },
+    {
+      "url": "https://www.247trucktyreservices.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.247trucktyreservices.com.au/",
+      "title": "Automotive & Truck Repairs Adelaide | 24/7 Truck Tyre Services",
+      "note": null
+    },
+    {
+      "url": "https://www.maplerentals.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.maplerentals.com.au/",
+      "title": "Premium Driver Car Rentals Sydney | Maple Rentals",
+      "note": null
+    },
+    {
+      "url": "https://www.galarentals.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.galarentals.com.au/",
+      "title": "Galarentals | Premium Car Rentals Sydney",
+      "note": null
+    },
+    {
+      "url": "https://zqremovalsadelaide.com.au/",
+      "status": 200,
+      "finalUrl": "https://zqremovalsadelaide.com.au/",
+      "title": "Adelaide Removalists | Home & Interstate Moves | ZQ Removals",
+      "note": null
+    },
+    {
+      "url": "https://www.decentdevelopment.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.decentdevelopment.com.au/",
+      "title": "Sydney Duplex Builder & Property Development | DECENT Development",
+      "note": null
+    },
+    {
+      "url": "https://milestonedevelopment.com.au/",
+      "status": 200,
+      "finalUrl": "https://milestonedevelopment.com.au/",
+      "title": "Milestone Development | Residential & Commercial Construction",
+      "note": null
+    },
+    {
+      "url": "https://4point-concrete-website.vercel.app/",
+      "status": 200,
+      "finalUrl": "https://4point-concrete-website.vercel.app/",
+      "title": "4Point Concrete Construction Group | Concrete Contractor Girraween NSW",
+      "note": null
+    },
+    {
+      "url": "https://www.1stclassexpress.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.1stclassexpress.com.au/",
+      "title": "1st Class Express | Freight, Drivers & Fleet Solutions",
+      "note": null
+    },
+    {
+      "url": "https://www.hfremovalsadelaide.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.hfremovalsadelaide.com.au/",
+      "title": "Removalists Adelaide & Movers | HF Removals Adelaide",
+      "note": null
+    },
+    {
+      "url": "https://www.cheapadelaideremovalist.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.cheapadelaideremovalist.com.au/",
+      "title": "Cheap Adelaide Removalists | Affordable Adelaide Movers",
+      "note": null
+    },
+    {
+      "url": "https://www.freshstop.com.au/",
+      "status": 200,
+      "finalUrl": "https://www.freshstop.com.au/",
+      "title": "Fresh Stop — Sydney Fresh Produce & Online Groceries",
+      "note": null
+    },
+    {
+      "url": "https://wildpestsolutions.com.au/",
+      "status": 200,
+      "finalUrl": "https://wildpestsolutions.com.au/",
+      "title": "Free Feral Animal Management for NSW Landowners",
+      "note": null
+    },
+    {
+      "url": "https://peptuplabs.com.au/",
+      "status": 200,
+      "finalUrl": "https://peptuplabs.com.au/",
+      "title": "PeptUp Peptides | Purity · Potency · Performance",
+      "note": null
+    },
+    {
+      "url": "https://oncalltrailers.com.au/",
+      "status": 0,
+      "finalUrl": null,
+      "title": null,
+      "note": "Owner reports the site is live and working (2026-11-09). NOT independently verified: from this machine HTTPS fails the TLS handshake (internal_error) on apex and www, and plain HTTP serves 'Domain Parked With VentraIP' (A record 103.42.108.46). Possible causes: a different route or network for the owner, or a change that has not propagated.",
+      "ownerConfirmedLive": true,
+      "ownerConfirmedAt": "2026-11-09"
+    }
+  ]
+}
