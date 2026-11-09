@@ -51,7 +51,7 @@ test("portfolio contains every required live project", async () => {
     "https://www.hfremovalsadelaide.com.au/",
     "https://www.aftabandsons.com.au/",
     "https://247trucktyreservices.store/",
-    "https://jufaja-homes-platform.vercel.app/",
+    "https://www.jufajaconstructions.com.au/",
   ];
 
   for (const project of requiredProjects) assert.match(projects, new RegExp(project.replaceAll(".", "\\.")));

@@ -12,9 +12,11 @@ const REST_PITCH = -0.025;
 interface Hero3DCanvasProps {
   className?: string;
   quality?: "mobile" | "tablet" | "desktop";
+  /** Static stand-in shown until WebGL is ready or if it fails. Defaults to the approved artwork. */
+  fallback?: React.ReactNode;
 }
 
-export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanvasProps) {
+export function Hero3DCanvas({ className = "", quality = "desktop", fallback }: Hero3DCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [rendererFailed, setRendererFailed] = useState(false);
 
@@ -396,7 +398,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
   }, [quality, rendererFailed]);
 
   if (rendererFailed) {
-    return <HeroFallback />;
+    return <>{fallback ?? <HeroFallback />}</>;
   }
 
   return (
@@ -413,7 +415,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop" }: Hero3DCanv
       }}
       aria-hidden="true"
     >
-      <HeroFallback />
+      {fallback ?? <HeroFallback />}
     </div>
   );
 }

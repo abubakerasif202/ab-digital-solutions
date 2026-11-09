@@ -8,10 +8,16 @@ test("portfolio retains every case study and distinguishes external destination 
   assert.ok(findProject("milestone-development"));
   assert.notEqual(findProject("milestone-renovate").url, findProject("milestone-development").url);
   const jufaja = findProject("jufaja-homes");
+  const showcase = findProject("4-point-concrete");
   const gala = findProject("gala-rentals");
   const software = findProject("247-inventory-system");
-  assert.equal(projectDestinationLabel(jufaja), "Hosted website showcase");
-  assert.equal(projectVisitLabel(jufaja), "View Website Showcase");
+  // Jufaja moved from a Vercel preview host to its own canonical domain.
+  assert.equal(jufaja.url, "https://www.jufajaconstructions.com.au/");
+  assert.equal(jufaja.displayUrl, "jufajaconstructions.com.au");
+  assert.equal(projectDestinationLabel(jufaja), "Live website");
+  assert.equal(projectVisitLabel(jufaja), "View Live Website");
+  assert.equal(projectDestinationLabel(showcase), "Hosted website showcase");
+  assert.equal(projectVisitLabel(showcase), "View Website Showcase");
   assert.equal(projectDestinationLabel(gala), "Live website");
   assert.equal(projectVisitLabel(gala), "View Live Website");
   assert.equal(projectDestinationLabel(software), "Staff-access system");

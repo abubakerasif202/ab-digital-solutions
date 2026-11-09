@@ -86,6 +86,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/(.*)", headers: securityHeaders },
+      // Design-review routes are never indexable, whatever the page metadata says.
+      { source: "/preview/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }] },
       // Social share images are crawled from page metadata; keep them out of the web index.
       ...["/opengraph-image", "/work/:slug/opengraph-image"].map((source) => ({
         source,

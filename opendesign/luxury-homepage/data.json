@@ -1,0 +1,660 @@
+{
+  "generatedFrom": [
+    "app/project-data.ts",
+    "app/site-config.ts",
+    "app/contact-options.ts",
+    "opendesign/luxury-homepage/link-check.json"
+  ],
+  "linkCheckedAt": "2026-11-09",
+  "site": {
+    "name": "AB Web Studio",
+    "url": "https://www.abwebstudio.com.au",
+    "email": "enquiry@abwebstudio.com.au",
+    "phoneDisplay": "0423 332 037",
+    "phoneInternational": "+61423332037",
+    "location": "Sydney, NSW, Australia",
+    "social": {
+      "linkedin": "https://www.linkedin.com/in/abubakar-asif-247908316",
+      "github": "https://github.com/abubakerasif202",
+      "facebook": "https://www.facebook.com/abubakarasif202",
+      "instagram": "https://www.instagram.com/abubakarasif202"
+    }
+  },
+  "services": [
+    "Website design & development",
+    "SEO & local visibility",
+    "Branding & content",
+    "E-commerce solutions",
+    "Digital marketing",
+    "Website care & support",
+    "Custom software & business systems"
+  ],
+  "sectors": [
+    "Property & construction",
+    "Transport & logistics",
+    "Custom software",
+    "E-commerce",
+    "Automotive",
+    "Mobility",
+    "Removals",
+    "Grocery & fresh produce",
+    "Environmental & Wildlife Management",
+    "Trailer hire"
+  ],
+  "projects": [
+    {
+      "slug": "jufaja-homes",
+      "name": "Jufaja Construction / Jufaja Homes",
+      "sector": "Property & construction",
+      "category": "Construction · Property Digital Platform",
+      "description": "Premium construction and property digital experience.",
+      "solution": "We created a premium, responsive website presenting Jufaja's home designs and construction offering through clear catalogue navigation, design studies and dedicated enquiry pathways, with a refined forest-green and gold visual identity.",
+      "keyFeatures": [
+        "Home design catalogue and category navigation",
+        "Construction services and design study presentation",
+        "Dedicated home, house and land, and display home enquiry pathways",
+        "Responsive interface with reduced-motion-aware opening animation"
+      ],
+      "techStack": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Framer Motion"
+      ],
+      "url": "https://www.jufajaconstructions.com.au/",
+      "displayUrl": "jufajaconstructions.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/jufaja-homes",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-jufaja-homes.webp",
+        "width": 2400,
+        "height": 1350,
+        "alt": "Jufaja Constructions homepage with forest-green and gold branding, home design navigation and illustrative architecture"
+      }
+    },
+    {
+      "slug": "milestone-renovate",
+      "name": "Milestone Renovate",
+      "sector": "Property & construction",
+      "category": "Renovation · Planning Platform",
+      "description": "A renovation planning website for Sydney homeowners, pairing guided tools with practical guidance from the first idea to the first conversation.",
+      "solution": "We built a forest-green and gold planning platform around four guided tools: an indicative renovation cost planner, a moodboard design studio, a renovation questionnaire and an NSW DA or CDC approvals guide. Enquiries are validated and delivered by email, with indicative estimates and a call request rather than a confirmed booking. The site distinguishes owner-supplied project photography from concept references.",
+      "keyFeatures": [
+        "Indicative renovation cost planner with ranges, timelines and stated assumptions",
+        "Guided design studio that builds a moodboard from the visitor's selections",
+        "Renovation questionnaire feeding a validated email enquiry flow",
+        "NSW approvals guide helping visitors gauge DA or CDC pathways"
+      ],
+      "techStack": [
+        "HTML",
+        "Python",
+        "Vanilla JavaScript",
+        "Supabase",
+        "Zod",
+        "Resend",
+        "Vercel"
+      ],
+      "url": "https://milestonerenovate.com/",
+      "displayUrl": "milestonerenovate.com",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/milestone-renovate",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-milestone-renovate.webp",
+        "width": 2400,
+        "height": 1500,
+        "alt": "Milestone Renovate homepage with a forest-green header, gold call to action and an AI-generated renovation concept image"
+      }
+    },
+    {
+      "slug": "aftab-sons-transport",
+      "name": "Aftab & Sons Transport",
+      "sector": "Transport & logistics",
+      "category": "Transport · Logistics Website",
+      "description": "Premium transport and logistics website for an Australian heavy-vehicle transport company, with an industrial identity, responsive interface and conversion-focused presentation.",
+      "solution": "We created a responsive industrial website with clear service and capability paths, motion-led storytelling, accessible reduced-motion behaviour and prominent quote enquiries across screen sizes.",
+      "keyFeatures": [
+        "Truck transport and B-double freight service presentation",
+        "Local delivery and interstate capability pathways",
+        "Responsive quote-focused interface",
+        "Reduced-motion-aware animation system"
+      ],
+      "techStack": [
+        "React",
+        "Tailwind CSS",
+        "Framer Motion",
+        "Responsive UI"
+      ],
+      "url": "https://www.aftabandsons.com.au/",
+      "displayUrl": "aftabandsons.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/aftab-sons-transport",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-aftab-sons-transport.webp",
+        "width": 2400,
+        "height": 1649,
+        "alt": "Aftab & Sons Transport website homepage with a branded B-double truck convoy"
+      }
+    },
+    {
+      "slug": "247-inventory-system",
+      "name": "247 Inventory System",
+      "sector": "Custom software",
+      "category": "Custom Business Software · Inventory Management",
+      "description": "Custom inventory and business management platform for 24/7 Truck Tyre Services, centralising tyre stock, operational workflows, sales and business records.",
+      "solution": "We built a role-protected business system covering stock control, transfers, purchasing, point of sale, quotes, invoices, receivables, customers, jobs and operational analytics in one interface.",
+      "keyFeatures": [
+        "Tyre inventory, stock movement and transfer workflows",
+        "Purchasing, suppliers and purchase order management",
+        "Point of sale, quotes, invoices and receivables",
+        "Secure staff access with operational dashboards"
+      ],
+      "techStack": [
+        "Next.js",
+        "TypeScript",
+        "Supabase",
+        "PostgreSQL"
+      ],
+      "url": "https://247trucktyreservices.store/",
+      "displayUrl": "247trucktyreservices.store",
+      "statusLabel": "Staff-access system",
+      "visitLabel": "View Staff Sign-in",
+      "isSoftware": true,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/247-inventory-system",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-247-inventory-system.webp",
+        "width": 2400,
+        "height": 1649,
+        "alt": "247 Inventory System secure staff sign-in screen for inventory and purchasing operations"
+      }
+    },
+    {
+      "slug": "adelaide-wholesale-tyres",
+      "name": "Adelaide Wholesale Tyres",
+      "sector": "E-commerce",
+      "category": "E-Commerce · Wholesale Platform",
+      "description": "A modern wholesale tyre platform built for Adelaide workshops, fleets, transport operators and trade buyers to browse live stock and order or request a quote.",
+      "solution": "We built a wholesale e-commerce platform with a searchable tyre catalogue filtered by size, application and stock availability, cart-based bulk ordering, a wholesale quote workflow for fleet and recurring supply, and clear Adelaide delivery tiers and warehouse pickup information.",
+      "keyFeatures": [
+        "Searchable wholesale tyre catalogue with live stock availability",
+        "Tyre size, application and in-stock filtering",
+        "Cart-based bulk ordering with wholesale quote workflow",
+        "Adelaide delivery tiers and Regency Park warehouse pickup"
+      ],
+      "techStack": [
+        "Next.js",
+        "TypeScript",
+        "Responsive UI",
+        "SEO Structure"
+      ],
+      "url": "https://adelaidewholesaletyres.com.au/",
+      "displayUrl": "adelaidewholesaletyres.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/adelaide-wholesale-tyres",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-adelaide-wholesale-tyres.webp",
+        "width": 2400,
+        "height": 1643,
+        "alt": "Adelaide Wholesale Tyres wholesale tyre e-commerce website homepage designed by AB Web Studio"
+      }
+    },
+    {
+      "slug": "247-truck-tyre-services",
+      "name": "24/7 Truck Tyre Services",
+      "sector": "Automotive",
+      "category": "Automotive · Roadside Assistance · Truck Tyre Services",
+      "description": "A responsive roadside assistance website built to generate emergency service enquiries and present truck tyre support for commercial operators.",
+      "solution": "We developed a mobile-first automotive website with an emergency-led information architecture, service enquiry pathways, local search structure and prominent call-to-action elements for roadside assistance and fleet support.",
+      "keyFeatures": [
+        "Emergency roadside assistance call-to-action pathways",
+        "Truck tyre supply, fitting and service presentation",
+        "National Roadside Assistance Program registration path",
+        "Commercial fleet support and service enquiry structure"
+      ],
+      "techStack": [
+        "Next.js",
+        "TypeScript",
+        "Responsive UI",
+        "SEO Structure"
+      ],
+      "url": "https://www.247trucktyreservices.com.au/",
+      "displayUrl": "247trucktyreservices.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/247-truck-tyre-services",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-247-truck-tyre-services.jpg",
+        "width": 2400,
+        "height": 1649,
+        "alt": "24/7 Truck Tyre Services website designed by AB Web Studio"
+      }
+    },
+    {
+      "slug": "maple-rentals",
+      "name": "Maple Rentals",
+      "sector": "Mobility",
+      "category": "Mobility · Car rentals",
+      "description": "Premium driver rentals and streamlined online applications.",
+      "solution": "We built a structured web experience highlighting rental terms, vehicle tiers, and application requirements, connected directly to enquiry and application pathways.",
+      "keyFeatures": [
+        "Vehicle fleet & rental tier showcase",
+        "Streamlined online application pathway",
+        "Clear driver eligibility & pricing breakdown",
+        "Fast mobile navigation & responsive layout"
+      ],
+      "techStack": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS"
+      ],
+      "url": "https://www.maplerentals.com.au/",
+      "displayUrl": "maplerentals.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/maple-rentals",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-maple-rentals.jpg",
+        "width": 2400,
+        "height": 1649,
+        "alt": "Maple Rentals website homepage preview"
+      }
+    },
+    {
+      "slug": "gala-rentals",
+      "name": "Gala Rentals",
+      "sector": "Mobility",
+      "category": "Mobility · Car rentals",
+      "description": "A confident booking experience for weekly car rentals in Sydney.",
+      "solution": "We designed an accessible, mobile-first website that simplifies vehicle selection, highlights weekly rates, and provides a clear contact and enquiry system.",
+      "keyFeatures": [
+        "Weekly rate transparency and vehicle catalog",
+        "Mobile-first reservation enquiry flow",
+        "Local Sydney service area positioning",
+        "Search-optimised page architecture"
+      ],
+      "techStack": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS"
+      ],
+      "url": "https://www.galarentals.com.au/",
+      "displayUrl": "galarentals.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/gala-rentals",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-gala-rentals.jpg",
+        "width": 2400,
+        "height": 1649,
+        "alt": "Gala Rentals website homepage preview"
+      }
+    },
+    {
+      "slug": "zq-removals",
+      "name": "ZQ Removals",
+      "sector": "Removals",
+      "category": "Services · Removals",
+      "description": "Local-service positioning and a direct path to quote requests.",
+      "solution": "We built a local service website with clear moving services, Adelaide coverage information and direct quote request pathways.",
+      "keyFeatures": [
+        "Direct quote request form integration",
+        "Adelaide service area positioning",
+        "Residential vs commercial service breakdown",
+        "Touch-optimised mobile call & enquiry triggers"
+      ],
+      "techStack": [
+        "HTML",
+        "Vanilla CSS",
+        "JavaScript",
+        "JSON-LD"
+      ],
+      "url": "https://zqremovalsadelaide.com.au/",
+      "displayUrl": "zqremovalsadelaide.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/zq-removals",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-zq-removals.jpg",
+        "width": 2400,
+        "height": 1649,
+        "alt": "ZQ Removals website homepage preview"
+      }
+    },
+    {
+      "slug": "decent-development",
+      "name": "DECENT Development",
+      "sector": "Property & construction",
+      "category": "Property · Development",
+      "description": "A refined digital presence for a Sydney construction business.",
+      "solution": "We crafted a dark, sophisticated portfolio site emphasizing project photography, service information and direct consultation enquiries.",
+      "keyFeatures": [
+        "Full-width architectural project gallery",
+        "Construction service and project information",
+        "Dark luxury aesthetic matching brand identity",
+        "Fast page load & image optimization"
+      ],
+      "techStack": [
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "Framer Motion"
+      ],
+      "url": "https://www.decentdevelopment.com.au/",
+      "displayUrl": "decentdevelopment.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/decent-development",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-decent-development.jpg",
+        "width": 2400,
+        "height": 1649,
+        "alt": "DECENT Development website homepage preview"
+      }
+    },
+    {
+      "slug": "milestone-development",
+      "name": "Milestone Development",
+      "sector": "Property & construction",
+      "category": "Property · Construction",
+      "description": "A project-led showcase for residential and commercial construction.",
+      "solution": "We built a project-centric digital platform with structured capability decks, completed project archives, and clear stakeholder contact paths.",
+      "keyFeatures": [
+        "Filterable project portfolio showcase",
+        "Commercial & residential capability breakdown",
+        "Company, team and construction process information",
+        "Responsive accessibility-conscious structure"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "GSAP"
+      ],
+      "url": "https://milestonedevelopment.com.au/",
+      "displayUrl": "milestonedevelopment.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/milestone-development",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-milestone-development.jpg",
+        "width": 2400,
+        "height": 1649,
+        "alt": "Milestone Development website homepage preview"
+      }
+    },
+    {
+      "slug": "4-point-concrete",
+      "name": "4 Point Concrete",
+      "sector": "Property & construction",
+      "category": "Construction · Civil",
+      "description": "Capability-focused presentation for concrete and structural works.",
+      "solution": "We created a concrete-services website with a clear services structure, project presentation and quote enquiry pathways. Concept imagery is labelled on the hosted showcase.",
+      "keyFeatures": [
+        "Concrete service and capability presentation",
+        "Direct quote enquiry pathway",
+        "Clearly labelled concept imagery",
+        "Responsive navigation and contact options"
+      ],
+      "techStack": [
+        "React",
+        "Vite",
+        "Tailwind CSS"
+      ],
+      "url": "https://4point-concrete-website.vercel.app/",
+      "displayUrl": "4point-concrete-website.vercel.app",
+      "statusLabel": "Hosted website showcase",
+      "visitLabel": "View Website Showcase",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/4-point-concrete",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-four-point-concrete.jpg",
+        "width": 2400,
+        "height": 1649,
+        "alt": "4 Point Concrete website homepage preview"
+      }
+    },
+    {
+      "slug": "1st-class-express",
+      "name": "1st Class Express",
+      "sector": "Transport & logistics",
+      "category": "Transport & Logistics Website",
+      "description": "Interstate freight positioning, a clear fleet showcase and a fast path to quote enquiries on every screen size.",
+      "solution": "We designed an interstate logistics platform featuring freight service breakdowns, fleet asset specifications, and an easy quote enquiry system.",
+      "keyFeatures": [
+        "Interstate freight route & service presentation",
+        "Fleet capacity & vehicle specification breakdown",
+        "Express freight quote request engine",
+        "Mobile-optimised driver & depot contact points"
+      ],
+      "techStack": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS"
+      ],
+      "url": "https://www.1stclassexpress.com.au/",
+      "displayUrl": "1stclassexpress.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/1st-class-express",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-1st-class-express.jpg",
+        "width": 2400,
+        "height": 1649,
+        "alt": "1st Class Express transport and logistics website homepage preview"
+      }
+    },
+    {
+      "slug": "hf-removals-adelaide",
+      "name": "HF Removals Adelaide",
+      "sector": "Removals",
+      "category": "Services · Removals",
+      "description": "Published reference rates, an instant quote request and round-the-clock enquiry capture.",
+      "solution": "We built a rate-transparent removals platform pairing published local and per-cubic-metre interstate pricing with an above-the-fold instant quote form, suburb and route landing pages, and review-backed trust signals.",
+      "keyFeatures": [
+        "Above-the-fold instant quote request form",
+        "Published local rates and per-cubic-metre interstate routes",
+        "Adelaide suburb and interstate route landing pages",
+        "Google review and insurance trust signals throughout"
+      ],
+      "techStack": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "JSON-LD"
+      ],
+      "url": "https://www.hfremovalsadelaide.com.au/",
+      "displayUrl": "hfremovalsadelaide.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/hf-removals-adelaide",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-hf-removals.jpg",
+        "width": 2400,
+        "height": 1649,
+        "alt": "HF Removals Adelaide website homepage preview"
+      }
+    },
+    {
+      "slug": "cheap-adelaide-removalist",
+      "name": "Cheap Adelaide Removalist",
+      "sector": "Removals",
+      "category": "Services · Removals",
+      "description": "A conversion-focused removals platform for Adelaide, built to make pricing, services and quote requests easy to understand while building a strong local-search content foundation.",
+      "solution": "We built a local service website with published starting rates and clear pricing conditions, dedicated moving-service pages, Adelaide coverage information, practical moving guides, FAQs and a quote request form that gathers move details.",
+      "keyFeatures": [
+        "Published starting rates with move-specific pricing conditions",
+        "Dedicated moving-service pages and practical guides",
+        "Adelaide suburb and service-area information",
+        "Multi-field quote request form with property access and inventory scoping"
+      ],
+      "techStack": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "JSON-LD"
+      ],
+      "url": "https://www.cheapadelaideremovalist.com.au/",
+      "displayUrl": "cheapadelaideremovalist.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/cheap-adelaide-removalist",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-cheap-adelaide-removalist.png",
+        "width": 2400,
+        "height": 1649,
+        "alt": "Cheap Adelaide Removalist website homepage showing published moving rates and a branded removals truck"
+      }
+    },
+    {
+      "slug": "fresh-stop",
+      "name": "Fresh Stop",
+      "sector": "Grocery & fresh produce",
+      "category": "Grocery · Fresh Produce · Online Catalogue",
+      "description": "A fresh produce and grocery catalogue for Sydney, with indicative prices, a cart-based enquiry journey and clear wholesale and home delivery contact pathways.",
+      "solution": "AB Web Studio built a colourful grocery website with category browsing, indicative AUD prices and a shopping cart that prepares an enquiry rather than a confirmed order. Dedicated wholesale and business enquiry pathways sit alongside home delivery enquiries through email and WhatsApp. Responsive navigation and clear product guidance preserve the distinction between browsing, requesting details and placing an order. Product imagery is labelled as illustrative where applicable on the published site.",
+      "keyFeatures": [
+        "Fresh fruit, vegetables, pantry and frozen food category browsing",
+        "Product browsing with clearly labelled indicative AUD prices",
+        "Cart-based shopping list and enquiry workflow",
+        "Dedicated wholesale and business enquiry pathways",
+        "Home delivery enquiries through email and WhatsApp",
+        "Responsive presentation and navigation across screen sizes"
+      ],
+      "techStack": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Prisma",
+        "PostgreSQL"
+      ],
+      "url": "https://www.freshstop.com.au/",
+      "displayUrl": "freshstop.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/fresh-stop",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-fresh-stop.jpg",
+        "width": 2400,
+        "height": 1649,
+        "alt": "Fresh Stop live homepage with green and red branding, fresh produce artwork and catalogue, wholesale and home delivery navigation"
+      }
+    },
+    {
+      "slug": "wild-pest-solutions",
+      "name": "Wild Pest Solutions",
+      "sector": "Environmental & Wildlife Management",
+      "category": "Regional Services · Wildlife Management",
+      "description": "A distinctive digital presence for Wild Pest Solutions, connecting NSW landowners with responsible feral animal management services.",
+      "solution": "An earthy visual direction pairs Australian landscape and wildlife imagery with strong typography and spacious layouts. Species-led service navigation helps landowners explore relevant information, while regional coverage and a clear property enquiry pathway guide the next step. Responsive layouts carry that hierarchy from desktop to mobile.",
+      "keyFeatures": [
+        "Species-led feral animal management service navigation",
+        "Australian landscape and wildlife visual storytelling",
+        "NSW regional coverage information",
+        "Property enquiry and contact pathways"
+      ],
+      "techStack": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "SEO Structure"
+      ],
+      "url": "https://wildpestsolutions.com.au/",
+      "displayUrl": "wildpestsolutions.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "Visit Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/wild-pest-solutions",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-wild-pest-solutions-desktop.webp",
+        "width": 2400,
+        "height": 1667,
+        "alt": "Wild Pest Solutions desktop homepage presenting feral animal management for NSW landowners"
+      }
+    },
+    {
+      "slug": "pept-up-labs",
+      "name": "Pept Up Labs",
+      "sector": "E-commerce",
+      "category": "E-Commerce · Product Catalogue",
+      "description": "A bold product catalogue for Pept Up Labs, bringing single vials, bulk collections and laboratory accessories into a clear, responsive interface.",
+      "solution": "An electric-blue and cyan palette, dark backgrounds and oversized typography establish a distinctive visual identity. Product artwork anchors the homepage, while collection navigation, strength selection and quick-view controls organise a detailed catalogue. Mobile layouts preserve the hierarchy and direct access to support. The published site identifies its products as intended for laboratory research, not human consumption or therapeutic use.",
+      "keyFeatures": [
+        "Single-vial, ten-vial bulk pack and accessory collections",
+        "Product strength selection and AUD price presentation",
+        "Quick-view product controls",
+        "Email and WhatsApp support pathways"
+      ],
+      "techStack": [
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Responsive UI"
+      ],
+      "url": "https://peptuplabs.com.au/",
+      "displayUrl": "peptuplabs.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "Visit Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/pept-up-labs",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-pept-up-labs-desktop.webp",
+        "width": 2400,
+        "height": 1667,
+        "alt": "Pept Up Labs desktop homepage with electric-blue branding and product catalogue navigation"
+      }
+    },
+    {
+      "slug": "on-call-trailers",
+      "name": "On Call Trailers",
+      "sector": "Trailer hire",
+      "category": "Trailer Hire · Local Services Website",
+      "description": "A trailer hire website for Sydney, presenting cage, motorcycle and car trailers with clear specifications, hire rates and booking pathways.",
+      "solution": "AB Web Studio built a responsive trailer hire website with a night-time Sydney skyline hero, fleet cards showing size, payload and towing weight, a side-by-side comparison table and a towing checklist. Booking routes straight to the live listing, while the car trailer uses an enquiry pathway until its details are confirmed. Customer reviews, pickup hours and a short FAQ sit alongside, and animations can be paused.",
+      "keyFeatures": [
+        "Fleet cards for cage, motorcycle and car trailers with size, payload and towing weight",
+        "Side-by-side trailer comparison table",
+        "Direct booking pathways, with enquiry-only handling for the car trailer",
+        "Towing checklist, pickup details and customer reviews",
+        "Pause control for page animations"
+      ],
+      "techStack": [
+        "Next.js",
+        "React",
+        "Responsive UI"
+      ],
+      "url": "https://oncalltrailers.com.au/",
+      "displayUrl": "oncalltrailers.com.au",
+      "statusLabel": "Live website",
+      "visitLabel": "Visit Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/on-call-trailers",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-on-call-trailers.webp",
+        "width": 2400,
+        "height": 1500,
+        "alt": "On Call Trailers homepage with a galvanised cage trailer and a flatbed trailer in front of the Sydney Harbour Bridge at night"
+      }
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AB Web Studio — Websites with presence | Sydney</title>
+<meta name="description" content="AB Web Studio is a Sydney studio designing and building premium websites, online stores and custom business systems for Australian businesses.">
+<!-- Standalone design-review build. Never index it: the live site is served by the Next.js app. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a0a0d">
+<link rel="preload" href="fonts/bodonimoda-normal-400-700.woff2" as="font" type="font/woff2" crossorigin>
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="styles.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="AB Web Studio home"><span class="brand-mark" aria-hidden="true">AB</span><span class="brand-name">Web Studio</span></a>
+  <nav aria-label="Main navigation">
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#services" data-spy>Services</a></li>
+      <li><a href="#work" data-spy>Work</a></li>
+      <li><a href="#process" data-spy>Process</a></li>
+      <li><a href="#enquire" data-spy>Enquire</a></li>
+    </ul>
+  </nav>
+  <a class="btn btn-primary nav-cta" href="#enquire">Start an enquiry</a>
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Open menu"><span></span><span></span></button>
+</header>
+
+<main id="main" tabindex="-1">
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="eyebrow mono reveal">Sydney · Websites · Online stores · Business systems</p>
+    <h1 class="display reveal" id="hero-title">Websites that look expensive and <em>earn their keep.</em></h1>
+    <p class="lede reveal">We design and build bespoke digital experiences for businesses that want to be remembered, and contacted.</p>
+    <div class="hero-actions reveal">
+      <a class="btn btn-primary" href="#enquire">Start an enquiry</a>
+      <a class="btn btn-secondary" href="#work">View selected work</a>
+    </div>
+  </div>
+  <div class="stage" id="stage" aria-hidden="true">
+    <div class="stage-glow"></div>
+    <div class="monogram" id="monogram"></div>
+  </div>
+  <a class="scroll-cue mono" href="#harbour">Scroll</a>
+</section>
+
+<section class="harbour" id="harbour" aria-label="Sydney skyline illustration">
+  <svg class="skyline" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Line illustration of the Sydney Opera House sails and Harbour Bridge arch">
+    <defs>
+      <linearGradient id="gold" x1="0" x2="1"><stop offset="0" stop-color="#E0BE7E"/><stop offset="1" stop-color="#B69558"/></linearGradient>
+    </defs>
+    <g class="sky-layer far" data-depth="0.15" fill="none" stroke="#403A3B" stroke-width="1">
+      <path d="M0 250h1440M60 250v-30h40v30M140 250v-60h30v60M200 250v-45h50v45M1180 250v-70h36v70M1250 250v-40h44v40M1330 250v-85h28v85"/>
+    </g>
+    <g class="sky-layer mid" data-depth="0.35" fill="none" stroke="url(#gold)" stroke-width="1.5">
+      <path d="M720 250C800 90 960 60 1100 110M720 250C800 130 930 100 1100 110M1100 110V250M860 250V150M960 250V120M1030 250V108M770 250V190"/>
+      <path d="M700 250H1440"/>
+    </g>
+    <g class="sky-layer near" data-depth="0.6" fill="none" stroke="#C8A86B" stroke-width="1.5">
+      <path d="M180 250C200 160 280 120 330 130C340 170 300 230 280 250Z"/>
+      <path d="M280 250C300 170 380 120 440 140C440 180 410 230 390 250Z"/>
+      <path d="M390 250C410 190 470 160 520 175C515 205 495 230 480 250Z"/>
+      <path d="M120 250C140 205 190 190 230 200C225 225 210 240 200 250Z"/>
+      <path d="M80 250H540"/>
+    </g>
+    <path d="M0 250H1440V320H0Z" fill="#0A0A0D"/>
+    <g class="water" stroke="#A04661" stroke-width="1" opacity=".7"><path d="M120 270h420M180 285h300M760 270h520M860 285h340"/></g>
+  </svg>
+</section>
+
+<section class="section services" id="services" aria-labelledby="services-title">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="eyebrow mono">01 — Services</p>
+      <h2 class="display h2" id="services-title">Three disciplines, one accountable studio.</h2>
+    </header>
+    <div class="cards" id="serviceCards">
+      <article class="card reveal">
+        <h3 class="card-heading">
+          <button class="card-toggle" type="button" aria-expanded="false" aria-controls="svc-1">
+            <span class="mono idx">01</span>
+            <span class="card-title">Website design</span>
+            <span class="card-sum">Art-directed interfaces with a clear point of view.</span>
+            <span class="plus" aria-hidden="true"></span>
+          </button>
+        </h3>
+        <div class="card-body" id="svc-1" hidden>
+          <ul class="ticks">
+            <li>Brand-led layouts, not templates</li>
+            <li>Typography and motion systems</li>
+            <li>Conversion paths mapped before pixels</li>
+          </ul>
+          <button class="btn btn-secondary small" type="button" data-discuss="Website design &amp; development">Discuss this</button>
+        </div>
+      </article>
+      <article class="card reveal">
+        <h3 class="card-heading">
+          <button class="card-toggle" type="button" aria-expanded="false" aria-controls="svc-2">
+            <span class="mono idx">02</span>
+            <span class="card-title">Development</span>
+            <span class="card-sum">Fast, responsive builds that stay easy to use and edit.</span>
+            <span class="plus" aria-hidden="true"></span>
+          </button>
+        </h3>
+        <div class="card-body" id="svc-2" hidden>
+          <ul class="ticks">
+            <li>Next.js and React websites and online stores</li>
+            <li>Custom business systems for stock, quotes and invoices</li>
+            <li>Responsive, keyboard-friendly interfaces with reduced-motion support</li>
+          </ul>
+          <button class="btn btn-secondary small" type="button" data-discuss="Custom software &amp; business systems">Discuss this</button>
+        </div>
+      </article>
+      <article class="card reveal">
+        <h3 class="card-heading">
+          <button class="card-toggle" type="button" aria-expanded="false" aria-controls="svc-3">
+            <span class="mono idx">03</span>
+            <span class="card-title">SEO &amp; marketing</span>
+            <span class="card-sum">Be found by the people already looking for you.</span>
+            <span class="plus" aria-hidden="true"></span>
+          </button>
+        </h3>
+        <div class="card-body" id="svc-3" hidden>
+          <ul class="ticks">
+            <li>Technical SEO and search-ready page structure</li>
+            <li>Local-search content for service businesses</li>
+            <li>Landing pages with a clear enquiry path</li>
+          </ul>
+          <button class="btn btn-secondary small" type="button" data-discuss="SEO &amp; local visibility">Discuss this</button>
+        </div>
+      </article>
+    </div>
+    <p class="section-link reveal"><a class="text-link" id="allServices" href="https://www.abwebstudio.com.au/services">Explore every service<span class="sr-only"> (opens in a new tab)</span></a></p>
+  </div>
+</section>
+
+<section class="section work" id="work" aria-labelledby="work-title">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="eyebrow mono">02 — Selected work</p>
+      <h2 class="display h2" id="work-title"><span id="projectCount">Selected</span> project case studies.</h2>
+      <p class="muted">Drawn from the studio's published case studies. Each one states whether it is a live client website, a hosted showcase or a staff-access system.</p>
+    </header>
+    <div class="filters" id="filters" role="group" aria-label="Filter projects by sector"></div>
+    <p class="visually-live" id="resultStatus" role="status" aria-live="polite"></p>
+    <ul class="projects" id="projects"></ul>
+    <p class="show-all"><button class="btn btn-secondary" type="button" id="showAll" hidden aria-expanded="false" aria-controls="projects"></button></p>
+    <p class="empty" id="projectsEmpty" hidden>No projects in this sector yet.</p>
+  </div>
+</section>
+
+<section class="section process" id="process" aria-labelledby="process-title">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="eyebrow mono">03 — Process</p>
+      <h2 class="display h2" id="process-title">From first call to launch, in four moves.</h2>
+    </header>
+    <ol class="steps" id="steps">
+      <li class="step is-on"><span class="mono idx">01</span><h3>Discover</h3><p>Goals, audience and what a good enquiry looks like for you.</p></li>
+      <li class="step"><span class="mono idx">02</span><h3>Design</h3><p>Direction, key pages and motion, reviewed with you early.</p></li>
+      <li class="step"><span class="mono idx">03</span><h3>Build</h3><p>Responsive development with real content.</p></li>
+      <li class="step"><span class="mono idx">04</span><h3>Launch</h3><p>Search-ready structure, redirects checked and a clear handover.</p></li>
+    </ol>
+    <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+  </div>
+</section>
+
+<section class="section enquire" id="enquire" aria-labelledby="enquire-title">
+  <div class="wrap enquire-grid">
+    <header class="reveal">
+      <p class="eyebrow mono">04 — Enquire</p>
+      <h2 class="display h2" id="enquire-title">Tell us what you're building.</h2>
+      <p class="lede">A short note is plenty. Tell us what you need and we'll come back to you.</p>
+      <p class="contact">
+        <a id="contactEmail" href="mailto:enquiry@abwebstudio.com.au">enquiry@abwebstudio.com.au</a><br>
+        <a id="contactPhone" href="tel:+61423332037">0423 332 037</a><br>
+        <span class="muted" id="contactLocation">Sydney, NSW, Australia</span>
+      </p>
+    </header>
+    <form class="form reveal" id="form" novalidate>
+      <div class="error-summary" id="errSummary" role="alert" tabindex="-1" hidden></div>
+      <div class="field">
+        <label for="fullName">Name <span class="req">required</span></label>
+        <input id="fullName" name="fullName" autocomplete="name" required aria-describedby="fullName-err">
+        <p class="err" id="fullName-err" hidden></p>
+      </div>
+      <div class="field">
+        <label for="email">Email <span class="req">required</span></label>
+        <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="email-err">
+        <p class="err" id="email-err" hidden></p>
+      </div>
+      <div class="field">
+        <label for="phone">Phone <span class="req">optional</span></label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel">
+      </div>
+      <div class="field">
+        <label for="service">Service <span class="req">required</span></label>
+        <select id="service" name="service" required aria-describedby="service-err"></select>
+        <p class="err" id="service-err" hidden></p>
+      </div>
+      <div class="field">
+        <label for="message">Project details <span class="req">required</span></label>
+        <textarea id="message" name="message" rows="4" required aria-describedby="message-err"></textarea>
+        <p class="err" id="message-err" hidden></p>
+      </div>
+      <div class="form-trap" aria-hidden="true">
+        <label for="company">Leave this field empty</label>
+        <input id="company" name="company" tabindex="-1" autocomplete="off">
+      </div>
+      <button class="btn btn-primary" type="submit" id="submitBtn">Send enquiry</button>
+      <p class="form-error" id="formError" role="alert" hidden></p>
+      <p class="success" id="success" role="status" hidden></p>
+      <noscript><p class="muted">Online enquiries need JavaScript. Please email <a href="mailto:enquiry@abwebstudio.com.au">enquiry@abwebstudio.com.au</a>.</p></noscript>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap foot-grid">
+    <p class="display foot-big" aria-hidden="true">AB Web Studio</p>
+    <nav aria-label="Footer navigation">
+      <ul class="foot-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#enquire">Enquire</a></li>
+        <li><a id="privacyLink" href="https://www.abwebstudio.com.au/privacy">Privacy</a></li>
+      </ul>
+    </nav>
+    <ul class="social" id="social" aria-label="AB Web Studio profiles"></ul>
+    <p class="mono muted small-print" id="footerNote">Sydney, NSW, Australia</p>
+  </div>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg-inner">
+    <p class="mono eyebrow" id="dlgCat"></p>
+    <h3 class="display" id="dlgTitle"></h3>
+    <img class="dlg-img" id="dlgImg" alt="" width="1200" height="800" decoding="async" hidden>
+    <p id="dlgText"></p>
+    <ul class="ticks" id="dlgList"></ul>
+    <p class="dlg-stack mono muted" id="dlgStack"></p>
+    <div class="dlg-actions">
+      <a class="btn btn-primary" id="dlgCase" href="#" target="_blank" rel="noopener noreferrer">Read the case study<span class="sr-only"> (opens in a new tab)</span></a>
+      <a class="btn btn-secondary" id="dlgLink" href="#" target="_blank" rel="noopener noreferrer" hidden></a>
+      <button class="btn btn-secondary" type="button" id="dlgEnquire">Enquire about similar</button>
+      <button class="btn btn-secondary" type="button" id="dlgClose">Close</button>
+    </div>
+  </div>
+</dialog>
+</body>
+</html>

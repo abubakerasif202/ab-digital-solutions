@@ -13,7 +13,9 @@
     "verify": "npm run lint && npm run typecheck && npm test",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern test-results --ignore-pattern .remember",
     "typecheck": "node scripts/typecheck.mjs",
-    "clickhouse:init": "node scripts/clickhouse-init.mjs"
+    "clickhouse:init": "node scripts/clickhouse-init.mjs",
+    "opendesign:data": "node --import ./tests/register-ts-hooks.mjs scripts/export-homepage-data.mjs",
+    "opendesign:serve": "node scripts/serve-luxury-prototype.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

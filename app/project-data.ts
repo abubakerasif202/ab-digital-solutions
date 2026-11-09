@@ -35,7 +35,6 @@ export type ProjectShot = {
 export const projects = [
   {
     slug: "jufaja-homes",
-    destination: "hosted-showcase",
     name: "Jufaja Construction / Jufaja Homes",
     category: "Construction / Property Digital Platform",
     sector: "Property & construction",
@@ -44,8 +43,8 @@ export const projects = [
       "Premium digital platform for Jufaja, combining a polished property and construction experience with a modern, responsive interface.",
     solution:
       "We created a premium, responsive website presenting Jufaja's home designs and construction offering through clear catalogue navigation, design studies and dedicated enquiry pathways, with a refined forest-green and gold visual identity.",
-    url: "https://jufaja-homes-platform.vercel.app/",
-    displayUrl: "jufaja-homes-platform.vercel.app",
+    url: "https://www.jufajaconstructions.com.au/",
+    displayUrl: "jufajaconstructions.com.au",
     image: `${assetBase}/ab-portfolio-jufaja-homes.webp`,
     alt: "Jufaja Constructions homepage with forest-green and gold branding, home design navigation and illustrative architecture",
     tags: ["Website Design", "UI/UX", "Frontend Development", "Responsive Development"],
