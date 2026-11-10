@@ -171,8 +171,13 @@ test("form: the shared ContactForm posts the live /api/contact contract and the 
   expect(payload).toMatchObject({ fullName: VALID.name, email: VALID.email, message: VALID.message, company: "" });
   expect(Array.isArray(payload.services) && payload.services.length >= 1).toBe(true);
   expect(payload.submissionId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
-  // The real route (no mail key configured locally): a valid payload passes validation and stops at delivery (503);
-  // an invalid one is rejected earlier (400). Nothing is sent either way.
+  // Direct valid submissions require an explicitly isolated no-delivery server. A developer's
+  // ordinary local server may load real credentials, so never infer safety from localhost.
+  if (process.env.QA_NO_DELIVERY !== "1") {
+    test.info().annotations.push({ type: "note", description: "direct API check requires QA_NO_DELIVERY=1 and a server started with an empty RESEND_API_KEY" });
+    return;
+  }
+  // On that isolated server a valid payload stops at delivery (503); invalid options return 400.
   const accepted = await request.post("/api/contact", { data: payload });
   if (accepted.status() === 429) {
     // The route allows 5 enquiries per 10 minutes per client; a long suite can exhaust that. The shape check above still ran.
@@ -187,6 +192,10 @@ test("form: the shared ContactForm posts the live /api/contact contract and the 
 });
 
 test("form: a failed send is reported as a failure, never as success", async ({ page }) => {
+  await page.route("**/api/contact", (route) => route.fulfill({
+    status: 503, contentType: "application/json",
+    body: JSON.stringify({ error: "Online enquiries are temporarily unavailable." }),
+  }));
   await open(page);
   await fillForm(page);
   await page.getByRole("button", { name: /Send project enquiry/ }).click();

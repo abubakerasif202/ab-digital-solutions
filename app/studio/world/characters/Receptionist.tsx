@@ -26,7 +26,7 @@ export function Receptionist({ greeting = false, position = [-6.1, 0.12, 2.95], 
   const [px, py, pz] = position;
   const sim = useMemo(() => createReceptionist(20260503), []);
   const kit = useMemo(() => createHumanoidKit(), []);
-  const rig = useMemo(() => { const r = createHumanoid(kit, CAST.receptionist); r.apply(sim.pose); return r; }, [kit, sim]);
+  const rig = useMemo(() => { const r = createHumanoid(kit, CAST.receptionist, { shadowRadius: 0.55 }); r.apply(sim.pose); return r; }, [kit, sim]);
   const screen = useMemo(() => createScreen("dashboard", 11), []);
   const greetingRef = useRef(greeting);
   useEffect(() => { greetingRef.current = greeting; }, [greeting]);
@@ -61,5 +61,6 @@ export function Receptionist({ greeting = false, position = [-6.1, 0.12, 2.95], 
     <mesh position={[-0.52, shelf + 0.05, 0.62]}><cylinderGeometry args={[0.038, 0.034, 0.1, 12]} /><meshStandardMaterial color={CREAM} roughness={0.5} /></mesh>
     <Block position={[0.3, shelf + 0.008, 0.5]} size={[0.16, 0.012, 0.22]} color="#d8cdb4" roughness={0.7} />
     <primitive object={rig.root} />
+    <primitive object={rig.shadow} />
   </group>;
 }

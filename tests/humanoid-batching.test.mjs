@@ -90,3 +90,37 @@ test("batched eyes still close when the facial rig blinks", () => {
   assert.ok(Math.abs(closed / open - .08) < 1e-5);
   kit.dispose();
 });
+
+test("contact shadows stay on the floor under the figure and outside the skinned mesh", () => {
+  const kit = createHumanoidKit();
+  const rig = createHumanoid(kit, CAST.walker, { shadowRadius: .4 });
+  assert.ok(rig.shadow.isMesh && !rig.shadow.isSkinnedMesh);
+  assert.equal(rig.shadow.parent, null, "a sibling of the figure, so the character stays one skinned draw");
+  const pose = poseWalk(createPose(), .8, 1);
+  pose.rootX = 2; pose.rootZ = -3; pose.rootLift = .24;
+  rig.apply(pose);
+  assert.equal(rig.shadow.position.x, 2);
+  assert.equal(rig.shadow.position.z, -3);
+  assert.ok(rig.shadow.position.y > .24 && rig.shadow.position.y < .26, "just above the floor the figure stands on");
+  assert.ok(Math.abs(rig.shadow.scale.x - .4 * CAST.walker.height) < 1e-9);
+  const colour = rig.shadow.geometry.getAttribute("color");
+  assert.equal(colour.itemSize, 4, "vertex alpha carries the falloff");
+  assert.ok(colour.getW(0) > .3);
+  assert.equal(colour.getW(colour.count - 1), 0, "the rim is fully clear");
+  assert.ok(rig.shadow.material.transparent && !rig.shadow.material.depthWrite, "never hides feet or furniture");
+  let disposed = false;
+  rig.shadow.material.addEventListener("dispose", () => { disposed = true; });
+  kit.dispose();
+  assert.ok(disposed);
+});
+
+test("staff clothing is distinguishable from skin so no figure reads as a bare mannequin", () => {
+  const luminance = hex => {
+    const c = new THREE.Color(hex);
+    return .2126 * c.r + .7152 * c.g + .0722 * c.b;
+  };
+  for (const [name, a] of Object.entries(CAST)) {
+    const ratio = (Math.max(luminance(a.top), luminance(a.skin)) + .05) / (Math.min(luminance(a.top), luminance(a.skin)) + .05);
+    assert.ok(ratio >= 1.5, `${name}: top ${a.top} against skin ${a.skin} is ${ratio.toFixed(2)}:1`);
+  }
+});

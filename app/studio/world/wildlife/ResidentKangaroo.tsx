@@ -37,6 +37,7 @@ export function ResidentKangaroo() {
 
   return <>
     <primitive object={rig.root} />
+    <primitive object={rig.shadow} />
     <HitTarget animal="kangaroo" position={[AT.x, 0.12 + 0.95, AT.z]} radius={0.95} />
   </>;
 }

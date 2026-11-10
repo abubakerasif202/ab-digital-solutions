@@ -1,5 +1,6 @@
 "use client";
 
+import { ABBrandImage } from "./components/brand/ABBrandImage";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -241,8 +242,7 @@ export function SiteHeader() {
       <header className={`site-header${scrolled ? " is-scrolled" : ""}`} id="top">
         <div className="container nav-wrap">
           <Link prefetch={prefetchNavigation} className="brand" href="/" aria-label="AB Web Studio home">
-            <span className="identity-mark" aria-hidden="true">ab<span>.</span></span>
-            <span className="identity-name" aria-hidden="true">Web<br />Studio</span>
+            <ABBrandImage decorative eager />
           </Link>
 
           <button
@@ -272,7 +272,7 @@ export function SiteHeader() {
             <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
             <Link href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("contact")} aria-current={navLinkCurrent("contact")}>Contact</Link>
             <a className="nav-phone" href={`tel:${siteConfig.phoneInternational}`} onClick={handleNavLinkClick}>{siteConfig.phoneDisplay}</a>
-            <Link className="nav-cta" href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick}>
+            <Link className="nav-cta" href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} data-magnetic>
               Start a project <ArrowIcon direction="right" />
             </Link>
           </nav>

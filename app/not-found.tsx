@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { assetBase } from "./site-config";
 import { ArrowIcon } from "./icons";
+
+// Without this the 404 inherits the homepage title, so the tab and any shared link claim to be the home page.
+export const metadata: Metadata = {
+  title: "Page not found",
+  description: "This page could not be found. Head back to AB Web Studio's home page, case studies or services.",
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (

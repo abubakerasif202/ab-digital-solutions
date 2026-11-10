@@ -150,6 +150,19 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
     visitor.x = camera.position.x; visitor.y = camera.position.y; visitor.z = camera.position.z;
     visitor.inReception = camera.position.x > -8.5 && camera.position.x < -1.2 && camera.position.z > .9 && camera.position.z < 9;
     if (!visible || !controls.current) return;
+    // Development-only hook so QA can frame any character or prop exactly; stripped from production builds.
+    if (process.env.NODE_ENV !== "production") {
+      const shot = (window as unknown as { __abStudioShot?: { position: [number, number, number]; target: [number, number, number]; fov?: number } }).__abStudioShot;
+      if (shot) {
+        limit(true);
+        camera.position.set(...shot.position);
+        controls.current.target.set(...shot.target);
+        if (shot.fov) setLens(camera, shot.fov);
+        controls.current.update();
+        invalidate();
+        return;
+      }
+    }
     if (arriving || state.mode === "loading") limit(true);
     if (arriving) {
       let seconds = (performance.now() - arrivalStart.current) / 1000;

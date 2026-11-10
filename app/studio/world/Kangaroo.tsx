@@ -4,7 +4,8 @@ import { useEffect, useId, useMemo } from "react";
 import * as THREE from "three";
 import { useSceneClock } from "./SceneClock";
 import { worldState } from "./worldState";
-import { createKangaroo } from "./sim/kangaroo-behavior";
+import { createKangaroo, GROUND_Y } from "./sim/kangaroo-behavior";
+import { createShadowGeometry, createShadowMaterial } from "./contact-shadow";
 import type { KangarooPose } from "./sim/kangaroo-behavior";
 
 type Vec = [number, number, number];
@@ -78,9 +79,20 @@ export function createKangarooRig() {
   blob(tail3, mats.dark, [0.04, 0.04, 0.17], [0, 0, -0.17]);
 
   root.visible = false;
+  // Contact shadow stays on the footpath and thins out as a hop lifts the body away from it.
+  const shadowGeometry = createShadowGeometry(24);
+  const shadowMaterial = createShadowMaterial();
+  const shadow = new THREE.Mesh(shadowGeometry, shadowMaterial);
+  shadow.visible = false;
+  shadow.renderOrder = 1;
   const apply = (p: KangarooPose, visible: boolean) => {
     root.visible = visible;
+    shadow.visible = visible;
     if (!visible) return;
+    const lift = Math.max(0, p.y - GROUND_Y);
+    shadow.position.set(p.x, GROUND_Y + 0.006, p.z);
+    shadow.scale.setScalar(0.62 * root.scale.x * (1 - Math.min(0.35, lift * 0.5)));
+    shadowMaterial.opacity = 1 - Math.min(0.55, lift * 0.9);
     root.position.set(p.x, p.y, p.z);
     root.rotation.y = p.heading;
     squash.scale.set(1 - p.squash * 0.5, 1 + p.squash, 1 - p.squash * 0.5);
@@ -95,8 +107,8 @@ export function createKangarooRig() {
     arms[1].shoulder.rotation.x = -p.armR; arms[1].elbow.rotation.x = -p.elbowR;
     tail1.rotation.x = p.tail1; tail2.rotation.x = p.tail2; tail3.rotation.x = p.tail3;
   };
-  const dispose = () => { sphere.dispose(); Object.values(mats).forEach((m) => m.dispose()); };
-  return { root, apply, dispose };
+  const dispose = () => { sphere.dispose(); Object.values(mats).forEach((m) => m.dispose()); shadowGeometry.dispose(); shadowMaterial.dispose(); };
+  return { root, shadow, apply, dispose };
 }
 
 /**
@@ -122,5 +134,5 @@ export function Kangaroo() {
   }, [scheduler, id, sim, rig]);
   useEffect(() => () => rig.dispose(), [rig]);
 
-  return <primitive object={rig.root} />;
+  return <><primitive object={rig.root} /><primitive object={rig.shadow} /></>;
 }

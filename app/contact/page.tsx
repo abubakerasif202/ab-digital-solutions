@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ContactForm } from "../components/ContactForm";
-import "../styles/new-interiors.css";
+import { EnquirySection } from "../components/studio/EnquirySection";
 import { PageTransition } from "../components/motion/PageTransition";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
@@ -57,32 +57,21 @@ export default function ContactPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page studio-page studio-page--contact ni-page" id="main-content">
-            <nav className="container content-breadcrumb" aria-label="Breadcrumb">
+      <main className="content-page studio-page studio-page--contact" id="main-content">
+        <EnquirySection
+          id="contact"
+          index="01"
+          headingAs="h1"
+          before={(
+            <nav className="studio-crumbs studio-crumbs--inline" aria-label="Breadcrumb">
               <Link href="/">Home</Link>
               <span aria-hidden="true">/</span>
               <span aria-current="page">Contact</span>
             </nav>
-        <header className="container ni-hero ni-contact-header">
-          <p className="eyebrow">Start a conversation</p>
-          <h1>What are you working on?</h1>
-          <p className="content-lead">A new website, a better online store or a simpler way to run the business. Tell us where you want to go.</p>
-        </header>
-        <section className="container ni-contact-grid" id="contact" aria-label="Project enquiry">
-          <aside className="ni-contact-aside">
-            <p className="eyebrow">Before you send</p>
-            <h2>A rough idea is a good start.</h2>
-            <p>Share your goals, an existing website and any timing or budget you have in mind. We will review your enquiry and come back with a practical next step.</p>
-            <p>You do not need a finished brief. We can work through the details together.</p>
-            <div className="ni-contact-details">
-              <span>Prefer a direct conversation?</span>
-              <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
-              <a href={`tel:${siteConfig.phoneInternational}`}>{siteConfig.phoneDisplay}</a>
-              <span>{siteConfig.location} · Working Australia-wide</span>
-            </div>
-          </aside>
-          <div className="ni-form-panel"><ContactForm titleAs="h2" /></div>
-        </section>
+          )}
+        >
+          <ContactForm titleAs="h2" />
+        </EnquirySection>
 
         <section className="gr-contact-next" aria-labelledby="next-steps-heading">
           <div className="container">
