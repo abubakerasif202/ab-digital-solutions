@@ -8,9 +8,13 @@ const output = path.resolve(process.env.QA_OUTPUT_DIR || "qa/studio-rebuild-2026
 const widths = process.env.QA_WIDTHS ? process.env.QA_WIDTHS.split(",").map(Number) : [360, 390, 768, 1024, 1440, 1920];
 if (widths.some((width) => !Number.isInteger(width) || width < 320 || width > 3840)) throw new Error("QA_WIDTHS must contain integer widths between 320 and 3840.");
 await mkdir(output, { recursive: true });
-const sources = await Promise.all(["app/project-data.ts", "app/services/service-data.ts"].map((file) => readFile(file, "utf8")));
-const slugs = sources.map((source) => [...source.matchAll(/slug: "([^"]+)"/g)].map((match) => match[1]));
-const routes = ["/", "/work", ...slugs[0].map((slug) => `/work/${slug}`), "/services", ...slugs[1].map((slug) => `/services/${slug}`), "/about", "/contact", "/privacy"];
+// The sitemap is derived from the canonical registries. Source regexes also match nested
+// service proof-project slugs and accidentally invent /services/<project> routes.
+const sitemapResponse = await fetch(new URL("/sitemap.xml", base));
+if (!sitemapResponse.ok) throw new Error(`Sitemap request failed: ${sitemapResponse.status}`);
+const sitemap = await sitemapResponse.text();
+const routes = [...new Set([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => new URL(match[1]).pathname))];
+if (!routes.includes("/") || !routes.includes("/services") || !routes.includes("/contact")) throw new Error("Sitemap is missing required QA routes.");
 const report = { base, capturedAt: new Date().toISOString(), routes, checks: [], exceptions: [], consoleErrors: [], failedImageResponses: [] };
 const axe = await readFile("node_modules/axe-core/axe.min.js", "utf8");
 let contactMock = null;
@@ -19,11 +23,23 @@ const check = (name, passed, detail) => report.checks.push({ name, passed, detai
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const browser = await puppeteer.launch({ headless: true, args: [
   "--enable-unsafe-swiftshader",
-  // Headless Linux can report pointer:none; explicitly model the desktop input
-  // required by the WebGL checks. Touch/reduced-motion fallbacks run separately.
+  // Headless Linux can report pointer:none; explicitly model desktop input.
+  // Mobile layout and reduced-motion behavior are checked separately below.
   "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
 ] });
+report.browser = await browser.version();
 const page = await browser.newPage();
+// The approved homepage uses a 2D particle logo in the film section, not a WebGL hero.
+// Count only that canvas's actual drawing so reduced-motion checks test work stopping,
+// rather than incorrectly requiring its persistent, decorative DOM canvas to disappear.
+await page.evaluateOnNewDocument(() => {
+  window.__qaLogoDraws = 0;
+  const fill = CanvasRenderingContext2D.prototype.fill;
+  CanvasRenderingContext2D.prototype.fill = function (...args) {
+    if (this.canvas.classList.contains("logo-reveal-canvas")) window.__qaLogoDraws++;
+    return fill.apply(this, args);
+  };
+});
 page.on("pageerror", (error) => report.exceptions.push({ route: page.url(), message: error.message }));
 page.on("response", (response) => {
   if (response.request().resourceType() === "image" && response.status() >= 400) report.failedImageResponses.push({ url: response.url(), status: response.status() });
@@ -106,30 +122,44 @@ try {
 
   await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
   await page.goto(base, { waitUntil: "networkidle0" });
-  const inputCapabilities = await page.evaluate(() => ({ fine: matchMedia("(pointer: fine)").matches, coarse: matchMedia("(pointer: coarse)").matches, reduced: matchMedia("(prefers-reduced-motion: reduce)").matches, cores: navigator.hardwareConcurrency }));
-  check("Fine-pointer GPU prerequisites", inputCapabilities.fine && !inputCapabilities.coarse && !inputCapabilities.reduced, inputCapabilities);
-  await page.mouse.move(1080, 420);
+  const hero = await page.evaluate(() => ({
+    heading: document.querySelector("#hero-heading")?.textContent,
+    contact: document.querySelector('.stage-hero .hero-actions a[href="#contact"]')?.textContent,
+    work: document.querySelector('.stage-hero .hero-actions a[href="#work"]')?.textContent,
+    studio: Boolean(document.querySelector('a[href="/studio"]')),
+    heroCanvases: document.querySelectorAll(".stage-hero canvas").length,
+  }));
+  check("Approved semantic hero preserves enquiry, portfolio and studio journeys", Boolean(hero.heading && hero.contact && hero.work && hero.studio) && hero.heroCanvases === 0, hero);
+  let logoStage = "loading authentic logo images";
   try {
-    await page.waitForSelector('.hero-3d-container[data-render-ready="true"] canvas', { timeout: 15000 });
-    check("Fine-pointer WebGL loads authentic texture", await page.evaluate(() => Boolean(document.querySelector("canvas")) && performance.getEntriesByType("resource").some((entry) => entry.name.endsWith("/brand/ab-hero-monogram.webp"))));
-    await page.screenshot({ path: path.join(output, "1440-home-webgl.png") });
+    await page.$eval(".logo-reveal", (logo) => logo.scrollIntoView({ block: "center", behavior: "instant" }));
+    await page.waitForFunction(() => [...document.querySelectorAll(".logo-reveal-lockup img")].every((image) => image.complete && image.naturalWidth > 0));
+    // Cancel any scroll-triggered autoplay so only this explicit replay can satisfy the assertion.
     await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
-    await page.waitForFunction(() => !document.querySelector("canvas"));
-    check("Switching reduced motion releases WebGL", true);
+    logoStage = "settling initial logo autoplay";
+    await page.waitForFunction(() => getComputedStyle(document.querySelector(".logo-reveal-word")).opacity === "1");
     await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "no-preference" }]);
-    await page.waitForSelector('.hero-3d-container[data-render-ready="true"] canvas');
-    const lossSupported = await page.evaluate(() => {
-      const extension = document.querySelector("canvas").getContext("webgl2")?.getExtension("WEBGL_lose_context");
-      extension?.loseContext();
-      return Boolean(extension);
-    });
-    if (lossSupported) {
-      await page.waitForFunction(() => !document.querySelector("canvas"));
-      check("Context loss restores authentic static artwork", await page.$eval(".hero-sculpture", (image) => image.complete && image.naturalWidth > 0));
-      await page.screenshot({ path: path.join(output, "1440-home-context-loss.png") });
-    } else check("Context loss restores authentic static artwork", false, "WEBGL_lose_context unavailable in this browser");
+    // Let the media-query change listeners finish cancelling before starting a new generation.
+    await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    const replayStartDraws = await page.evaluate(() => window.__qaLogoDraws);
+    logoStage = "drawing fresh particles after explicit replay";
+    await page.click('button[aria-label="Replay the logo animation"]');
+    await page.waitForFunction((count) => window.__qaLogoDraws > count, {}, replayStartDraws);
+    check("Film logo replay draws its original 2D particles", await page.$eval(".logo-reveal-canvas", (canvas) => canvas.getAttribute("aria-hidden") === "true" && Boolean(canvas.getContext("2d"))));
+    await page.screenshot({ path: path.join(output, "1440-film-logo-replay.png") });
+    await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
+    logoStage = "restoring static logo after reduced motion";
+    await page.waitForFunction(() => [...document.querySelectorAll(".logo-reveal-mark > img:not(.logo-reveal-sweep), .logo-reveal-word")].every((image) => getComputedStyle(image).opacity === "1" && getComputedStyle(image).transform === "none"));
+    const stoppedDraws = await page.evaluate(() => window.__qaLogoDraws);
+    await wait(600);
+    check("Switching reduced motion stops particle work and restores the logo lockup", await page.evaluate((count) => window.__qaLogoDraws === count && document.querySelector(".logo-reveal-sweep").style.opacity === "0", stoppedDraws));
+    await page.click('button[aria-label="Replay the logo animation"]');
+    await wait(600);
+    check("Reduced-motion replay remains static", await page.evaluate((count) => window.__qaLogoDraws === count, stoppedDraws));
+    await page.screenshot({ path: path.join(output, "1440-film-logo-reduced-motion.png") });
+    await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "no-preference" }]);
   } catch (error) {
-    check("Fine-pointer WebGL lifecycle", false, error.message);
+    check("Film logo particle and reduced-motion lifecycle", false, `${logoStage}: ${error.message}`);
   }
 
   for (const width of [360, 390, 768]) {
@@ -157,8 +187,16 @@ try {
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
   await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
   await page.goto(base, { waitUntil: "networkidle0" });
-  const motion = await page.evaluate(() => ({ canvases: document.querySelectorAll("canvas").length, armed: document.querySelectorAll('[data-reveal-state="armed"]').length, artwork: Boolean(document.querySelector(".hero-sculpture")), intro: Boolean(document.querySelector(".brand-intro")) }));
-  check("Reduced-motion static hero and content", !motion.canvases && !motion.armed && motion.artwork && !motion.intro, motion);
+  const motion = await page.evaluate(() => ({
+    draws: window.__qaLogoDraws,
+    armed: document.querySelectorAll('[data-reveal-state="armed"]').length,
+    heading: Boolean(document.querySelector("#hero-heading")?.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })),
+    artwork: Boolean(document.querySelector('.logo-reveal-mark > img[alt="AB Web Studio monogram"]')),
+    decorativeCanvas: document.querySelector(".logo-reveal-canvas")?.getAttribute("aria-hidden") === "true",
+    marqueeAnimation: getComputedStyle(document.querySelector(".hero-marquee-track")).animationName,
+    intro: Boolean(document.querySelector(".brand-intro")),
+  }));
+  check("Reduced-motion semantic hero, decorative logo and content stay static", !motion.draws && !motion.armed && motion.heading && motion.artwork && motion.decorativeCanvas && motion.marqueeAnimation === "none" && !motion.intro, motion);
   await page.screenshot({ path: path.join(output, "390-home-reduced-motion.png") });
   for (const route of ["/", "/contact"]) {
     for (const mock of [{ status: 200, body: { ok: true }, outcome: "success" }, { status: 200, body: {}, outcome: "error" }, { status: 503, body: { error: "Local QA simulated delivery failure" }, outcome: "error" }]) {

@@ -28,17 +28,30 @@ export function Reveal({ as = "div", variant = "fade-up", delay = 0, className, 
     if (!element) return;
     if (!("IntersectionObserver" in window)) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (element.getBoundingClientRect().top < window.innerHeight * 0.92) return;
-
-    element.setAttribute("data-reveal-state", "armed");
+    let initialized = false;
     const show = () => {
+      initialized = true;
       element.setAttribute("data-reveal-state", "in");
       observer.disconnect();
     };
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        show();
+        if (!entry) return;
+        if (!initialized) {
+          initialized = true;
+          // Observer geometry is supplied asynchronously, without forcing layout of
+          // content-visibility sections during hydration. Never hide visible or focused content.
+          const bounds = entry.boundingClientRect;
+          // Skipped content-visibility descendants report an empty rectangle at zero,
+          // not an above-the-fold position. Keep those armed until they intersect.
+          const hasBounds = bounds.width > 0 || bounds.height > 0;
+          if (entry.isIntersecting || (hasBounds && bounds.top < window.innerHeight * 0.92) || element.contains(document.activeElement)) {
+            show();
+            return;
+          }
+          element.setAttribute("data-reveal-state", "armed");
+        }
+        if (entry.isIntersecting) show();
       },
       { rootMargin: "0px 0px -8% 0px", threshold: 0 },
     );

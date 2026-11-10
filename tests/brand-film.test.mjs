@@ -36,8 +36,7 @@ test("logo reveal respects reduced motion, plays once per session and cleans up"
 
 test("homepage mounts the brand film after the portfolio", async () => {
   const [home, layout] = await Promise.all([read("../app/agency-home.tsx"), read("../app/layout.tsx")]);
-  assert.ok(home.indexOf('id="work"') < home.indexOf('id="film"'));
-  assert.ok(home.indexOf('id="film"') < home.indexOf('id="services"'));
-  // New design system includes brand film styles in new-design.css
-  assert.match(layout, /styles\/new-design\.css/);
+  assert.ok(home.indexOf("<PortfolioSection />") < home.indexOf("<BrandFilmSection />"));
+  assert.ok(home.indexOf("<BrandFilmSection />") < home.indexOf('id="services"'));
+  assert.match(layout, /styles\/brand-film\.css/);
 });

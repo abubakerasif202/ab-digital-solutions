@@ -1142,6 +1142,33 @@ h1 em {
   color: var(--white);
 }
 
+/* gilt-ruby.css later restyles every .button.button-primary as ruby and every
+   .button.button-ghost as gilt. On this ruby band that left the primary action
+   ruby-on-ruby and the ghost label at 2.4:1, so both are restated here with
+   enough specificity to hold: gilt primary (the original intent above) and a
+   white ghost at 5.3:1 whose hover rule is white instead of invisible ruby. */
+.service-page .service-cta .button.button-primary {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.service-page .service-cta .button.button-primary:is(:hover, :focus-visible) {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--white);
+}
+
+.service-page .service-cta .button.button-ghost,
+.service-page .service-cta .button.button-ghost:is(:hover, :focus-visible) {
+  border-color: rgba(255, 255, 255, 0.72);
+  color: var(--white);
+}
+
+.service-page .service-cta .button.button-ghost::after {
+  background: var(--white);
+}
+
 .button {
   display: inline-flex;
   min-height: 56px;

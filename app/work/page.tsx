@@ -6,7 +6,6 @@ import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { siteConfig } from "../site-config";
 import { ArrowIcon } from "../icons";
-import "../styles/new-interiors.css";
 
 export const metadata: Metadata = {
   title: "Our Work & Case Studies",
@@ -67,10 +66,7 @@ export default function WorkPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="work-index-page ni-page ni-work" id="main-content">
-        <nav className="container content-breadcrumb" aria-label="Breadcrumb">
-          <Link href="/">Home</Link><span aria-hidden="true">/</span><span aria-current="page">Work</span>
-        </nav>
+      <main className="work-index-page" id="main-content">
         <WorkIndexBody />
 
         <aside className="gr-final-cta gr-final-cta--work" aria-labelledby="work-cta-heading">

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageTransition } from "../components/motion/PageTransition";
 import { ProjectArtwork } from "../project-artwork";
-import { findProject } from "../project-data";
-import "../styles/new-interiors.css";
+import { findProject, projects } from "../project-data";
+import { ServiceIndex, type ServiceIndexItem } from "../components/ServiceIndex";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
 import { servicePages } from "./service-data";
@@ -62,6 +62,19 @@ const schema = {
   ],
 };
 
+const serviceItems: ServiceIndexItem[] = servicePages.map((service) => {
+  const project = findProject(service.featuredProject);
+  if (!project) throw new Error(`services: unknown featured project "${service.featuredProject}"`);
+  return {
+    slug: service.slug,
+    title: service.title,
+    summary: service.summary,
+    intro: service.intro,
+    benefits: service.benefits,
+    project,
+  };
+});
+
 const processSteps = [
   ["01", "Discover", "We clarify your audience, offer, goals and the actions your website needs to drive."],
   ["02", "Design", "We map the content, page structure and customer journey before visual design begins."],
@@ -74,7 +87,7 @@ export default function ServicesPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page service-page gr-svc-page ni-page" id="main-content">
+      <main className="content-page service-page gr-svc-page" id="main-content">
         <div className="container">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -82,10 +95,10 @@ export default function ServicesPage() {
             <span aria-current="page">Services</span>
           </nav>
 
-          <header className="ni-hero ni-hero--split">
+          <header className="service-hero gr-svc-hero">
             <div className="service-hero-copy">
               <p className="eyebrow">Digital services / Sydney</p>
-              <h1>A better digital home for your business.</h1>
+              <h1>Websites to business systems. <span className="accent-serif">Built with purpose.</span></h1>
               <p className="content-lead">
                 Websites, online stores and custom software for Australian businesses. Bring us a new
                 project, an existing site to improve or a workflow that needs a better system.
@@ -95,14 +108,16 @@ export default function ServicesPage() {
                 <Link className="button button-ghost" href="/work" data-magnetic>View Our Work</Link>
               </div>
             </div>
-            <aside className="ni-brief">
-              <p className="eyebrow">Where should we start?</p>
-              <h2>Choose your next move.</h2>
-              <a href="#services-index-heading">Build or improve a website <ArrowIcon /></a>
-              <Link href="/services/ecommerce-website-development">Bring your products online <ArrowIcon /></Link>
-              <Link href="/services/custom-software-business-systems">Simplify a business workflow <ArrowIcon /></Link>
-              <p>Scope, deliverables and costs agreed in a written proposal.</p>
-            </aside>
+            {/* Decorative detail crop of the lead portfolio project. */}
+            <figure className="service-hero-visual" aria-hidden="true">
+              <div className="service-hero-visual-frame">
+                <ProjectArtwork project={projects[0]} priority sizes="(max-width: 960px) 92vw, 520px" />
+              </div>
+              <figcaption>
+                <span>Studio project</span>
+                {projects[0].name}
+              </figcaption>
+            </figure>
           </header>
         </div>
 
@@ -115,17 +130,7 @@ export default function ServicesPage() {
                 <p>Explore the approach, scope and relevant project experience behind each service. We agree deliverables and costs in a written proposal.</p>
               </div>
             </div>
-            <div className="ni-services">
-              {servicePages.map((service, index) => (
-                <article className="ni-service" key={service.slug}>
-                  <span className="ni-number">{String(index + 1).padStart(2, "0")}</span>
-                  <h3><Link href={`/services/${service.slug}`}>{service.title}</Link></h3>
-                  <p>{service.summary}</p>
-                  <ul>{service.benefits.slice(0, 3).map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>
-                  <Link className="text-link" href={`/services/${service.slug}`}>Explore service <ArrowIcon /></Link>
-                </article>
-              ))}
-            </div>
+            <ServiceIndex items={serviceItems} />
           </div>
         </section>
 

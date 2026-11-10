@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as THREE from "three";
 import sharp from "sharp";
+import { studioProjects } from "../../app/studio/studio-data.ts";
 const output = process.env.QA_OUT || "qa/virtual-studio";
 test.beforeAll(() => {
   if (!["localhost", "127.0.0.1"].includes(new URL(process.env.QA_BASE_URL || "http://127.0.0.1:3100").hostname)) {
@@ -55,7 +56,7 @@ for (const width of [390, 768, 1440]) {
         expect(sheet.y).toBeGreaterThanOrEqual(stage.y + stage.height - 1);
       }
       if (label === "Portfolio gallery") {
-        await expect(page.locator("#studio-project option")).toHaveCount(18);
+        await expect(page.locator("#studio-project option")).toHaveText(studioProjects.map((project) => project.name));
         await page.locator("#studio-project").selectOption("1");
         await expect(page.getByRole("link", { name: "View case study" })).toHaveAttribute("href", "/work/milestone-renovate");
       }

@@ -63,7 +63,7 @@ try {
       const debug = gl?.getExtension("WEBGL_debug_renderer_info");
       return { renderer: debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : "unavailable", canvasPixels: [canvas.width, canvas.height] };
     }));
-    const skip = page.getByRole("button", { name: "Skip Intro", exact: true });
+    const skip = page.getByRole("button", { name: "Skip intro", exact: true });
     if (await skip.isVisible()) await skip.click();
     await page.waitForFunction(() => document.querySelector("[data-mode]")?.dataset.mode === "explore", null, { timeout: 10000 });
     await page.waitForTimeout(2300);
@@ -106,14 +106,14 @@ try {
       result.orbitFrames = await page.evaluate(() => ({ count: window.__frames.length, maxDraws: Math.max(0,...window.__frames.map(f => f.draws)), maxTriangles: Math.max(0,...window.__frames.map(f => f.triangles)) }));
       result.orbitRawFrames = await page.evaluate(() => window.__frames);
       // Return to the same establishing camera for repeatable comparison images.
-      await page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button", { name: "Reception" }).click();
+      await page.getByRole("navigation", { name: "Studio rooms" }).getByRole("button", { name: "Reception" }).click();
       await page.keyboard.press("Escape");
       await page.waitForTimeout(2300);
     }
     if (run === 1 && process.env.QA_CAPTURE !== "0") {
       await page.screenshot({ path: `${root}/${width}-overview.png` });
       for (const [area, name] of [["reception","Reception"],["gallery","Portfolio gallery"],["services","Services atelier"],["consultation","Consultation lounge"]]) {
-        await page.getByRole("navigation", { name: "Studio spaces" }).getByRole("button", { name }).click();
+        await page.getByRole("navigation", { name: "Studio rooms" }).getByRole("button", { name }).click();
         await page.waitForTimeout(2100);
         await page.screenshot({ path: `${root}/${width}-${area}.png` });
       }

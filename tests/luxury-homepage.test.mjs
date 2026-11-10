@@ -8,6 +8,20 @@ import { buildHomepageData } from "../scripts/export-homepage-data.mjs";
 const dir = new URL("../opendesign/luxury-homepage/", import.meta.url);
 const read = (name) => readFile(new URL(name, dir), "utf8");
 
+test("the standalone page declares the existing brand favicon and serves it", async () => {
+  assert.match(await read("index.html"), /<link\s+rel="icon"\s+href="\/favicon\.svg"/);
+  const { startServer } = await import("../scripts/serve-luxury-prototype.mjs");
+  const { server, url } = await startServer();
+  try {
+    const response = await fetch(`${url}/favicon.svg`);
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get("content-type"), /image\/svg\+xml/);
+    assert.equal(await response.text(), await readFile(new URL("../public/favicon.svg", import.meta.url), "utf8"));
+  } finally {
+    await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+  }
+});
+
 test("data.json is generated from the canonical registry and is not stale", async () => {
   const committed = JSON.parse(await read("data.json"));
   const fresh = await buildHomepageData();

@@ -26,6 +26,8 @@
 .welcome { color: #d8bb83; font-style: italic; line-height: 1.5; max-width: 34ch; }
 @media (max-width: 699px) { .loading { left: 12px; right: 12px; top: 66px; bottom: auto; max-width: none; } .loading[data-stage="intro"] { padding: 14px; } .loadingActions > * { flex: 1 1 auto; justify-content: center; min-height: 44px; } }
 .sceneCaption { position: absolute; left: 32px; right: 32px; bottom: 24px; display: flex; justify-content: space-between; gap: 12px; font: 10px var(--font-mono), monospace; letter-spacing: .05em; color: #dfd7c7; pointer-events: none; text-shadow: 0 1px 5px black; }
+/* The room label stays on one line beside the hint instead of breaking mid-name on tablets. */
+.sceneCaption > span:first-child { flex: none; white-space: nowrap; }
 .controls { border-bottom: 1px solid #c5aa7833; padding: 0 32px; background: #101112; }
 .areaNav { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid #c5aa7826; }
 .areaNav button { background: transparent; border: 0; border-bottom: 2px solid transparent; color: #afaca5; font: 400 13px var(--font-sans), sans-serif; padding: 22px 12px; text-align: left; cursor: pointer; min-height: 60px; }

@@ -133,7 +133,7 @@ export function StudioStaff() {
   const sim = useMemo(() => createStaff(20260427), []);
   const kit = useMemo(() => createHumanoidKit(), []);
   const rigs = useMemo(() => {
-    const r = { designer: createHumanoid(kit, CAST.designer), developer: createHumanoid(kit, CAST.developer), walker: createHumanoid(kit, CAST.walker) };
+    const r = { designer: createHumanoid(kit, CAST.designer, { shadowRadius: 0.55 }), developer: createHumanoid(kit, CAST.developer), walker: createHumanoid(kit, CAST.walker) };
     r.designer.apply(sim.designer); r.developer.apply(sim.developer); r.walker.apply(sim.walker);
     return r;
   }, [kit, sim]);
@@ -157,5 +157,8 @@ export function StudioStaff() {
     <primitive object={rigs.designer.root} />
     <primitive object={rigs.developer.root} />
     <primitive object={rigs.walker.root} />
+    <primitive object={rigs.designer.shadow} />
+    <primitive object={rigs.developer.shadow} />
+    <primitive object={rigs.walker.shadow} />
   </group>;
 }
