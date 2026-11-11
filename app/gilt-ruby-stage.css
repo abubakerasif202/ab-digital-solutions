@@ -155,12 +155,14 @@
 .stage-confidence svg { width: 14px; height: 14px; }
 
 /* Live ticker: a solid panel (no glass), real projects only. -------------------- */
+.live-ticker-wrap { display: flex; align-items: stretch; gap: 8px; width: min(100%, 27.25rem); }
 .live-ticker {
   display: grid;
+  flex: 1;
   grid-template-columns: 96px minmax(0, 1fr);
   align-items: center;
   gap: 16px;
-  width: min(100%, 24rem);
+  min-width: 0;
   padding: 10px 18px 10px 10px;
   border: 1px solid var(--line-strong);
   background: rgba(15, 15, 18, 0.92);
@@ -180,6 +182,20 @@
 @keyframes ticker-pulse { 70%, 100% { box-shadow: 0 0 0 7px rgba(210, 23, 54, 0); } }
 .live-ticker-copy strong { overflow: hidden; font-family: var(--display); font-size: 1.15rem; font-weight: 500; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
 .live-ticker-copy > span { color: var(--paper-dim); font-size: 0.8125rem; }
+.live-ticker-toggle {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  background: rgba(15, 15, 18, 0.92);
+  color: var(--paper);
+  cursor: pointer;
+  transition: border-color 420ms var(--stage-ease), background 420ms var(--stage-ease), color 420ms var(--stage-ease);
+}
+.live-ticker-toggle:is(:hover, :focus-visible) { border-color: var(--gold); background: var(--panel); color: var(--gold-bright); }
 
 .stage-bar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 18px; border-top: 1px solid var(--line); color: var(--paper-dim); font-family: var(--mono); font-size: var(--text-micro, 0.75rem); letter-spacing: 0.14em; text-transform: uppercase; }
 .stage-bar p { margin: 0; }
@@ -231,7 +247,7 @@
   .stage-edition { display: none; }
   .stage-foot { align-items: stretch; flex-direction: column; }
   .stage-confidence { gap: 4px 16px; margin-top: 12px; }
-  .live-ticker { width: 100%; }
+  .live-ticker-wrap { width: 100%; }
   .stage-bar { flex-wrap: wrap; row-gap: 4px; }
   .stage-bar p { display: none; }
   .cinematic-home .ruby-band .studio-capabilities { grid-template-columns: 1fr; }
@@ -250,6 +266,7 @@
   .metal-gilt, .metal-ruby, .stage-ring--outer, .stage-ring--inner, .stage-line > span,
   .live-ticker-thumb img, .live-ticker-copy small i, .stage-scroll-line::after { animation: none !important; }
   .stage-scroll-line::after { transform: none; }
+  .live-ticker-toggle { display: none; }
 }
 
 /* Keep the authentic mark separate from reading and enquiry surfaces. */
@@ -286,5 +303,18 @@
 .studio-supporting-hero.stage-hero { min-height: 0; }
 .studio-supporting-hero .stage-hero-art, .studio-supporting-hero .stage-hero-top,
 .studio-supporting-hero .stage-bar, .studio-supporting-hero .hero-marquee { display: none; }
-.studio-supporting-hero .stage-hero-body { padding-block: 48px; }
-.studio-supporting-hero .stage-title { font-size: clamp(32px, 4vw, 60px); }
+.studio-supporting-hero .stage-hero-body { padding-block: clamp(20px, 3vh, 44px) 48px; }
+/* The hero is the first thing on the page, so its headline stays on the display
+   scale set above (it previously shrank to 60px, half the size of every section
+   heading below it). Each row holds two phrases that share a line when there is
+   room and wrap between them when there is not. */
+.studio-supporting-hero .stage-title { max-width: none; }
+/* Cap the display size so "Websites with presence." always fits the 1184px
+   container on one row (the base 7.2rem cap overflowed it from ~1900px up). */
+@media (min-width: 1025px) {
+  .studio-supporting-hero .stage-title { font-size: clamp(2.7rem, min(6.1vw, 11svh), 6.5rem); }
+}
+.stage-row { display: block; }
+.stage-row > .stage-line { display: inline-block; }
+.stage-row:nth-child(2) > .stage-line:nth-child(1) > span { animation-delay: 180ms; }
+.stage-row:nth-child(2) > .stage-line:nth-child(2) > span { animation-delay: 270ms; }

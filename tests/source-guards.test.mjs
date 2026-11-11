@@ -27,7 +27,7 @@ test("homepage exposes content directly instead of using an iframe", async () =>
 
   assert.doesNotMatch(page, /<iframe\b/i);
   assert.match(homepage, /className="stage-title"/);
-  assert.match(homepage, /Websites with<\/span><\/span>\s*<span className="stage-line"><span>presence\./);
+  assert.match(homepage, /<span className="stage-row">\s*<span className="stage-line"><span>Websites with<\/span><\/span>(?:\{" "\})?\s*<span className="stage-line"><span>presence\./);
   assert.match(homepage, /metal-ruby">Software with<[\s\S]*?metal-gilt">purpose\./);
   assert.match(homepage, /Built for your business\./);
   assert.match(homepage, /id="contact"/);
@@ -648,4 +648,26 @@ test("second-pass compositions: real pages, varied portfolio and case-study syst
   // Scroll-linked motion is opt-in and switched off for reduced motion.
   assert.match(compositions, /@media \(prefers-reduced-motion: no-preference\)[\s\S]*?animation-timeline: view\(\)/);
   assert.match(compositions, /@media \(prefers-reduced-motion: reduce\)/);
+});
+
+test("hero headline stays on the display scale, showcase images fit their slot and auto-rotation can be paused", async () => {
+  const [stage, showcase, ticker] = await Promise.all([
+    read("../app/gilt-ruby-stage.css"),
+    read("../app/components/ProjectShowcase.tsx"),
+    read("../app/components/LiveTicker.tsx"),
+  ]);
+
+  // The supporting-hero override must not shrink the headline to a fixed small cap
+  // or squeeze it into the old 11ch measure.
+  assert.doesNotMatch(stage, /\.studio-supporting-hero \.stage-title \{[^}]*font-size: clamp\(32px/);
+  assert.match(stage, /\.studio-supporting-hero \.stage-title \{ max-width: none; \}/);
+
+  // `sizes` describes the real slot (~92vw until the 1182px container cap) so the
+  // browser does not pick a file too small for it.
+  assert.match(showcase, /sizes="\(max-width: 1286px\) 92vw, 1182px"/);
+
+  // WCAG 2.2.2: the featured-project ticker has an explicit pause control.
+  assert.match(ticker, /className="live-ticker-toggle"/);
+  assert.match(ticker, /Pause featured projects/);
+  assert.match(stage, /\.live-ticker-toggle \{[^}]*width: 44px/s);
 });
