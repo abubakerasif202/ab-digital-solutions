@@ -123,10 +123,14 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
           <div className="container stage-hero-body">
             <h1 id="hero-heading" className="stage-title">
-              <span className="stage-line"><span>Websites with</span></span>
-              <span className="stage-line"><span>presence.</span></span>
-              <span className="stage-line stage-line--ruby"><span className="metal-ruby">Software with</span></span>
-              <span className="stage-line stage-line--gilt"><span className="metal-gilt">purpose.</span></span>
+              <span className="stage-row">
+                <span className="stage-line"><span>Websites with</span></span>{" "}
+                <span className="stage-line"><span>presence.</span></span>
+              </span>{" "}
+              <span className="stage-row">
+                <span className="stage-line stage-line--ruby"><span className="metal-ruby">Software with</span></span>{" "}
+                <span className="stage-line stage-line--gilt"><span className="metal-gilt">purpose.</span></span>
+              </span>
             </h1>
 
             <div className="stage-foot">

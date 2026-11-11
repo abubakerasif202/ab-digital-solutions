@@ -158,10 +158,13 @@ export function ProjectShowcase() {
                 data-cursor="VIEW"
               >
                 {/* Below the fold: lazy-load. A priority preload here competes
-                    with the hero's CSS, fonts and LCP on every home visit. */}
+                    with the hero's CSS, fonts and LCP on every home visit.
+                    The slide spans the container: about 92vw until it caps at
+                    1182px (viewports from ~1287px). Keep `sizes` in step with
+                    that slot or the browser picks a file too small for it. */}
                 <ProjectArtwork
                   project={project}
-                  sizes="(max-width: 1080px) 92vw, (max-width: 1440px) 46vw, (max-width: 1800px) 660px, 800px"
+                  sizes="(max-width: 1286px) 92vw, 1182px"
                 />
               </Link>
             );
