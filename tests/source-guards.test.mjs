@@ -671,3 +671,68 @@ test("hero headline stays on the display scale, showcase images fit their slot a
   assert.match(ticker, /Pause featured projects/);
   assert.match(stage, /\.live-ticker-toggle \{[^}]*width: 44px/s);
 });
+
+test("design review F04-F13: nav width, footer band, copy, section order, film, sticky columns, type floor", async () => {
+  const [system, sections, harmony, compositions, brandFilmCss, filmSection, footer, home, portfolio, premium, studioCss, studioModule, preview] = await Promise.all([
+    read("../app/styles/studio-system.css"),
+    read("../app/styles/studio-sections.css"),
+    read("../app/styles/studio-harmony.css"),
+    read("../app/compositions.css"),
+    read("../app/styles/brand-film.css"),
+    read("../app/components/film/BrandFilmSection.tsx"),
+    read("../app/site-footer.tsx"),
+    read("../app/agency-home.tsx"),
+    read("../app/components/PortfolioSection.tsx"),
+    read("../app/studio-premium.css"),
+    read("../app/studio.css"),
+    read("../app/studio/studio.module.css"),
+    read("../app/components/studio/VirtualStudioPreview.tsx"),
+  ]);
+
+  // F09: the active nav link adds no slash to its flow, so no neighbour moves.
+  assert.doesNotMatch(system, /a\[aria-current\]::before \{[^}]*content: "\/"/);
+  assert.match(system, /:is\(\.is-active, \[aria-current\]\)::after \{\s*transform: scaleX\(1\)/);
+  // F13: the mobile index numbers the six page links only, not the phone row.
+  assert.match(compositions, /\.site-nav a:not\(\.nav-cta, \.nav-phone\)::after/);
+
+  // F08: one four-column footer band; the contact column cannot wrap beneath the rest.
+  assert.match(system, /\.studio-footer-main \{\s*display: grid;/);
+  assert.match(system, /minmax\(0, 4fr\) minmax\(0, 2fr\) minmax\(0, 3fr\) minmax\(0, 3fr\)/);
+  assert.match(system, /\.studio-footer-col \.studio-footer-profiles \{ flex-direction: row;/);
+
+  // F05: footer, homepage rows and form chips share one set of service names.
+  assert.match(footer, /contactServiceKeys\[service\.contactKey\]/);
+  assert.match(home, /title: contactServiceKeys\[page\.contactKey\]/);
+
+  // F07 / F13: one sentence-case label for the primary action and for /work.
+  for (const source of [home, footer, preview, portfolio]) {
+    assert.doesNotMatch(source, /Start Your Project|Discuss your idea|Explore Our Work|Open the work index|View all case studies/);
+  }
+  assert.match(home, /href="\/contact" prefetch=\{false\} data-magnetic>\s*Start a project/);
+  assert.match(preview, /Step inside our studio\./);
+
+  // F04: six featured rows link to the full index; Capabilities precede the 3D preview and film.
+  assert.match(portfolio, /const FEATURED_ROWS = 6;/);
+  assert.match(portfolio, /projects\.slice\(0, FEATURED_ROWS\)\.map/);
+  assert.ok(home.indexOf('id="services"') < home.indexOf("<VirtualStudioPreview />"));
+  assert.ok(home.indexOf('id="services"') < home.indexOf("<BrandFilmSection />"));
+
+  // F06: one film player; the lockup panel is not repeated beside its poster.
+  assert.doesNotMatch(filmSection, /LogoReveal|brand-film-logo/);
+  assert.match(brandFilmCss, /\.brand-film-grid \{ display: grid; grid-template-columns: minmax\(0, 1fr\); \}/);
+
+  // F12: the short columns beside About and the enquiry form stay pinned while the long one scrolls.
+  assert.match(sections, /\.studio-about-plate-wrap \{ position: sticky; top: calc\(var\(--header-height\) \+ 24px\); \}/);
+  assert.match(sections, /\.studio-enquiry-copy \{ position: sticky; top: calc\(var\(--header-height\) \+ 24px\); \}/);
+
+  // F10: no homepage label is set below the 12px floor.
+  assert.match(premium, /\.showcase-browser-status \{ font-size: 12px;/);
+  assert.match(premium, /\.blueprint-label, \.showcase-depth-caption \{ font: 12px/);
+  assert.doesNotMatch(premium, /\.blueprint-label \{ font-size: 7px/);
+  assert.match(studioModule, /\.kicker \{ font: 500 12px/);
+  assert.match(studioModule, /\.previewArt span \{[^}]*font: 12px/);
+  assert.match(studioCss, /\.showcase-browser-bar \{[^}]*font-size: 12px;/);
+
+  // F11: Bodoni titles under 28px use a heavier weight so hairlines hold on the dark ground.
+  assert.match(harmony, /\.cinematic-home \.gr-services \.service-card h3,[\s\S]*?\{ font-weight: 600; \}/);
+});
