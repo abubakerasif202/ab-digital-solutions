@@ -104,7 +104,7 @@ export default function ServicesPage() {
                 project, an existing site to improve or a workflow that needs a better system.
               </p>
               <div className="content-actions">
-                <Link className="button button-primary" href="/contact" data-magnetic>Start a Project <ArrowIcon /></Link>
+                <Link className="button button-primary" href="/contact" data-magnetic>Start a project <ArrowIcon /></Link>
                 <Link className="button button-ghost" href="/work" data-magnetic>View Our Work</Link>
               </div>
             </div>
@@ -166,7 +166,7 @@ export default function ServicesPage() {
             <h2 id="services-cta-heading">Not sure which service fits? <span className="accent-serif">Start with a conversation.</span></h2>
             <p className="content-lead">Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
             <div className="content-actions">
-              <Link className="button button-primary" href="/contact" data-magnetic>Start a Project <ArrowIcon /></Link>
+              <Link className="button button-primary" href="/contact" data-magnetic>Start a project <ArrowIcon /></Link>
               <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>Call {siteConfig.phoneDisplay}</a>
             </div>
           </div>

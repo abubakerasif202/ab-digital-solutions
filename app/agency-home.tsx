@@ -4,6 +4,7 @@ import { ContactForm } from "./components/ContactForm";
 import { LiveTicker } from "./components/LiveTicker";
 import { findProject, projects, type Project } from "./project-data";
 import { findService } from "./services/service-data";
+import { contactServiceKeys } from "./contact-options";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
@@ -21,7 +22,6 @@ const services = [
   {
     number: "01",
     slug: "web-design-sydney",
-    title: "Website design & development",
     description:
       "Custom service, portfolio and business websites with sharp positioning, persuasive journeys and a premium finish.",
     details: ["UX & visual design", "Responsive development", "Conversion pathways"],
@@ -29,7 +29,6 @@ const services = [
   {
     number: "02",
     slug: "seo-local-visibility",
-    title: "SEO & local visibility",
     description:
       "Search-ready architecture and content foundations designed to help the right customers discover your business.",
     details: ["Technical SEO", "On-page optimisation", "Local search"],
@@ -37,7 +36,6 @@ const services = [
   {
     number: "03",
     slug: "branding-content",
-    title: "Branding & content",
     description:
       "A coherent visual direction and confident messaging that make your business easier to recognise, trust and choose.",
     details: ["Brand direction", "Website copy", "Campaign creative"],
@@ -45,7 +43,6 @@ const services = [
   {
     number: "04",
     slug: "ecommerce-website-development",
-    title: "E-commerce solutions",
     description:
       "Clear, friction-conscious storefronts that showcase products, simplify purchasing and leave room to scale.",
     details: ["Product catalogues", "Checkout integration", "Mobile commerce"],
@@ -53,7 +50,6 @@ const services = [
   {
     number: "05",
     slug: "digital-marketing",
-    title: "Digital marketing",
     description:
       "Focused landing pages and campaigns built to create attention, generate enquiries and support the sales process.",
     details: ["Landing pages", "Lead generation", "Campaign strategy"],
@@ -61,7 +57,6 @@ const services = [
   {
     number: "06",
     slug: "website-maintenance",
-    title: "Website care & support",
     description:
       "Practical ongoing support for updates, technical health and continuous improvement after your site goes live.",
     details: ["Content updates", "Technical support", "Growth improvements"],
@@ -69,7 +64,6 @@ const services = [
   {
     number: "07",
     slug: "custom-software-business-systems",
-    title: "Custom software & business systems",
     description:
       "Role-protected web applications, inventory platforms and internal tools built around the workflows your team runs every day.",
     details: ["Inventory & purchasing", "Staff portals", "Integrations & automation"],
@@ -85,7 +79,7 @@ const serviceRows = services.map((service) => {
   if (!page) throw new Error(`agency-home: unknown service slug "${service.slug}"`);
   const featured = findProject(page.featuredProject);
   if (!featured) throw new Error(`agency-home: unknown featured project "${page.featuredProject}"`);
-  return { ...service, featured: featured as Project };
+  return { ...service, title: contactServiceKeys[page.contactKey], featured: featured as Project };
 });
 
 const processSteps = [
@@ -140,12 +134,12 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                   Premium <Link href="/services/web-design-sydney" prefetch={false}>websites and redesigns</Link>, online stores and custom business systems for Australian businesses. Thoughtful design, clear customer journeys and technology that supports your daily work.
                 </p>
                 <div className="hero-actions">
-                  <a className="button button-primary" href="#contact" data-magnetic>
-                    Start Your Project <ArrowIcon />
-                  </a>
-                  <a className="button button-ghost" href="#work" data-magnetic>
-                    Explore Our Work <ArrowIcon direction="down-right" />
-                  </a>
+                  <Link className="button button-primary" href="/contact" prefetch={false} data-magnetic>
+                    Start a project <ArrowIcon />
+                  </Link>
+                  <Link className="button button-ghost" href="/work" prefetch={false} data-magnetic>
+                    Explore our work <ArrowIcon direction="right" />
+                  </Link>
                 </div>
                 <div className="stage-confidence" aria-label="Explore the studio or call directly">
                   <Link href="/work" prefetch={false}>{projects.length} project case studies <ArrowIcon /></Link>
@@ -175,11 +169,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         </section>
 
         <PortfolioSection />
-
-        <VirtualStudioPreview />
-
-        <BrandFilmSection />
-
 
         <section className="section ruby-band" id="services" aria-labelledby="services-heading">
           <div className="container">
@@ -219,13 +208,18 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           </div>
         </section>
 
+        <VirtualStudioPreview />
+
+        <BrandFilmSection />
+
+
         <section className="section process-section" id="process" aria-labelledby="process-heading">
           <div className="container process-layout">
             <div className="process-intro" data-reveal>
               <p className="eyebrow section-index"><span className="section-index-num">03</span><span className="micro-rule" aria-hidden="true" />How we work</p>
               <h2 id="process-heading">A clear path from ambition to <span className="accent-serif">launch.</span></h2>
               <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
-              <a className="text-link" href="#contact">Start Your Project <ArrowIcon /></a>
+              <Link className="text-link" href="/contact" prefetch={false}>Start a project <ArrowIcon /></Link>
             </div>
             <ProcessTimeline>
               <span className="process-rail-fill" aria-hidden="true" />

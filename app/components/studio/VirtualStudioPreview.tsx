@@ -9,10 +9,10 @@ export function VirtualStudioPreview() {
     <div className={styles.previewInner}>
       <div className={styles.previewCopy}>
         <p className={styles.kicker}>AB WEB STUDIO — IMMERSIVE EXPERIENCE</p>
-        <h2 id="virtual-studio-preview">Don&apos;t Just Visit Our Website.<br /><em>Step Inside Our Studio.</em></h2>
+        <h2 id="virtual-studio-preview">Don&apos;t just visit our website.<br /><em>Step inside our studio.</em></h2>
         <p>Experience our creative world in 3D. Explore our studio, discover our work, and see where your next big idea begins.</p>
         <Link href="/studio" prefetch={false} className={styles.primary}>Enter Our 3D Studio <StudioArrow /></Link>
-        <Link href="/work" prefetch={false} className={styles.textLink}>Explore Our Work</Link>
+        <Link href="/work" prefetch={false} className={styles.textLink}>Explore our work</Link>
         <p>Walk through. Look around. Discover what&apos;s possible.</p>
       </div>
       <Link href="/studio" prefetch={false} className={styles.previewArt} aria-label="Explore AB Web Studio’s virtual studio">

@@ -37,6 +37,8 @@ test("logo reveal respects reduced motion, plays once per session and cleans up"
 test("homepage mounts the brand film after the portfolio", async () => {
   const [home, layout] = await Promise.all([read("../app/agency-home.tsx"), read("../app/layout.tsx")]);
   assert.ok(home.indexOf("<PortfolioSection />") < home.indexOf("<BrandFilmSection />"));
-  assert.ok(home.indexOf("<BrandFilmSection />") < home.indexOf('id="services"'));
+  // Capabilities come first so the long media sections do not push them 9 screens down (F04).
+  assert.ok(home.indexOf('id="services"') < home.indexOf("<BrandFilmSection />"));
+  assert.ok(home.indexOf("<BrandFilmSection />") < home.indexOf('id="process"'));
   assert.match(layout, /styles\/brand-film\.css/);
 });

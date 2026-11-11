@@ -1,6 +1,5 @@
 import { siteConfig } from "../../site-config";
 import { BrandFilmPlayer, type FilmChapter } from "./BrandFilmPlayer";
-import { LogoReveal } from "./LogoReveal";
 
 /* Scene timings mirror the supplied Claude Design film (35s, 5 scenes). */
 const chapters: readonly FilmChapter[] = [
@@ -39,9 +38,6 @@ export function BrandFilmSection() {
           <h2 id="film-heading" className="gr-display-xl">Thirty-five seconds <span className="accent-serif">of craft.</span></h2>
         </header>
         <div className="brand-film-grid">
-          <div className="brand-film-logo" data-reveal>
-            <LogoReveal />
-          </div>
           <div className="brand-film-video" data-reveal>
             <BrandFilmPlayer
               title={FILM.title}

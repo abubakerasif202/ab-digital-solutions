@@ -153,7 +153,7 @@ test("server HTML works without JavaScript; homepage preview loads no model", as
   await staticPage.screenshot({ path: `${output}/390-no-javascript.png`, fullPage: true });
   expect(await staticPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await context.close();
   const models = []; page.on("request", (request) => { if (/\.glb/.test(request.url())) models.push(request.url()); });
-  await page.goto("/"); await expect(page.getByRole("heading", { name: /Don.t Just Visit Our Website.*Step Inside Our Studio/ })).toBeAttached();
+  await page.goto("/"); await expect(page.getByRole("heading", { name: /Don.t just visit our website.*Step inside our studio/ })).toBeAttached();
   await expect(page.getByRole("link", { name: "Enter Our 3D Studio", exact: true }).first()).toHaveAttribute("href", "/studio"); expect(models).toEqual([]);
 });
 

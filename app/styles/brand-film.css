@@ -5,16 +5,10 @@
 .brand-film-head { display: grid; gap: 16px; margin-bottom: clamp(32px, 5vw, 64px); }
 .brand-film-head h2 { margin: 0; }
 
-.brand-film-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: clamp(16px, 2.4vw, 32px);
-  align-items: stretch;
-}
-.brand-film-logo, .brand-film-video { min-width: 0; }
-@media (max-width: 900px) {
-  .brand-film-grid { grid-template-columns: minmax(0, 1fr); }
-}
+/* One player: its poster already carries the AB lockup, so the section no longer
+   repeats it in a second panel beside the film. */
+.brand-film-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+.brand-film-video { min-width: 0; }
 
 /* Logo reveal ---------------------------------------------------------------- */
 .logo-reveal {

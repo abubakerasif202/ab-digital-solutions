@@ -46,7 +46,7 @@ export const servicePages = [
     benefits: ["Custom UX and visual direction", "Responsive, accessibility-conscious development", "Conversion-focused content structure", "Launch and measurement foundations"],
     featuredProject: "maple-rentals",
     contactKey: "web-design",
-    ctaLabel: "Start a Project",
+    ctaLabel: "Start a project",
     proof: [
       { slug: "maple-rentals", role: "Mobility / Car rentals" },
       { slug: "milestone-renovate", role: "Renovation / Planning Platform" },
@@ -84,7 +84,7 @@ export const servicePages = [
     benefits: ["Product and collection strategy", "Mobile commerce UX", "Checkout integration", "Performance and search foundations"],
     featuredProject: "adelaide-wholesale-tyres",
     contactKey: "ecommerce",
-    ctaLabel: "Start a Project",
+    ctaLabel: "Start a project",
     proof: [
       { slug: "adelaide-wholesale-tyres", role: "B2B Wholesale Platform" },
       { slug: "fresh-stop", role: "Grocery & Fresh Produce Online Catalogue" },
@@ -124,7 +124,7 @@ export const servicePages = [
     benefits: ["Technical SEO review", "On-page optimisation", "Local search structure", "Measurement and improvement plan"],
     featuredProject: "zq-removals",
     contactKey: "seo",
-    ctaLabel: "Start a Project",
+    ctaLabel: "Start a project",
     proof: [
       { slug: "zq-removals", role: "Local-Service Positioning & JSON-LD" },
       { slug: "wild-pest-solutions", role: "NSW Regional & Local Search Foundation" },
@@ -162,7 +162,7 @@ export const servicePages = [
     benefits: ["Brand direction", "Website messaging", "Content hierarchy", "Campaign-ready creative"],
     featuredProject: "decent-development",
     contactKey: "branding",
-    ctaLabel: "Start a Project",
+    ctaLabel: "Start a project",
     proof: [
       { slug: "decent-development", role: "Property & Development Identity" },
       { slug: "jufaja-homes", role: "Architectural Brand Direction & UI System" },
@@ -200,7 +200,7 @@ export const servicePages = [
     benefits: ["Campaign strategy", "Landing page design", "Lead-generation journeys", "Tracking foundations"],
     featuredProject: "milestone-development",
     contactKey: "marketing",
-    ctaLabel: "Start a Project",
+    ctaLabel: "Start a project",
     proof: [
       { slug: "milestone-development", role: "Project-Led Conversion Showcase" },
       { slug: "hf-removals-adelaide", role: "Instant Quote Capture & Lead Funnel" },
@@ -238,7 +238,7 @@ export const servicePages = [
     benefits: ["Content updates", "Technical health checks", "Performance improvements", "Agreed support scope"],
     featuredProject: "247-truck-tyre-services",
     contactKey: "maintenance",
-    ctaLabel: "Start a Project",
+    ctaLabel: "Start a project",
     proof: [
       { slug: "247-truck-tyre-services", role: "24/7 Emergency Enquiry Reliability" },
       { slug: "aftab-sons-transport", role: "Ongoing Performance & Fleet Updates" },

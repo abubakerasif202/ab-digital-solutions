@@ -131,7 +131,7 @@ test("the existing 3D studio entry is present and leads to the unchanged /studio
   await open(page);
   const link = page.getByRole("link", { name: /Enter Our 3D Studio/ });
   await expect(link).toHaveAttribute("href", "/studio");
-  await expect(page.locator("#virtual-studio-preview")).toContainText("Step Inside Our Studio");
+  await expect(page.locator("#virtual-studio-preview")).toContainText("Step inside our studio");
   const response = await page.request.get("/studio");
   expect(response.status()).toBe(200);
 });
