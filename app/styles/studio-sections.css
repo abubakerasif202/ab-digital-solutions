@@ -422,6 +422,17 @@
 .studio-page > .studio-enquiry:first-child { padding-top: clamp(40px, 6vw, 80px); border-top: 0; }
 .studio-crumbs--inline { margin-bottom: -8px; }
 
+/* The short column beside a long one holds its place while the long one scrolls, the way
+   the Process section already does, instead of leaving half the screen blank. Only when the
+   two columns sit side by side and the viewport is tall enough to hold the pinned column
+   (about 440px for the About plate, about 760px for the enquiry copy, plus the header). */
+@media (min-width: 1025px) and (min-height: 600px) {
+  .studio-about-plate-wrap { position: sticky; top: calc(var(--header-height) + 24px); }
+}
+@media (min-width: 1025px) and (min-height: 900px) {
+  .studio-enquiry-copy { position: sticky; top: calc(var(--header-height) + 24px); }
+}
+
 /* Offscreen rendering for the two homepage sections below the fold. */
 .cinematic-home .studio-about,
 .cinematic-home .studio-enquiry {
