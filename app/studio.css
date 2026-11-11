@@ -34,7 +34,7 @@
 .cinematic-home .client-proof a { text-decoration-color: var(--red); }
 .cinematic-home .hero-foot { padding-bottom: 24px; }
 .cinematic-home .hero-showcase-stack { padding-block: 28px; }
-.showcase-browser-bar { display: flex; min-height: 36px; gap: 16px; align-items: center; padding: 8px 14px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); font-family: var(--mono); font-size: 11px; }
+.showcase-browser-bar { display: flex; min-height: 36px; gap: 16px; align-items: center; padding: 8px 14px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); font-family: var(--mono); font-size: 12px; }
 .showcase-browser-dots { display: flex; gap: 5px; }
 .showcase-browser-dots i { width: 5px; height: 5px; background: #68646a; border-radius: 50%; }
 .showcase-browser-status { margin-left: auto; color: var(--paper-dim); white-space: nowrap; }
@@ -158,7 +158,7 @@
   .cinematic-home .slider-tabs button { flex: 1 0 44px; text-align: center; }
   .cinematic-home .hero-foot { display: none; }
   .cinematic-home .hero-marquee-group { padding: 20px 16px; gap: 12px 22px; }
-  .cinematic-home .hero-marquee-group span { font-size: 11px; }
+  .cinematic-home .hero-marquee-group span { font-size: 12px; }
   .cinematic-home .section-heading { margin-bottom: 32px; }
   .cinematic-home .section-heading h2 { font-size: 42px; }
 

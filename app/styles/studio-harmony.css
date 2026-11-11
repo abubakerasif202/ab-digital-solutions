@@ -132,3 +132,10 @@
 }
 /* WebGL owns hero parallax; do not stack a second scroll animation on it. */
 .cinematic-home .stage-hero .hero-3d-bg-wrap { animation: none; }
+
+/* Bodoni Moda's hairlines thin out on a dark ground below roughly 28px, which drops
+   thin strokes such as the hyphen in "E-commerce". Titles set in it at that size use a
+   heavier weight; 28px and up keep the display weights. */
+.cinematic-home .gr-services .service-card h3,
+.cinematic-home .gr-services .capability-card h3,
+.cinematic-home .showcase-caption strong { font-weight: 600; }

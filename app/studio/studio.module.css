@@ -1,6 +1,6 @@
 .page { padding-top: var(--header-height, 80px); background: #08090a; color: #f4f1ea; }
 .introduction { width: min(1440px, 100%); margin: auto; padding: 54px clamp(20px, 4vw, 64px) 38px; display: flex; justify-content: space-between; align-items: end; gap: 32px; }
-.kicker { font: 500 10px/1.6 var(--font-mono), monospace; letter-spacing: .17em; text-transform: uppercase; color: #c5aa78; margin: 0 0 16px; }
+.kicker { font: 500 12px/1.6 var(--font-mono), monospace; letter-spacing: .17em; text-transform: uppercase; color: #c5aa78; margin: 0 0 16px; }
 .introduction h1 { font: 400 clamp(42px, 5.1vw, 76px)/1.02 var(--font-display), serif; letter-spacing: -.035em; margin: 0; }
 .page em { color: #dec18b; font-family: var(--font-display), serif; font-weight: 400; }
 .introduction > p { font-size: 13px; line-height: 1.8; color: #a9a69f; margin: 0 0 3px; }
@@ -68,7 +68,7 @@
 .previewCopy em { color: #d8bb83; }
 .previewArt { display: block; position: relative; border: 1px solid #bba07255; }
 .previewArt img { width: 100%; height: auto; display: block; }
-.previewArt span { position: absolute; bottom: 16px; left: 16px; font: 9px var(--font-mono), monospace; letter-spacing: .13em; color: #ead5ab; }
+.previewArt span { position: absolute; bottom: 16px; left: 16px; font: 12px var(--font-mono), monospace; letter-spacing: .13em; color: #ead5ab; }
 @media (max-width: 900px) { .introduction { padding-top: 38px; } .introduction > p { max-width: 160px; font-size: 12px; } .directory { gap: 40px; grid-template-columns: 1fr; padding-block: 70px; } .directoryIntro { max-width: 520px; } .previewInner { gap: 28px; } .areaNav button { padding-inline: 6px; font-size: 11px; } .areaNav button span { margin-right: 6px; } }
 @media (max-width: 600px) { .introduction { padding: 32px 22px 24px; display: block; } .introduction > p { max-width: none; margin-top: 16px; } .introduction > p br { display: none; } .introduction h1 { font-size: 43px; } .stage { min-height: 570px; height: 72svh; max-height: 720px; } .poster { object-position: 58% center; } .stageTop { left: 18px; right: 18px; top: 18px; } .edition { font-size: 8px; max-width: 130px; line-height: 1.8; } .entry { left: 24px; top: 49%; } .entry h2 { font-size: 62px; } .entry > p:not(.kicker) { max-width: 280px; } .controls { padding-inline: 16px; } .areaNav { grid-template-columns: repeat(2, 1fr); } .areaNav button { padding: 16px 8px; min-height: 54px; font-size: 11px; } .areaNav button span { margin-right: 12px; } .secondaryControls { gap: 8px 16px; font-size: 10px; padding-block: 8px; } .secondaryControls > span { max-width: 130px; } .accessNote { padding-inline: 22px; font-size: 10px; } .sceneCaption { left: 18px; right: 18px; bottom: 18px; flex-direction: column; font-size: 9px; } .panel { top: auto; bottom: 70px; max-height: 48%; right: 14px; width: calc(100% - 28px); padding: 18px 22px; } .panel h2 { font-size: 33px; } .panelTop .kicker { letter-spacing: .08em; } .loading { left: 14px; right: 14px; top: 76px; bottom: auto; gap: 8px; justify-content: space-between; padding: 8px 12px; } .loading p { font-size: 10px; } .directoryItems { grid-template-columns: 1fr; gap: 28px; } .previewInner { grid-template-columns: 1fr; padding-block: 44px; } .previewArt { order: -1; } }
 @media (prefers-reduced-motion: reduce) { .primary { transition: none; } }
