@@ -95,7 +95,7 @@
     text-transform: none;
   }
 
-  .site-nav a:not(.nav-cta)::after {
+  .site-nav a:not(.nav-cta, .nav-phone)::after {
     position: static;
     display: block;
     height: auto;

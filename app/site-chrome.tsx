@@ -279,7 +279,7 @@ export function SiteHeader() {
         </div>
       </header>
       {mobileCtaVisible && !menuOpen ? (
-        <Link prefetch={prefetchNavigation} className="mobile-project-cta" href={pathname === "/" ? "#contact" : "/contact"}>
+        <Link prefetch={prefetchNavigation} className="mobile-project-cta" href="/contact">
           Start a project <ArrowIcon />
         </Link>
       ) : null}

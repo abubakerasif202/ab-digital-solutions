@@ -229,22 +229,15 @@ body { background: var(--obsidian); color: var(--ivory); }
   transform-origin: left;
 }
 
-/* Current page / section: gilt with the reference's leading slash. */
+/* Current page / section: gilt text plus the full underline. Nothing is inserted into
+   the link's flow, so its width never changes when the active section does. */
 .site-header .site-nav a:not(.nav-cta)::before { content: none; }
 .site-header .site-nav a.is-active,
 .site-header .site-nav a[aria-current] { color: var(--gilt); }
-.site-header .site-nav a[aria-current]::before {
-  position: static;
-  width: auto;
-  height: auto;
-  margin: 0 0.35em 0 0;
-  border-radius: 0;
-  background: none;
-  color: var(--gilt);
-  content: "/";
-  transform: none;
+.site-header .site-nav a:not(.nav-cta, .nav-phone):is(.is-active, [aria-current])::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
-.site-header .site-nav a[aria-current]::after { display: none; }
 
 .site-header .site-nav .nav-phone {
   color: var(--ivory-muted);
@@ -307,6 +300,10 @@ body { background: var(--obsidian); color: var(--ivory); }
   }
 
   .site-header .site-nav a[aria-current] { color: var(--gilt); }
+  .site-header .site-nav a:not(.nav-cta, .nav-phone):is(.is-active, [aria-current])::after { display: none; }
+
+  /* The numbered index covers the six page links only; the phone row carries no number. */
+  .site-header .site-nav .nav-phone::after { content: none; }
 
   .site-header .site-nav .nav-phone {
     margin-top: 12px;
