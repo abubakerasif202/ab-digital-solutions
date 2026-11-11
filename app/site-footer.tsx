@@ -2,6 +2,7 @@ import { ABBrandImage } from "./components/brand/ABBrandImage";
 import Link from "next/link";
 import { siteConfig } from "./site-config";
 import { servicePages } from "./services/service-data";
+import { contactServiceKeys } from "./contact-options";
 import { MessageCircle } from "lucide-react";
 import { ArrowIcon, Glyph } from "./icons";
 
@@ -33,7 +34,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
           </Link>
           <p>{siteConfig.description}</p>
           <Link className="footer-contact-cta button button-ghost" href="/contact">
-            Discuss your idea <ArrowIcon direction="right" />
+            Start a project <ArrowIcon direction="right" />
           </Link>
         </div>
 
@@ -50,7 +51,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
           <h2>Services</h2>
           <ul>
             {servicePages.map((service) => (
-              <li key={service.slug}><Link href={`/services/${service.slug}`}>{service.title}</Link></li>
+              <li key={service.slug}><Link href={`/services/${service.slug}`}>{contactServiceKeys[service.contactKey]}</Link></li>
             ))}
           </ul>
         </nav>

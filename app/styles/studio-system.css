@@ -330,21 +330,29 @@ body { background: var(--obsidian); color: var(--ivory); }
   color: var(--ivory);
 }
 
+/* One band of four columns on desktop, two on tablet, one on phones, so the contact
+   column never wraps onto its own row beneath the others. */
 .studio-footer-main {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 48px 64px;
-  padding-bottom: clamp(48px, 6vw, 72px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 48px;
+  padding-bottom: clamp(40px, 5vw, 56px);
+}
+.studio-footer-main > .studio-footer-brand { grid-column: 1 / -1; }
+@media (min-width: 1025px) {
+  .studio-footer-main { grid-template-columns: minmax(0, 4fr) minmax(0, 2fr) minmax(0, 3fr) minmax(0, 3fr); gap: 48px 56px; }
+  .studio-footer-main > .studio-footer-brand { grid-column: auto; }
+}
+@media (max-width: 640px) {
+  .studio-footer-main { grid-template-columns: minmax(0, 1fr); }
 }
 
-.studio-footer-brand { display: flex; min-width: 0; flex: 4 1 300px; flex-direction: column; align-items: flex-start; gap: 20px; }
+.studio-footer-brand { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: 20px; }
 .studio-footer-brand .brand .brand-monogram-image { width: 44px; height: 44px; }
 .studio-footer-brand p { max-width: 24rem; margin: 0; color: var(--ivory-muted); font-size: 1.0625rem; line-height: 1.6; }
 .studio-footer-brand .button { min-height: 48px; padding: 0 22px; font-size: 0.9375rem; }
 
-.studio-footer-col { min-width: 0; flex: 2 1 160px; }
-.studio-footer-col--services { flex: 3 1 220px; }
-.studio-footer-col:last-child { flex: 3 1 220px; }
+.studio-footer-col { min-width: 0; }
 
 .studio-footer-col h2 {
   margin: 0 0 16px;
@@ -356,8 +364,9 @@ body { background: var(--obsidian); color: var(--ivory); }
   text-transform: uppercase;
 }
 
-.studio-footer-col ul { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 1.0625rem; }
-.studio-footer-col li > :is(a, span) { display: inline-block; padding: 8px 0; color: var(--ivory-muted); text-decoration: none; }
+.studio-footer-col ul { display: flex; flex-direction: column; gap: 0; margin: 0; padding: 0; list-style: none; font-size: 1rem; }
+/* 12px + 20px line + 12px = a 44px target on every footer link. */
+.studio-footer-col li > :is(a, span) { display: inline-block; padding: 12px 0; line-height: 1.25rem; color: var(--ivory-muted); text-decoration: none; }
 .studio-footer-col a { transition: color var(--dur-ui) var(--ease-lux); }
 .studio-footer-col a:is(:hover, :focus-visible) { color: var(--ivory); }
 .studio-footer-col a.studio-footer-strong { color: var(--ivory); }
@@ -401,6 +410,7 @@ body { background: var(--obsidian); color: var(--ivory); }
 .studio-crumbs a:is(:hover, :focus-visible) { color: var(--ivory); }
 .studio-crumbs [aria-current] { color: var(--gilt); }
 
-.studio-footer-social { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
-.studio-footer-profiles { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 0; padding: 0; list-style: none; }
+/* Specific enough to beat `.studio-footer-col li > a`, which would otherwise stack the icon above its label. */
+.studio-footer-col li > a.studio-footer-social { display: inline-flex; align-items: center; gap: 10px; }
+.studio-footer-col .studio-footer-profiles { flex-direction: row; flex-wrap: wrap; gap: 0 20px; padding-top: 4px; border-top: 1px solid var(--hair); }
 .studio-footer-profiles a { display: inline-flex; align-items: center; min-height: 44px; }
