@@ -257,6 +257,8 @@
 }
 .hx-lede a { color: var(--ivory); text-decoration-color: var(--signal); text-underline-offset: 4px; }
 .hx-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.hx-actions .hx-studio-btn { border-color: rgba(255, 90, 60, 0.4); }
+.hx-actions .hx-studio-btn:hover { border-color: var(--signal); color: var(--ivory); }
 .hx-assure { display: flex; flex-wrap: wrap; gap: 8px 26px; font-size: 0.95rem; color: var(--ivory-muted); }
 .hx-assure a { color: var(--ivory); text-decoration-color: var(--hair-strong); text-underline-offset: 4px; }
 
@@ -335,8 +337,9 @@
   .hx-hero { align-items: flex-start; padding-top: calc(var(--header-height) + 4vh); padding-bottom: 44vh; }
   .hx-title { font-size: clamp(2.5rem, 11.4vw, 4.4rem); max-width: 10em; }
   .hx-lede { font-size: 1rem; line-height: 1.55; }
-  .hx-actions { flex-wrap: nowrap; gap: 8px; }
-  .hx-actions .ix-btn { flex: 1 1 0; justify-content: center; padding: 0.95rem 0.6rem; font-size: 0.92rem; white-space: nowrap; }
+  .hx-actions { flex-wrap: wrap; gap: 8px; }
+  .hx-actions .ix-btn { flex: 1 1 calc(50% - 4px); justify-content: center; padding: 0.95rem 0.6rem; font-size: 0.92rem; white-space: nowrap; }
+  .hx-actions .hx-studio-btn { flex: 1 1 100%; border-color: rgba(255, 90, 60, 0.45); }
   .hx-actions .ix-btn svg { display: none; }
   .hx-copy { gap: 18px; }
   .hx-veil { background: linear-gradient(180deg, #07080a 0%, rgba(7, 8, 10, 0.9) 38%, rgba(7, 8, 10, 0) 70%), linear-gradient(0deg, #07080a 0%, rgba(7, 8, 10, 0) 18%); }

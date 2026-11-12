@@ -145,6 +145,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <div className="hx-actions">
                 <a className="ix-btn ix-btn--solid" href="#contact">Start a project <ArrowIcon /></a>
                 <a className="ix-btn ix-btn--ghost" href="#work">Explore our work <ArrowIcon direction="down-right" /></a>
+                <Link className="ix-btn ix-btn--ghost hx-studio-btn" href="/studio" prefetch={false}>
+                  Virtual 3D Studio <ArrowIcon direction="right" />
+                </Link>
               </div>
               <div className="hx-assure" aria-label="Explore the work or call directly">
                 <Link href="/work" prefetch={false}>{projects.length} project case studies <ArrowIcon /></Link>
