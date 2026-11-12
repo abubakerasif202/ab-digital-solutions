@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { CSSProperties } from "react";
+import { Crumbs } from "../components/inspector/Crumbs";
+import { InspectFrame } from "../components/inspector/InspectFrame";
 import { StudioAbout } from "../components/studio/StudioAbout";
 import { PageTransition } from "../components/motion/PageTransition";
 import { ArrowIcon } from "../icons";
-import { ProjectArtwork } from "../project-artwork";
+import { projectArtworkRatio } from "../project-artwork";
 import { findProject, projects, type Project } from "../project-data";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
@@ -70,61 +73,23 @@ export default function AboutPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page studio-page gr-about" id="main-content">
-        <nav className="studio-shell studio-crumbs" aria-label="Breadcrumb">
-          <Link href="/">Home</Link>
-          <span aria-hidden="true">/</span>
-          <span aria-current="page">About</span>
-        </nav>
+      <main className="ip ip-about inspector-home" id="main-content">
+        <div className="ip-about-crumbs">
+          <Crumbs items={[{ label: "Home", href: "/" }, { label: "About" }]} />
+        </div>
 
-        <StudioAbout headingAs="h1" index="01" />
+        <StudioAbout headingAs="h1" index="01" variant="inspector" />
 
-        <section className="container gr-about-approach" aria-labelledby="approach-heading">
-          <div className="gr-section-head">
-            <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />Approach</p>
-            <h2 id="approach-heading" className="gr-display-l">Design, development and <span className="accent-serif">systems</span> under one roof.</h2>
-          </div>
-          <ol className="gr-about-approach-list">
-            {approach.map(([title, copy], index) => (
-              <li key={title} data-reveal>
-                <span className="gr-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="gr-about-collage" aria-labelledby="collage-heading">
-          <div className="container">
-            <div className="gr-about-collage-head" data-reveal>
-              <p className="eyebrow">Selected studio projects</p>
-              <h2 id="collage-heading">From a first impression to <span className="accent-serif">day-to-day operations.</span></h2>
-              <Link className="text-link" href="/work">See all {projects.length} projects <ArrowIcon /></Link>
+        <section className="ip-sec ip-sec--tight" aria-labelledby="approach-heading">
+          <div className="ip-wrap">
+            <div className="ip-head">
+              <p className="ix-label">02 · Approach</p>
+              <h2 id="approach-heading" className="ip-h2">Design, development and <em>systems</em> under one roof.</h2>
             </div>
-            <div className="gr-about-collage-grid">
-              {collage.map((project, index) => (
-                <Link className={`gr-about-tile gr-about-tile--${index + 1}`} href={`/work/${project.slug}`} key={project.slug} data-cursor="VIEW" data-reveal>
-                  <span className="gr-about-tile-media">
-                    <ProjectArtwork project={project} sizes="(max-width: 860px) 92vw, 50vw" />
-                  </span>
-                  <span className="gr-about-tile-caption"><span>{project.sector}</span>{project.name}</span><span className="studio-project-evidence">{project.description}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="gr-about-principles" aria-labelledby="principles-heading">
-          <div className="container">
-            <div className="gr-section-head">
-              <p className="eyebrow section-index"><span className="section-index-num">03</span><span className="micro-rule" aria-hidden="true" />The AB standard</p>
-              <h2 id="principles-heading" className="gr-display-l">Feel the quality. <span className="accent-serif">Then see the thinking.</span></h2>
-            </div>
-            <ol className="gr-about-principles-list">
-              {principles.map(([number, title, copy]) => (
-                <li key={number} data-reveal>
-                  <span>{number}</span>
+            <ol className="ip-approach">
+              {approach.map(([title, copy], index) => (
+                <li key={title} style={{ "--i": index } as CSSProperties}>
+                  <span className="ip-big-no" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                   <h3>{title}</h3>
                   <p>{copy}</p>
                 </li>
@@ -133,13 +98,63 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <aside className="gr-final-cta" aria-labelledby="about-cta-heading">
-          <div className="container gr-final-cta-inner" data-reveal>
-            <p className="eyebrow">Start a conversation</p>
-            <h2 id="about-cta-heading">Tell us what you are building and where you want the business to <span className="accent-serif">go.</span></h2>
-            <div className="content-actions">
-              <Link className="button button-primary" href="/contact">Start a project <ArrowIcon /></Link>
-              <Link className="button button-ghost" href="/services">Explore services <ArrowIcon direction="right" /></Link>
+        <section className="ip-sec ip-sec--line" aria-labelledby="collage-heading">
+          <div className="ip-wrap">
+            <div className="ip-head ip-head--row">
+              <div>
+                <p className="ix-label">Selected studio projects</p>
+                <h2 id="collage-heading" className="ip-h2">From a first impression to <em>day-to-day operations.</em></h2>
+              </div>
+              <Link className="ip-link" href="/work">See all {projects.length} projects <ArrowIcon /></Link>
+            </div>
+            <div className="ip-collage">
+              {collage.map((project, index) => (
+                <Link className={`ip-tile ip-tile--${index + 1}`} href={`/work/${project.slug}`} key={project.slug}>
+                  <span className="ip-tile-media">
+                    <InspectFrame
+                      src={project.image}
+                      alt={project.alt}
+                      ratio={projectArtworkRatio(project)}
+                      sizes="(max-width: 860px) 92vw, 50vw"
+                    />
+                  </span>
+                  <span className="ip-tile-cap"><span className="ip-kicker">{project.sector}</span><strong>{project.name}</strong></span>
+                  <span className="ip-tile-note">{project.description}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="ip-paper" aria-labelledby="principles-heading">
+          <div className="ip-wrap">
+            <div className="ip-head ip-head--paper">
+              <p className="ix-label">03 · The AB standard</p>
+              <h2 id="principles-heading" className="ip-h2">Feel the quality. <em>Then see the thinking.</em></h2>
+            </div>
+            <ol className="ip-principles">
+              {principles.map(([number, title, copy], index) => (
+                <li key={number} style={{ "--i": index } as CSSProperties}>
+                  <span className="ip-big-no" aria-hidden="true">{number}</span>
+                  <h3>{title}</h3>
+                  <p>{copy}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <aside className="ip-cta" aria-labelledby="about-cta-heading">
+          <div className="ip-wrap ip-cta-grid">
+            <div>
+              <p className="ix-label">Start a conversation</p>
+              <h2 id="about-cta-heading" className="ip-h2">Tell us what you are building and where you want the business to <em>go.</em></h2>
+            </div>
+            <div className="ip-cta-side">
+              <div className="ip-actions">
+                <Link className="ix-btn ix-btn--solid" href="/contact">Start a project <ArrowIcon /></Link>
+                <Link className="ix-btn ix-btn--ghost" href="/services">Explore services <ArrowIcon direction="right" /></Link>
+              </div>
             </div>
           </div>
         </aside>

@@ -1,0 +1,807 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\abuba\\AppData\\Local\\nvm\\v22.23.1\\node.exe",
+      "C:\\Users\\abuba\\ab-digital-solutions\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/e2e/opendesign-preview.spec.mjs"
+    ],
+    "configFile": "C:\\Users\\abuba\\ab-digital-solutions\\playwright.config.mjs",
+    "rootDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/abuba/ab-digital-solutions/test-results/inspector-preview-production",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-production",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.mjs",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://localhost:3116",
+          "browserName": "chromium",
+          "actionTimeout": 10000,
+          "navigationTimeout": 30000,
+          "launchOptions": {
+            "args": [
+              "--no-sandbox",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "qa/inspector-preview-production/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "opendesign-preview.spec.mjs",
+      "file": "opendesign-preview.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "mobile-compact 360x800: no overflow, no console or CSP errors, images load",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4354,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:03:50.523Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-9c5d02a53aa5284f9cc3",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 50,
+          "column": 3
+        },
+        {
+          "title": "mobile-standard 390x844: no overflow, no console or CSP errors, images load",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6722,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:03:55.050Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-1f0e68830ad81d431f16",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 50,
+          "column": 3
+        },
+        {
+          "title": "tablet-portrait 820x1180: no overflow, no console or CSP errors, images load",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4870,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:01.800Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-786e39135ba664dca422",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 50,
+          "column": 3
+        },
+        {
+          "title": "desktop 1440x900: no overflow, no console or CSP errors, images load",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4394,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:06.698Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-51499a76e1f29198e461",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 50,
+          "column": 3
+        },
+        {
+          "title": "wide 1920x1080: no overflow, no console or CSP errors, images load",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2621,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:11.118Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-da2d510abbddb6159538",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 50,
+          "column": 3
+        },
+        {
+          "title": "noindex everywhere it can be set, and absent from sitemap, robots and the live homepage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2100,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:13.763Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-38d4d4d54e110060bec9",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "production gate: the route is a 404 when VERCEL_ENV=production",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 278,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:15.893Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-40dbb9177121685dbfc7",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 80,
+          "column": 1
+        },
+        {
+          "title": "the live homepage is the inspector hero and never contains the preview",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2040,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:16.188Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-a738c3077a11de0c48c9",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 86,
+          "column": 1
+        },
+        {
+          "title": "structure: one h1, ordered headings, one main landmark, unique ids, skip link target exists",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1513,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:18.256Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-42abca8c253d4ab54dd0",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 94,
+          "column": 1
+        },
+        {
+          "title": "work: server-rendered cards, six shown first, filters, case-study links, honest status labels",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3099,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:19.802Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-a5580e1410e56fc203cf",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 110,
+          "column": 1
+        },
+        {
+          "title": "the existing 3D studio entry is present and leads to the unchanged /studio route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1524,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:22.928Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-0e635bf8f502cf23d5a2",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 131,
+          "column": 1
+        },
+        {
+          "title": "without JavaScript every project is listed and the headline is visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1400,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:24.478Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-58afe2b6d3be117a6373",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 140,
+          "column": 1
+        },
+        {
+          "title": "disciplines: accordion semantics and 'Discuss this' selects the service in the shared form",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3732,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:25.901Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-f91714a76b232416f015",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 149,
+          "column": 1
+        },
+        {
+          "title": "form: the shared ContactForm posts the live /api/contact contract and the API accepts that shape",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5135,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatch\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/temporarily unavailable/i\u001b[39m\nReceived string:  \u001b[31m\"Enquiry submissions are disabled in preview deployments. Nothing was sent.\"\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatch\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/temporarily unavailable/i\u001b[39m\nReceived string:  \u001b[31m\"Enquiry submissions are disabled in preview deployments. Nothing was sent.\"\u001b[39m\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:190:41",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                      "column": 41,
+                      "line": 190
+                    },
+                    "snippet": "  188 |   }\n  189 |   expect(accepted.status()).toBe(503);\n> 190 |   expect((await accepted.json()).error).toMatch(/temporarily unavailable/i);\n      |                                         ^\n  191 |   const rejected = await request.post(\"/api/contact\", { data: { ...payload, services: [\"Not a real service\"] } });\n  192 |   expect(rejected.status()).toBe(400);\n  193 | });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                        "column": 41,
+                        "line": 190
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatch\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/temporarily unavailable/i\u001b[39m\nReceived string:  \u001b[31m\"Enquiry submissions are disabled in preview deployments. Nothing was sent.\"\u001b[39m\n\n  188 |   }\n  189 |   expect(accepted.status()).toBe(503);\n> 190 |   expect((await accepted.json()).error).toMatch(/temporarily unavailable/i);\n      |                                         ^\n  191 |   const rejected = await request.post(\"/api/contact\", { data: { ...payload, services: [\"Not a real service\"] } });\n  192 |   expect(rejected.status()).toBe(400);\n  193 | });\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:190:41"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:29.657Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-production\\opendesign-preview-form-th-f2293--the-API-accepts-that-shape\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-production\\opendesign-preview-form-th-f2293--the-API-accepts-that-shape\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-production\\opendesign-preview-form-th-f2293--the-API-accepts-that-shape\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                    "column": 41,
+                    "line": 190
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-55cb2197fbd0dcae8ac0",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 162,
+          "column": 1
+        },
+        {
+          "title": "form: a failed send is reported as a failure, never as success",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2845,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:36.023Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-69c4f94a89ca35afc543",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 195,
+          "column": 1
+        },
+        {
+          "title": "hero: the approved artwork is the fallback, and ?fallback=css swaps in the CSS monogram",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1677,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:39.012Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-b199256f915d4668c9d3",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 207,
+          "column": 1
+        },
+        {
+          "title": "hero: the Three.js scene still activates on desktop after pointer intent",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1825,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:40.708Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-f103320ea889bf2d4115",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 221,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: the CSS monogram does not animate",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1273,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:42.555Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-e3885447d4a41bf871c8",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 233,
+          "column": 1
+        },
+        {
+          "title": "keyboard: skip link first, then the shared header menu works on mobile",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1444,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:04:43.853Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-64b2bde43e7710be4d28",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 239,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-12T22:03:49.616Z",
+    "duration": 55813.448,
+    "expected": 18,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

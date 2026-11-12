@@ -62,9 +62,12 @@ body { background: var(--obsidian); color: var(--ivory); }
 :is(h1, h2, h3) em,
 :is(h1, h2, h3) .accent-serif {
   color: var(--accent-ink) !important;
-  font-family: var(--display);
+  font-family: var(--accent-serif-font);
   font-style: italic;
   font-weight: 400;
+  /* The accent face has a smaller x-height than the grotesque; scale to match. */
+  font-size: 1.08em;
+  letter-spacing: -0.01em;
 }
 
 /* Specific enough to outrank legacy `.content-page h1` sizing on interior pages. */

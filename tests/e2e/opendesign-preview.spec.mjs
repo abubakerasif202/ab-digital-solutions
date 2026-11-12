@@ -83,10 +83,11 @@ test("production gate: the route is a 404 when VERCEL_ENV=production", async ({ 
   expect(response.status()).toBe(404);
 });
 
-test("the live homepage is unchanged", async ({ page }) => {
+test("the live homepage is the inspector hero and never contains the preview", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator("h1.stage-title")).toContainText("Websites with");
-  await expect(page.locator(".stage-hero")).toBeVisible();
+  await expect(page.locator("h1.hx-title")).toContainText("Websites with");
+  await expect(page.locator(".hx-hero")).toBeVisible();
+  await expect(page.locator(".hx-stage")).toBeAttached();
   await expect(page.locator(".odp")).toHaveCount(0);
 });
 
@@ -221,7 +222,11 @@ test("hero: the Three.js scene still activates on desktop after pointer intent",
   await open(page, { width: 1440, height: 900 });
   const cores = await page.evaluate(() => navigator.hardwareConcurrency);
   test.skip(cores <= 4, "Hero3DExperience deliberately stays on the static artwork for devices with 4 or fewer cores");
-  await page.mouse.move(1000, 400);
+  const stage = page.locator(".hero-3d-bg-wrap");
+  await stage.scrollIntoViewIfNeeded();
+  const bounds = await stage.boundingBox();
+  expect(bounds).not.toBeNull();
+  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
   await expect(page.locator(".hero-3d-container canvas")).toBeVisible({ timeout: 20_000 });
 });
 

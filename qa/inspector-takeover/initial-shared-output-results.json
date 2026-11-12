@@ -1,0 +1,268 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\abuba\\AppData\\Local\\nvm\\v22.23.1\\node.exe",
+      "C:\\Users\\abuba\\ab-digital-solutions\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/e2e/inspector-wall.spec.mjs",
+      "--timeout",
+      "60000"
+    ],
+    "configFile": "C:\\Users\\abuba\\ab-digital-solutions\\playwright.config.mjs",
+    "rootDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/abuba/ab-digital-solutions/test-results/virtual-studio",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\virtual-studio",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.mjs",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://localhost:3100",
+          "browserName": "chromium",
+          "actionTimeout": 10000,
+          "navigationTimeout": 30000,
+          "launchOptions": {
+            "args": [
+              "--no-sandbox",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "qa/virtual-studio/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "inspector-wall.spec.mjs",
+      "file": "inspector-wall.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "fallback imagery follows the selected project without WebGL",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2428,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:40:32.615Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4338cad12414d2e29ef7-1919e2c5f6a688cd0aa1",
+          "file": "inspector-wall.spec.mjs",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "wall motion can be paused and reduced-motion preferences update live",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9787,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:40:35.210Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4338cad12414d2e29ef7-47b031a297ce56ce3c6e",
+          "file": "inspector-wall.spec.mjs",
+          "line": 16,
+          "column": 1
+        },
+        {
+          "title": "a lost WebGL context restores the current project and survives navigation",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 13112,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.hx-stage')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" locator('.hx-stage') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('.hx-stage')\u001b[22m\n\u001b[2m    23 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.hx-stage')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" locator('.hx-stage') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('.hx-stage')\u001b[22m\n\u001b[2m    23 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\inspector-wall.spec.mjs:50:43",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\inspector-wall.spec.mjs",
+                      "column": 43,
+                      "line": 50
+                    },
+                    "snippet": "  48 |   await expect(page.locator(\".hx-stage\")).toHaveAttribute(\"data-failed\", \"false\");\n  49 |   await page.locator(\".hx-actions\").getByRole(\"link\").first().click();\n> 50 |   await expect(page.locator(\".hx-stage\")).toHaveCount(0);\n     |                                           ^\n  51 |   await page.goBack();\n  52 |   await expect(page.locator(\".hx-stage\")).toHaveAttribute(\"data-ready\", \"true\", { timeout: 30000 });\n  53 |   expect(errors).toEqual([]);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\inspector-wall.spec.mjs",
+                        "column": 43,
+                        "line": 50
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.hx-stage')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" locator('.hx-stage') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('.hx-stage')\u001b[22m\n\u001b[2m    23 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n\n  48 |   await expect(page.locator(\".hx-stage\")).toHaveAttribute(\"data-failed\", \"false\");\n  49 |   await page.locator(\".hx-actions\").getByRole(\"link\").first().click();\n> 50 |   await expect(page.locator(\".hx-stage\")).toHaveCount(0);\n     |                                           ^\n  51 |   await page.goBack();\n  52 |   await expect(page.locator(\".hx-stage\")).toHaveAttribute(\"data-ready\", \"true\", { timeout: 30000 });\n  53 |   expect(errors).toEqual([]);\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\inspector-wall.spec.mjs:50:43"
+                    },
+                    {
+                      "message": "Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, copyfile 'C:\\Users\\abuba\\ab-digital-solutions\\test-results\\virtual-studio\\.playwright-artifacts-0\\traces\\4338cad12414d2e29ef7-1ca56b4235e739335ba6-recording5.network' -> 'C:\\Users\\abuba\\ab-digital-solutions\\test-results\\virtual-studio\\.playwright-artifacts-0\\traces\\4338cad12414d2e29ef7-1ca56b4235e739335ba6-recording5-pwnetcopy-1.network'"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:40:45.024Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\virtual-studio\\inspector-wall-a-lost-WebG-8019a-ect-and-survives-navigation\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\virtual-studio\\inspector-wall-a-lost-WebG-8019a-ect-and-survives-navigation\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\virtual-studio\\inspector-wall-a-lost-WebG-8019a-ect-and-survives-navigation\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\inspector-wall.spec.mjs",
+                    "column": 43,
+                    "line": 50
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4338cad12414d2e29ef7-1ca56b4235e739335ba6",
+          "file": "inspector-wall.spec.mjs",
+          "line": 31,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-12T21:40:32.061Z",
+    "duration": 26881.166,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

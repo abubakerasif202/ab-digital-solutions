@@ -1,4 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { mkdir } from "node:fs/promises";
+
+const output = process.env.QA_OUT || "qa/wild-pest-solutions";
+test.beforeAll(() => mkdir(output, { recursive: true }));
 
 for (const width of [320, 375, 768, 1024, 1440]) {
   test(`Wild Pest case study at ${width}px`, async ({ page }) => {
@@ -18,9 +22,9 @@ for (const width of [320, 375, 768, 1024, 1440]) {
     await page.waitForTimeout(700);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     expect(await page.locator("main img").evaluateAll(imgs => imgs.every(img => img.complete && img.naturalWidth > 0))).toBe(true);
-    await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });
+    await page.screenshot({ path: `${output}/case-study-${width}.png`, fullPage: true });
     await page.emulateMedia({ reducedMotion: "reduce" });
-    expect(await page.locator(".gr-cs-pan img").evaluate(el => getComputedStyle(el).animationName)).toBe("none");
+    expect(await page.locator(".ip-pan img").evaluate(el => getComputedStyle(el).animationName)).toBe("none");
     await page.keyboard.press("Tab");
     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);
     expect(errors).toEqual([]);
@@ -35,7 +39,7 @@ test("portfolio filtering retains accessible project and live links", async ({ p
   await expect(card.getByRole("link", { name: /View case study/ })).toHaveAttribute("href", "/work/wild-pest-solutions");
   await card.scrollIntoViewIfNeeded();
   await page.waitForTimeout(1200);
-  await card.screenshot({ path: "qa/wild-pest-solutions/portfolio-card.png" });
+  await card.screenshot({ path: `${output}/portfolio-card.png` });
   await page.getByRole("button", { name: /All work/ }).click();
   expect(await page.locator("article").count()).toBeGreaterThanOrEqual(18);
 });
@@ -50,11 +54,13 @@ test("Pept Up Labs metadata, gallery and responsive layouts", async ({ page }) =
     await expect(page).toHaveTitle("Pept Up Labs Website Project | AB Web Studio");
     await expect(page.locator("h1")).toHaveText("Pept Up Labs");
     await expect(page.getByRole("link", { name: /Visit Live Website/ }).first()).toHaveAttribute("href", "https://peptuplabs.com.au/");
-    await page.locator(".gr-cs-gallery").scrollIntoViewIfNeeded();
+    await page.getByRole("list", { name: "Pept Up Labs website screens" }).scrollIntoViewIfNeeded();
     await page.waitForTimeout(1000);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    expect(await page.locator(".gr-cs-gallery img").evaluateAll(imgs => imgs.every(img => img.complete && img.naturalWidth > 0))).toBe(true);
-    await page.screenshot({ path: `qa/wild-pest-solutions/peptup-case-study-${width}.png`, fullPage: true });
+    const gallery = page.getByRole("list", { name: "Pept Up Labs website screens" });
+    await expect(gallery.locator("img")).not.toHaveCount(0);
+    expect(await gallery.locator("img").evaluateAll(imgs => imgs.every(img => img.complete && img.naturalWidth > 0))).toBe(true);
+    await page.screenshot({ path: `${output}/peptup-case-study-${width}.png`, fullPage: true });
   }
   expect(errors).toEqual([]);
 });

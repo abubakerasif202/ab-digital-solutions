@@ -1,21 +1,21 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { PageTransition } from "./components/motion/PageTransition";
 import { ContactForm } from "./components/ContactForm";
-import { LiveTicker } from "./components/LiveTicker";
-import { findProject, projects, type Project } from "./project-data";
+import { HeroStage, type StageProject } from "./components/home/HeroStage";
+import { WorkIndex, type WorkRow } from "./components/home/WorkIndex";
+import { findProject, projectDestinationLabel, projects, type Project } from "./project-data";
 import { findService } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
 import { ArrowIcon } from "./icons";
-import { PortfolioSection } from "./components/PortfolioSection";
-import { BrandFilmSection } from "./components/film/BrandFilmSection";
 import { StudioCapabilities } from "./components/StudioCapabilities";
-import { ProcessTimeline } from "./components/motion/ProcessTimeline";
+import { ProcessBand } from "./components/home/sections/ProcessBand";
+import { ServiceInspector, type ServiceRow } from "./components/home/sections/ServiceInspector";
 import { StackLedger } from "./components/StackLedger";
 import { EnquirySection } from "./components/studio/EnquirySection";
 import { StudioAbout } from "./components/studio/StudioAbout";
-import { VirtualStudioPreview } from "./components/studio/VirtualStudioPreview";
 
 const services = [
   {
@@ -88,6 +88,15 @@ const serviceRows = services.map((service) => {
   return { ...service, featured: featured as Project };
 });
 
+const inspectorRows: ServiceRow[] = serviceRows.map((service) => ({
+  number: service.number,
+  slug: service.slug,
+  title: service.title,
+  description: service.description,
+  details: service.details,
+  project: { name: service.featured.name, sector: service.featured.sector, image: service.featured.image },
+}));
+
 const processSteps = [
   ["01", "Discover", "We clarify your audience, offer, goals and the actions your website needs to drive."],
   ["02", "Design", "We map the content, page structure and customer journey before visual design begins."],
@@ -95,7 +104,24 @@ const processSteps = [
   ["04", "Launch", "We complete launch checks, publish with confidence and stay available as you grow."],
 ] as const;
 
-const tickerItems = projects.slice(0, 6).map(({ slug, name, sector, image }) => ({ slug, name, sector, image }));
+// Six featured projects drive both the WebGL wall and the work index.
+const featured = projects.slice(0, 6);
+const stageProjects: StageProject[] = featured.map((project) => ({
+  slug: project.slug,
+  name: project.name,
+  image: project.image,
+  sector: project.sector,
+  stack: [...project.techStack],
+  href: `/work/${project.slug}`,
+}));
+const workRows: WorkRow[] = featured.map((project) => ({
+  slug: project.slug,
+  name: project.name,
+  sector: project.sector,
+  destinationLabel: projectDestinationLabel(project as Project),
+  stack: [...project.techStack],
+  href: `/work/${project.slug}`,
+}));
 
 export default function AgencyHome({ currentYear }: { currentYear: number }) {
   return (
@@ -103,160 +129,75 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
       <SiteHeader />
 
       <PageTransition>
-      <main id="main-content" className="cinematic-home">
-        <section className="stage-hero studio-supporting-hero" aria-labelledby="hero-heading">
-          <div className="stage-hero-art" aria-hidden="true">
+      <main id="main-content" className="cinematic-home inspector-home">
+        <div className="hx-scope">
+          <HeroStage projects={stageProjects} />
 
-            <span className="stage-ring stage-ring--outer" />
-            <span className="stage-ring stage-ring--inner" />
-          </div>
-
-          <div className="container stage-hero-top">
-            <p className="eyebrow hero-label">
-              <span className="eyebrow-mark" />
-              <span className="hero-label-primary">Sydney studio</span>
-              <span className="micro-rule" aria-hidden="true" />
-              <span className="hero-label-secondary">Australia-wide</span>
-            </p>
-            <span className="stage-edition" aria-hidden="true">Independent by design.</span>
-          </div>
-
-          <div className="container stage-hero-body">
-            <h1 id="hero-heading" className="stage-title">
-              <span className="stage-line"><span>Websites with</span></span>
-              <span className="stage-line"><span>presence.</span></span>
-              <span className="stage-line stage-line--ruby"><span className="metal-ruby">Software with</span></span>
-              <span className="stage-line stage-line--gilt"><span className="metal-gilt">purpose.</span></span>
-            </h1>
-
-            <div className="stage-foot">
-              <div className="stage-intro">
-                <p className="stage-tagline">Built for your business.</p>
-                <p className="hero-intro">
-                  Premium <Link href="/services/web-design-sydney" prefetch={false}>websites and redesigns</Link>, online stores and custom business systems for Australian businesses. Thoughtful design, clear customer journeys and technology that supports your daily work.
-                </p>
-                <div className="hero-actions">
-                  <a className="button button-primary" href="#contact" data-magnetic>
-                    Start Your Project <ArrowIcon />
-                  </a>
-                  <a className="button button-ghost" href="#work" data-magnetic>
-                    Explore Our Work <ArrowIcon direction="down-right" />
-                  </a>
-                </div>
-                <div className="stage-confidence" aria-label="Explore the studio or call directly">
-                  <Link href="/work" prefetch={false}>{projects.length} project case studies <ArrowIcon /></Link>
-                  <a href={`tel:${siteConfig.phoneInternational}`}>Prefer a conversation? {siteConfig.phoneDisplay}</a>
-                </div>
+          <section className="hx-hero" aria-labelledby="hero-heading">
+            <div className="hx-copy">
+              <p className="hx-eyebrow ix-label"><i aria-hidden="true" />Sydney studio · Australia-wide</p>
+              <h1 id="hero-heading" className="hx-title">
+                Websites with presence. <span className="hx-sub">Software with <em>purpose.</em></span>
+              </h1>
+              <p className="hx-lede">
+                Premium <Link href="/services/web-design-sydney" prefetch={false}>websites and redesigns</Link>, online stores and custom business systems for Australian businesses. Thoughtful design, clear customer journeys and technology that supports your daily work.
+              </p>
+              <div className="hx-actions">
+                <a className="ix-btn ix-btn--solid" href="#contact">Start a project <ArrowIcon /></a>
+                <a className="ix-btn ix-btn--ghost" href="#work">Explore our work <ArrowIcon direction="down-right" /></a>
               </div>
-              <LiveTicker items={tickerItems} />
-            </div>
-          </div>
-
-          <div className="container stage-bar">
-            <a className="stage-scroll-cue" href="#work"><span className="stage-scroll-line" aria-hidden="true" />Scroll to explore</a>
-            <p>Design-led websites · Purpose-built technology</p>
-            <Link href="/work">{projects.length} real projects <ArrowIcon /></Link>
-          </div>
-
-          <div className="hero-marquee" aria-label="Capabilities">
-            <div className="hero-marquee-track">
-              <div className="hero-marquee-group">
-                <span>Web design</span><i aria-hidden="true">/</i><span>Development</span><i aria-hidden="true">/</i><span>Business systems</span><i aria-hidden="true">/</i><span>AI + automation</span><i aria-hidden="true">/</i><span>Performance</span><i aria-hidden="true">/</i>
-              </div>
-              <div className="hero-marquee-group" aria-hidden="true">
-                <span>Web design</span><i>/</i><span>Development</span><i>/</i><span>Business systems</span><i>/</i><span>AI + automation</span><i>/</i><span>Performance</span><i>/</i>
+              <div className="hx-assure" aria-label="Explore the work or call directly">
+                <Link href="/work" prefetch={false}>{projects.length} project case studies <ArrowIcon /></Link>
+                <a href={`tel:${siteConfig.phoneInternational}`}>Prefer a conversation? {siteConfig.phoneDisplay}</a>
               </div>
             </div>
+          </section>
+
+          <section className="wx" id="work" aria-labelledby="work-heading">
+            <div className="wx-inner">
+              <div className="wx-head">
+                <p className="ix-label">01 · Selected work</p>
+                <h2 id="work-heading">The work speaks <em>first.</em></h2>
+                <p>{projects.length} responsive websites and custom software projects across grocery, fresh produce, mobility, logistics, local services, construction and property. Move across a project to inspect it.</p>
+              </div>
+              <WorkIndex rows={workRows} total={projects.length} />
+            </div>
+          </section>
+        </div>
+
+        <StudioCapabilities />
+
+        <section className="sx-svc" aria-labelledby="svc-index-heading">
+          <div className="sx-svc-inner">
+            <div className="sx-svc-head">
+              <p className="ix-label">Service index</p>
+              <h2 id="svc-index-heading">The details that bring it <em>together.</em></h2>
+            </div>
+            <ServiceInspector rows={inspectorRows} />
           </div>
         </section>
 
-        <PortfolioSection />
-
-        <VirtualStudioPreview />
-
-        <BrandFilmSection />
-
-
-        <section className="section ruby-band" id="services" aria-labelledby="services-heading">
-          <div className="container">
-            <div className="section-heading" data-reveal>
-              <div>
-                <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />Capabilities</p>
-                <h2 id="services-heading" className="gr-display-xl">From first impression to <span className="accent-serif">everyday operation.</span></h2>
-              </div>
-              <p>From the first strategic decision to post-launch support, every recommendation is tied to a clear business goal.</p>
-            </div>
-            <StudioCapabilities />
-          </div>
-        </section>
-
-        <section className="section services-section gr-services" aria-label="Services">
-          <div className="container">
-            <div className="gr-service-index">
-              <p className="eyebrow supporting-services-label">The details that bring it together</p>
-              <ol className="services-list">
-                {serviceRows.map((service) => (
-                  <li key={service.number}>
-                    <Link className="service-card" data-reveal href={`/services/${service.slug}`}>
-                      <span className="service-card-index">{service.number}</span>
-                      <h3>{service.title}</h3>
-                      <span className="gr-service-body">
-                        <span className="gr-service-desc">{service.description}</span>
-                        <span className="gr-service-tags">
-                          {service.details.map((detail) => <span key={detail}>{detail}</span>)}
-                        </span>
-                      </span>
-                      <span className="service-card-arrow" aria-hidden="true"><ArrowIcon /></span>
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </section>
-
-        <section className="section process-section" id="process" aria-labelledby="process-heading">
-          <div className="container process-layout">
-            <div className="process-intro" data-reveal>
-              <p className="eyebrow section-index"><span className="section-index-num">03</span><span className="micro-rule" aria-hidden="true" />How we work</p>
-              <h2 id="process-heading">A clear path from ambition to <span className="accent-serif">launch.</span></h2>
-              <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
-              <a className="text-link" href="#contact">Start Your Project <ArrowIcon /></a>
-            </div>
-            <ProcessTimeline>
-              <span className="process-rail-fill" aria-hidden="true" />
-              <ol className="process-list">
-              {processSteps.map(([number, title, description]) => (
-                <li data-process-step key={number}>
-                  <span>{number}</span>
-                  <div><h3>{title}</h3><p>{description}</p></div>
-                  <span aria-hidden="true"><ArrowIcon direction="down-right" /></span>
-                </li>
-              ))}
-              </ol>
-            </ProcessTimeline>
-          </div>
-        </section>
+        <ProcessBand steps={processSteps} />
 
         <StackLedger />
 
-        <section className="standard-section" aria-labelledby="standard-heading">
-          <div className="container standard-layout">
-            <div className="standard-statement" data-reveal>
-              <p className="eyebrow section-index"><span className="section-index-num">05</span><span className="micro-rule" aria-hidden="true" />The AB standard</p>
-              <h2 id="standard-heading">Feel the quality. <span className="accent-serif">Then see the thinking.</span></h2>
+        <section className="sx-standard" aria-labelledby="standard-heading">
+          <div className="sx-standard-inner">
+            <div className="sx-standard-statement">
+              <p className="ix-label">05 · The AB standard</p>
+              <h2 id="standard-heading">Feel the quality. <em>Then see the thinking.</em></h2>
             </div>
-            <div className="standard-points">
-              <article data-reveal><span>01 / Show</span><h3>Show the work first.</h3><p>Visitors understand who you help, what you offer and why your business is worth choosing.</p></article>
-              <article data-reveal><span>02 / Explain</span><h3>Explain the business value.</h3><p>Information hierarchy and calls to action work together to turn attention into genuine enquiries.</p></article>
-              <article data-reveal><span>03 / Guide</span><h3>Keep the next step obvious.</h3><p>Responsive, accessible, <Link href="/services/seo-local-visibility">search-ready website foundations</Link> engineered to feel fast on the devices customers actually use.</p></article>
-            </div>
+            <ol className="sx-standard-points">
+              <li style={{ "--i": 0 } as CSSProperties}><span>01 / Show</span><h3>Show the work first.</h3><p>Visitors understand who you help, what you offer and why your business is worth choosing.</p></li>
+              <li style={{ "--i": 1 } as CSSProperties}><span>02 / Explain</span><h3>Explain the business value.</h3><p>Information hierarchy and calls to action work together to turn attention into genuine enquiries.</p></li>
+              <li style={{ "--i": 2 } as CSSProperties}><span>03 / Guide</span><h3>Keep the next step obvious.</h3><p>Responsive, accessible, <Link href="/services/seo-local-visibility">search-ready website foundations</Link> engineered to feel fast on the devices customers actually use.</p></li>
+            </ol>
           </div>
         </section>
 
-        <StudioAbout id="about" index="06" showStudioLink />
+        <StudioAbout id="about" index="06" variant="inspector" />
 
-        <EnquirySection id="contact" index="07">
+        <EnquirySection id="contact" index="07" variant="inspector">
           <ContactForm />
         </EnquirySection>
       </main>

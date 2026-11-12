@@ -34,9 +34,11 @@ test("logo reveal respects reduced motion, plays once per session and cleans up"
   assert.match(reveal, /await import\("\.\/logo-particles"\)/);
 });
 
-test("homepage mounts the brand film after the portfolio", async () => {
+test("the homepage leads with the inspector wall and work index, not the retired film and studio teasers", async () => {
   const [home, layout] = await Promise.all([read("../app/agency-home.tsx"), read("../app/layout.tsx")]);
-  assert.ok(home.indexOf("<PortfolioSection />") < home.indexOf("<BrandFilmSection />"));
-  assert.ok(home.indexOf("<BrandFilmSection />") < home.indexOf('id="services"'));
+  assert.match(home, /<HeroStage projects=\{stageProjects\} \/>/);
+  assert.match(home, /<WorkIndex rows=\{workRows\} total=\{projects\.length\} \/>/);
+  assert.doesNotMatch(home, /BrandFilmSection|VirtualStudioPreview|PortfolioSection/);
+  // The film module stays available for other surfaces.
   assert.match(layout, /styles\/brand-film\.css/);
 });

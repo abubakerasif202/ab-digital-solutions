@@ -4,7 +4,8 @@ import { PageTransition } from "../../components/motion/PageTransition";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { Reveal } from "../../components/motion/Reveal";
+import { Crumbs } from "../../components/inspector/Crumbs";
+import { InspectFrame } from "../../components/inspector/InspectFrame";
 import { ProjectArtwork, projectArtworkRatio } from "../../project-artwork";
 import { findProject, formatCategory, isSoftwareProject, projectDestinationLabel, projectVisitLabel, projects } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
@@ -102,146 +103,145 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className={`content-page case-study-page gr-cs gr-cs--${variant}${project.slug === "wild-pest-solutions" ? " gr-cs--wild-pest" : ""}`} id="main-content">
-        <header className="container gr-cs-hero">
-          <nav className="content-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span aria-hidden="true">/</span>
-            <Link href="/work">Work</Link>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">{project.name}</span>
-          </nav>
-
-          <div className="gr-cs-hero-grid">
-            <div className="gr-cs-hero-copy">
-              <p className="eyebrow">Case study <span className="gr-kicker-num">{number}</span> / {total}</p>
-              <h1>{project.name}</h1>
-              <p className="content-lead">{project.description}</p>
-              <div className="content-actions">
+      <main className={`ip ip-cs ip-cs--${variant} inspector-home${project.slug === "wild-pest-solutions" ? " ip-cs--wild" : ""}`} id="main-content">
+        <header className="ip-hero ip-hero--cs">
+          <div className="ip-wrap ip-hero-grid ip-hero-grid--cs">
+            <div className="ip-hero-copy">
+              <Crumbs items={[{ label: "Home", href: "/" }, { label: "Work", href: "/work" }, { label: project.name }]} />
+              <p className="ix-label">Case study <span className="ip-label-num">{number}</span> / {total}</p>
+              <h1 className="ip-title ip-title--cs">{project.name}</h1>
+              <p className="ip-lede">{project.description}</p>
+              <div className="ip-actions">
                 <a
-                  className="button button-primary"
+                  className="ix-btn ix-btn--solid"
                   href={project.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  data-cursor="VISIT"
-                  data-magnetic
                   aria-label={visitLabel}
                 >
                   {projectVisitLabel(project)} <ArrowIcon />
                 </a>
-                <Link className="button button-ghost" href="/contact" data-magnetic>
+                <Link className="ix-btn ix-btn--ghost" href="/contact">
                   Get a Website Quote <ArrowIcon />
                 </Link>
               </div>
             </div>
-            <span className="gr-number gr-cs-number" aria-hidden="true">{number}</span>
+            <span className="ip-ghost-num ip-ghost-num--cs" aria-hidden="true">{number}</span>
           </div>
 
-          <Reveal className="case-study-meta gr-cs-meta">
-            <div><span>Sector</span><strong>{project.sector}</strong></div>
-            <div><span>Category</span><strong>{formatCategory(project.category)}</strong></div>
-            <div><span>{project.region ? "Region" : project.techStack.length ? "Stack" : "Focus"}</span><strong>{project.region ?? (project.techStack.length ? project.techStack.join(" · ") : project.tags[0])}</strong></div>
-            <div>
-              <span>{destinationLabel}</span>
-              <a href={project.url} target="_blank" rel="noopener noreferrer" data-cursor="VISIT" aria-label={`${project.displayUrl} (opens in a new tab)`}>
-                {project.displayUrl} <ArrowIcon />
-              </a>
-            </div>
-          </Reveal>
+          <div className="ip-wrap">
+            <dl className="ip-meta">
+              <div><dt>Sector</dt><dd>{project.sector}</dd></div>
+              <div><dt>Category</dt><dd>{formatCategory(project.category)}</dd></div>
+              <div><dt>{project.region ? "Region" : project.techStack.length ? "Stack" : "Focus"}</dt><dd>{project.region ?? (project.techStack.length ? project.techStack.join(" · ") : project.tags[0])}</dd></div>
+              <div>
+                <dt>{destinationLabel}</dt>
+                <dd>
+                  <a href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`${project.displayUrl} (opens in a new tab)`}>
+                    {project.displayUrl} <ArrowIcon />
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </div>
         </header>
 
-        <div className="gr-cs-hero-media">
-          <div className="container">
-            <div className="browser-frame">
-              <div className="browser-bar" aria-hidden="true">
+        <div className="ip-cs-media">
+          <div className="ip-wrap">
+            <div className="ip-window">
+              <div className="ip-bar" aria-hidden="true">
                 <i /><i /><i />
                 <span>{project.displayUrl}</span>
               </div>
               {/* Same name as the work-index card image, so it morphs between them. */}
-              <div
-                className="case-study-hero-image"
-                style={{ aspectRatio: projectArtworkRatio(project), viewTransitionName: `project-${project.slug}` } as CSSProperties}
-              >
-                <ProjectArtwork project={project} priority sizes="(max-width: 1040px) 100vw, 1440px" />
-              </div>
+              <InspectFrame
+                src={project.image}
+                alt={project.alt}
+                ratio={projectArtworkRatio(project)}
+                sizes="(max-width: 1040px) 100vw, 1360px"
+                priority
+                focusable
+                transitionName={`project-${project.slug}`}
+                caption="inspect · move across the capture"
+              />
             </div>
           </div>
         </div>
 
-        <section className="container gr-cs-story" aria-label="Case study overview and approach">
-          <Reveal className="gr-cs-story-block">
-            <p className="eyebrow">01 / Overview</p>
-            <p className="gr-cs-statement">{project.overview}</p>
-          </Reveal>
-          <Reveal className="gr-cs-story-block gr-cs-story-block--approach" delay={120}>
-            <p className="eyebrow">02 / Approach</p>
-            <h2>{approachHeading}</h2>
-            <p className="case-study-body-text">{project.solution}</p>
-          </Reveal>
+        <section className="ip-sec" aria-label="Case study overview and approach">
+          <div className="ip-wrap ip-story">
+            <div className="ip-story-block">
+              <p className="ix-label">01 / Overview</p>
+              <p className="ip-statement">{project.overview}</p>
+            </div>
+            <div className="ip-story-block ip-story-block--approach">
+              <p className="ix-label">02 / Approach</p>
+              <h2 className="ip-h2">{approachHeading}</h2>
+              <p className="ip-body">{project.solution}</p>
+            </div>
+          </div>
         </section>
 
-        <section className="gr-cs-features" aria-labelledby="features-heading">
-          <div className="container gr-cs-features-grid">
-            <Reveal className="gr-cs-features-head">
-              <p className="eyebrow">03 / Key features</p>
-              <h2 id="features-heading">{project.name}: <span className="accent-serif">in detail.</span></h2>
-              <div className="gr-cs-capabilities">
+        <section className="ip-sec ip-sec--line" aria-labelledby="features-heading">
+          <div className="ip-wrap ip-split">
+            <div className="ip-side">
+              <p className="ix-label">03 / Key features</p>
+              <h2 id="features-heading" className="ip-h2">{project.name}: <em>in detail.</em></h2>
+              <div className="ip-caps">
                 <h3>Capabilities</h3>
-                <div className="sidebar-tags">
-                  {project.tags.map((tag) => <span key={tag} className="project-tag-pill">{tag}</span>)}
-                </div>
+                <ul className="ip-chips">
+                  {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
+                </ul>
                 {project.techStack.length > 0 ? <h3>Project technology</h3> : null}
-                <div className="sidebar-tech">
-                  {project.techStack.map((tech) => <span key={tech} className="tech-pill">{tech}</span>)}
-                </div>
+                <ul className="ip-chips ip-chips--tech">
+                  {project.techStack.map((tech) => <li key={tech}>{tech}</li>)}
+                </ul>
               </div>
-            </Reveal>
-            <ol className="gr-cs-feature-list">
+            </div>
+            <ol className="ip-features">
               {project.keyFeatures.map((feature, idx) => (
-                <li key={feature}>
-                  <Reveal className="gr-cs-feature-row" delay={idx * 90}>
-                    <span className="gr-cs-feature-num" aria-hidden="true">{String(idx + 1).padStart(2, "0")}</span>
-                    <span>{feature}</span>
-                  </Reveal>
+                <li key={feature} style={{ "--i": idx } as CSSProperties}>
+                  <span className="ip-feat-no" aria-hidden="true">{String(idx + 1).padStart(2, "0")}</span>
+                  <span className="ip-feat-t">{feature}</span>
                 </li>
               ))}
             </ol>
           </div>
         </section>
 
-        <section className="container gr-cs-detail" aria-labelledby="visual-showcase-heading">
-          <Reveal className="gr-cs-detail-head">
-            <p className="eyebrow">04 / A closer look</p>
-            <h2 id="visual-showcase-heading">{softwareProject ? "The public staff-access experience." : `${project.name}, on screen.`}</h2>
-          </Reveal>
-          <Reveal variant="mask" className="gr-cs-pan gr-cut-lg" style={{ aspectRatio: projectArtworkRatio(project) }}>
-            <ProjectArtwork project={project} sizes="(max-width: 860px) 100vw, 1440px" />
-          </Reveal>
-          <p className="gr-cs-pan-caption">{softwareProject ? "Public sign-in capture only. Internal records remain private." : `Desktop homepage capture · ${project.displayUrl}`}</p>
-          {project.gallery ? (
-            <ul className="gr-cs-gallery" aria-label={`${project.name} website screens`}>
-              {project.gallery.map((shot, idx) => (
-                <li key={shot.src}>
-                  <Reveal as="div" delay={idx * 110}>
+        <section className="ip-sec ip-sec--tight" aria-labelledby="visual-showcase-heading">
+          <div className="ip-wrap">
+            <div className="ip-head">
+              <p className="ix-label">04 / A closer look</p>
+              <h2 id="visual-showcase-heading" className="ip-h2">{softwareProject ? "The public staff-access experience." : `${project.name}, on screen.`}</h2>
+            </div>
+            <div className="ip-pan" style={{ aspectRatio: projectArtworkRatio(project) }}>
+              <ProjectArtwork project={project} sizes="(max-width: 860px) 100vw, 1360px" />
+            </div>
+            <p className="ip-caption">{softwareProject ? "Public sign-in capture only. Internal records remain private." : `Desktop homepage capture · ${project.displayUrl}`}</p>
+            {project.gallery ? (
+              <ul className="ip-gallery" aria-label={`${project.name} website screens`}>
+                {project.gallery.map((shot, idx) => (
+                  <li key={shot.src} style={{ "--i": idx } as CSSProperties}>
                     <figure>
-                    <div className="gr-cs-gallery-frame" style={{ aspectRatio: shot.aspectRatio ?? projectArtworkRatio(project) }}>
-                      <Image src={shot.src} alt={shot.alt} fill loading="lazy" sizes="(max-width: 860px) 100vw, 33vw" />
-                    </div>
-                    <figcaption>{shot.caption}</figcaption>
+                      <div className="ip-gallery-frame" style={{ aspectRatio: shot.aspectRatio ?? projectArtworkRatio(project) }}>
+                        <Image src={shot.src} alt={shot.alt} fill loading="lazy" sizes="(max-width: 860px) 100vw, 33vw" />
+                      </div>
+                      <figcaption>{shot.caption}</figcaption>
                     </figure>
-                  </Reveal>
-                </li>
-              ))}
-            </ul>
-          ) : null}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
         </section>
 
-        <section className="gr-cs-live" aria-labelledby="live-proof-heading">
-          <Reveal className="container gr-cs-live-inner">
+        <section className="ip-paper ip-paper--live" aria-labelledby="live-proof-heading">
+          <div className="ip-wrap ip-live-grid">
             <div>
-              <p className="eyebrow">{destinationLabel}</p>
-              <h2 id="live-proof-heading">See {project.name} <span className="accent-serif">in action.</span></h2>
-              <p>
+              <p className="ix-label">{destinationLabel}</p>
+              <h2 id="live-proof-heading" className="ip-h2">See {project.name} <em>in action.</em></h2>
+              <p className="ip-paper-lead">
                 {project.destination === "unavailable"
                   ? "The external project website was unavailable during our latest check. The case study above documents the delivered work."
                   : project.destination === "hosted-showcase"
@@ -252,47 +252,49 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
               </p>
             </div>
             <a
-              className="button button-primary"
+              className="ix-btn sx-btn-ink"
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              data-cursor="VISIT"
-              data-magnetic
               aria-label={visitLabel}
             >
               {projectVisitLabel(project)} <ArrowIcon />
             </a>
-          </Reveal>
+          </div>
         </section>
 
-        <nav className="next-project-nav gr-cs-next" aria-label="Next Project">
-          <Link className="gr-cs-next-link" href={`/work/${nextProject.slug}`} data-cursor="VIEW">
-            <div className="container gr-cs-next-inner">
+        <nav className="ip-next" aria-label="Next Project">
+          <Link className="ip-next-link" href={`/work/${nextProject.slug}`}>
+            <div className="ip-wrap ip-next-inner">
               <div>
-                <span className="gr-kicker">Next case study / {String(projects.indexOf(nextProject) + 1).padStart(2, "0")}</span>
-                <h2 className="gr-cs-next-title">{nextProject.name}</h2>
-                <span className="gr-cs-next-cta">View case study <ArrowIcon /></span>
+                <span className="ix-label">Next case study / {String(projects.indexOf(nextProject) + 1).padStart(2, "0")}</span>
+                <h2 className="ip-next-title">{nextProject.name}</h2>
+                <span className="ip-link">View case study <ArrowIcon /></span>
               </div>
-              <div className="gr-cs-next-media" aria-hidden="true">
+              <div className="ip-next-media" aria-hidden="true">
                 <ProjectArtwork project={nextProject} sizes="(max-width: 860px) 92vw, 42vw" />
               </div>
             </div>
           </Link>
         </nav>
 
-        <aside className="gr-final-cta" aria-label="Start your project">
-          <Reveal className="container gr-final-cta-inner">
-            <p className="eyebrow">Have a project in mind?</p>
-            <h2>{project.slug === "wild-pest-solutions" ? <>Let&apos;s build something <span className="accent-serif">exceptional.</span></> : <>Let&apos;s create a digital experience with a clear <span className="accent-serif">commercial purpose.</span></>}</h2>
-            <div className="content-actions">
-              <Link className="button button-primary" href="/contact" data-magnetic>
-                Get a Website Quote <ArrowIcon />
-              </Link>
-              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
-                Call {siteConfig.phoneDisplay}
-              </a>
+        <aside className="ip-cta" aria-label="Start your project">
+          <div className="ip-wrap ip-cta-grid">
+            <div>
+              <p className="ix-label">Have a project in mind?</p>
+              <h2 className="ip-h2">{project.slug === "wild-pest-solutions" ? <>Let&apos;s build something <em>exceptional.</em></> : <>Let&apos;s create a digital experience with a clear <em>commercial purpose.</em></>}</h2>
             </div>
-          </Reveal>
+            <div className="ip-cta-side">
+              <div className="ip-actions">
+                <Link className="ix-btn ix-btn--solid" href="/contact">
+                  Get a Website Quote <ArrowIcon />
+                </Link>
+                <a className="ix-btn ix-btn--ghost" href={`tel:${siteConfig.phoneInternational}`}>
+                  Call {siteConfig.phoneDisplay}
+                </a>
+              </div>
+            </div>
+          </div>
         </aside>
         <script
           type="application/ld+json"

@@ -1,0 +1,1007 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\abuba\\AppData\\Local\\nvm\\v22.23.1\\node.exe",
+      "C:\\Users\\abuba\\ab-digital-solutions\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/e2e/opendesign-preview.spec.mjs"
+    ],
+    "configFile": "C:\\Users\\abuba\\ab-digital-solutions\\playwright.config.mjs",
+    "rootDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/abuba/ab-digital-solutions/test-results/inspector-preview-suite",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.mjs",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://localhost:3100",
+          "browserName": "chromium",
+          "actionTimeout": 10000,
+          "navigationTimeout": 30000,
+          "launchOptions": {
+            "args": [
+              "--no-sandbox",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "qa/inspector-preview-suite/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "opendesign-preview.spec.mjs",
+      "file": "opendesign-preview.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "mobile-compact 360x800: no overflow, no console or CSP errors, images load",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4240,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:62:24",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                      "column": 24,
+                      "line": 62
+                    },
+                    "snippet": "  60 |     expect(report.overflow).toBeLessThanOrEqual(0);\n  61 |     expect(report.broken).toEqual([]);\n> 62 |     expect(report.csp).toEqual([]);\n     |                        ^\n  63 |     expect(problems).toEqual([]);\n  64 |   });\n  65 | }"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                        "column": 24,
+                        "line": 62
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  60 |     expect(report.overflow).toBeLessThanOrEqual(0);\n  61 |     expect(report.broken).toEqual([]);\n> 62 |     expect(report.csp).toEqual([]);\n     |                        ^\n  63 |     expect(problems).toEqual([]);\n  64 |   });\n  65 | }\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:62:24"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:54:57.208Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-mobile--3c7ab-e-or-CSP-errors-images-load\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-mobile--3c7ab-e-or-CSP-errors-images-load\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-mobile--3c7ab-e-or-CSP-errors-images-load\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                    "column": 24,
+                    "line": 62
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-9c5d02a53aa5284f9cc3",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 50,
+          "column": 3
+        },
+        {
+          "title": "mobile-standard 390x844: no overflow, no console or CSP errors, images load",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3994,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:62:24",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                      "column": 24,
+                      "line": 62
+                    },
+                    "snippet": "  60 |     expect(report.overflow).toBeLessThanOrEqual(0);\n  61 |     expect(report.broken).toEqual([]);\n> 62 |     expect(report.csp).toEqual([]);\n     |                        ^\n  63 |     expect(problems).toEqual([]);\n  64 |   });\n  65 | }"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                        "column": 24,
+                        "line": 62
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  60 |     expect(report.overflow).toBeLessThanOrEqual(0);\n  61 |     expect(report.broken).toEqual([]);\n> 62 |     expect(report.csp).toEqual([]);\n     |                        ^\n  63 |     expect(problems).toEqual([]);\n  64 |   });\n  65 | }\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:62:24"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:02.241Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-mobile--21a29-e-or-CSP-errors-images-load\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-mobile--21a29-e-or-CSP-errors-images-load\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-mobile--21a29-e-or-CSP-errors-images-load\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                    "column": 24,
+                    "line": 62
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-1f0e68830ad81d431f16",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 50,
+          "column": 3
+        },
+        {
+          "title": "tablet-portrait 820x1180: no overflow, no console or CSP errors, images load",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2994,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:62:24",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                      "column": 24,
+                      "line": 62
+                    },
+                    "snippet": "  60 |     expect(report.overflow).toBeLessThanOrEqual(0);\n  61 |     expect(report.broken).toEqual([]);\n> 62 |     expect(report.csp).toEqual([]);\n     |                        ^\n  63 |     expect(problems).toEqual([]);\n  64 |   });\n  65 | }"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                        "column": 24,
+                        "line": 62
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  60 |     expect(report.overflow).toBeLessThanOrEqual(0);\n  61 |     expect(report.broken).toEqual([]);\n> 62 |     expect(report.csp).toEqual([]);\n     |                        ^\n  63 |     expect(problems).toEqual([]);\n  64 |   });\n  65 | }\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:62:24"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:07.151Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-tablet--184c1-e-or-CSP-errors-images-load\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-tablet--184c1-e-or-CSP-errors-images-load\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-tablet--184c1-e-or-CSP-errors-images-load\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                    "column": 24,
+                    "line": 62
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-786e39135ba664dca422",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 50,
+          "column": 3
+        },
+        {
+          "title": "desktop 1440x900: no overflow, no console or CSP errors, images load",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3820,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:62:24",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                      "column": 24,
+                      "line": 62
+                    },
+                    "snippet": "  60 |     expect(report.overflow).toBeLessThanOrEqual(0);\n  61 |     expect(report.broken).toEqual([]);\n> 62 |     expect(report.csp).toEqual([]);\n     |                        ^\n  63 |     expect(problems).toEqual([]);\n  64 |   });\n  65 | }"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                        "column": 24,
+                        "line": 62
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  60 |     expect(report.overflow).toBeLessThanOrEqual(0);\n  61 |     expect(report.broken).toEqual([]);\n> 62 |     expect(report.csp).toEqual([]);\n     |                        ^\n  63 |     expect(problems).toEqual([]);\n  64 |   });\n  65 | }\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:62:24"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:11.176Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-desktop-e7ea6-e-or-CSP-errors-images-load\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-desktop-e7ea6-e-or-CSP-errors-images-load\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-desktop-e7ea6-e-or-CSP-errors-images-load\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                    "column": 24,
+                    "line": 62
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-51499a76e1f29198e461",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 50,
+          "column": 3
+        },
+        {
+          "title": "wide 1920x1080: no overflow, no console or CSP errors, images load",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3795,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:62:24",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                      "column": 24,
+                      "line": 62
+                    },
+                    "snippet": "  60 |     expect(report.overflow).toBeLessThanOrEqual(0);\n  61 |     expect(report.broken).toEqual([]);\n> 62 |     expect(report.csp).toEqual([]);\n     |                        ^\n  63 |     expect(problems).toEqual([]);\n  64 |   });\n  65 | }"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                        "column": 24,
+                        "line": 62
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"script-src-elem https://va.vercel-scripts.com/v1/speed-insights/script.debug.js\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  60 |     expect(report.overflow).toBeLessThanOrEqual(0);\n  61 |     expect(report.broken).toEqual([]);\n> 62 |     expect(report.csp).toEqual([]);\n     |                        ^\n  63 |     expect(problems).toEqual([]);\n  64 |   });\n  65 | }\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:62:24"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:16.305Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-wide-19-36d96-e-or-CSP-errors-images-load\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-wide-19-36d96-e-or-CSP-errors-images-load\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-wide-19-36d96-e-or-CSP-errors-images-load\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                    "column": 24,
+                    "line": 62
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-da2d510abbddb6159538",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 50,
+          "column": 3
+        },
+        {
+          "title": "noindex everywhere it can be set, and absent from sitemap, robots and the live homepage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2724,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:21.304Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-38d4d4d54e110060bec9",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "production gate: the route is a 404 when VERCEL_ENV=production",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 197,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:24.161Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-40dbb9177121685dbfc7",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 80,
+          "column": 1
+        },
+        {
+          "title": "the live homepage is the inspector hero and never contains the preview",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1526,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:24.374Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-a738c3077a11de0c48c9",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 86,
+          "column": 1
+        },
+        {
+          "title": "structure: one h1, ordered headings, one main landmark, unique ids, skip link target exists",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1626,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:25.917Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-42abca8c253d4ab54dd0",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 94,
+          "column": 1
+        },
+        {
+          "title": "work: server-rendered cards, six shown first, filters, case-study links, honest status labels",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2547,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:27.566Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-a5580e1410e56fc203cf",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 110,
+          "column": 1
+        },
+        {
+          "title": "the existing 3D studio entry is present and leads to the unchanged /studio route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1924,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:30.131Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-0e635bf8f502cf23d5a2",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 131,
+          "column": 1
+        },
+        {
+          "title": "without JavaScript every project is listed and the headline is visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1375,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:32.072Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-58afe2b6d3be117a6373",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 140,
+          "column": 1
+        },
+        {
+          "title": "disciplines: accordion semantics and 'Discuss this' selects the service in the shared form",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3033,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:33.463Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-f91714a76b232416f015",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 149,
+          "column": 1
+        },
+        {
+          "title": "form: the shared ContactForm posts the live /api/contact contract and the API accepts that shape",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2456,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:36.512Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-55cb2197fbd0dcae8ac0",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 162,
+          "column": 1
+        },
+        {
+          "title": "form: a failed send is reported as a failure, never as success",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3486,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:38.990Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-69c4f94a89ca35afc543",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 195,
+          "column": 1
+        },
+        {
+          "title": "hero: the approved artwork is the fallback, and ?fallback=css swaps in the CSS monogram",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3048,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:42.490Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-b199256f915d4668c9d3",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 207,
+          "column": 1
+        },
+        {
+          "title": "hero: the Three.js scene still activates on desktop after pointer intent",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 21772,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.hero-3d-container canvas')\nExpected: visible\nTimeout: 20000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.hero-3d-container canvas') with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for locator('.hero-3d-container canvas')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.hero-3d-container canvas')\nExpected: visible\nTimeout: 20000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.hero-3d-container canvas') with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for locator('.hero-3d-container canvas')\u001b[22m\n\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:226:59",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                      "column": 59,
+                      "line": 226
+                    },
+                    "snippet": "  224 |   test.skip(cores <= 4, \"Hero3DExperience deliberately stays on the static artwork for devices with 4 or fewer cores\");\n  225 |   await page.mouse.move(1000, 400);\n> 226 |   await expect(page.locator(\".hero-3d-container canvas\")).toBeVisible({ timeout: 20_000 });\n      |                                                           ^\n  227 | });\n  228 |\n  229 | test(\"reduced motion: the CSS monogram does not animate\", async ({ page }) => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                        "column": 59,
+                        "line": 226
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.hero-3d-container canvas')\nExpected: visible\nTimeout: 20000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.hero-3d-container canvas') with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for locator('.hero-3d-container canvas')\u001b[22m\n\n\n  224 |   test.skip(cores <= 4, \"Hero3DExperience deliberately stays on the static artwork for devices with 4 or fewer cores\");\n  225 |   await page.mouse.move(1000, 400);\n> 226 |   await expect(page.locator(\".hero-3d-container canvas\")).toBeVisible({ timeout: 20_000 });\n      |                                                           ^\n  227 | });\n  228 |\n  229 | test(\"reduced motion: the CSS monogram does not animate\", async ({ page }) => {\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs:226:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:55:45.554Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-hero-th-191cb-esktop-after-pointer-intent\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-hero-th-191cb-esktop-after-pointer-intent\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-preview-suite\\opendesign-preview-hero-th-191cb-esktop-after-pointer-intent\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\opendesign-preview.spec.mjs",
+                    "column": 59,
+                    "line": 226
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-f103320ea889bf2d4115",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 221,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: the CSS monogram does not animate",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1628,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:56:08.051Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-e3885447d4a41bf871c8",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 229,
+          "column": 1
+        },
+        {
+          "title": "keyboard: skip link first, then the shared header menu works on mobile",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1605,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:56:09.792Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d538e195526ffe8852a9-64b2bde43e7710be4d28",
+          "file": "opendesign-preview.spec.mjs",
+          "line": 235,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-12T21:54:56.675Z",
+    "duration": 74798.14,
+    "expected": 13,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type CSSProperties } from "react";
+import { useState } from "react";
 import { flushSync } from "react-dom";
-import { ProjectArtwork, projectArtworkRatio } from "../project-artwork";
+import { InspectFrame } from "./inspector/InspectFrame";
+import { projectArtworkRatio } from "../project-artwork";
 import { formatCategory, isSoftwareProject, projectDestinationLabel, projectDisplayDomain, projects, sectors, type Project } from "../project-data";
 import { ArrowIcon } from "../icons";
 
@@ -13,17 +14,13 @@ type ViewTransitionDocument = Document & {
   startViewTransition?: (callback: () => void) => void;
 };
 
-interface CardMotionStyle extends CSSProperties {
-  viewTransitionName?: string;
-}
-
 type BlockType = "feature" | "split" | "split-reverse" | "pair" | "system";
 type Block = { type: BlockType; items: Project[] };
 
 /* Compose the visible projects into a rhythm of different presentations so
-   the index never repeats one card: a cinematic feature first, then
-   alternating editorial splits and staggered pairs, with live software
-   always shown full-width inside a browser frame. */
+   the index never repeats one card: a wide feature first, then alternating
+   offset splits and staggered pairs, with live software always shown
+   full-width inside a window frame. */
 function composeBlocks(list: readonly Project[]): Block[] {
   if (list.length === 0) return [];
   const blocks: Block[] = [{ type: "feature", items: [list[0]] }];
@@ -71,104 +68,100 @@ export function WorkIndexBody() {
 
   return (
     <>
-      <section className="work-index-hero gr-wi-hero">
-        <div className="container gr-wi-hero-inner">
-          <p className="eyebrow" data-reveal>
-            <span className="eyebrow-mark" /> Index / client work
-          </p>
-          <div className="gr-wi-hero-row">
-            <h1 data-reveal>The work, at the size it <span className="accent-serif">deserves.</span></h1>
-            <div className="gr-wi-hero-count" data-reveal aria-hidden="true">
-              <span className="gr-number">{String(projects.length).padStart(2, "0")}</span>
-            </div>
-          </div>
-          <div className="gr-wi-hero-copy" data-reveal>
-            <p className="content-lead">
+      <header className="ip-hero ip-hero--work">
+        <div className="ip-wrap ip-work-hero">
+          <div className="ip-hero-copy">
+            <p className="ix-label">Index / client work</p>
+            <h1 className="ip-title">The work, at the size it <em>deserves.</em></h1>
+            <p className="ip-lede">
               A portfolio of websites and custom software created for
               Australian grocery, fresh produce, transport, logistics, mobility, removals, construction and property
               businesses.
             </p>
-            <p className="work-index-count">{projects.length} projects · Sydney studio</p>
+            <p className="ip-meta-line">{projects.length} projects · Sydney studio</p>
+            <p className="ip-work-hint" aria-hidden="true">
+              <span>Move across a capture to inspect it</span>
+            </p>
           </div>
         </div>
-      </section>
+        <span className="ip-ghost-num" aria-hidden="true">{String(projects.length).padStart(2, "0")}</span>
+      </header>
 
-      <div className="gr-wi-filter-bar">
-        <div className="container work-index-filters" role="group" aria-label="Filter by sector">
-          {filters.map((sector) => {
-            const isActive = sector === filter;
-            const count = sector === ALL_SECTORS
-              ? projects.length
-              : projects.filter((project) => project.sector === sector).length;
-            return (
-              <button
-                key={sector}
-                type="button"
-                className={`work-index-filter${isActive ? " is-active" : ""}`}
-                aria-pressed={isActive}
-                onClick={() => handleFilterChange(sector)}
-              >
-                {sector} <small aria-hidden="true">{count}</small>
-              </button>
-            );
-          })}
+      <div className="ip-wi-scope">
+        <div className="ip-filter-bar">
+          <div className="ip-wrap ip-filters" role="group" aria-label="Filter by sector">
+            {filters.map((sector) => {
+              const isActive = sector === filter;
+              const count = sector === ALL_SECTORS
+                ? projects.length
+                : projects.filter((project) => project.sector === sector).length;
+              return (
+                <button
+                  key={sector}
+                  type="button"
+                  className={`ip-filter${isActive ? " is-active" : ""}`}
+                  aria-pressed={isActive}
+                  onClick={() => handleFilterChange(sector)}
+                >
+                  {sector} <small aria-hidden="true">{count}</small>
+                </button>
+              );
+            })}
+          </div>
         </div>
+
+        <section className="ip-wi" aria-label="Project index">
+          <div className="ip-wrap">
+            <p className="sr-only" aria-live="polite">
+              Showing {visibleProjects.length} of {projects.length} projects
+            </p>
+            {blocks.map((block) => (
+              <div className={`ip-wi-block ip-wi-block--${block.type}`} key={block.items.map((p) => p.slug).join("+")}>
+                {block.items.map((project) => (
+                  <WorkIndexCard key={project.slug} project={project} type={block.type} />
+                ))}
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
-
-      <section className="gr-wi-list" aria-label="Project index">
-        <div className="container">
-          <p className="sr-only" aria-live="polite">
-            Showing {visibleProjects.length} of {projects.length} projects
-          </p>
-          {blocks.map((block) => (
-            <div className={`gr-wi-block gr-wi-block--${block.type}`} key={block.items.map((p) => p.slug).join("+")}>
-              {block.items.map((project) => (
-                <WorkIndexCard key={project.slug} project={project} type={block.type} />
-              ))}
-            </div>
-          ))}
-        </div>
-      </section>
     </>
   );
 }
 
 function WorkIndexCard({ project, type }: { project: Project; type: BlockType }) {
   const number = String(projects.findIndex((p) => p.slug === project.slug) + 1).padStart(2, "0");
-  const cardStyle: CardMotionStyle = { viewTransitionName: `work-card-${project.slug}` };
   const sizes = type === "feature" || type === "system"
-    ? "(max-width: 960px) 100vw, 1440px"
+    ? "(max-width: 960px) 100vw, 1360px"
     : type === "pair"
       ? "(max-width: 960px) 92vw, 48vw"
       : "(max-width: 960px) 92vw, 60vw";
 
   return (
-    <article className="gr-wi-card" data-reveal style={cardStyle}>
-      <Link className="gr-wi-link" href={`/work/${project.slug}`}>
-        <div className="gr-wi-media gr-wi-media--framed">
-          <div className="gr-browser-bar" aria-hidden="true"><i /><i /><i /><span>{projectDisplayDomain(project)}</span></div>
-          <div
-            className="gr-wi-image"
-            style={{ aspectRatio: projectArtworkRatio(project), viewTransitionName: `project-${project.slug}` } as CardMotionStyle}
-          >
-            <ProjectArtwork project={project} sizes={sizes} priority={type === "feature"} />
-          </div>
-          <span className="live-label">
-            <i /> {projectDestinationLabel(project)}
-          </span>
+    <article className="ip-wi-card">
+      <Link className="ip-wi-link" href={`/work/${project.slug}`}>
+        <div className="ip-wi-media">
+          <div className="ip-bar" aria-hidden="true"><i /><i /><i /><span>{projectDisplayDomain(project)}</span></div>
+          <InspectFrame
+            src={project.image}
+            alt={project.alt}
+            ratio={projectArtworkRatio(project)}
+            sizes={sizes}
+            priority={type === "feature"}
+            transitionName={`project-${project.slug}`}
+          />
+          <span className="ip-live"><i aria-hidden="true" /> {projectDestinationLabel(project)}</span>
         </div>
-        <div className="gr-wi-meta">
-          <span className="gr-number gr-wi-number" aria-hidden="true">{number}</span>
-          <div className="gr-wi-heading">
-            <p className="gr-kicker">{formatCategory(project.category)}</p>
-            <h2 className="gr-wi-title">{project.name}</h2>
+        <div className="ip-wi-meta">
+          <span className="ip-wi-no" aria-hidden="true">{number}</span>
+          <div className="ip-wi-heading">
+            <p className="ip-kicker">{formatCategory(project.category)}</p>
+            <h2 className="ip-wi-title">{project.name}</h2>
           </div>
-          <div className="gr-wi-detail">
-            <p className="gr-wi-description">{project.description}</p>
-            <p className="gr-wi-stack">{project.techStack.join(" · ")}</p>
-            <span className="gr-wi-cta">
-              View case study <ArrowIcon />
-            </span>
+          <div className="ip-wi-detail">
+            <p className="ip-wi-desc">{project.description}</p>
+            <p className="ip-wi-stack">{project.techStack.join(" · ")}</p>
+            <span className="ip-wi-cta">View case study <ArrowIcon /></span>
           </div>
         </div>
       </Link>

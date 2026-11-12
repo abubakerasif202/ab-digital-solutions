@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <main className="not-found" id="main-content">
-      <div className="not-found-grid" aria-hidden="true" />
-      <span className="not-found-numeral" aria-hidden="true">404</span>
-      <div className="not-found-content">
+    <main className="ip-nf" id="main-content">
+      <div className="ip-nf-grid" aria-hidden="true" />
+      <span className="ip-nf-numeral" aria-hidden="true">404</span>
+      <div className="ip-nf-content">
         {/* eslint-disable-next-line @next/next/no-img-element -- next/image blocks SVG optimization by default; this is a trusted, self-authored decorative asset */}
         <img
           src={`${assetBase}/ab-web-studio-lockup.svg`}
@@ -24,14 +24,14 @@ export default function NotFound() {
           height={500}
           loading="lazy"
         />
-        <p className="eyebrow">404 / Page not found</p>
-        <h1>This page has moved off the map.</h1>
-        <p>The address may be outdated, but the studio is right where you left it.</p>
-        <div className="not-found-actions">
-          <Link className="button button-primary" href="/">Return home <ArrowIcon /></Link>
-          <Link className="button button-ghost" href="/contact">Start a project</Link>
+        <p className="ix-label">404 / Page not found</p>
+        <h1>This page has moved off the <em>map.</em></h1>
+        <p className="ip-nf-lede">The address may be outdated, but the studio is right where you left it.</p>
+        <div className="ip-actions">
+          <Link className="ix-btn ix-btn--solid" href="/">Return home <ArrowIcon /></Link>
+          <Link className="ix-btn ix-btn--ghost" href="/contact">Start a project</Link>
         </div>
-        <nav className="not-found-nav" aria-label="Popular pages">
+        <nav className="ip-nf-nav" aria-label="Popular pages">
           <Link href="/work">Case studies</Link>
           <Link href="/services/web-design-sydney">Web design</Link>
           <Link href="/services/seo-local-visibility">SEO</Link>

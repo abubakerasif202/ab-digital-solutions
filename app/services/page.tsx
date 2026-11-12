@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { CSSProperties } from "react";
+import { Crumbs } from "../components/inspector/Crumbs";
 import { PageTransition } from "../components/motion/PageTransition";
 import { ProjectArtwork } from "../project-artwork";
 import { findProject, projects } from "../project-data";
@@ -87,87 +89,95 @@ export default function ServicesPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page service-page gr-svc-page" id="main-content">
-        <div className="container">
-          <nav className="content-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">Services</span>
-          </nav>
-
-          <header className="service-hero gr-svc-hero">
-            <div className="service-hero-copy">
-              <p className="eyebrow">Digital services / Sydney</p>
-              <h1>Websites to business systems. <span className="accent-serif">Built with purpose.</span></h1>
-              <p className="content-lead">
+      <main className="ip ip-services inspector-home" id="main-content">
+        <header className="ip-hero">
+          <div className="ip-wrap ip-hero-grid">
+            <div className="ip-hero-copy">
+              <Crumbs items={[{ label: "Home", href: "/" }, { label: "Services" }]} />
+              <p className="ix-label">Digital services / Sydney</p>
+              <h1 className="ip-title">Websites to business systems. <em>Built with purpose.</em></h1>
+              <p className="ip-lede">
                 Websites, online stores and custom software for Australian businesses. Bring us a new
                 project, an existing site to improve or a workflow that needs a better system.
               </p>
-              <div className="content-actions">
-                <Link className="button button-primary" href="/contact" data-magnetic>Start a Project <ArrowIcon /></Link>
-                <Link className="button button-ghost" href="/work" data-magnetic>View Our Work</Link>
+              <div className="ip-actions">
+                <Link className="ix-btn ix-btn--solid" href="/contact">Start a Project <ArrowIcon /></Link>
+                <Link className="ix-btn ix-btn--ghost" href="/work">View Our Work</Link>
               </div>
             </div>
             {/* Decorative detail crop of the lead portfolio project. */}
-            <figure className="service-hero-visual" aria-hidden="true">
-              <div className="service-hero-visual-frame">
-                <ProjectArtwork project={projects[0]} priority sizes="(max-width: 960px) 92vw, 520px" />
+            <figure className="ip-hero-visual" aria-hidden="true">
+              <div className="ip-plate">
+                <ProjectArtwork project={projects[0]} priority sizes="(max-width: 900px) 92vw, 520px" />
               </div>
               <figcaption>
                 <span>Studio project</span>
                 {projects[0].name}
               </figcaption>
             </figure>
-          </header>
-        </div>
+          </div>
+          <span className="ip-ghost-num" aria-hidden="true">{String(servicePages.length).padStart(2, "0")}</span>
+        </header>
 
-        <section className="gr-svc-section" aria-labelledby="services-index-heading">
-          <div className="container">
-            <div className="gr-section-head">
-              <p className="eyebrow section-index"><span className="section-index-num">01</span><span className="micro-rule" aria-hidden="true" />Capabilities</p>
-              <h2 id="services-index-heading" className="gr-display-l">Explore each <span className="accent-serif">service.</span></h2>
-              <div className="gr-section-head-aside">
-                <p>Explore the approach, scope and relevant project experience behind each service. We agree deliverables and costs in a written proposal.</p>
-              </div>
+        <section className="ip-sec ip-sec--tight" aria-labelledby="services-index-heading">
+          <div className="ip-wrap">
+            <div className="ip-head">
+              <p className="ix-label">01 · Capabilities</p>
+              <h2 id="services-index-heading" className="ip-h2">Explore each <em>service.</em></h2>
+              <p className="ip-head-note">Explore the approach, scope and relevant project experience behind each service. We agree deliverables and costs in a written proposal.</p>
             </div>
             <ServiceIndex items={serviceItems} />
           </div>
         </section>
 
-        <section className="container studio-systems-proof" aria-labelledby="systems-proof-heading">
-          <div><p className="eyebrow">Beyond the website</p><h2 id="systems-proof-heading">Software for the way a business actually works.</h2><p>Web applications, business systems and automation begin with the workflow. The 247 Inventory System brings stock, purchasing, sales and invoicing into a role-protected interface.</p><Link className="text-link" href="/services/custom-software-business-systems">Explore custom software and business systems <ArrowIcon /></Link></div>
-          <Link className="studio-system-image" href="/work/247-inventory-system"><span className="studio-system-media"><ProjectArtwork project={findProject("247-inventory-system")!} sizes="(max-width: 900px) 92vw, 600px" /></span><span>Public staff-access screen · View case study <ArrowIcon /></span></Link>
+        <section className="ip-proof" aria-labelledby="systems-proof-heading">
+          <div className="ip-wrap ip-proof-grid">
+            <div className="ip-proof-copy">
+              <p className="ix-label">Beyond the website</p>
+              <h2 id="systems-proof-heading" className="ip-h2">Software for the way a business actually works.</h2>
+              <p>Web applications, business systems and automation begin with the workflow. The 247 Inventory System brings stock, purchasing, sales and invoicing into a role-protected interface.</p>
+              <Link className="ip-link" href="/services/custom-software-business-systems">Explore custom software and business systems <ArrowIcon /></Link>
+            </div>
+            <Link className="ip-proof-shot" href="/work/247-inventory-system">
+              <span className="ip-proof-img"><ProjectArtwork project={findProject("247-inventory-system")!} sizes="(max-width: 900px) 92vw, 600px" /></span>
+              <span className="ip-proof-cap">Public staff-access screen · View case study <ArrowIcon /></span>
+            </Link>
+          </div>
         </section>
 
-        <section className="gr-svc-process" aria-labelledby="services-process-heading">
-          <div className="container">
-            <div className="gr-section-head">
-              <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />How every engagement runs</p>
-              <h2 id="services-process-heading" className="gr-display-l">A clear path from ambition to <span className="accent-serif">launch.</span></h2>
-              <div className="gr-section-head-aside">
-                <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
-              </div>
+        <section className="sx-process" aria-labelledby="services-process-heading">
+          <div className="sx-process-inner">
+            <div className="sx-process-head">
+              <p className="ix-label">02 · How every engagement runs</p>
+              <h2 id="services-process-heading">A clear path from ambition to <em>launch.</em></h2>
+              <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
             </div>
-            <ol className="gr-steps">
-              {processSteps.map(([number, title, description]) => (
-                <li key={number} data-reveal>
-                  <span className="gr-steps-num" aria-hidden="true">{number}</span>
-                  <h3>{title}</h3>
-                  <p>{description}</p>
+            <ol className="sx-steps">
+              {processSteps.map(([number, title, description], index) => (
+                <li key={number} style={{ "--i": index } as CSSProperties}>
+                  <span className="sx-step-no">{number}</span>
+                  <div className="sx-step-body">
+                    <h3>{title}</h3>
+                    <p>{description}</p>
+                  </div>
                 </li>
               ))}
             </ol>
           </div>
         </section>
 
-        <aside className="gr-final-cta" aria-labelledby="services-cta-heading">
-          <div className="container gr-final-cta-inner" data-reveal>
-            <p className="eyebrow">Ready when you are</p>
-            <h2 id="services-cta-heading">Not sure which service fits? <span className="accent-serif">Start with a conversation.</span></h2>
-            <p className="content-lead">Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
-            <div className="content-actions">
-              <Link className="button button-primary" href="/contact" data-magnetic>Start a Project <ArrowIcon /></Link>
-              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>Call {siteConfig.phoneDisplay}</a>
+        <aside className="ip-cta" aria-labelledby="services-cta-heading">
+          <div className="ip-wrap ip-cta-grid">
+            <div>
+              <p className="ix-label">Ready when you are</p>
+              <h2 id="services-cta-heading" className="ip-h2">Not sure which service fits? <em>Start with a conversation.</em></h2>
+            </div>
+            <div className="ip-cta-side">
+              <p>Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
+              <div className="ip-actions">
+                <Link className="ix-btn ix-btn--solid" href="/contact">Start a Project <ArrowIcon /></Link>
+                <a className="ix-btn ix-btn--ghost" href={`tel:${siteConfig.phoneInternational}`}>Call {siteConfig.phoneDisplay}</a>
+              </div>
             </div>
           </div>
         </aside>

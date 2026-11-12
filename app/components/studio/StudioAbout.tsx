@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { ArrowIcon } from "../../icons";
 import { projects } from "../../project-data";
 import { siteConfig } from "../../site-config";
@@ -20,6 +21,8 @@ interface StudioAboutProps {
   headingId?: string;
   /** Adds a route link to the full About page (used on the homepage). */
   showStudioLink?: boolean;
+  /** "inspector" is the homepage composition; the default is shared with /about. */
+  variant?: "default" | "inspector";
 }
 
 /**
@@ -33,7 +36,81 @@ export function StudioAbout({
   headingAs: Heading = "h2",
   headingId = "about-heading",
   showStudioLink = false,
+  variant = "default",
 }: StudioAboutProps) {
+  if (variant === "inspector") {
+    return (
+      <section className="sx-about" id={id} aria-labelledby={headingId}>
+        <div className="sx-about-inner">
+          <figure className="sx-specimen">
+            <div className="sx-specimen-stage">
+              <span className="sx-ring sx-ring--outer" aria-hidden="true" />
+              <span className="sx-ring sx-ring--mid" aria-hidden="true" />
+              <span className="sx-ring sx-ring--inner" aria-hidden="true" />
+              <span className="sx-cross sx-cross--h" aria-hidden="true" />
+              <span className="sx-cross sx-cross--v" aria-hidden="true" />
+              <Image
+                className="sx-specimen-mark"
+                src="/brand/ab-hero-monogram.webp"
+                width={960}
+                height={800}
+                sizes="(max-width: 720px) 48vw, 280px"
+                alt="AB Web Studio monogram"
+              />
+            </div>
+            <figcaption>
+              <span>AB <i aria-hidden="true">/</i> Web Studio</span>
+              <span>Sydney <i aria-hidden="true">/</i> Australia</span>
+            </figcaption>
+          </figure>
+
+          <div className="sx-about-copy">
+            <p className="ix-label">{index} · About AB</p>
+            <Heading id={headingId} className="sx-about-title">
+              Your digital presence should <em>work as hard</em> as you do.
+            </Heading>
+            <p className="sx-about-lead">
+              AB Web Studio is a Sydney-based digital studio helping ambitious Australian businesses build authority through thoughtful design, clear communication and practical technology.
+            </p>
+            <p className="sx-about-body">
+              Every engagement is shaped around the business behind the brief: the people you need to reach, the proof they need to see and the next step they should feel confident taking. The result is a distinctive website with a clear commercial purpose, not a generic template dressed in your colours.
+            </p>
+
+            <dl className="sx-spec">
+              <div>
+                <dt>Founder &amp; Lead Developer</dt>
+                <dd>Abubakar Asif</dd>
+              </div>
+              <div>
+                <dt>Working Australia-wide</dt>
+                <dd>{siteConfig.location}</dd>
+              </div>
+              <div>
+                <dt>Project case studies</dt>
+                <dd className="sx-spec-count">{projects.length}</dd>
+              </div>
+            </dl>
+
+            <dl className="sx-notes">
+              {values.map(([term, detail], noteIndex) => (
+                <div key={term} style={{ "--i": noteIndex } as CSSProperties}>
+                  <dt>{term}</dt>
+                  <dd>{detail}</dd>
+                </div>
+              ))}
+            </dl>
+
+            {showStudioLink && (
+              <Link className="sx-text-link" href="/about">
+                Inside the studio <ArrowIcon />
+              </Link>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="studio-about" id={id} aria-labelledby={headingId}>
       <div className="studio-shell studio-split">

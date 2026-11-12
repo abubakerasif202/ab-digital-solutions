@@ -26,10 +26,8 @@ test("homepage exposes content directly instead of using an iframe", async () =>
   ]);
 
   assert.doesNotMatch(page, /<iframe\b/i);
-  assert.match(homepage, /className="stage-title"/);
-  assert.match(homepage, /Websites with<\/span><\/span>\s*<span className="stage-line"><span>presence\./);
-  assert.match(homepage, /metal-ruby">Software with<[\s\S]*?metal-gilt">purpose\./);
-  assert.match(homepage, /Built for your business\./);
+  assert.match(homepage, /<h1 id="hero-heading" className="hx-title">/);
+  assert.match(homepage, /Websites with presence\. <span className="hx-sub">Software with <em>purpose\.<\/em><\/span>/);
   assert.match(homepage, /id="contact"/);
   assert.match(showcase, /aria-roledescription="carousel"/);
   assert.match(heroExperience, /prefers-reduced-motion/);
@@ -125,10 +123,19 @@ test("premium motion remains present while mobile rendering is constrained", asy
     read("../app/globals.css"),
   ]);
 
-  assert.match(homepage, /className="hero-marquee-track"/);
-  assert.match(homepage, /className="hero-marquee-group" aria-hidden="true"/);
-  assert.match(styles, /\.hero-marquee-track\s*\{[\s\S]*?width: max-content;[\s\S]*?animation: hero-marquee-scroll 24s linear infinite;/);
-  assert.match(styles, /@keyframes hero-marquee-scroll[\s\S]*?translate3d\(-50%, 0, 0\)/);
+  // The inspector hero keeps its motion but sheds cost on constrained devices.
+  assert.match(homepage, /<HeroStage projects=\{stageProjects\} \/>/);
+  const [stage, engine, inspector] = await Promise.all([
+    read("../app/components/home/HeroStage.tsx"),
+    read("../app/components/home/wall/WallEngine.ts"),
+    read("../app/styles/inspector.css"),
+  ]);
+  assert.match(stage, /saveData/);
+  assert.match(stage, /deviceMemory/);
+  assert.match(engine, /mobile \? 1\.5 : 1\.75/);
+  assert.match(engine, /const cols = mobile \? 20 : 30;/);
+  assert.match(engine, /antialias: !mobile/);
+  assert.match(inspector, /@media \(max-width: 899px\)[\s\S]*?\.hx-poster/);
   assert.match(experience, /if \(constrainedDevice\) \{\s*setMode\("fallback"\)/);
   assert.match(experience, /else if \(tabletQuery\.matches\)/);
   assert.match(canvas, /Math\.min\(window\.devicePixelRatio, 1\.25\)/);
@@ -202,14 +209,14 @@ test("reviewed design issues remain remediated", async () => {
   ]);
 
   assert.doesNotMatch(homepage, /hero-brand-art/);
-  assert.match(homepage, /<LiveTicker items=\{tickerItems\} \/>/);
+  assert.match(homepage, /<ServiceInspector rows=\{inspectorRows\} \/>/);
   assert.match(showcase, /sliderPreferencePaused \|\| hovered \|\| focused \|\| !isVisible \|\| !isPageVisible/);
   assert.match(showcase, /onMouseEnter=\{\(\) => setHovered\(true\)\}/);
   assert.match(showcase, /onMouseLeave=\{\(\) => setHovered\(false\)\}/);
   assert.match(showcase, /onFocusCapture=\{\(\) => setFocused\(true\)\}/);
   assert.match(showcase, /!event\.currentTarget\.contains\(event\.relatedTarget\)[\s\S]*?setFocused\(false\)/);
   assert.match(showcase, /setSliderPauseOverride\(true\)/);
-  assert.match(homepage, /<Link className="service-card"[^>]*href=\{`\/services\/\$\{service\.slug\}`\}/);
+  assert.match(await read("../app/components/home/sections/ServiceInspector.tsx"), /href=\{`\/services\/\$\{row\.slug\}`\}/);
   assert.match(chrome, /<ABBrandImage decorative eager/);
   assert.match(chrome, /AB Web Studio/);
   assert.match(servicePage, /<SiteHeader/);
@@ -218,7 +225,8 @@ test("reviewed design issues remain remediated", async () => {
   assert.match(servicePage, /"@type": "FAQPage"/);
   assert.doesNotMatch(servicePage, /offers:\s*\{/);
   assert.match(servicePage, /images: \[\{/);
-  assert.match(servicePage, /className="service-context"/);
+  assert.match(servicePage, /aria-labelledby="service-context-heading"/);
+  assert.match(servicePage, /id="service-context-heading"[^>]*>\{service\.detailTitle\}/);
   assert.match(servicePage, /Related services/);
 
   assert.match(styles, /\.button-primary\s*\{\s*background: var\(--red\);\s*color: var\(--white\);/);
@@ -295,11 +303,10 @@ test("premium interaction layer is wired without heavy dependencies", async () =
     read("../package.json"),
   ]);
 
-  assert.match(homepage, /metal-gilt/);
-  assert.match(homepage, /stage-scroll-cue/);
-  assert.match(homepage, /process-rail-fill/);
+  assert.match(homepage, /<ProcessBand steps=\{processSteps\} \/>/);
   assert.doesNotMatch(homepage, /project-ghost-index/);
-  assert.match(homepage, /<VirtualStudioPreview \/>/);
+  // The 3D studio world was rejected as cartoonish; the homepage no longer teases it.
+  assert.doesNotMatch(homepage, /VirtualStudioPreview/);
 
 
   assert.match(intro, /sessionStorage/);
@@ -316,15 +323,17 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   assert.match(chrome, /is-scrolled/);
   assert.match(styles, /\.site-header\.is-scrolled/);
 
-  assert.match(caseStudy, /case-study-meta/);
+  assert.match(caseStudy, /<dl className="ip-meta">/);
   assert.match(caseStudy, /01 \/ Overview/);
-  assert.match(caseStudy, /data-cursor="VISIT"/);
-  const [serviceIndex, compositions] = await Promise.all([
+  assert.match(caseStudy, /aria-label=\{visitLabel\}/);
+  assert.match(caseStudy, /const visitLabel = `\$\{projectVisitLabel\(project\)\}.*opens in a new tab/);
+  const [serviceIndex, inspectorPages] = await Promise.all([
     read("../app/components/ServiceIndex.tsx"),
-    read("../app/compositions.css"),
+    read("../app/styles/inspector-pages.css"),
   ]);
-  assert.match(serviceIndex, /services-index-row gr-svc-row/);
-  assert.match(compositions, /\.gr-svc-row/);
+  assert.match(serviceIndex, /className="ip-svc-row"/);
+  assert.match(serviceIndex, /href=\{`\/services\/\$\{item\.slug\}`\}/);
+  assert.match(inspectorPages, /\.ip-svc-row/);
 
   const pkg = JSON.parse(rawPackage);
   for (const name of Object.keys({ ...pkg.dependencies, ...pkg.devDependencies })) {
@@ -383,7 +392,8 @@ test("services index page exists and is wired into SEO routes", async () => {
 
   assert.match(servicesIndex, /canonical: "\/services"/);
   assert.match(servicesIndex, /"@type": "CollectionPage"/);
-  assert.match(servicesIndex, /aria-label="Breadcrumb"/);
+  assert.match(servicesIndex, /<Crumbs items=\{/);
+  assert.match(await read("../app/components/inspector/Crumbs.tsx"), /<nav className="ip-crumbs" aria-label="Breadcrumb">/);
   assert.match(servicesIndex, /servicePages\.map/);
   assert.match(sitemap, /\/services`/);
 });
@@ -456,12 +466,14 @@ test("typography is self-hosted so every platform gets the intended pairing", as
   assert.match(layout, /from "next\/font\/google"/);
   assert.match(layout, /variable: "--font-sans"/);
   assert.match(layout, /variable: "--font-display"/);
+  assert.match(layout, /variable: "--font-accent"/);
   assert.match(layout, /variable: "--font-mono"/);
   // Every font variable must sit on <html>: the role tokens are declared on
   // :root, so a variable set lower in the tree would leave them invalid.
-  assert.match(layout, /<html[^>]*className=\{`\$\{sansFont\.variable\} \$\{displayFont\.variable\} \$\{monoFont\.variable\}`\}/);
+  assert.match(layout, /<html[^>]*className=\{`\$\{sansFont\.variable\} \$\{displayFont\.variable\} \$\{accentFont\.variable\} \$\{monoFont\.variable\}`\}/);
   assert.match(styles, /--sans: var\(--font-sans\),/);
   assert.match(styles, /--display: var\(--font-display\),/);
+  assert.match(styles, /--accent-serif-font: var\(--font-accent\),/);
   assert.match(styles, /--mono: var\(--font-mono\),/);
   // next/font serves files same-origin, which the CSP must continue to allow.
   assert.match(nextConfig, /"font-src 'self'/);
@@ -481,8 +493,9 @@ test("service heroes carry decorative real project evidence", async () => {
     read("../app/services/page.tsx"),
   ]);
   for (const source of [servicePage, servicesIndex]) {
-    assert.match(source, /className="service-hero-copy"/);
-    assert.match(source, /<figure className="service-hero-visual" aria-hidden="true">/);
+    assert.match(source, /className="ip-hero-copy"/);
+    assert.match(source, /<figure className="ip-hero-visual" aria-hidden="true">/);
+    assert.match(source, /<ProjectArtwork project=\{/);
   }
   assert.match(servicePage, /project=\{featuredProject\}/);
 });
@@ -547,18 +560,23 @@ test("anchor jumps re-align once offscreen sections have rendered", async () => 
   assert.match(settle, /passes >= 2/);
 });
 
-test("display and mono fonts load only the weights and styles they render", async () => {
+test("display, accent and mono fonts load only the weights and styles they render", async () => {
   const layout = await read("../app/layout.tsx");
-  const serif = layout.match(/Bodoni_Moda\(\{[\s\S]*?\}\)/)?.[0];
-  assert.ok(serif, "Bodoni Moda display font");
-  // Headlines use 400–700, so one variable file (with its optical-size axis)
-  // replaces several static weights.
-  assert.doesNotMatch(serif, /weight:/);
-  assert.match(serif, /axes: \["opsz"\]/);
-  // The whole hero h1 (LCP) is set in the display face, so it is preloaded
-  // rather than swapped in late.
-  assert.match(serif, /style: \["normal", "italic"\]/);
-  assert.doesNotMatch(serif, /preload: false/);
+  const display = layout.match(/Bricolage_Grotesque\(\{[\s\S]*?\}\)/)?.[0];
+  assert.ok(display, "Bricolage Grotesque display font");
+  // One variable file (weight and optical-size axes) covers every headline weight.
+  assert.doesNotMatch(display, /weight:/);
+  assert.match(display, /axes: \["opsz"\]/);
+  // The hero h1 (LCP) is set in the display face, so it is preloaded rather than swapped in late.
+  assert.doesNotMatch(display, /preload: false/);
+
+  // The serif italic is an accent for single words at display sizes, never body copy.
+  const accent = layout.match(/Instrument_Serif\(\{[\s\S]*?\}\)/)?.[0];
+  assert.ok(accent, "Instrument Serif accent font");
+  assert.match(accent, /weight: "400"/);
+  assert.match(accent, /style: \["italic"\]/);
+  assert.match(accent, /preload: false/);
+  assert.doesNotMatch(layout, /Bodoni_Moda/, "no hairline didone faces remain");
 
   const mono = layout.match(/IBM_Plex_Mono\(\{[\s\S]*?\}\)/)?.[0];
   assert.ok(mono, "IBM Plex Mono label font");
@@ -588,19 +606,26 @@ test("Tailwind only scans app source, keeping unused utilities out of critical C
   assert.match(styles, /@import "tailwindcss" source\(none\);\s*\n@source "\.\/";/);
 });
 
-test("Gilt & Ruby design system: didone headlines, grotesk body and The Cut", async () => {
-  const [layout, studio, layer] = await Promise.all([
+test("Inspector design system: grotesque headlines, signal accent and tokens loaded last", async () => {
+  const [layout, studio, layer, inspector] = await Promise.all([
     read("../app/layout.tsx"),
     read("../app/studio.css"),
     read("../app/gilt-ruby.css"),
+    read("../app/styles/inspector.css"),
   ]);
 
-  assert.match(layout, /Bodoni_Moda\(/);
+  assert.match(layout, /Bricolage_Grotesque\(/);
   assert.match(layout, /Schibsted_Grotesk\(/);
   assert.match(layout, /variable: "--font-display"/);
-  assert.match(layout, /import "\.\/gilt-ruby\.css";/);
-  assert.ok(layout.indexOf('import "./gilt-ruby.css"') > layout.indexOf('import "./editorial.css"'), "gilt-ruby.css must load last");
+  assert.match(layout, /import "\.\/styles\/inspector\.css";/);
+  assert.ok(layout.indexOf('import "./styles/inspector.css"') > layout.indexOf('import "./gilt-ruby.css"'), "inspector.css must load after the legacy layers");
   assert.doesNotMatch(studio, /\.cinematic-home h1, \.cinematic-home h2[^{]*\{[^}]*var\(--sans\)/);
+
+  // One signal colour; the legacy gilt/ruby token names resolve to it so interior pages inherit it.
+  assert.match(inspector, /--signal: #ff5a3c;/);
+  assert.match(inspector, /--gilt: var\(--signal\);/);
+  // Text on a signal fill must be ink, not white (contrast).
+  assert.match(inspector, /\.ix-btn--solid \{ background: var\(--signal\); color: var\(--signal-ink\); \}/);
 
   assert.match(layer, /--clip-cut-sm: polygon\(/);
   assert.match(layer, /\.button-primary,[\s\S]*?clip-path: var\(--clip-cut-sm\)/);

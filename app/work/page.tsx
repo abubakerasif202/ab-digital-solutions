@@ -66,24 +66,28 @@ export default function WorkPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="work-index-page" id="main-content">
+      <main className="ip ip-work inspector-home" id="main-content">
         <WorkIndexBody />
 
-        <aside className="gr-final-cta gr-final-cta--work" aria-labelledby="work-cta-heading">
-          <div className="container gr-final-cta-inner" data-reveal>
-            <p className="eyebrow">Next</p>
-            <h2 id="work-cta-heading">Your project could be the next one on <span className="accent-serif">this list.</span></h2>
-            <p className="content-lead">
-              Tell us what you are building and where you want the business to go. We will come
-              back with a practical next step.
-            </p>
-            <div className="content-actions">
-              <Link className="button button-primary" href="/contact" data-magnetic>
-                Get a Website Quote <ArrowIcon />
-              </Link>
-              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
-                Call {siteConfig.phoneDisplay}
-              </a>
+        <aside className="ip-cta" aria-labelledby="work-cta-heading">
+          <div className="ip-wrap ip-cta-grid">
+            <div>
+              <p className="ix-label">Next</p>
+              <h2 id="work-cta-heading" className="ip-h2">Your project could be the next one on <em>this list.</em></h2>
+            </div>
+            <div className="ip-cta-side">
+              <p>
+                Tell us what you are building and where you want the business to go. We will come
+                back with a practical next step.
+              </p>
+              <div className="ip-actions">
+                <Link className="ix-btn ix-btn--solid" href="/contact">
+                  Get a Website Quote <ArrowIcon />
+                </Link>
+                <a className="ix-btn ix-btn--ghost" href={`tel:${siteConfig.phoneInternational}`}>
+                  Call {siteConfig.phoneDisplay}
+                </a>
+              </div>
             </div>
           </div>
         </aside>

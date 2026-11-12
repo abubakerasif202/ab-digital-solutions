@@ -1,0 +1,590 @@
+{
+  "config": {
+    "argv": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "C:\\Users\\abuba\\ab-digital-solutions\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/e2e/inspector-wall.spec.mjs",
+      "tests/e2e/inspector-pages.spec.mjs",
+      "tests/e2e/inspector-accessibility.spec.mjs",
+      "tests/e2e/reveal-performance.spec.mjs"
+    ],
+    "configFile": "C:\\Users\\abuba\\ab-digital-solutions\\playwright.config.mjs",
+    "rootDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/abuba/ab-digital-solutions/test-results/inspector-production-suite",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-production-suite",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.mjs",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://localhost:3114",
+          "browserName": "chromium",
+          "actionTimeout": 10000,
+          "navigationTimeout": 30000,
+          "launchOptions": {
+            "args": [
+              "--no-sandbox",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "qa/inspector-production-suite/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "inspector-accessibility.spec.mjs",
+      "file": "inspector-accessibility.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Inspector landmarks at 375px on /",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3419,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:20:54.566Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d5162f0eca4e9d042f3-67c1567fbe558b0f5796",
+          "file": "inspector-accessibility.spec.mjs",
+          "line": 8,
+          "column": 5
+        },
+        {
+          "title": "Inspector landmarks at 375px on /services/web-design-sydney",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1484,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:20:58.069Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d5162f0eca4e9d042f3-8faaf770dbad6ba82ff3",
+          "file": "inspector-accessibility.spec.mjs",
+          "line": 8,
+          "column": 5
+        },
+        {
+          "title": "Inspector landmarks at 1440px on /",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2871,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:20:59.566Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d5162f0eca4e9d042f3-1d7744cf72f8a1ed9410",
+          "file": "inspector-accessibility.spec.mjs",
+          "line": 8,
+          "column": 5
+        },
+        {
+          "title": "Inspector landmarks at 1440px on /services/web-design-sydney",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1588,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:21:02.461Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d5162f0eca4e9d042f3-3eab008e9ac3e27a8adf",
+          "file": "inspector-accessibility.spec.mjs",
+          "line": 8,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "inspector-pages.spec.mjs",
+      "file": "inspector-pages.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "standalone inspection frame exposes its keyboard toggle state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1362,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:21:04.098Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0b456e0cbec0ae866328-6ebefaea7950b6a98535",
+          "file": "inspector-pages.spec.mjs",
+          "line": 11,
+          "column": 1
+        },
+        {
+          "title": "inspection lens follows scrolled geometry and stops writing when settled",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2124,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:21:05.477Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0b456e0cbec0ae866328-258713495780341b925a",
+          "file": "inspector-pages.spec.mjs",
+          "line": 24,
+          "column": 1
+        },
+        {
+          "title": "coarse pointer: resting inspection lens tracks viewport resizing",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1010,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:21:07.619Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0b456e0cbec0ae866328-5a285cd617aa1575ac30",
+          "file": "inspector-pages.spec.mjs",
+          "line": 55,
+          "column": 3
+        },
+        {
+          "title": "reduced motion: resting inspection lens tracks viewport resizing",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 820,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:21:08.656Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0b456e0cbec0ae866328-54f6b3513aede8672be8",
+          "file": "inspector-pages.spec.mjs",
+          "line": 55,
+          "column": 3
+        }
+      ]
+    },
+    {
+      "title": "inspector-wall.spec.mjs",
+      "file": "inspector-wall.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "fallback imagery follows the selected project without WebGL",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 922,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:21:09.501Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4338cad12414d2e29ef7-1919e2c5f6a688cd0aa1",
+          "file": "inspector-wall.spec.mjs",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "wall motion can be paused and reduced-motion preferences update live",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9277,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:21:10.440Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4338cad12414d2e29ef7-47b031a297ce56ce3c6e",
+          "file": "inspector-wall.spec.mjs",
+          "line": 27,
+          "column": 1
+        },
+        {
+          "title": "the work composition removes hidden hero controls from keyboard focus",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2188,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:21:19.737Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4338cad12414d2e29ef7-2c5e14b371038b7b5b17",
+          "file": "inspector-wall.spec.mjs",
+          "line": 46,
+          "column": 1
+        },
+        {
+          "title": "a lost WebGL context restores the current project and survives navigation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6255,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:21:21.949Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4338cad12414d2e29ef7-1ca56b4235e739335ba6",
+          "file": "inspector-wall.spec.mjs",
+          "line": 70,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "reveal-performance.spec.mjs",
+      "file": "reveal-performance.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Inspector content paints on scroll and retains real focus and reduced-motion behavior",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10104,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:21:28.255Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b3669f690f1cb72728b3-70fb718db90d4bb90398",
+          "file": "reveal-performance.spec.mjs",
+          "line": 33,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-12T22:20:54.146Z",
+    "duration": 44381.520000000004,
+    "expected": 13,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\abuba\\AppData\\Local\\nvm\\v22.23.1\\node.exe",
+      "C:\\Users\\abuba\\ab-digital-solutions\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/e2e/inspector-wall.spec.mjs",
+      "--grep",
+      "hidden hero controls",
+      "--timeout",
+      "30000"
+    ],
+    "configFile": "C:\\Users\\abuba\\ab-digital-solutions\\playwright.config.mjs",
+    "rootDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/abuba/ab-digital-solutions/test-results/inspector-wall-agent",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wall-agent",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.mjs",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://localhost:3100",
+          "browserName": "chromium",
+          "actionTimeout": 10000,
+          "navigationTimeout": 30000,
+          "launchOptions": {
+            "args": [
+              "--no-sandbox",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "qa/inspector-wall-agent/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "inspector-wall.spec.mjs",
+      "file": "inspector-wall.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the work composition removes hidden hero controls from keyboard focus",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4088,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:45:22.311Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4338cad12414d2e29ef7-2c5e14b371038b7b5b17",
+          "file": "inspector-wall.spec.mjs",
+          "line": 46,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-12T21:45:21.196Z",
+    "duration": 5812.081999999999,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

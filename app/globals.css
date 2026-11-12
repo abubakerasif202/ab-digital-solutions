@@ -37,7 +37,8 @@
   --type-micro: 0.75rem;
   --type-small: 0.875rem;
   --type-action: 0.875rem;
-  --display: var(--font-display), "Iowan Old Style", "Baskerville", "Times New Roman", serif;
+  --display: var(--font-display), "Avenir Next", "Helvetica Neue", "Segoe UI", sans-serif;
+  --accent-serif-font: var(--font-accent), "Iowan Old Style", "Baskerville", Georgia, serif;
   --sans: var(--font-sans), "Avenir Next", "Helvetica Neue", "Segoe UI", sans-serif;
   --mono: var(--font-mono), "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
   /* Shared motion language: one entrance curve and one smooth curve used by

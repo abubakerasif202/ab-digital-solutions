@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import type { CSSProperties } from "react";
+import { Crumbs } from "../components/inspector/Crumbs";
 import { ContactForm } from "../components/ContactForm";
 import { EnquirySection } from "../components/studio/EnquirySection";
 import { PageTransition } from "../components/motion/PageTransition";
@@ -57,29 +58,26 @@ export default function ContactPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page studio-page studio-page--contact" id="main-content">
+      <main className="ip ip-contact inspector-home" id="main-content">
         <EnquirySection
           id="contact"
           index="01"
           headingAs="h1"
-          before={(
-            <nav className="studio-crumbs studio-crumbs--inline" aria-label="Breadcrumb">
-              <Link href="/">Home</Link>
-              <span aria-hidden="true">/</span>
-              <span aria-current="page">Contact</span>
-            </nav>
-          )}
+          variant="inspector"
+          before={<Crumbs items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />}
         >
           <ContactForm titleAs="h2" />
         </EnquirySection>
 
-        <section className="gr-contact-next" aria-labelledby="next-steps-heading">
-          <div className="container">
-            <h2 id="next-steps-heading" className="eyebrow">What happens next</h2>
-            <ol className="gr-contact-steps">
-              {nextSteps.map(([number, title, copy]) => (
-                <li key={number}>
-                  <span className="gr-number" aria-hidden="true">{number}</span>
+        <section className="ip-paper" aria-labelledby="next-steps-heading">
+          <div className="ip-wrap">
+            <div className="ip-head ip-head--paper">
+              <h2 id="next-steps-heading" className="ip-h2">What happens <em>next</em></h2>
+            </div>
+            <ol className="ip-principles">
+              {nextSteps.map(([number, title, copy], index) => (
+                <li key={number} style={{ "--i": index } as CSSProperties}>
+                  <span className="ip-big-no" aria-hidden="true">{number}</span>
                   <h3>{title}</h3>
                   <p>{copy}</p>
                 </li>

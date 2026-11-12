@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { CSSProperties } from "react";
+import { Crumbs } from "../../components/inspector/Crumbs";
 import { PageTransition } from "../../components/motion/PageTransition";
 import { notFound } from "next/navigation";
 import { ProjectArtwork } from "../../project-artwork";
@@ -118,29 +120,22 @@ export default async function ServicePage({ params }: Props) {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page service-page" id="main-content">
-        <div className="container content-shell">
-          <nav className="content-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span aria-hidden="true">/</span>
-            <Link href="/services">Services</Link>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">{service.title}</span>
-          </nav>
-
-          <header className="service-hero">
-            <div className="service-hero-copy">
-              <p className="eyebrow">Digital services / Sydney</p>
-              <h1>{service.h1}</h1>
-              <p className="content-lead">{service.intro}</p>
-              <div className="content-actions">
-                <Link className="button button-primary" href={contactHref}>{service.ctaLabel} <ArrowIcon /></Link>
-                <Link className="button button-ghost" href="/work">View Our Work</Link>
+      <main className="ip ip-service inspector-home" id="main-content">
+        <header className="ip-hero">
+          <div className="ip-wrap ip-hero-grid">
+            <div className="ip-hero-copy">
+              <Crumbs items={[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }, { label: service.title }]} />
+              <p className="ix-label">Digital services / Sydney</p>
+              <h1 className="ip-title">{service.h1}</h1>
+              <p className="ip-lede">{service.intro}</p>
+              <div className="ip-actions">
+                <Link className="ix-btn ix-btn--solid" href={contactHref}>{service.ctaLabel} <ArrowIcon /></Link>
+                <Link className="ix-btn ix-btn--ghost" href="/work">View Our Work</Link>
               </div>
             </div>
             {/* Decorative detail crop; the same project is linked in full below. */}
-            <figure className="service-hero-visual" aria-hidden="true">
-              <div className="service-hero-visual-frame">
+            <figure className="ip-hero-visual" aria-hidden="true">
+              <div className="ip-plate">
                 <ProjectArtwork project={featuredProject} priority sizes="(max-width: 900px) 92vw, 440px" />
               </div>
               <figcaption>
@@ -148,58 +143,80 @@ export default async function ServicePage({ params }: Props) {
                 {featuredProject.name}
               </figcaption>
             </figure>
-          </header>
+          </div>
+        </header>
 
-          <section className="studio-concept" aria-labelledby="concept-heading">
-            <div><p className="eyebrow">Planning the work</p><h2 id="concept-heading">{service.title}, in layers.</h2><p>These are the areas we review together. Your proposal sets out the deliverables, responsibilities and costs.</p></div>
-            <ol className="studio-interface-layers">{delivery.layers.map((layer, index) => <li key={layer}><span aria-hidden="true">0{index + 1}</span>{layer}</li>)}</ol>
-          </section>
-
-          <section className="service-inclusions" aria-labelledby="included-heading">
-            <div className="service-section-heading">
-              <p className="eyebrow">Built around the goal</p>
-              <h2 id="included-heading">What we can help with</h2>
+        <section className="ip-sec ip-sec--tight" aria-labelledby="concept-heading">
+          <div className="ip-wrap ip-split">
+            <div className="ip-side">
+              <p className="ix-label">Planning the work</p>
+              <h2 id="concept-heading" className="ip-h2">{service.title}, in <em>layers.</em></h2>
+              <p className="ip-side-note">These are the areas we review together. Your proposal sets out the deliverables, responsibilities and costs.</p>
             </div>
-            <ul>{service.benefits.map((benefit, index) => <li key={benefit}><span>{String(index + 1).padStart(2, "0")}</span>{benefit}</li>)}</ul>
-          </section>
+            <ol className="ip-layers">
+              {delivery.layers.map((layer, index) => (
+                <li key={layer} style={{ "--i": index } as CSSProperties}>
+                  <span className="ip-layer-no" aria-hidden="true">0{index + 1}</span>
+                  <span className="ip-layer-text">{layer}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
 
-          <section className="service-context" aria-labelledby="service-context-heading">
-            <p className="eyebrow">Strategy before output</p>
-            <div>
-              <h2 id="service-context-heading">{service.detailTitle}</h2>
+        <section className="ip-sec ip-sec--tight ip-sec--line" aria-labelledby="included-heading">
+          <div className="ip-wrap ip-split">
+            <div className="ip-side">
+              <p className="ix-label">Built around the goal</p>
+              <h2 id="included-heading" className="ip-h2">What we can help with</h2>
+            </div>
+            <ul className="ip-rows">
+              {service.benefits.map((benefit, index) => (
+                <li key={benefit}><span className="ip-row-n">{String(index + 1).padStart(2, "0")}</span><span className="ip-row-t">{benefit}</span></li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="ip-paper" aria-labelledby="service-context-heading">
+          <div className="ip-wrap ip-split">
+            <div className="ip-side">
+              <p className="ix-label">Strategy before output</p>
+            </div>
+            <div className="ip-paper-body">
+              <h2 id="service-context-heading" className="ip-h2">{service.detailTitle}</h2>
               <p>{service.detail}</p>
-              <Link className="text-link" href={contactHref}>Discuss your {service.title} project <ArrowIcon /></Link>
+              <Link className="ix-btn sx-btn-ink" href={contactHref}>Discuss your {service.title} project <ArrowIcon /></Link>
             </div>
-          </section>
+          </div>
+        </section>
 
-          <section className="service-showcase" aria-labelledby="work-proof-heading">
-            <div className="service-section-heading">
-              <p className="eyebrow">Relevant project experience</p>
-              <h2 id="work-proof-heading">{featuredProject.name}: the work behind the service.</h2>
-              <p>{featuredProject.overview}</p>
+        <section className="ip-sec" aria-labelledby="work-proof-heading">
+          <div className="ip-wrap">
+            <div className="ip-head">
+              <p className="ix-label">Relevant project experience</p>
+              <h2 id="work-proof-heading" className="ip-h2">{featuredProject.name}: the work behind the service.</h2>
+              <p className="ip-head-note">{featuredProject.overview}</p>
             </div>
-            <Link
-              className="service-project"
-              href={`/work/${featuredProject.slug}`}
-            >
-              <div className="service-project-image">
+            <Link className="ip-feature" href={`/work/${featuredProject.slug}`}>
+              <span className="ip-feature-img">
                 <ProjectArtwork project={featuredProject} sizes="(max-width: 900px) 92vw, (max-width: 1440px) 52vw, 700px" />
-                <span>View Case Study <ArrowIcon direction="right" /></span>
-              </div>
-              <div>
-                <p>{primaryProof.role}</p>
-                <h3>{featuredProject.name}</h3>
+                <span className="ip-feature-go">View Case Study <ArrowIcon direction="right" /></span>
+              </span>
+              <span className="ip-feature-copy">
+                <span className="ip-kicker">{primaryProof.role}</span>
+                <strong>{featuredProject.name}</strong>
                 <span>{featuredProject.description}</span>
-              </div>
+              </span>
             </Link>
-            <ul className="service-project-supporting" aria-label="More project experience">
-              {supportingProof.map(({ project, role }) => (
-                <li key={project.slug}>
+            <ul className="ip-support" aria-label="More project experience">
+              {supportingProof.map(({ project, role }, index) => (
+                <li key={project.slug} style={{ "--i": index } as CSSProperties}>
                   <Link href={`/work/${project.slug}`}>
-                    <span className="service-project-supporting-image">
+                    <span className="ip-support-img">
                       <ProjectArtwork project={project} sizes="(max-width: 900px) 92vw, 380px" />
                     </span>
-                    <span className="service-project-supporting-copy">
+                    <span className="ip-support-copy">
                       <small>{role}</small>
                       <strong>{project.name}</strong>
                       <span>{projectDisplayDomain(project)} <ArrowIcon direction="right" /></span>
@@ -208,29 +225,33 @@ export default async function ServicePage({ params }: Props) {
                 </li>
               ))}
             </ul>
-          </section>
+          </div>
+        </section>
 
-          <section className="service-process" aria-labelledby="service-process-heading">
-            <div className="service-section-heading">
-              <p className="eyebrow">A visible process</p>
-              <h2 id="service-process-heading">From first conversation to a dependable result.</h2>
+        <section className="ip-sec ip-sec--line" aria-labelledby="service-process-heading">
+          <div className="ip-wrap ip-split">
+            <div className="ip-side">
+              <p className="ix-label">A visible process</p>
+              <h2 id="service-process-heading" className="ip-h2">From first conversation to a dependable <em>result.</em></h2>
             </div>
-            <ol>
+            <ol className="ip-steps">
               {process.map(([number, title, description]) => (
-                <li key={number} data-reveal>
-                  <span>{number}</span>
+                <li key={number}>
+                  <span className="ip-step-no" aria-hidden="true">{number}</span>
                   <div><h3>{title}</h3><p>{description}</p></div>
                 </li>
               ))}
             </ol>
-          </section>
+          </div>
+        </section>
 
-          <section className="service-faq" aria-labelledby="service-faq-heading">
-            <div className="service-section-heading">
-              <p className="eyebrow">Useful details</p>
-              <h2 id="service-faq-heading">Frequently asked questions</h2>
+        <section className="ip-sec ip-sec--tight" aria-labelledby="service-faq-heading">
+          <div className="ip-wrap ip-split">
+            <div className="ip-side">
+              <p className="ix-label">Useful details</p>
+              <h2 id="service-faq-heading" className="ip-h2">Frequently asked questions</h2>
             </div>
-            <div>
+            <div className="ip-faq">
               {faqs.map(({ question, answer }) => (
                 <details key={question}>
                   <summary>{question}<span aria-hidden="true">+</span></summary>
@@ -238,32 +259,42 @@ export default async function ServicePage({ params }: Props) {
                 </details>
               ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          <section className="related-services" aria-labelledby="related-services-heading">
-            <div className="service-section-heading">
-              <p className="eyebrow">Connected capabilities</p>
-              <h2 id="related-services-heading">Related services</h2>
+        <section className="ip-sec ip-sec--tight ip-sec--line" aria-labelledby="related-services-heading">
+          <div className="ip-wrap ip-split">
+            <div className="ip-side">
+              <p className="ix-label">Connected capabilities</p>
+              <h2 id="related-services-heading" className="ip-h2">Related services</h2>
             </div>
-            <div>
-              {relatedServices.map((related) => (
-                <Link href={`/services/${related.slug}`} key={related.slug}>
-                  <span>{related.title}</span><ArrowIcon />
-                </Link>
+            <ul className="ip-related">
+              {relatedServices.map((related, index) => (
+                <li key={related.slug} style={{ "--i": index } as CSSProperties}>
+                  <Link href={`/services/${related.slug}`}>
+                    <span>{related.title}</span><ArrowIcon />
+                  </Link>
+                </li>
               ))}
-            </div>
-          </section>
+            </ul>
+          </div>
+        </section>
 
-          <section className="service-cta" aria-labelledby="service-cta-heading">
-            <p className="eyebrow">Ready when you are</p>
-            <h2 id="service-cta-heading">Let&apos;s turn the next digital decision into useful progress.</h2>
-            <p>Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
-            <div className="content-actions">
-              <Link className="button button-primary" href={contactHref}>{service.ctaLabel} <ArrowIcon /></Link>
-              <Link className="button button-ghost" href="/work">View Our Work</Link>
+        <section className="ip-cta" aria-labelledby="service-cta-heading">
+          <div className="ip-wrap ip-cta-grid">
+            <div>
+              <p className="ix-label">Ready when you are</p>
+              <h2 id="service-cta-heading" className="ip-h2">Let&apos;s turn the next digital decision into useful <em>progress.</em></h2>
             </div>
-          </section>
-        </div>
+            <div className="ip-cta-side">
+              <p>Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
+              <div className="ip-actions">
+                <Link className="ix-btn ix-btn--solid" href={contactHref}>{service.ctaLabel} <ArrowIcon /></Link>
+                <Link className="ix-btn ix-btn--ghost" href="/work">View Our Work</Link>
+              </div>
+            </div>
+          </div>
+        </section>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       </main>
       </PageTransition>

@@ -229,11 +229,10 @@ export function SiteHeader() {
   // the scroll-spy marks the in-page section being read instead.
   const routeSection = pathname.startsWith("/work") ? "work"
     : pathname.startsWith("/services") ? "services"
-    : pathname.startsWith("/studio") ? "studio"
     : pathname.startsWith("/about") ? "about"
     : pathname.startsWith("/contact") ? "contact"
     : null;
-  const navLinkClass = (id: string) => (activeSection === id || routeSection === id ? "is-active" : undefined);
+  const navLinkClass = (id: string) => `ix-nl${activeSection === id || routeSection === id ? " is-active" : ""}`;
   const navLinkCurrent = (id: string) => (routeSection === id ? "page" : activeSection === id ? "location" : undefined);
 
   return (
@@ -267,7 +266,6 @@ export function SiteHeader() {
           >
             <Link href="/work" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
             <Link href="/services" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
-            <Link href="/studio" prefetch={false} onClick={handleNavLinkClick} className={navLinkClass("studio")} aria-current={navLinkCurrent("studio")}>Studio</Link>
             <Link href="/#process" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
             <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
             <Link href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("contact")} aria-current={navLinkCurrent("contact")}>Contact</Link>
@@ -279,9 +277,11 @@ export function SiteHeader() {
         </div>
       </header>
       {mobileCtaVisible && !menuOpen ? (
-        <Link prefetch={prefetchNavigation} className="mobile-project-cta" href={pathname === "/" ? "#contact" : "/contact"}>
-          Start a project <ArrowIcon />
-        </Link>
+        <nav aria-label="Quick project enquiry">
+          <Link prefetch={prefetchNavigation} className="mobile-project-cta" href={pathname === "/" ? "#contact" : "/contact"}>
+            Start a project <ArrowIcon />
+          </Link>
+        </nav>
       ) : null}
     </>
   );

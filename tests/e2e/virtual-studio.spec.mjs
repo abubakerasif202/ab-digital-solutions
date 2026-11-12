@@ -107,7 +107,8 @@ test("keyboard enters, skips, opens and closes without trapping focus", async ({
 
 test("WebGL context loss preserves HTML functionality", async ({ page }) => {
   await page.goto("/studio", { waitUntil: "networkidle" }); await enter(page);
-  await page.locator("canvas").evaluate((canvas) => canvas.dispatchEvent(new Event("webglcontextlost", { cancelable: true })));
+  await expect(page.locator("canvas")).toBeVisible();
+  await page.evaluate(() => document.querySelector("canvas")?.dispatchEvent(new Event("webglcontextlost", { cancelable: true })));
   await expect(mode(page)).toHaveAttribute("data-mode", "failed"); await expect(page.locator("canvas")).toHaveCount(0);
   await space(page, "Portfolio gallery"); await expect(page.getByRole("link", { name: "View case study" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Try 3D again" })).toBeVisible();
@@ -153,8 +154,10 @@ test("server HTML works without JavaScript; homepage preview loads no model", as
   await staticPage.screenshot({ path: `${output}/390-no-javascript.png`, fullPage: true });
   expect(await staticPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await context.close();
   const models = []; page.on("request", (request) => { if (/\.glb/.test(request.url())) models.push(request.url()); });
-  await page.goto("/"); await expect(page.getByRole("heading", { name: /Don.t Just Visit Our Website.*Step Inside Our Studio/ })).toBeAttached();
-  await expect(page.getByRole("link", { name: "Enter Our 3D Studio", exact: true }).first()).toHaveAttribute("href", "/studio"); expect(models).toEqual([]);
+  // The studio world is no longer teased on the homepage; it stays reachable from the footer and never loads models there.
+  await page.goto("/"); await expect(page.getByRole("heading", { name: /Step Inside Our Studio/i })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Enter Our 3D Studio", exact: true })).toHaveCount(0);
+  await expect(page.locator("footer a[href=\"/studio\"]").first()).toBeAttached(); expect(models).toEqual([]);
 });
 
 test("touch orbit changes view and vertical swipe scrolls the page", async ({ browser }) => {

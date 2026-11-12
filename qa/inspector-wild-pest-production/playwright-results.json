@@ -1,0 +1,599 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\abuba\\AppData\\Local\\nvm\\v22.23.1\\node.exe",
+      "C:\\Users\\abuba\\ab-digital-solutions\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/e2e/wild-pest-solutions.spec.mjs"
+    ],
+    "configFile": "C:\\Users\\abuba\\ab-digital-solutions\\playwright.config.mjs",
+    "rootDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/abuba/ab-digital-solutions/test-results/inspector-wild-pest-production",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/abuba/ab-digital-solutions/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.mjs",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://localhost:3114",
+          "browserName": "chromium",
+          "actionTimeout": 10000,
+          "navigationTimeout": 30000,
+          "launchOptions": {
+            "args": [
+              "--no-sandbox",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "qa/inspector-wild-pest-production/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "wild-pest-solutions.spec.mjs",
+      "file": "wild-pest-solutions.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Wild Pest case study at 320px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 19209,
+                  "error": {
+                    "message": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n",
+                    "stack": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:23:49",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                      "column": 49,
+                      "line": 23
+                    },
+                    "snippet": "  21 |     await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });\n  22 |     await page.emulateMedia({ reducedMotion: \"reduce\" });\n> 23 |     expect(await page.locator(\".gr-cs-pan img\").evaluate(el => getComputedStyle(el).animationName)).toBe(\"none\");\n     |                                                 ^\n  24 |     await page.keyboard.press(\"Tab\");\n  25 |     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);\n  26 |     expect(errors).toEqual([]);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                        "column": 49,
+                        "line": 23
+                      },
+                      "message": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n\n\n  21 |     await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });\n  22 |     await page.emulateMedia({ reducedMotion: \"reduce\" });\n> 23 |     expect(await page.locator(\".gr-cs-pan img\").evaluate(el => getComputedStyle(el).animationName)).toBe(\"none\");\n     |                                                 ^\n  24 |     await page.keyboard.press(\"Tab\");\n  25 |     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);\n  26 |     expect(errors).toEqual([]);\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:23:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:52:39.334Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-320px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-320px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-320px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                    "column": 49,
+                    "line": 23
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "81e482524e594533b75e-ce66919fb4a1fe56ce95",
+          "file": "wild-pest-solutions.spec.mjs",
+          "line": 4,
+          "column": 3
+        },
+        {
+          "title": "Wild Pest case study at 375px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 18549,
+                  "error": {
+                    "message": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n",
+                    "stack": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:23:49",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                      "column": 49,
+                      "line": 23
+                    },
+                    "snippet": "  21 |     await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });\n  22 |     await page.emulateMedia({ reducedMotion: \"reduce\" });\n> 23 |     expect(await page.locator(\".gr-cs-pan img\").evaluate(el => getComputedStyle(el).animationName)).toBe(\"none\");\n     |                                                 ^\n  24 |     await page.keyboard.press(\"Tab\");\n  25 |     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);\n  26 |     expect(errors).toEqual([]);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                        "column": 49,
+                        "line": 23
+                      },
+                      "message": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n\n\n  21 |     await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });\n  22 |     await page.emulateMedia({ reducedMotion: \"reduce\" });\n> 23 |     expect(await page.locator(\".gr-cs-pan img\").evaluate(el => getComputedStyle(el).animationName)).toBe(\"none\");\n     |                                                 ^\n  24 |     await page.keyboard.press(\"Tab\");\n  25 |     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);\n  26 |     expect(errors).toEqual([]);\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:23:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:52:59.439Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-375px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-375px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-375px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                    "column": 49,
+                    "line": 23
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "81e482524e594533b75e-2463b8921ac386db1817",
+          "file": "wild-pest-solutions.spec.mjs",
+          "line": 4,
+          "column": 3
+        },
+        {
+          "title": "Wild Pest case study at 768px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 19721,
+                  "error": {
+                    "message": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n",
+                    "stack": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:23:49",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                      "column": 49,
+                      "line": 23
+                    },
+                    "snippet": "  21 |     await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });\n  22 |     await page.emulateMedia({ reducedMotion: \"reduce\" });\n> 23 |     expect(await page.locator(\".gr-cs-pan img\").evaluate(el => getComputedStyle(el).animationName)).toBe(\"none\");\n     |                                                 ^\n  24 |     await page.keyboard.press(\"Tab\");\n  25 |     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);\n  26 |     expect(errors).toEqual([]);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                        "column": 49,
+                        "line": 23
+                      },
+                      "message": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n\n\n  21 |     await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });\n  22 |     await page.emulateMedia({ reducedMotion: \"reduce\" });\n> 23 |     expect(await page.locator(\".gr-cs-pan img\").evaluate(el => getComputedStyle(el).animationName)).toBe(\"none\");\n     |                                                 ^\n  24 |     await page.keyboard.press(\"Tab\");\n  25 |     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);\n  26 |     expect(errors).toEqual([]);\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:23:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:53:18.879Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-768px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-768px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-768px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                    "column": 49,
+                    "line": 23
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "81e482524e594533b75e-1fb887e47e3c4bf97fbe",
+          "file": "wild-pest-solutions.spec.mjs",
+          "line": 4,
+          "column": 3
+        },
+        {
+          "title": "Wild Pest case study at 1024px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 18023,
+                  "error": {
+                    "message": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n",
+                    "stack": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:23:49",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                      "column": 49,
+                      "line": 23
+                    },
+                    "snippet": "  21 |     await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });\n  22 |     await page.emulateMedia({ reducedMotion: \"reduce\" });\n> 23 |     expect(await page.locator(\".gr-cs-pan img\").evaluate(el => getComputedStyle(el).animationName)).toBe(\"none\");\n     |                                                 ^\n  24 |     await page.keyboard.press(\"Tab\");\n  25 |     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);\n  26 |     expect(errors).toEqual([]);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                        "column": 49,
+                        "line": 23
+                      },
+                      "message": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n\n\n  21 |     await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });\n  22 |     await page.emulateMedia({ reducedMotion: \"reduce\" });\n> 23 |     expect(await page.locator(\".gr-cs-pan img\").evaluate(el => getComputedStyle(el).animationName)).toBe(\"none\");\n     |                                                 ^\n  24 |     await page.keyboard.press(\"Tab\");\n  25 |     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);\n  26 |     expect(errors).toEqual([]);\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:23:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:53:39.599Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-1024px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-1024px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-1024px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                    "column": 49,
+                    "line": 23
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "81e482524e594533b75e-8bc2dbbe016daad5ed59",
+          "file": "wild-pest-solutions.spec.mjs",
+          "line": 4,
+          "column": 3
+        },
+        {
+          "title": "Wild Pest case study at 1440px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 19336,
+                  "error": {
+                    "message": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n",
+                    "stack": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:23:49",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                      "column": 49,
+                      "line": 23
+                    },
+                    "snippet": "  21 |     await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });\n  22 |     await page.emulateMedia({ reducedMotion: \"reduce\" });\n> 23 |     expect(await page.locator(\".gr-cs-pan img\").evaluate(el => getComputedStyle(el).animationName)).toBe(\"none\");\n     |                                                 ^\n  24 |     await page.keyboard.press(\"Tab\");\n  25 |     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);\n  26 |     expect(errors).toEqual([]);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                        "column": 49,
+                        "line": 23
+                      },
+                      "message": "TimeoutError: locator.evaluate: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-pan img')\u001b[22m\n\n\n  21 |     await page.screenshot({ path: `qa/wild-pest-solutions/case-study-${width}.png`, fullPage: true });\n  22 |     await page.emulateMedia({ reducedMotion: \"reduce\" });\n> 23 |     expect(await page.locator(\".gr-cs-pan img\").evaluate(el => getComputedStyle(el).animationName)).toBe(\"none\");\n     |                                                 ^\n  24 |     await page.keyboard.press(\"Tab\");\n  25 |     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true);\n  26 |     expect(errors).toEqual([]);\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:23:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:53:58.802Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-1440px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-1440px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Wild-Pest-case-study-at-1440px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                    "column": 49,
+                    "line": 23
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "81e482524e594533b75e-417e2c45aeae02b7228a",
+          "file": "wild-pest-solutions.spec.mjs",
+          "line": 4,
+          "column": 3
+        },
+        {
+          "title": "portfolio filtering retains accessible project and live links",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3743,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:54:19.223Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "81e482524e594533b75e-86fad25ae52a9b6c3275",
+          "file": "wild-pest-solutions.spec.mjs",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "Pept Up Labs metadata, gallery and responsive layouts",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 11437,
+                  "error": {
+                    "message": "TimeoutError: locator.scrollIntoViewIfNeeded: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-gallery')\u001b[22m\n",
+                    "stack": "TimeoutError: locator.scrollIntoViewIfNeeded: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-gallery')\u001b[22m\n\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:53:42",
+                    "location": {
+                      "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                      "column": 42,
+                      "line": 53
+                    },
+                    "snippet": "  51 |     await expect(page.locator(\"h1\")).toHaveText(\"Pept Up Labs\");\n  52 |     await expect(page.getByRole(\"link\", { name: /Visit Live Website/ }).first()).toHaveAttribute(\"href\", \"https://peptuplabs.com.au/\");\n> 53 |     await page.locator(\".gr-cs-gallery\").scrollIntoViewIfNeeded();\n     |                                          ^\n  54 |     await page.waitForTimeout(1000);\n  55 |     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);\n  56 |     expect(await page.locator(\".gr-cs-gallery img\").evaluateAll(imgs => imgs.every(img => img.complete && img.naturalWidth > 0))).toBe(true);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                        "column": 42,
+                        "line": 53
+                      },
+                      "message": "TimeoutError: locator.scrollIntoViewIfNeeded: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.gr-cs-gallery')\u001b[22m\n\n\n  51 |     await expect(page.locator(\"h1\")).toHaveText(\"Pept Up Labs\");\n  52 |     await expect(page.getByRole(\"link\", { name: /Visit Live Website/ }).first()).toHaveAttribute(\"href\", \"https://peptuplabs.com.au/\");\n> 53 |     await page.locator(\".gr-cs-gallery\").scrollIntoViewIfNeeded();\n     |                                          ^\n  54 |     await page.waitForTimeout(1000);\n  55 |     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);\n  56 |     expect(await page.locator(\".gr-cs-gallery img\").evaluateAll(imgs => imgs.every(img => img.complete && img.naturalWidth > 0))).toBe(true);\n    at C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs:53:42"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T21:54:23.078Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Pept-U-d5b9a-lery-and-responsive-layouts\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Pept-U-d5b9a-lery-and-responsive-layouts\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\abuba\\ab-digital-solutions\\test-results\\inspector-wild-pest-production\\wild-pest-solutions-Pept-U-d5b9a-lery-and-responsive-layouts\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\abuba\\ab-digital-solutions\\tests\\e2e\\wild-pest-solutions.spec.mjs",
+                    "column": 42,
+                    "line": 53
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "81e482524e594533b75e-a099c4416d2833bdf2bb",
+          "file": "wild-pest-solutions.spec.mjs",
+          "line": 43,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-12T21:52:38.611Z",
+    "duration": 116048.298,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

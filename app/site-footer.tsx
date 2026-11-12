@@ -8,7 +8,6 @@ import { ArrowIcon, Glyph } from "./icons";
 const studioLinks = [
   ["/work", "Work"],
   ["/services", "Services"],
-  ["/studio", "Virtual Studio"],
   ["/#process", "Process"],
   ["/about", "About"],
   ["/contact", "Contact"],
@@ -32,7 +31,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
             <ABBrandImage decorative />
           </Link>
           <p>{siteConfig.description}</p>
-          <Link className="footer-contact-cta button button-ghost" href="/contact">
+          <Link className="footer-contact-cta ix-btn ix-btn--ghost" href="/contact">
             Discuss your idea <ArrowIcon direction="right" />
           </Link>
         </div>
@@ -78,6 +77,7 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
         <p>© {currentYear} AB Web Studio. All rights reserved.</p>
         <p className="studio-footer-legal-links">
           <Link href="/privacy">Privacy</Link>
+          <Link href="/studio" prefetch={false}>Virtual studio</Link>
           <a className="footer-top-link" href="#top">Back to top <ArrowIcon direction="up" /></a>
         </p>
       </div>

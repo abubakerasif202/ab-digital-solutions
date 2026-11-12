@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Mono, Instrument_Serif, Schibsted_Grotesk } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnchorSettle } from "./components/AnchorSettle";
 import { BrandIntro } from "./components/intro/BrandIntro";
@@ -23,6 +23,10 @@ import "./styles/studio-system.css";
 import "./styles/studio-sections.css";
 import "./styles/studio-harmony.css";
 import "./styles/brand-film.css";
+// Inspector system: tokens, hero stage and work index. Loads last.
+import "./styles/inspector.css";
+import "./styles/inspector-sections.css";
+import "./styles/inspector-pages.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -155,23 +159,31 @@ const structuredData = {
   ],
 };
 
-// Gilt & Ruby type system: a didone for display (it echoes the hairline/thick
-// strokes of the AB monogram), a grotesk for interface and body copy, and a
-// mono for micro labels and indices.
+// Type system: a variable grotesque with real weight and optical size for
+// headlines (legible from card titles to the oversized hero), a refined serif
+// italic reserved for single-word accents, a quiet grotesk for body copy and a
+// mono for labels and indices. No hairline faces anywhere.
 const sansFont = Schibsted_Grotesk({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
 });
 
-// Preload the display faces for editorial headlines. The optical-size axis
-// keeps their hairlines crisp from small cards to the oversized hero.
-const displayFont = Bodoni_Moda({
+const displayFont = Bricolage_Grotesque({
   subsets: ["latin"],
-  style: ["normal", "italic"],
   axes: ["opsz"],
   display: "swap",
   variable: "--font-display",
+});
+
+// Accent italic: used at display sizes only, so it is never set small.
+const accentFont = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["italic"],
+  preload: false,
+  display: "swap",
+  variable: "--font-accent",
 });
 
 // Labels only: two weights, never on the critical path.
@@ -185,7 +197,7 @@ const monoFont = IBM_Plex_Mono({
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-AU" data-scroll-behavior="smooth" className={`${sansFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
+    <html lang="en-AU" data-scroll-behavior="smooth" className={`${sansFont.variable} ${displayFont.variable} ${accentFont.variable} ${monoFont.variable}`}>
       <body>
         <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
         <BrandIntro />
