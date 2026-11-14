@@ -9,12 +9,12 @@ export default function RouteError({ error, reset }: { error: Error & { digest?:
   }, [error]);
 
   return (
-    <main className="not-found" id="main-content">
-      <div className="not-found-content">
-        <p className="eyebrow">Something went wrong</p>
+    <main className="shell lost" id="main-content">
+      <div style={{ display: "grid", gap: "1.5rem", justifyItems: "start" }}>
+        <p className="label">Something went wrong</p>
         <h1>This page did not load as expected.</h1>
         <p>Please try again. If it keeps happening, get in touch and we will sort it out.</p>
-        <div className="not-found-actions">
+        <div className="actions">
           <button className="button button-primary" type="button" onClick={reset}>Try again</button>
           <Link className="button button-ghost" href="/contact">Contact the studio</Link>
         </div>

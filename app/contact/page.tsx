@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ContactForm } from "../components/ContactForm";
-import { EnquirySection } from "../components/studio/EnquirySection";
-import { PageTransition } from "../components/motion/PageTransition";
-import { SiteHeader } from "../site-chrome";
-import { SiteFooter } from "../site-footer";
+import { breadcrumbSchema, Crumbs, EnquiryAside, JsonLd, PageShell, ProcessRail } from "../components/ui";
 import { siteConfig } from "../site-config";
 
 const description =
@@ -26,6 +22,8 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: `Start a Project | ${siteConfig.name}`, description, images: ["/opengraph-image"] },
 };
 
+const trail = [["Contact", "/contact"]] as const;
+
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
@@ -36,62 +34,35 @@ const schema = {
       url: `${siteConfig.url}/contact`,
       about: { "@id": `${siteConfig.url}/#organization` },
     },
-    {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
-        { "@type": "ListItem", position: 2, name: "Contact", item: `${siteConfig.url}/contact` },
-      ],
-    },
+    breadcrumbSchema(trail),
   ],
 };
 
 const nextSteps = [
-  ["01", "Tell us what you are building", "Share the business, the goal and anything you already have — a site, a brief or just an idea."],
-  ["02", "We come back with a next step", "A practical recommendation for where to start, based on what you told us."],
-  ["03", "Discover, design, build, launch", "A clear path from ambition to launch, with visible progress and clear review points."],
+  ["Tell us what you are building", "Share the business, the goal and anything you already have — a site, a brief or just an idea."],
+  ["We come back with a next step", "A practical recommendation for where to start, based on what you told us."],
+  ["Discover, design, build, launch", "A clear path from ambition to launch, with visible progress and clear review points."],
 ] as const;
 
 export default function ContactPage() {
   return (
-    <>
-      <SiteHeader />
-      <PageTransition>
-      <main className="content-page studio-page studio-page--contact" id="main-content">
-        <EnquirySection
-          id="contact"
-          index="01"
-          headingAs="h1"
-          before={(
-            <nav className="studio-crumbs studio-crumbs--inline" aria-label="Breadcrumb">
-              <Link href="/">Home</Link>
-              <span aria-hidden="true">/</span>
-              <span aria-current="page">Contact</span>
-            </nav>
-          )}
-        >
+    <PageShell>
+      <div className="shell">
+        <Crumbs trail={trail} />
+        <section className="enquiry" id="contact" aria-labelledby="contact-heading" style={{ paddingBlock: "clamp(1.5rem, 4vw, 3rem) var(--section)" }}>
+          <EnquiryAside headingAs="h1" id="contact-heading" />
           <ContactForm titleAs="h2" />
-        </EnquirySection>
-
-        <section className="gr-contact-next" aria-labelledby="next-steps-heading">
-          <div className="container">
-            <h2 id="next-steps-heading" className="eyebrow">What happens next</h2>
-            <ol className="gr-contact-steps">
-              {nextSteps.map(([number, title, copy]) => (
-                <li key={number}>
-                  <span className="gr-number" aria-hidden="true">{number}</span>
-                  <h3>{title}</h3>
-                  <p>{copy}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
         </section>
+      </div>
 
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
-      </main>
-      </PageTransition>
-      <SiteFooter currentYear={new Date().getUTCFullYear()} />
-    </>
+      <section className="section section--deep" aria-labelledby="next-steps-heading">
+        <div className="shell">
+          <p className="label">What happens next</p>
+          <h2 id="next-steps-heading" style={{ margin: "1rem 0 clamp(2rem, 5vw, 3.5rem)" }}>Three steps, no surprises.</h2>
+          <ProcessRail steps={nextSteps} />
+        </div>
+      </section>
+      <JsonLd data={schema} />
+    </PageShell>
   );
 }

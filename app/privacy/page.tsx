@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteHeader } from "../site-chrome";
-import { SiteFooter } from "../site-footer";
+import { PageShell } from "../components/ui";
 import { siteConfig } from "../site-config";
 
 export const metadata: Metadata = {
@@ -35,13 +34,11 @@ const sections = [
 
 export default function PrivacyPage() {
   return (
-    <>
-      <SiteHeader />
-      <main className="content-page legal-page" id="main-content">
-        <div className="container content-shell">
-          <p className="eyebrow">Privacy / Australia</p>
+    <PageShell>
+        <div className="shell" style={{ paddingTop: "clamp(2rem, 5vw, 4rem)", display: "grid", gap: "1.25rem" }}>
+          <p className="label">Privacy / Australia</p>
           <h1>Privacy policy</h1>
-          <p className="content-lead">This policy explains how AB Web Studio handles enquiry details and technical information collected when you use this website.</p>
+          <p className="lead">This policy explains how AB Web Studio handles enquiry details and technical information collected when you use this website.</p>
           <div className="legal-layout">
           <nav className="legal-toc" aria-labelledby="legal-toc-heading">
             <h2 id="legal-toc-heading">On this page</h2>
@@ -59,8 +56,6 @@ export default function PrivacyPage() {
           </div>
           </div>
         </div>
-      </main>
-      <SiteFooter currentYear={new Date().getUTCFullYear()} />
-    </>
+    </PageShell>
   );
 }

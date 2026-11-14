@@ -1,16 +1,12 @@
-import type { CSSProperties } from "react";
 import type { Metadata } from "next";
-import { PageTransition } from "../../components/motion/PageTransition";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import { Reveal } from "../../components/motion/Reveal";
-import { ProjectArtwork, projectArtworkRatio } from "../../project-artwork";
-import { findProject, formatCategory, isSoftwareProject, projectDestinationLabel, projectVisitLabel, projects } from "../../project-data";
-import { SiteHeader } from "../../site-chrome";
-import { SiteFooter } from "../../site-footer";
-import { siteConfig } from "../../site-config";
+import { breadcrumbSchema, Crumbs, DestinationChip, JsonLd, PageShell, ProjectFrame } from "../../components/ui";
 import { ArrowIcon } from "../../icons";
+import { projectArtworkRatio } from "../../project-artwork";
+import { findProject, formatCategory, isSoftwareProject, projectDestinationLabel, projectVisitLabel, projects } from "../../project-data";
+import { siteConfig } from "../../site-config";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -24,6 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const projectType = isSoftwareProject(project) ? "software" : "website";
   const title = project.seoTitle ?? `${project.name} Case Study`;
   const description = project.seoDescription ?? project.description;
+  const image = `/work/${project.slug}/opengraph-image`;
   return {
     title,
     description,
@@ -35,32 +32,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: siteConfig.name,
       type: "website",
       locale: "en_AU",
-      images: [
-        {
-          url: `/work/${project.slug}/opengraph-image`,
-          width: 1200,
-          height: 630,
-          alt: `${project.name} ${projectType} case study by ${siteConfig.name}`,
-        },
-      ],
+      images: [{ url: image, width: 1200, height: 630, alt: `${project.name} ${projectType} case study by ${siteConfig.name}` }],
     },
-    twitter: {
-      card: "summary_large_image",
-      title: `${title} | ${siteConfig.name}`,
-      description,
-      images: [`/work/${project.slug}/opengraph-image`],
-    },
+    twitter: { card: "summary_large_image", title: `${title} | ${siteConfig.name}`, description, images: [image] },
   };
 }
 
 export default async function ProjectCaseStudyPage({ params }: Props) {
   const project = findProject((await params).slug);
   if (!project) notFound();
-  const softwareProject = isSoftwareProject(project);
 
-  const currentIndex = projects.findIndex((p) => p.slug === project.slug);
+  const softwareProject = isSoftwareProject(project);
+  const currentIndex = projects.findIndex((entry) => entry.slug === project.slug);
   const nextProject = projects[(currentIndex + 1) % projects.length];
-  const currentYear = new Date().getUTCFullYear();
+  const number = String(currentIndex + 1).padStart(2, "0");
+  const total = String(projects.length).padStart(2, "0");
+  const trail = [["Work", "/work"], [project.name, `/work/${project.slug}`]] as const;
+  const visitLabel = `${projectVisitLabel(project)} — ${project.name} (opens in a new tab)`;
 
   const schema = {
     "@context": "https://schema.org",
@@ -72,235 +60,145 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
         url: `${siteConfig.url}/work/${project.slug}`,
         author: { "@id": `${siteConfig.url}/#organization` },
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
-          { "@type": "ListItem", position: 2, name: "Work", item: `${siteConfig.url}/work` },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: project.name,
-            item: `${siteConfig.url}/work/${project.slug}`,
-          },
-        ],
-      },
+      breadcrumbSchema(trail),
     ],
   };
 
-  const number = String(currentIndex + 1).padStart(2, "0");
-  const total = String(projects.length).padStart(2, "0");
-  const approachHeading = project.headline ?? `${project.tags[0]} for ${project.name}`;
-  // Three presentations share one system so consecutive case studies never
-  // feel identical: live software gets a dark system frame, websites
-  // alternate between a cinematic full-width hero and an editorial split.
-  const variant = project.slug === "wild-pest-solutions" ? "cinematic" : softwareProject ? "system" : currentIndex % 2 === 0 ? "cinematic" : "split";
-  const destinationLabel = projectDestinationLabel(project);
-  const visitLabel = `${projectVisitLabel(project)} — ${project.name} (opens in a new tab)`;
-
   return (
-    <>
-      <SiteHeader />
-      <PageTransition>
-      <main className={`content-page case-study-page gr-cs gr-cs--${variant}${project.slug === "wild-pest-solutions" ? " gr-cs--wild-pest" : ""}`} id="main-content">
-        <header className="container gr-cs-hero">
-          <nav className="content-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span aria-hidden="true">/</span>
-            <Link href="/work">Work</Link>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">{project.name}</span>
-          </nav>
-
-          <div className="gr-cs-hero-grid">
-            <div className="gr-cs-hero-copy">
-              <p className="eyebrow">Case study <span className="gr-kicker-num">{number}</span> / {total}</p>
-              <h1>{project.name}</h1>
-              <p className="content-lead">{project.description}</p>
-              <div className="content-actions">
-                <a
-                  className="button button-primary"
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-cursor="VISIT"
-                  data-magnetic
-                  aria-label={visitLabel}
-                >
-                  {projectVisitLabel(project)} <ArrowIcon />
-                </a>
-                <Link className="button button-ghost" href="/contact" data-magnetic>
-                  Get a Website Quote <ArrowIcon />
-                </Link>
-              </div>
-            </div>
-            <span className="gr-number gr-cs-number" aria-hidden="true">{number}</span>
-          </div>
-
-          <Reveal className="case-study-meta gr-cs-meta">
-            <div><span>Sector</span><strong>{project.sector}</strong></div>
-            <div><span>Category</span><strong>{formatCategory(project.category)}</strong></div>
-            <div><span>{project.region ? "Region" : project.techStack.length ? "Stack" : "Focus"}</span><strong>{project.region ?? (project.techStack.length ? project.techStack.join(" · ") : project.tags[0])}</strong></div>
-            <div>
-              <span>{destinationLabel}</span>
-              <a href={project.url} target="_blank" rel="noopener noreferrer" data-cursor="VISIT" aria-label={`${project.displayUrl} (opens in a new tab)`}>
-                {project.displayUrl} <ArrowIcon />
+    <PageShell>
+      <div className="shell">
+        <Crumbs trail={trail} />
+        <header className="page-hero page-hero--solo">
+          <div className="page-hero-copy">
+            <p className="label">Case study {number} / {total}</p>
+            <h1>{project.name}</h1>
+            <p className="lead">{project.description}</p>
+            <div className="actions">
+              <a className="button button-primary" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={visitLabel}>
+                {projectVisitLabel(project)} <ArrowIcon />
               </a>
+              <Link className="button button-ghost" href="/contact">Start a similar project <ArrowIcon direction="right" /></Link>
             </div>
-          </Reveal>
+          </div>
         </header>
 
-        <div className="gr-cs-hero-media">
-          <div className="container">
-            <div className="browser-frame">
-              <div className="browser-bar" aria-hidden="true">
-                <i /><i /><i />
-                <span>{project.displayUrl}</span>
-              </div>
-              {/* Same name as the work-index card image, so it morphs between them. */}
-              <div
-                className="case-study-hero-image"
-                style={{ aspectRatio: projectArtworkRatio(project), viewTransitionName: `project-${project.slug}` } as CSSProperties}
-              >
-                <ProjectArtwork project={project} priority sizes="(max-width: 1040px) 100vw, 1440px" />
-              </div>
-            </div>
+        <dl className="meta-grid">
+          <div><dt>Sector</dt><dd>{project.sector}</dd></div>
+          <div><dt>Category</dt><dd>{formatCategory(project.category)}</dd></div>
+          <div>
+            <dt>{project.region ? "Region" : project.techStack.length ? "Stack" : "Focus"}</dt>
+            <dd>{project.region ?? (project.techStack.length ? project.techStack.join(" · ") : project.tags[0])}</dd>
           </div>
+          <div>
+            <dt>{projectDestinationLabel(project)}</dt>
+            <dd>
+              <a href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`${project.displayUrl} (opens in a new tab)`}>
+                {project.displayUrl} <ArrowIcon />
+              </a>
+            </dd>
+          </div>
+        </dl>
+
+        <div className="case-media">
+          <ProjectFrame project={project} natural priority sizes="(max-width: 1320px) 94vw, 1320px" />
+          <p className="muted" style={{ marginTop: "0.75rem", fontSize: "var(--type-small)" }}>
+            {softwareProject ? "Public sign-in capture only. Internal records remain private." : `Desktop homepage capture · ${project.displayUrl}`}
+          </p>
         </div>
 
-        <section className="container gr-cs-story" aria-label="Case study overview and approach">
-          <Reveal className="gr-cs-story-block">
-            <p className="eyebrow">01 / Overview</p>
-            <p className="gr-cs-statement">{project.overview}</p>
-          </Reveal>
-          <Reveal className="gr-cs-story-block gr-cs-story-block--approach" delay={120}>
-            <p className="eyebrow">02 / Approach</p>
-            <h2>{approachHeading}</h2>
-            <p className="case-study-body-text">{project.solution}</p>
-          </Reveal>
-        </section>
-
-        <section className="gr-cs-features" aria-labelledby="features-heading">
-          <div className="container gr-cs-features-grid">
-            <Reveal className="gr-cs-features-head">
-              <p className="eyebrow">03 / Key features</p>
-              <h2 id="features-heading">{project.name}: <span className="accent-serif">in detail.</span></h2>
-              <div className="gr-cs-capabilities">
-                <h3>Capabilities</h3>
-                <div className="sidebar-tags">
-                  {project.tags.map((tag) => <span key={tag} className="project-tag-pill">{tag}</span>)}
-                </div>
-                {project.techStack.length > 0 ? <h3>Project technology</h3> : null}
-                <div className="sidebar-tech">
-                  {project.techStack.map((tech) => <span key={tech} className="tech-pill">{tech}</span>)}
-                </div>
-              </div>
-            </Reveal>
-            <ol className="gr-cs-feature-list">
-              {project.keyFeatures.map((feature, idx) => (
-                <li key={feature}>
-                  <Reveal className="gr-cs-feature-row" delay={idx * 90}>
-                    <span className="gr-cs-feature-num" aria-hidden="true">{String(idx + 1).padStart(2, "0")}</span>
-                    <span>{feature}</span>
-                  </Reveal>
-                </li>
-              ))}
-            </ol>
+        <section className="split section" style={{ paddingTop: 0 }} aria-label="Overview and approach">
+          <div data-reveal>
+            <p className="label">Overview</p>
+            <p className="statement" style={{ marginTop: "1rem" }}>{project.overview}</p>
+          </div>
+          <div className="prose" data-reveal>
+            <p className="label">Approach</p>
+            <h2>{project.headline ?? `${project.tags[0]} for ${project.name}`}</h2>
+            <p>{project.solution}</p>
           </div>
         </section>
+      </div>
 
-        <section className="container gr-cs-detail" aria-labelledby="visual-showcase-heading">
-          <Reveal className="gr-cs-detail-head">
-            <p className="eyebrow">04 / A closer look</p>
-            <h2 id="visual-showcase-heading">{softwareProject ? "The public staff-access experience." : `${project.name}, on screen.`}</h2>
-          </Reveal>
-          <Reveal variant="mask" className="gr-cs-pan gr-cut-lg" style={{ aspectRatio: projectArtworkRatio(project) }}>
-            <ProjectArtwork project={project} sizes="(max-width: 860px) 100vw, 1440px" />
-          </Reveal>
-          <p className="gr-cs-pan-caption">{softwareProject ? "Public sign-in capture only. Internal records remain private." : `Desktop homepage capture · ${project.displayUrl}`}</p>
-          {project.gallery ? (
-            <ul className="gr-cs-gallery" aria-label={`${project.name} website screens`}>
-              {project.gallery.map((shot, idx) => (
-                <li key={shot.src}>
-                  <Reveal as="div" delay={idx * 110}>
-                    <figure>
-                    <div className="gr-cs-gallery-frame" style={{ aspectRatio: shot.aspectRatio ?? projectArtworkRatio(project) }}>
-                      <Image src={shot.src} alt={shot.alt} fill loading="lazy" sizes="(max-width: 860px) 100vw, 33vw" />
+      <section className="section section--tint" aria-labelledby="features-heading">
+        <div className="shell split">
+          <div className="split-sticky" data-reveal>
+            <p className="label">Key features</p>
+            <h2 id="features-heading">What was built.</h2>
+            <div>
+              <h3 className="label label--plain" style={{ marginBottom: "0.6rem" }}>Capabilities</h3>
+              <ul className="chips">{project.tags.map((tag) => <li key={tag} className="chip">{tag}</li>)}</ul>
+            </div>
+            {project.techStack.length > 0 ? (
+              <div>
+                <h3 className="label label--plain" style={{ marginBottom: "0.6rem" }}>Project technology</h3>
+                <ul className="chips">{project.techStack.map((tech) => <li key={tech} className="chip">{tech}</li>)}</ul>
+              </div>
+            ) : null}
+          </div>
+          <ol className="rows">
+            {project.keyFeatures.map((feature, index) => (
+              <li key={feature} data-reveal>
+                <div className="row" style={{ gridTemplateColumns: "3.5rem minmax(0, 1fr)" }}>
+                  <span className="row-num">{String(index + 1).padStart(2, "0")}</span>
+                  <h3>{feature}</h3>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {project.gallery ? (
+        <section className="section" aria-labelledby="gallery-heading">
+          <div className="shell">
+            <p className="label">A closer look</p>
+            <h2 id="gallery-heading" style={{ marginTop: "1rem" }}>{project.name}, on screen.</h2>
+            <ul className="gallery" aria-label={`${project.name} website screens`}>
+              {project.gallery.map((shot) => (
+                <li key={shot.src} data-reveal>
+                  <figure>
+                    <div className="frame-media" style={{ aspectRatio: shot.aspectRatio ?? projectArtworkRatio(project) }}>
+                      <Image src={shot.src} alt={shot.alt} fill loading="lazy" sizes="(max-width: 820px) 92vw, 420px" />
                     </div>
                     <figcaption>{shot.caption}</figcaption>
-                    </figure>
-                  </Reveal>
+                  </figure>
                 </li>
               ))}
             </ul>
-          ) : null}
+          </div>
         </section>
+      ) : null}
 
-        <section className="gr-cs-live" aria-labelledby="live-proof-heading">
-          <Reveal className="container gr-cs-live-inner">
-            <div>
-              <p className="eyebrow">{destinationLabel}</p>
-              <h2 id="live-proof-heading">See {project.name} <span className="accent-serif">in action.</span></h2>
-              <p>
-                {project.destination === "unavailable"
-                  ? "The external project website was unavailable during our latest check. The case study above documents the delivered work."
-                  : project.destination === "hosted-showcase"
-                    ? "Explore the hosted website showcase. This address is separate from a verified client production domain."
-                    : softwareProject
-                  ? "Continue to the secure production system to view its public staff access experience."
-                  : "Continue to the client website when you are ready to explore the published experience."}
-              </p>
-            </div>
-            <a
-              className="button button-primary"
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="VISIT"
-              data-magnetic
-              aria-label={visitLabel}
-            >
-              {projectVisitLabel(project)} <ArrowIcon />
-            </a>
-          </Reveal>
-        </section>
+      <section className="section section--deep" aria-labelledby="live-heading">
+        <div className="shell" style={{ display: "grid", gap: "1.25rem", justifyItems: "start" }} data-reveal>
+          <DestinationChip project={project} />
+          <h2 id="live-heading">See {project.name} for yourself.</h2>
+          <p className="lead">
+            {project.destination === "unavailable"
+              ? "The public address for this project is not responding at the moment. The case study above records the work as delivered."
+              : softwareProject
+                ? "This is a protected business system. The link opens its public sign-in screen; staff records stay private."
+                : project.destination === "hosted-showcase"
+                  ? "This project is presented as a hosted showcase of the website."
+                  : "The website is live. Open it in a new tab and try it on your own device."}
+          </p>
+          <a className="button button-primary" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={visitLabel}>
+            {projectVisitLabel(project)} <ArrowIcon />
+          </a>
+        </div>
+      </section>
 
-        <nav className="next-project-nav gr-cs-next" aria-label="Next Project">
-          <Link className="gr-cs-next-link" href={`/work/${nextProject.slug}`} data-cursor="VIEW">
-            <div className="container gr-cs-next-inner">
-              <div>
-                <span className="gr-kicker">Next case study / {String(projects.indexOf(nextProject) + 1).padStart(2, "0")}</span>
-                <h2 className="gr-cs-next-title">{nextProject.name}</h2>
-                <span className="gr-cs-next-cta">View case study <ArrowIcon /></span>
-              </div>
-              <div className="gr-cs-next-media" aria-hidden="true">
-                <ProjectArtwork project={nextProject} sizes="(max-width: 860px) 92vw, 42vw" />
-              </div>
-            </div>
-          </Link>
-        </nav>
-
-        <aside className="gr-final-cta" aria-label="Start your project">
-          <Reveal className="container gr-final-cta-inner">
-            <p className="eyebrow">Have a project in mind?</p>
-            <h2>{project.slug === "wild-pest-solutions" ? <>Let&apos;s build something <span className="accent-serif">exceptional.</span></> : <>Let&apos;s create a digital experience with a clear <span className="accent-serif">commercial purpose.</span></>}</h2>
-            <div className="content-actions">
-              <Link className="button button-primary" href="/contact" data-magnetic>
-                Get a Website Quote <ArrowIcon />
-              </Link>
-              <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>
-                Call {siteConfig.phoneDisplay}
-              </a>
-            </div>
-          </Reveal>
-        </aside>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
-        />
-      </main>
-      </PageTransition>
-      <SiteFooter currentYear={currentYear} />
-    </>
+      <div className="shell">
+        <Link className="next-project" href={`/work/${nextProject.slug}`}>
+          <span style={{ display: "grid", gap: "1rem" }}>
+            <span className="label">Next project</span>
+            <h2>{nextProject.name}</h2>
+            <span className="work-cue">View case study <ArrowIcon /></span>
+          </span>
+          <ProjectFrame project={nextProject} sizes="(max-width: 820px) 92vw, 560px" />
+        </Link>
+      </div>
+      <JsonLd data={schema} />
+    </PageShell>
   );
 }

@@ -1,272 +1,229 @@
 import Link from "next/link";
-import { PageTransition } from "./components/motion/PageTransition";
 import { ContactForm } from "./components/ContactForm";
-import { LiveTicker } from "./components/LiveTicker";
-import { findProject, projects, type Project } from "./project-data";
-import { findService } from "./services/service-data";
-import { SiteHeader } from "./site-chrome";
-import { SiteFooter } from "./site-footer";
-import { siteConfig } from "./site-config";
+import { HeroStage } from "./components/hero/HeroStage";
+import { CtaBand, DestinationChip, EnquiryAside, FaqList, PageShell, ProcessRail, SectionHead, WorkItem } from "./components/ui";
 import { ArrowIcon } from "./icons";
-import { PortfolioSection } from "./components/PortfolioSection";
-import { BrandFilmSection } from "./components/film/BrandFilmSection";
-import { StudioCapabilities } from "./components/StudioCapabilities";
-import { ProcessTimeline } from "./components/motion/ProcessTimeline";
-import { StackLedger } from "./components/StackLedger";
-import { EnquirySection } from "./components/studio/EnquirySection";
-import { StudioAbout } from "./components/studio/StudioAbout";
-import { VirtualStudioPreview } from "./components/studio/VirtualStudioPreview";
+import { ProjectArtwork } from "./project-artwork";
+import { findProject, projects, sectors, type Project } from "./project-data";
+import { findService, servicePages } from "./services/service-data";
+import { siteConfig } from "./site-config";
 
-const services = [
-  {
-    number: "01",
-    slug: "web-design-sydney",
-    title: "Website design & development",
-    description:
-      "Custom service, portfolio and business websites with sharp positioning, persuasive journeys and a premium finish.",
-    details: ["UX & visual design", "Responsive development", "Conversion pathways"],
-  },
-  {
-    number: "02",
-    slug: "seo-local-visibility",
-    title: "SEO & local visibility",
-    description:
-      "Search-ready architecture and content foundations designed to help the right customers discover your business.",
-    details: ["Technical SEO", "On-page optimisation", "Local search"],
-  },
-  {
-    number: "03",
-    slug: "branding-content",
-    title: "Branding & content",
-    description:
-      "A coherent visual direction and confident messaging that make your business easier to recognise, trust and choose.",
-    details: ["Brand direction", "Website copy", "Campaign creative"],
-  },
-  {
-    number: "04",
-    slug: "ecommerce-website-development",
-    title: "E-commerce solutions",
-    description:
-      "Clear, friction-conscious storefronts that showcase products, simplify purchasing and leave room to scale.",
-    details: ["Product catalogues", "Checkout integration", "Mobile commerce"],
-  },
-  {
-    number: "05",
-    slug: "digital-marketing",
-    title: "Digital marketing",
-    description:
-      "Focused landing pages and campaigns built to create attention, generate enquiries and support the sales process.",
-    details: ["Landing pages", "Lead generation", "Campaign strategy"],
-  },
-  {
-    number: "06",
-    slug: "website-maintenance",
-    title: "Website care & support",
-    description:
-      "Practical ongoing support for updates, technical health and continuous improvement after your site goes live.",
-    details: ["Content updates", "Technical support", "Growth improvements"],
-  },
-  {
-    number: "07",
-    slug: "custom-software-business-systems",
-    title: "Custom software & business systems",
-    description:
-      "Role-protected web applications, inventory platforms and internal tools built around the workflows your team runs every day.",
-    details: ["Inventory & purchasing", "Staff portals", "Integrations & automation"],
-  },
-] as const;
+const project = (slug: string): Project => {
+  const match = findProject(slug);
+  if (!match) throw new Error(`agency-home: unknown project "${slug}"`);
+  return match;
+};
+const service = (slug: string) => {
+  const match = findService(slug);
+  if (!match) throw new Error(`agency-home: unknown service "${slug}"`);
+  return match;
+};
 
-// Homepage rows must always point at a canonical service page, and each row
-// borrows that page's featured live project as its preview image; fail the
-// build loudly if either list drifts. The homepage keeps its own row copy on
-// purpose — it is marketing language, not the service-page text.
-const serviceRows = services.map((service) => {
-  const page = findService(service.slug);
-  if (!page) throw new Error(`agency-home: unknown service slug "${service.slug}"`);
-  const featured = findProject(page.featuredProject);
-  if (!featured) throw new Error(`agency-home: unknown featured project "${page.featuredProject}"`);
-  return { ...service, featured: featured as Project };
-});
+// Selected work: one lead, an offset pair, then a short index. Every entry is a registry project.
+const leadProject = project("on-call-trailers");
+const pairProjects = [project("247-inventory-system"), project("adelaide-wholesale-tyres")];
+const indexProjects = ["jufaja-homes", "milestone-renovate", "aftab-sons-transport", "wild-pest-solutions"].map(project);
+const stageProjects = [leadProject, ...pairProjects, ...indexProjects].map(({ slug, name, sector }) => ({ slug, name, sector }));
 
-const processSteps = [
-  ["01", "Discover", "We clarify your audience, offer, goals and the actions your website needs to drive."],
-  ["02", "Design", "We map the content, page structure and customer journey before visual design begins."],
-  ["03", "Build", "We create, refine and develop the experience responsively, with clear review points."],
-  ["04", "Launch", "We complete launch checks, publish with confidence and stay available as you grow."],
-] as const;
+// Technology counts come from the registry, never from hand-typed numbers.
+const stack = Object.entries(
+  projects.reduce<Record<string, Project[]>>((groups, entry) => {
+    for (const tech of entry.techStack) (groups[tech] ??= []).push(entry);
+    return groups;
+  }, {}),
+)
+  .sort(([, a], [, b]) => b.length - a.length)
+  .slice(0, 6);
+const codeBuilt = projects.filter((entry) => entry.techStack.some((tech) => tech === "Next.js" || tech === "React")).length;
 
-const tickerItems = projects.slice(0, 6).map(({ slug, name, sector, image }) => ({ slug, name, sector, image }));
+const webDesign = service("web-design-sydney");
+const seo = service("seo-local-visibility");
+const faqs = [webDesign.faqs[1], webDesign.faqs[2], webDesign.faqs[0], webDesign.faqs[3], seo.faqs[3]];
 
-export default function AgencyHome({ currentYear }: { currentYear: number }) {
+export default function AgencyHome() {
   return (
-    <>
-      <SiteHeader />
-
-      <PageTransition>
-      <main id="main-content" className="cinematic-home">
-        <section className="stage-hero studio-supporting-hero" aria-labelledby="hero-heading">
-          <div className="stage-hero-art" aria-hidden="true">
-
-            <span className="stage-ring stage-ring--outer" />
-            <span className="stage-ring stage-ring--inner" />
-          </div>
-
-          <div className="container stage-hero-top">
-            <p className="eyebrow hero-label">
-              <span className="eyebrow-mark" />
-              <span className="hero-label-primary">Sydney studio</span>
-              <span className="micro-rule" aria-hidden="true" />
-              <span className="hero-label-secondary">Australia-wide</span>
+    <PageShell>
+      <section className="hero" aria-labelledby="hero-heading">
+        <div className="shell hero-grid">
+          <div className="hero-copy">
+            <p className="label">Sydney web studio · Working Australia-wide</p>
+            <h1 id="hero-heading">Sharp websites and <em>working software</em> for Australian business.</h1>
+            <p className="lead">
+              AB Web Studio designs, builds and looks after websites, online stores and custom business systems, with local search and practical automation where they help.
             </p>
-            <span className="stage-edition" aria-hidden="true">Independent by design.</span>
+            <div className="actions">
+              <Link className="button button-primary" href="/contact">Start a project <ArrowIcon /></Link>
+              <Link className="button button-ghost" href="/work">See the work <ArrowIcon direction="right" /></Link>
+            </div>
+            <p className="hero-proof">
+              <Link href="/work">{projects.length} project case studies <ArrowIcon /></Link>
+              <a href={`tel:${siteConfig.phoneInternational}`}>Prefer to talk? {siteConfig.phoneDisplay}</a>
+            </p>
           </div>
+          <HeroStage projects={stageProjects} />
+        </div>
+        <dl className="shell ledger">
+          <div><dt>Project case studies</dt><dd data-count={projects.length}>{projects.length}</dd></div>
+          <div><dt>Industries</dt><dd data-count={sectors.length}>{sectors.length}</dd></div>
+          <div><dt>Service areas</dt><dd data-count={servicePages.length}>{servicePages.length}</dd></div>
+          <div><dt>Based in</dt><dd>Sydney</dd></div>
+        </dl>
+      </section>
 
-          <div className="container stage-hero-body">
-            <h1 id="hero-heading" className="stage-title">
-              <span className="stage-row">
-                <span className="stage-line"><span>Websites with</span></span>{" "}
-                <span className="stage-line"><span>presence.</span></span>
-              </span>{" "}
-              <span className="stage-row">
-                <span className="stage-line stage-line--ruby"><span className="metal-ruby">Software with</span></span>{" "}
-                <span className="stage-line stage-line--gilt"><span className="metal-gilt">purpose.</span></span>
-              </span>
-            </h1>
+      <section className="section" id="work" aria-labelledby="work-heading">
+        <div className="shell">
+          <SectionHead id="work-heading" label="Selected work" title="Real projects, labelled for what they are.">
+            Every project opens as a case study first, and says whether it is a live website, a hosted showcase or a staff-access system.
+          </SectionHead>
 
-            <div className="stage-foot">
-              <div className="stage-intro">
-                <p className="stage-tagline">Built for your business.</p>
-                <p className="hero-intro">
-                  Premium <Link href="/services/web-design-sydney" prefetch={false}>websites and redesigns</Link>, online stores and custom business systems for Australian businesses. Thoughtful design, clear customer journeys and technology that supports your daily work.
-                </p>
-                <div className="hero-actions">
-                  <a className="button button-primary" href="#contact" data-magnetic>
-                    Start Your Project <ArrowIcon />
-                  </a>
-                  <a className="button button-ghost" href="#work" data-magnetic>
-                    Explore Our Work <ArrowIcon direction="down-right" />
-                  </a>
-                </div>
-                <div className="stage-confidence" aria-label="Explore the studio or call directly">
-                  <Link href="/work" prefetch={false}>{projects.length} project case studies <ArrowIcon /></Link>
-                  <a href={`tel:${siteConfig.phoneInternational}`}>Prefer a conversation? {siteConfig.phoneDisplay}</a>
-                </div>
+          <Link className="work-item work-lead" href={`/work/${leadProject.slug}`} data-reveal>
+            <span className="frame">
+              <span className="frame-bar" aria-hidden="true"><i /><i /><i /><span>{leadProject.displayUrl}</span></span>
+              <span className="frame-media"><ProjectArtwork project={leadProject} sizes="(max-width: 820px) 92vw, 760px" /></span>
+            </span>
+            <span className="work-lead-copy">
+              <span className="work-meta"><span>{leadProject.sector}</span><DestinationChip project={leadProject} /></span>
+              <h3>{leadProject.name}</h3>
+              <p>{leadProject.description}</p>
+              <span className="work-cue">View case study <ArrowIcon /></span>
+            </span>
+          </Link>
+
+          <div className="work-pair">
+            {pairProjects.map((entry) => (
+              <div key={entry.slug} data-reveal>
+                <WorkItem project={entry} sizes="(max-width: 820px) 92vw, 600px" />
               </div>
-              <LiveTicker items={tickerItems} />
-            </div>
+            ))}
           </div>
 
-          <div className="container stage-bar">
-            <a className="stage-scroll-cue" href="#work"><span className="stage-scroll-line" aria-hidden="true" />Scroll to explore</a>
-            <p>Design-led websites · Purpose-built technology</p>
-            <Link href="/work">{projects.length} real projects <ArrowIcon /></Link>
-          </div>
+          <ol className="rows work-index">
+            {indexProjects.map((entry, index) => (
+              <li key={entry.slug} data-reveal>
+                <Link className="row" href={`/work/${entry.slug}`}>
+                  <span className="row-num">{String(index + 4).padStart(2, "0")}</span>
+                  <h3>{entry.name}</h3>
+                  <span className="muted">{entry.sector}</span>
+                  <DestinationChip project={entry} />
+                  <span className="row-arrow"><ArrowIcon /></span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+          <p style={{ marginTop: "2rem" }}><Link className="text-link" href="/work">All {projects.length} projects <ArrowIcon /></Link></p>
+        </div>
+      </section>
 
-          <div className="hero-marquee" aria-label="Capabilities">
-            <div className="hero-marquee-track">
-              <div className="hero-marquee-group">
-                <span>Web design</span><i aria-hidden="true">/</i><span>Development</span><i aria-hidden="true">/</i><span>Business systems</span><i aria-hidden="true">/</i><span>AI + automation</span><i aria-hidden="true">/</i><span>Performance</span><i aria-hidden="true">/</i>
-              </div>
-              <div className="hero-marquee-group" aria-hidden="true">
-                <span>Web design</span><i>/</i><span>Development</span><i>/</i><span>Business systems</span><i>/</i><span>AI + automation</span><i>/</i><span>Performance</span><i>/</i>
-              </div>
+      <hr className="vivid-rule" />
+
+      <section className="section section--tint" id="services" aria-labelledby="services-heading">
+        <div className="shell">
+          <SectionHead id="services-heading" label="Services" title="From first impression to everyday operation.">
+            Each service is explained by what it changes for the business: more of the right enquiries, less manual work, a site that stays healthy.
+          </SectionHead>
+          <ol className="rows">
+            {servicePages.map((entry, index) => (
+              <li key={entry.slug} data-reveal>
+                <Link className="row service-row" href={`/services/${entry.slug}`}>
+                  <span className="row-num">{String(index + 1).padStart(2, "0")}</span>
+                  <h3>{entry.title}</h3>
+                  <p>{entry.summary}</p>
+                  <span className="row-arrow"><ArrowIcon /></span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+          <div className="callout" data-reveal>
+            <div>
+              <h3>AI assistants and business automation</h3>
+              <p>Have a task your team repeats every day? We look at where an assistant or a connected workflow could take it off their hands, and scope it alongside your website or system.</p>
             </div>
+            <Link className="button button-ghost" href="/contact?service=custom-software">Discuss an automation idea <ArrowIcon /></Link>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <PortfolioSection />
-
-        <VirtualStudioPreview />
-
-        <BrandFilmSection />
-
-
-        <section className="section ruby-band" id="services" aria-labelledby="services-heading">
-          <div className="container">
-            <div className="section-heading" data-reveal>
-              <div>
-                <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />Capabilities</p>
-                <h2 id="services-heading" className="gr-display-xl">From first impression to <span className="accent-serif">everyday operation.</span></h2>
-              </div>
-              <p>From the first strategic decision to post-launch support, every recommendation is tied to a clear business goal.</p>
-            </div>
-            <StudioCapabilities />
+      <section className="section" aria-labelledby="stack-heading">
+        <div className="shell split">
+          <div className="split-sticky" data-reveal>
+            <p className="label">Development capability</p>
+            <h2 id="stack-heading">The tools behind the work.</h2>
+            <p className="muted">Counted straight from the project registry, so the numbers move only when the work does.</p>
+            <Link className="text-link" href="/services/custom-software-business-systems">Custom software and business systems <ArrowIcon /></Link>
           </div>
-        </section>
-
-        <section className="section services-section gr-services" aria-label="Services">
-          <div className="container">
-            <div className="gr-service-index">
-              <p className="eyebrow supporting-services-label">The details that bring it together</p>
-              <ol className="services-list">
-                {serviceRows.map((service) => (
-                  <li key={service.number}>
-                    <Link className="service-card" data-reveal href={`/services/${service.slug}`}>
-                      <span className="service-card-index">{service.number}</span>
-                      <h3>{service.title}</h3>
-                      <span className="gr-service-body">
-                        <span className="gr-service-desc">{service.description}</span>
-                        <span className="gr-service-tags">
-                          {service.details.map((detail) => <span key={detail}>{detail}</span>)}
-                        </span>
-                      </span>
-                      <span className="service-card-arrow" aria-hidden="true"><ArrowIcon /></span>
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </section>
-
-        <section className="section process-section" id="process" aria-labelledby="process-heading">
-          <div className="container process-layout">
-            <div className="process-intro" data-reveal>
-              <p className="eyebrow section-index"><span className="section-index-num">03</span><span className="micro-rule" aria-hidden="true" />How we work</p>
-              <h2 id="process-heading">A clear path from ambition to <span className="accent-serif">launch.</span></h2>
-              <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
-              <a className="text-link" href="#contact">Start Your Project <ArrowIcon /></a>
-            </div>
-            <ProcessTimeline>
-              <span className="process-rail-fill" aria-hidden="true" />
-              <ol className="process-list">
-              {processSteps.map(([number, title, description]) => (
-                <li data-process-step key={number}>
-                  <span>{number}</span>
-                  <div><h3>{title}</h3><p>{description}</p></div>
-                  <span aria-hidden="true"><ArrowIcon direction="down-right" /></span>
-                </li>
+          <table className="sheet" data-reveal>
+            <caption className="sr-only">Technologies used across {projects.length} projects, with an example case study for each</caption>
+            <thead><tr><th scope="col">Technology</th><th scope="col">Projects</th><th scope="col">Example</th></tr></thead>
+            <tbody>
+              {stack.map(([tech, used]) => (
+                <tr key={tech}>
+                  <th scope="row">{tech}<span className="sheet-bar" style={{ width: `${Math.round((used.length / projects.length) * 100)}%` }} aria-hidden="true" /></th>
+                  <td className="num">{used.length} of {projects.length}</td>
+                  <td><Link href={`/work/${used[0].slug}`}>{used[0].name}</Link></td>
+                </tr>
               ))}
-              </ol>
-            </ProcessTimeline>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="section section--deep" id="process" aria-labelledby="process-heading">
+        <div className="shell">
+          <SectionHead id="process-heading" label="How a project runs" title="A clear path from brief to launch.">
+            No black box. Collaborative decisions, visible progress and review points you can plan around.
+          </SectionHead>
+          <ProcessRail />
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="reasons-heading">
+        <div className="shell">
+          <SectionHead id="reasons-heading" label="Why AB" title="Reasons you can check." />
+          <ul className="reasons">
+            <li data-reveal>
+              <h3>The work is open to inspection.</h3>
+              <p>{projects.length} case studies show the brief, the approach and the result, each labelled as a live website, hosted showcase or staff-access system.</p>
+              <p className="evidence">Evidence · <Link href="/work">the full project list</Link></p>
+            </li>
+            <li data-reveal>
+              <h3>You deal with the person building it.</h3>
+              <p>Founder and lead developer Abubakar Asif runs each project from first conversation to launch, so decisions are not lost between hand-offs.</p>
+              <p className="evidence">Evidence · <Link href="/about">about the studio</Link></p>
+            </li>
+            <li data-reveal>
+              <h3>A written, fixed-price proposal first.</h3>
+              <p>Deliverables, responsibilities and costs are agreed in writing before any work begins.</p>
+              <p className="evidence">Evidence · <Link href="/services/web-design-sydney">web design questions</Link></p>
+            </li>
+            <li data-reveal>
+              <h3>Built in code, not page-builder templates.</h3>
+              <p>Sites are engineered in React, Next.js and TypeScript, which leaves room for calculators, portals and dashboards when the business needs them.</p>
+              <p className="evidence">Evidence · {codeBuilt} of {projects.length} projects use React or Next.js</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="section section--tint" aria-labelledby="faq-heading">
+        <div className="shell split">
+          <div className="split-sticky" data-reveal>
+            <p className="label">Useful details</p>
+            <h2 id="faq-heading">Questions people ask first.</h2>
+            <p className="muted">More detail sits on each service page.</p>
+            <Link className="text-link" href="/services">Explore the services <ArrowIcon /></Link>
           </div>
-        </section>
+          <FaqList items={faqs} />
+        </div>
+      </section>
 
-        <StackLedger />
-
-        <section className="standard-section" aria-labelledby="standard-heading">
-          <div className="container standard-layout">
-            <div className="standard-statement" data-reveal>
-              <p className="eyebrow section-index"><span className="section-index-num">05</span><span className="micro-rule" aria-hidden="true" />The AB standard</p>
-              <h2 id="standard-heading">Feel the quality. <span className="accent-serif">Then see the thinking.</span></h2>
-            </div>
-            <div className="standard-points">
-              <article data-reveal><span>01 / Show</span><h3>Show the work first.</h3><p>Visitors understand who you help, what you offer and why your business is worth choosing.</p></article>
-              <article data-reveal><span>02 / Explain</span><h3>Explain the business value.</h3><p>Information hierarchy and calls to action work together to turn attention into genuine enquiries.</p></article>
-              <article data-reveal><span>03 / Guide</span><h3>Keep the next step obvious.</h3><p>Responsive, accessible, <Link href="/services/seo-local-visibility">search-ready website foundations</Link> engineered to feel fast on the devices customers actually use.</p></article>
-            </div>
-          </div>
-        </section>
-
-        <StudioAbout id="about" index="06" showStudioLink />
-
-        <EnquirySection id="contact" index="07">
+      <section className="section" id="contact" aria-labelledby="contact-heading">
+        <div className="shell enquiry">
+          <EnquiryAside id="contact-heading" />
           <ContactForm />
-        </EnquirySection>
-      </main>
-      </PageTransition>
+        </div>
+      </section>
 
-      <SiteFooter currentYear={currentYear} />
-    </>
+      <CtaBand id="closing-heading" label="Ready when you are" title="Bring the idea. We will bring a practical next step." />
+    </PageShell>
   );
 }

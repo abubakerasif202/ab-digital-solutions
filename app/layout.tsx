@@ -1,28 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { AnchorSettle } from "./components/AnchorSettle";
-import { BrandIntro } from "./components/intro/BrandIntro";
-import { introGateScript } from "./components/intro/intro-gate";
-import { PointerFX } from "./components/PointerFX";
+import { motionGateScript, RevealObserver } from "./components/RevealObserver";
 import { siteConfig } from "./site-config";
 import { WebVitals } from "./web-vitals";
-import "./globals.css";
-import "./studio.css";
-import "./motion.css";
-import "./intro.css";
-import "./editorial.css";
-import "./gilt-ruby.css";
-import "./compositions.css";
-import "./studio-premium.css";
-import "./studio-pages.css";
-import "./gilt-ruby-stage.css";
-import "./premium-dev.css";
-// The studio system states the final word on tokens, chrome and shared sections.
-import "./styles/studio-system.css";
-import "./styles/studio-sections.css";
-import "./styles/studio-harmony.css";
-import "./styles/brand-film.css";
+import "./styles/site.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -85,7 +67,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#070708",
+  themeColor: "#06070b",
   colorScheme: "dark",
 };
 
@@ -155,43 +137,23 @@ const structuredData = {
   ],
 };
 
-// Gilt & Ruby type system: a didone for display (it echoes the hairline/thick
-// strokes of the AB monogram), a grotesk for interface and body copy, and a
-// mono for micro labels and indices.
-const sansFont = Schibsted_Grotesk({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-sans",
-});
+// Harbour After Dark type system: a characterful variable grotesque for display,
+// a quieter grotesque for interface and body copy, and a mono for labels and indices.
+const sansFont = Schibsted_Grotesk({ subsets: ["latin"], display: "swap", variable: "--font-sans" });
 
-// Preload the display faces for editorial headlines. The optical-size axis
-// keeps their hairlines crisp from small cards to the oversized hero.
-const displayFont = Bodoni_Moda({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  axes: ["opsz"],
-  display: "swap",
-  variable: "--font-display",
-});
+const displayFont = Bricolage_Grotesque({ subsets: ["latin"], axes: ["opsz"], display: "swap", variable: "--font-display" });
 
-// Labels only: two weights, never on the critical path.
-const monoFont = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  preload: false,
-  display: "swap",
-  variable: "--font-mono",
-});
+// Labels only: never on the critical path.
+const monoFont = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], preload: false, display: "swap", variable: "--font-mono" });
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-AU" data-scroll-behavior="smooth" className={`${sansFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
       <body>
-        <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
-        <BrandIntro />
+        <script dangerouslySetInnerHTML={{ __html: motionGateScript }} />
+        <div className="scroll-progress" aria-hidden="true" />
         <WebVitals />
-        <AnchorSettle />
-        <PointerFX />
+        <RevealObserver />
         {children}
         <SpeedInsights />
         <script

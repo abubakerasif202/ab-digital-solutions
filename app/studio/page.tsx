@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   title: "The Virtual Studio",
   description,
   alternates: { canonical: "/studio" },
+  // Superseded by the homepage studio scene: reachable by direct link only until it is rebuilt or removed.
+  robots: { index: false, follow: true },
   openGraph: { title: "The Virtual Studio | AB Web Studio", description, url: "/studio", images: [{ url: "/studio/studio-poster.png", width: 1440, height: 900, alt: "AB Web Studio original architectural virtual studio" }] },
   twitter: { card: "summary_large_image", title: "The Virtual Studio | AB Web Studio", description, images: ["/studio/studio-poster.png"] },
 };
