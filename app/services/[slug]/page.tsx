@@ -118,7 +118,7 @@ export default async function ServicePage({ params }: Props) {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page service-page" id="main-content">
+      <main className="content-page service-page cinema-interior cinema-service-detail" id="main-content">
         <div className="container content-shell">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -130,7 +130,7 @@ export default async function ServicePage({ params }: Props) {
 
           <header className="service-hero">
             <div className="service-hero-copy">
-              <p className="eyebrow">Digital services / Sydney</p>
+              <p className="eyebrow cinema-chapter-label">The capabilities <span>Sydney · Australia-wide</span></p>
               <h1>{service.h1}</h1>
               <p className="content-lead">{service.intro}</p>
               <div className="content-actions">
@@ -139,18 +139,18 @@ export default async function ServicePage({ params }: Props) {
               </div>
             </div>
             {/* Decorative detail crop; the same project is linked in full below. */}
-            <figure className="service-hero-visual" aria-hidden="true">
+            <figure className="service-hero-visual cinema-service-cover">
               <div className="service-hero-visual-frame">
-                <ProjectArtwork project={featuredProject} priority sizes="(max-width: 900px) 92vw, 440px" />
+                <ProjectArtwork project={featuredProject} priority sizes="(max-width: 720px) 92vw, 1280px" />
               </div>
               <figcaption>
-                <span>Studio project</span>
+                <span>Design in practice</span>
                 {featuredProject.name}
               </figcaption>
             </figure>
           </header>
 
-          <section className="studio-concept" aria-labelledby="concept-heading">
+          <section className="studio-concept cinema-paper" aria-labelledby="concept-heading">
             <div><p className="eyebrow">Planning the work</p><h2 id="concept-heading">{service.title}, in layers.</h2><p>These are the areas we review together. Your proposal sets out the deliverables, responsibilities and costs.</p></div>
             <ol className="studio-interface-layers">{delivery.layers.map((layer, index) => <li key={layer}><span aria-hidden="true">0{index + 1}</span>{layer}</li>)}</ol>
           </section>
@@ -172,7 +172,7 @@ export default async function ServicePage({ params }: Props) {
             </div>
           </section>
 
-          <section className="service-showcase" aria-labelledby="work-proof-heading">
+          <section className="service-showcase cinema-service-evidence" aria-labelledby="work-proof-heading">
             <div className="service-section-heading">
               <p className="eyebrow">Relevant project experience</p>
               <h2 id="work-proof-heading">{featuredProject.name}: the work behind the service.</h2>

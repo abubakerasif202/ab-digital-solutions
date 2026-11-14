@@ -19,11 +19,15 @@ test("brand variants are local accessible vectors and application icons are non-
 test("homepage showcases every live project and the Work page retains the full canonical registry", async () => {
   const [home, portfolio, work] = await Promise.all([read("../app/agency-home.tsx"), read("../app/components/PortfolioSection.tsx"), read("../app/components/WorkIndexBody.tsx")]);
   assert.ok(home.indexOf("<PortfolioSection />") < home.indexOf('id="services"'));
-  // The showcase slider and the typographic index both draw from the canonical registry; nothing is curated away.
-  assert.match(portfolio, /<ProjectShowcase \/>/);
-  assert.match(portfolio, /projects\.map\(\(project, i\)/);
+  const exhibition = await read("../app/components/cinematic/ProjectExhibition.tsx");
+  assert.match(portfolio, /<ProjectExhibition \/>/);
+  assert.match(portfolio, /Explore all \{projects\.length\} projects/);
+  assert.match(exhibition, /projects\.map/);
+  assert.match(exhibition, /<ProjectArtwork/);
+  assert.match(exhibition, /projectDestinationLabel/);
+  assert.match(exhibition, /\/work\/\$\{active\.slug\}/);
   assert.match(work, /projects/);
-  assert.match(portfolio, /\/work\/\$\{project\.slug\}/);
+  assert.match(work, /\/work\/\$\{project\.slug\}/);
 });
 
 test("studio motion supports static content, touch and reduced motion", async () => {

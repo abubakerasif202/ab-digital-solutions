@@ -73,8 +73,8 @@ export function WorkIndexBody() {
     <>
       <section className="work-index-hero gr-wi-hero">
         <div className="container gr-wi-hero-inner">
-          <p className="eyebrow" data-reveal>
-            <span className="eyebrow-mark" /> Index / client work
+          <p className="eyebrow cinema-chapter-label" data-reveal>
+            <span>01 / Selected work</span><span>Sydney · Australia-wide</span>
           </p>
           <div className="gr-wi-hero-row">
             <h1 data-reveal>The work, at the size it <span className="accent-serif">deserves.</span></h1>
@@ -92,6 +92,11 @@ export function WorkIndexBody() {
           </div>
         </div>
       </section>
+
+      <div className="cinema-work-chapter container">
+        <p>Different businesses.<br /><em>Distinctive digital experiences.</em></p>
+        <span className="eyebrow">Explore the complete collection below</span>
+      </div>
 
       <div className="gr-wi-filter-bar">
         <div className="container work-index-filters" role="group" aria-label="Filter by sector">

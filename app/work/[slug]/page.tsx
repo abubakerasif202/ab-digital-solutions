@@ -102,7 +102,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className={`content-page case-study-page gr-cs gr-cs--${variant}${project.slug === "wild-pest-solutions" ? " gr-cs--wild-pest" : ""}`} id="main-content">
+      <main className={`content-page case-study-page gr-cs cinema-interior cinema-case-study gr-cs--${variant}${project.slug === "wild-pest-solutions" ? " gr-cs--wild-pest" : ""}`} id="main-content">
         <header className="container gr-cs-hero">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -114,7 +114,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
 
           <div className="gr-cs-hero-grid">
             <div className="gr-cs-hero-copy">
-              <p className="eyebrow">Case study <span className="gr-kicker-num">{number}</span> / {total}</p>
+              <p className="eyebrow cinema-chapter-label">Case study <span className="gr-kicker-num">{number} / {total}</span></p>
               <h1>{project.name}</h1>
               <p className="content-lead">{project.description}</p>
               <div className="content-actions">
@@ -180,7 +180,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           </Reveal>
         </section>
 
-        <section className="gr-cs-features" aria-labelledby="features-heading">
+        <section className="gr-cs-features cinema-paper" aria-labelledby="features-heading">
           <div className="container gr-cs-features-grid">
             <Reveal className="gr-cs-features-head">
               <p className="eyebrow">03 / Key features</p>

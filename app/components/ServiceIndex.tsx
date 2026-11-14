@@ -23,7 +23,7 @@ export function ServiceIndex({ items }: { items: readonly ServiceIndexItem[] }) 
   const current = items[active];
 
   return (
-    <div className="gr-svc-index">
+    <div className="gr-svc-index cinema-service-index">
       <ol className="gr-svc-list">
         {items.map((item, index) => (
           <li key={item.slug}>
