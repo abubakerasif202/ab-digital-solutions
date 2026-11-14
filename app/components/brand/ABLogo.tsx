@@ -16,7 +16,7 @@ export function ABLogo({ className, title = "AB Web Studio", decorative = false,
       className={className}
       width="48"
       height="48"
-      viewBox="0 0 80 64"
+      viewBox="0 0 88 64"
       fill="none"
       role={decorative ? undefined : "img"}
       aria-hidden={decorative ? true : undefined}
@@ -26,7 +26,7 @@ export function ABLogo({ className, title = "AB Web Studio", decorative = false,
       {!decorative && <title id={titleId}>{title}</title>}
       <path d={LOGO_PATHS.letterA} fill="currentColor" />
       <path d={LOGO_PATHS.letterB} fill="currentColor" />
-      <path d={LOGO_PATHS.slash} fill={monochrome ? "currentColor" : "#D21736"} />
+      <path d={LOGO_PATHS.slash} fill={monochrome ? "currentColor" : "#a394ff"} />
     </svg>
   );
 }

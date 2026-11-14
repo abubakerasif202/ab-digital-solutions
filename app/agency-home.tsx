@@ -47,9 +47,9 @@ export default function AgencyHome() {
         <div className="shell hero-grid">
           <div className="hero-copy">
             <p className="label">Sydney web studio · Working Australia-wide</p>
-            <h1 id="hero-heading">Sharp websites and <em>working software</em> for Australian business.</h1>
+            <h1 id="hero-heading">Your next chapter.<br /><em>Built by AB.</em></h1>
             <p className="lead">
-              AB Web Studio designs, builds and looks after websites, online stores and custom business systems, with local search and practical automation where they help.
+              Distinctive websites. Useful software. One Sydney studio to bring your business forward. We design, develop and support the tools your next chapter needs.
             </p>
             <div className="actions">
               <Link className="button button-primary" href="/contact">Start a project <ArrowIcon /></Link>
@@ -72,8 +72,8 @@ export default function AgencyHome() {
 
       <section className="section" id="work" aria-labelledby="work-heading">
         <div className="shell">
-          <SectionHead id="work-heading" label="Selected work" title="Real projects, labelled for what they are.">
-            Every project opens as a case study first, and says whether it is a live website, a hosted showcase or a staff-access system.
+          <SectionHead id="work-heading" label="Selected work" title="The work speaks.">
+            Explore websites, online stores and business systems. Each project includes its scope, approach and a clearly labelled destination.
           </SectionHead>
 
           <Link className="work-item work-lead" href={`/work/${leadProject.slug}`} data-reveal>
