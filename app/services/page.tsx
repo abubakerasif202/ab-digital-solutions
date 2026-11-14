@@ -87,7 +87,7 @@ export default function ServicesPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page service-page gr-svc-page" id="main-content">
+      <main className="content-page service-page gr-svc-page cinema-interior cinema-services" id="main-content">
         <div className="container">
           <nav className="content-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -97,7 +97,7 @@ export default function ServicesPage() {
 
           <header className="service-hero gr-svc-hero">
             <div className="service-hero-copy">
-              <p className="eyebrow">Digital services / Sydney</p>
+              <p className="eyebrow cinema-chapter-label">01 / Capabilities <span>Sydney · Australia-wide</span></p>
               <h1>Websites to business systems. <span className="accent-serif">Built with purpose.</span></h1>
               <p className="content-lead">
                 Websites, online stores and custom software for Australian businesses. Bring us a new
@@ -109,12 +109,12 @@ export default function ServicesPage() {
               </div>
             </div>
             {/* Decorative detail crop of the lead portfolio project. */}
-            <figure className="service-hero-visual" aria-hidden="true">
+            <figure className="service-hero-visual cinema-service-cover">
               <div className="service-hero-visual-frame">
-                <ProjectArtwork project={projects[0]} priority sizes="(max-width: 960px) 92vw, 520px" />
+                <ProjectArtwork project={projects[0]} priority sizes="(max-width: 720px) 92vw, 1280px" />
               </div>
               <figcaption>
-                <span>Studio project</span>
+                <span>Design in practice / 01</span>
                 {projects[0].name}
               </figcaption>
             </figure>
@@ -139,7 +139,7 @@ export default function ServicesPage() {
           <Link className="studio-system-image" href="/work/247-inventory-system"><span className="studio-system-media"><ProjectArtwork project={findProject("247-inventory-system")!} sizes="(max-width: 900px) 92vw, 600px" /></span><span>Public staff-access screen · View case study <ArrowIcon /></span></Link>
         </section>
 
-        <section className="gr-svc-process" aria-labelledby="services-process-heading">
+        <section className="gr-svc-process cinema-paper" aria-labelledby="services-process-heading">
           <div className="container">
             <div className="gr-section-head">
               <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />How every engagement runs</p>

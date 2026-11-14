@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Bodoni_Moda, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnchorSettle } from "./components/AnchorSettle";
-import { BrandIntro } from "./components/intro/BrandIntro";
-import { introGateScript } from "./components/intro/intro-gate";
+
+
 import { PointerFX } from "./components/PointerFX";
 import { siteConfig } from "./site-config";
 import { WebVitals } from "./web-vitals";
@@ -23,6 +23,11 @@ import "./styles/studio-system.css";
 import "./styles/studio-sections.css";
 import "./styles/studio-harmony.css";
 import "./styles/brand-film.css";
+import "./styles/cinematic.css";
+import "./styles/cinematic-interiors.css";
+import "./styles/ruby-cinematic.css";
+import "./styles/project-exhibition.css";
+import "./styles/ruby-kinetic.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -186,9 +191,9 @@ const monoFont = IBM_Plex_Mono({
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-AU" data-scroll-behavior="smooth" className={`${sansFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
-      <body>
-        <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
-        <BrandIntro />
+      <body className="after-hours ruby-cinematic">
+
+
         <WebVitals />
         <AnchorSettle />
         <PointerFX />

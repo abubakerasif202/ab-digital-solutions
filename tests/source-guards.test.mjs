@@ -26,10 +26,11 @@ test("homepage exposes content directly instead of using an iframe", async () =>
   ]);
 
   assert.doesNotMatch(page, /<iframe\b/i);
-  assert.match(homepage, /className="stage-title"/);
-  assert.match(homepage, /<span className="stage-row">\s*<span className="stage-line"><span>Websites with<\/span><\/span>(?:\{" "\})?\s*<span className="stage-line"><span>presence\./);
-  assert.match(homepage, /metal-ruby">Software with<[\s\S]*?metal-gilt">purpose\./);
-  assert.match(homepage, /Built for your business\./);
+  assert.match(homepage, /className="ruby-title"/);
+  assert.match(homepage, /<Words text="Digital experiences\."/);
+  assert.match(homepage, /<Words text="Beyond ordinary\."/);
+  assert.match(homepage, /purpose-built business systems/);
+  assert.match(homepage, /Premium websites, online stores/);
   assert.match(homepage, /id="contact"/);
   assert.match(showcase, /aria-roledescription="carousel"/);
   assert.match(heroExperience, /prefers-reduced-motion/);
@@ -86,7 +87,10 @@ test("every project ships a real preview image and routes visitors through a cas
 
   const [portfolio, showcaseSource] = await Promise.all([read("../app/components/PortfolioSection.tsx"), read("../app/components/ProjectShowcase.tsx")]);
   assert.match(showcaseSource, /View Case Study/);
-  assert.match(portfolio, /href=\{`\/work\/\$\{project\.slug\}`\}/);
+  const exhibition = await read("../app/components/cinematic/ProjectExhibition.tsx");
+  assert.match(portfolio, /<ProjectExhibition \/>/);
+  assert.match(exhibition, /href=\{`\/work\/\$\{active\.slug\}`\}/);
+  assert.doesNotMatch(exhibition, /href=\{(?:active|project)\.url\}/);
   assert.doesNotMatch(portfolio, /href=\{project\.url\}/);
   assert.doesNotMatch(homepage, /href=\{project\.url\}/);
   assert.doesNotMatch(workPage, /href=\{project\.url\}/);
@@ -125,8 +129,8 @@ test("premium motion remains present while mobile rendering is constrained", asy
     read("../app/globals.css"),
   ]);
 
-  assert.match(homepage, /className="hero-marquee-track"/);
-  assert.match(homepage, /className="hero-marquee-group" aria-hidden="true"/);
+  assert.match(homepage, /<CinematicMedia/);
+  assert.doesNotMatch(homepage, /hero-marquee-track|<Hero3DExperience/);
   assert.match(styles, /\.hero-marquee-track\s*\{[\s\S]*?width: max-content;[\s\S]*?animation: hero-marquee-scroll 24s linear infinite;/);
   assert.match(styles, /@keyframes hero-marquee-scroll[\s\S]*?translate3d\(-50%, 0, 0\)/);
   assert.match(experience, /if \(constrainedDevice\) \{\s*setMode\("fallback"\)/);
@@ -163,7 +167,8 @@ test("stack ledger derives every count from the canonical registry", async () =>
     read("../app/agency-home.tsx"),
     read("../app/components/StackLedger.tsx"),
   ]);
-  assert.match(homepage, /<StackLedger \/>/);
+  assert.doesNotMatch(homepage, /<StackLedger/);
+  assert.match(homepage, /\{projects\.length\}/);
   assert.match(ledger, /projects\.filter\(\(project\) => project\.techStack\.some/);
   assert.match(ledger, /const total = projects\.length/);
   assert.match(ledger, /projectDestinationLabel\(lead\)/);
@@ -179,9 +184,9 @@ test("project count copy is derived from the canonical registry", async () => {
     read("../app/components/WorkIndexBody.tsx"),
     read("../app/components/studio/StudioAbout.tsx"),
   ]);
-  assert.match(homepage, /\{projects\.length\} project case studies/);
+  assert.match(homepage, /\{projects\.length\} projects/);
   // The shared About section (homepage and /about) states the case-study count.
-  assert.match(homepage, /<StudioAbout\b/);
+  assert.match(homepage, /id="perspective-heading"/);
   assert.match(studioAbout, /<dt>Project case studies<\/dt>\s*<dd[^>]*>\{projects\.length\}<\/dd>/);
   assert.doesNotMatch(studioAbout, /<dd[^>]*>\d+<\/dd>/);
   assert.match(workIndexBody, /\{projects\.length\} projects/);
@@ -202,14 +207,16 @@ test("reviewed design issues remain remediated", async () => {
   ]);
 
   assert.doesNotMatch(homepage, /hero-brand-art/);
-  assert.match(homepage, /<LiveTicker items=\{tickerItems\} \/>/);
+  assert.match(homepage, /<CinematicMedia/);
+  assert.doesNotMatch(homepage, /<LiveTicker/);
   assert.match(showcase, /sliderPreferencePaused \|\| hovered \|\| focused \|\| !isVisible \|\| !isPageVisible/);
   assert.match(showcase, /onMouseEnter=\{\(\) => setHovered\(true\)\}/);
   assert.match(showcase, /onMouseLeave=\{\(\) => setHovered\(false\)\}/);
   assert.match(showcase, /onFocusCapture=\{\(\) => setFocused\(true\)\}/);
   assert.match(showcase, /!event\.currentTarget\.contains\(event\.relatedTarget\)[\s\S]*?setFocused\(false\)/);
   assert.match(showcase, /setSliderPauseOverride\(true\)/);
-  assert.match(homepage, /<Link className="service-card"[^>]*href=\{`\/services\/\$\{service\.slug\}`\}/);
+  assert.match(homepage, /href=\{`\/services\/\$\{service\.slug\}`\}/);
+  assert.match(homepage, /serviceContactHref\(service\)/);
   assert.match(chrome, /<ABBrandImage decorative eager/);
   assert.match(chrome, /AB Web Studio/);
   assert.match(servicePage, /<SiteHeader/);
@@ -295,11 +302,12 @@ test("premium interaction layer is wired without heavy dependencies", async () =
     read("../package.json"),
   ]);
 
-  assert.match(homepage, /metal-gilt/);
-  assert.match(homepage, /stage-scroll-cue/);
-  assert.match(homepage, /process-rail-fill/);
+  assert.match(homepage, /className="ruby-title"/);
+  assert.match(homepage, /className="ruby-ghost-cta" href="#work"/);
+  assert.match(homepage, /<RubyMotion \/>/);
+  assert.match(homepage, /data-ruby-magnet/);
   assert.doesNotMatch(homepage, /project-ghost-index/);
-  assert.match(homepage, /<VirtualStudioPreview \/>/);
+  assert.match(homepage, /href="\/about"/);
 
 
   assert.match(intro, /sessionStorage/);
@@ -482,7 +490,7 @@ test("service heroes carry decorative real project evidence", async () => {
   ]);
   for (const source of [servicePage, servicesIndex]) {
     assert.match(source, /className="service-hero-copy"/);
-    assert.match(source, /<figure className="service-hero-visual" aria-hidden="true">/);
+    assert.match(source, /<figure className="service-hero-visual cinema-service-cover">/);
   }
   assert.match(servicePage, /project=\{featuredProject\}/);
 });
@@ -642,8 +650,9 @@ test("second-pass compositions: real pages, varied portfolio and case-study syst
   assert.match(compositions, /\.gr-cs--split/);
   assert.match(compositions, /\.gr-cs--system/);
 
-  // Homepage service rows borrow each service page's real featured project.
-  assert.match(home, /findProject\(page\.featuredProject\)/);
+  // Homepage services and enquiry destinations derive from the canonical registry.
+  assert.match(home, /servicePages\.map/);
+  assert.match(home, /serviceContactHref\(service\)/);
 
   // Scroll-linked motion is opt-in and switched off for reduced motion.
   assert.match(compositions, /@media \(prefers-reduced-motion: no-preference\)[\s\S]*?animation-timeline: view\(\)/);

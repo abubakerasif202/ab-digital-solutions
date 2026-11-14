@@ -70,30 +70,16 @@ export default function AboutPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="content-page studio-page gr-about" id="main-content">
+      <main className="content-page studio-page gr-about cinema-interior cinema-about" id="main-content">
         <nav className="studio-shell studio-crumbs" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <span aria-hidden="true">/</span>
           <span aria-current="page">About</span>
         </nav>
 
-        <StudioAbout headingAs="h1" index="01" />
-
-        <section className="container gr-about-approach" aria-labelledby="approach-heading">
-          <div className="gr-section-head">
-            <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />Approach</p>
-            <h2 id="approach-heading" className="gr-display-l">Design, development and <span className="accent-serif">systems</span> under one roof.</h2>
-          </div>
-          <ol className="gr-about-approach-list">
-            {approach.map(([title, copy], index) => (
-              <li key={title} data-reveal>
-                <span className="gr-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
+        <div className="cinema-studio-chapter">
+          <StudioAbout headingAs="h1" index="01" />
+        </div>
 
         <section className="gr-about-collage" aria-labelledby="collage-heading">
           <div className="container">
@@ -113,6 +99,22 @@ export default function AboutPage() {
               ))}
             </div>
           </div>
+        </section>
+
+        <section className="container gr-about-approach" aria-labelledby="approach-heading">
+          <div className="gr-section-head">
+            <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />Approach</p>
+            <h2 id="approach-heading" className="gr-display-l">Design, development and <span className="accent-serif">systems</span> under one roof.</h2>
+          </div>
+          <ol className="gr-about-approach-list">
+            {approach.map(([title, copy], index) => (
+              <li key={title} data-reveal>
+                <span className="gr-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <section className="gr-about-principles" aria-labelledby="principles-heading">

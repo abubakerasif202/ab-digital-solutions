@@ -66,7 +66,7 @@ export default function WorkPage() {
     <>
       <SiteHeader />
       <PageTransition>
-      <main className="work-index-page" id="main-content">
+      <main className="work-index-page cinema-interior cinema-work" id="main-content">
         <WorkIndexBody />
 
         <aside className="gr-final-cta gr-final-cta--work" aria-labelledby="work-cta-heading">

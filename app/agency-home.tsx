@@ -1,271 +1,191 @@
 import Link from "next/link";
+import Image from "next/image";
+import { Fragment, type CSSProperties } from "react";
+import { ArrowDown } from "lucide-react";
 import { PageTransition } from "./components/motion/PageTransition";
+import { Reveal } from "./components/motion/Reveal";
 import { ContactForm } from "./components/ContactForm";
-import { LiveTicker } from "./components/LiveTicker";
-import { findProject, projects, type Project } from "./project-data";
-import { findService } from "./services/service-data";
+import { projects } from "./project-data";
+import { serviceContactHref, servicePages } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
 import { ArrowIcon } from "./icons";
 import { PortfolioSection } from "./components/PortfolioSection";
 import { BrandFilmSection } from "./components/film/BrandFilmSection";
-import { StudioCapabilities } from "./components/StudioCapabilities";
-import { ProcessTimeline } from "./components/motion/ProcessTimeline";
-import { StackLedger } from "./components/StackLedger";
 import { EnquirySection } from "./components/studio/EnquirySection";
-import { StudioAbout } from "./components/studio/StudioAbout";
-import { VirtualStudioPreview } from "./components/studio/VirtualStudioPreview";
+import { CinematicMedia } from "./components/cinematic/CinematicMedia";
+import { RubyMotion } from "./components/cinematic/RubyMotion";
 
-const services = [
-  {
-    number: "01",
-    slug: "web-design-sydney",
-    title: "Website design & development",
-    description:
-      "Custom service, portfolio and business websites with sharp positioning, persuasive journeys and a premium finish.",
-    details: ["UX & visual design", "Responsive development", "Conversion pathways"],
-  },
-  {
-    number: "02",
-    slug: "seo-local-visibility",
-    title: "SEO & local visibility",
-    description:
-      "Search-ready architecture and content foundations designed to help the right customers discover your business.",
-    details: ["Technical SEO", "On-page optimisation", "Local search"],
-  },
-  {
-    number: "03",
-    slug: "branding-content",
-    title: "Branding & content",
-    description:
-      "A coherent visual direction and confident messaging that make your business easier to recognise, trust and choose.",
-    details: ["Brand direction", "Website copy", "Campaign creative"],
-  },
-  {
-    number: "04",
-    slug: "ecommerce-website-development",
-    title: "E-commerce solutions",
-    description:
-      "Clear, friction-conscious storefronts that showcase products, simplify purchasing and leave room to scale.",
-    details: ["Product catalogues", "Checkout integration", "Mobile commerce"],
-  },
-  {
-    number: "05",
-    slug: "digital-marketing",
-    title: "Digital marketing",
-    description:
-      "Focused landing pages and campaigns built to create attention, generate enquiries and support the sales process.",
-    details: ["Landing pages", "Lead generation", "Campaign strategy"],
-  },
-  {
-    number: "06",
-    slug: "website-maintenance",
-    title: "Website care & support",
-    description:
-      "Practical ongoing support for updates, technical health and continuous improvement after your site goes live.",
-    details: ["Content updates", "Technical support", "Growth improvements"],
-  },
-  {
-    number: "07",
-    slug: "custom-software-business-systems",
-    title: "Custom software & business systems",
-    description:
-      "Role-protected web applications, inventory platforms and internal tools built around the workflows your team runs every day.",
-    details: ["Inventory & purchasing", "Staff portals", "Integrations & automation"],
-  },
+const disciplines = [
+  { number: "01", title: "Presence.", name: "Websites & digital experiences", description: "Distinctive design. A clear story. A considered journey from first impression to enquiry.", href: "/services/web-design-sydney", detail: "Strategy / Design / Development" },
+  { number: "02", title: "Purpose.", name: "Software & connected systems", description: "Practical technology shaped around the way your business works, not the other way around.", href: "/services/custom-software-business-systems", detail: "Platforms / Workflows / Integrations" },
+  { number: "03", title: "Possibility.", name: "Commerce & digital growth", description: "Thoughtful online stores, search-ready foundations and ongoing care for what comes next.", href: "/services/ecommerce-website-development", detail: "Commerce / Visibility / Support" },
 ] as const;
 
-// Homepage rows must always point at a canonical service page, and each row
-// borrows that page's featured live project as its preview image; fail the
-// build loudly if either list drifts. The homepage keeps its own row copy on
-// purpose — it is marketing language, not the service-page text.
-const serviceRows = services.map((service) => {
-  const page = findService(service.slug);
-  if (!page) throw new Error(`agency-home: unknown service slug "${service.slug}"`);
-  const featured = findProject(page.featuredProject);
-  if (!featured) throw new Error(`agency-home: unknown featured project "${page.featuredProject}"`);
-  return { ...service, featured: featured as Project };
-});
+const scenes = ["Harbour", "Arteries", "Skyline"] as const;
+const bandWords = ["Websites", "Online stores", "Business systems", "Made in Sydney"] as const;
 
-const processSteps = [
-  ["01", "Discover", "We clarify your audience, offer, goals and the actions your website needs to drive."],
-  ["02", "Design", "We map the content, page structure and customer journey before visual design begins."],
-  ["03", "Build", "We create, refine and develop the experience responsively, with clear review points."],
-  ["04", "Launch", "We complete launch checks, publish with confidence and stay available as you grow."],
-] as const;
+/** Per-line mask reveal: each line rises out of its own clipping row, staggered by index. */
+function Lines({ lines }: { lines: readonly (string | { accent: string })[] }) {
+  return (
+    <>
+      {lines.map((line, index) => {
+        const text = typeof line === "string" ? line : line.accent;
+        return (
+          <span className="ruby-line" key={text} style={{ "--line": index } as CSSProperties}>
+            <span>{typeof line === "string" ? text : <em>{text}</em>}</span>
+          </span>
+        );
+      })}
+    </>
+  );
+}
 
-const tickerItems = projects.slice(0, 6).map(({ slug, name, sector, image }) => ({ slug, name, sector, image }));
+function Words({ text, offset = 0 }: { text: string; offset?: number }) {
+  return (
+    <>
+      {text.split(" ").map((word, index) => (
+        <Fragment key={`${word}-${index}`}>
+          <span className="ruby-word" style={{ "--word": index + offset } as CSSProperties}><span>{word}</span></span>{" "}
+        </Fragment>
+      ))}
+    </>
+  );
+}
 
 export default function AgencyHome({ currentYear }: { currentYear: number }) {
   return (
     <>
       <SiteHeader />
-
       <PageTransition>
-      <main id="main-content" className="cinematic-home">
-        <section className="stage-hero studio-supporting-hero" aria-labelledby="hero-heading">
-          <div className="stage-hero-art" aria-hidden="true">
-
-            <span className="stage-ring stage-ring--outer" />
-            <span className="stage-ring stage-ring--inner" />
-          </div>
-
-          <div className="container stage-hero-top">
-            <p className="eyebrow hero-label">
-              <span className="eyebrow-mark" />
-              <span className="hero-label-primary">Sydney studio</span>
-              <span className="micro-rule" aria-hidden="true" />
-              <span className="hero-label-secondary">Australia-wide</span>
-            </p>
-            <span className="stage-edition" aria-hidden="true">Independent by design.</span>
-          </div>
-
-          <div className="container stage-hero-body">
-            <h1 id="hero-heading" className="stage-title">
-              <span className="stage-row">
-                <span className="stage-line"><span>Websites with</span></span>{" "}
-                <span className="stage-line"><span>presence.</span></span>
-              </span>{" "}
-              <span className="stage-row">
-                <span className="stage-line stage-line--ruby"><span className="metal-ruby">Software with</span></span>{" "}
-                <span className="stage-line stage-line--gilt"><span className="metal-gilt">purpose.</span></span>
-              </span>
-            </h1>
-
-            <div className="stage-foot">
-              <div className="stage-intro">
-                <p className="stage-tagline">Built for your business.</p>
-                <p className="hero-intro">
-                  Premium <Link href="/services/web-design-sydney" prefetch={false}>websites and redesigns</Link>, online stores and custom business systems for Australian businesses. Thoughtful design, clear customer journeys and technology that supports your daily work.
-                </p>
-                <div className="hero-actions">
-                  <a className="button button-primary" href="#contact" data-magnetic>
-                    Start Your Project <ArrowIcon />
-                  </a>
-                  <a className="button button-ghost" href="#work" data-magnetic>
-                    Explore Our Work <ArrowIcon direction="down-right" />
-                  </a>
-                </div>
-                <div className="stage-confidence" aria-label="Explore the studio or call directly">
-                  <Link href="/work" prefetch={false}>{projects.length} project case studies <ArrowIcon /></Link>
-                  <a href={`tel:${siteConfig.phoneInternational}`}>Prefer a conversation? {siteConfig.phoneDisplay}</a>
+        <main id="main-content" className="cinematic-home cinema-page ruby-page">
+          <RubyMotion />
+          <div className="ruby-scroll-progress" aria-hidden="true" />
+          <section className="cinema-hero ruby-hero" aria-labelledby="hero-heading" data-ruby-depth>
+            <CinematicMedia />
+            <div className="ruby-hero-shade" aria-hidden="true" />
+            <div className="ruby-hero-light" aria-hidden="true" />
+            <div className="ruby-hero-sweep" aria-hidden="true" />
+            <div className="ruby-grain" aria-hidden="true" />
+            <div className="cinema-shell ruby-hero-topline">
+              <p className="cinema-label"><span className="ruby-signal" />Independent digital studio</p>
+              <p className="cinema-label">Sydney, Australia <i aria-hidden="true" /> Working Australia-wide</p>
+            </div>
+            <div className="cinema-shell ruby-hero-composition">
+              <p className="cinema-label ruby-hero-overline">Thoughtful design. Exceptional presence.</p>
+              <h1 id="hero-heading" className="ruby-title">
+                <span className="ruby-title-row"><Words text="Digital experiences." /></span>
+                <span className="ruby-title-row ruby-title-row--signature"><em><Words text="Beyond ordinary." offset={2} /></em></span>
+              </h1>
+              <div className="ruby-hero-actionline">
+                <p>Premium websites, online stores<br />and purpose-built business systems.</p>
+                <div className="ruby-hero-actions">
+                  <a className="ruby-project-cta" href="#contact" data-ruby-magnet><span>Start your project</span><ArrowIcon /></a>
+                  <a className="ruby-ghost-cta" href="#work"><span>See the work</span><ArrowIcon direction="right" /></a>
                 </div>
               </div>
-              <LiveTicker items={tickerItems} />
+            </div>
+            <div className="cinema-shell ruby-hero-bottomline">
+              <a href="#work" className="ruby-discover"><span className="ruby-discover-icon" aria-hidden="true"><ArrowDown size={18} strokeWidth={1.5} /></span> Enter the exhibition</a>
+              <ol className="ruby-scenes" aria-hidden="true">
+                {scenes.map((scene, index) => <li key={scene}><span>{String(index + 1).padStart(2, "0")}</span>{scene}<i /></li>)}
+              </ol>
+              <span className="cinema-label">Sydney / In full colour</span>
+            </div>
+          </section>
+
+          <div className="ruby-band" aria-hidden="true">
+            <div className="ruby-band-track">
+              {[0, 1].map(copy => (
+                <p key={copy}>{bandWords.map(word => <span key={word}>{word}<i /></span>)}</p>
+              ))}
             </div>
           </div>
 
-          <div className="container stage-bar">
-            <a className="stage-scroll-cue" href="#work"><span className="stage-scroll-line" aria-hidden="true" />Scroll to explore</a>
-            <p>Design-led websites · Purpose-built technology</p>
-            <Link href="/work">{projects.length} real projects <ArrowIcon /></Link>
-          </div>
-
-          <div className="hero-marquee" aria-label="Capabilities">
-            <div className="hero-marquee-track">
-              <div className="hero-marquee-group">
-                <span>Web design</span><i aria-hidden="true">/</i><span>Development</span><i aria-hidden="true">/</i><span>Business systems</span><i aria-hidden="true">/</i><span>AI + automation</span><i aria-hidden="true">/</i><span>Performance</span><i aria-hidden="true">/</i>
+          <section id="about" className="ruby-positioning" aria-labelledby="perspective-heading">
+            <div className="cinema-shell ruby-positioning-grid">
+              <Reveal className="ruby-plate" variant="mask">
+                <div className="ruby-plate-frame">
+                  <Image src="/cinematic/sydney-plate-arteries.webp" alt="Sydney at night: light trails on the freeway beneath the lit North Sydney skyline" width={864} height={1080} sizes="(max-width: 600px) 88vw, (max-width: 1100px) 36vw, 30vw" />
+                </div>
+                <div className="ruby-identity-mark">
+                  <Image src="/brand/ab-luxury-monogram.webp" alt="AB Web Studio monogram" width={220} height={220} sizes="(max-width: 600px) 72px, 120px" />
+                  <span className="cinema-label">Independent<br />by design.</span>
+                </div>
+              </Reveal>
+              <div className="ruby-positioning-copy">
+                <Reveal as="p" className="cinema-label ruby-eyebrow">01 / A different perspective</Reveal>
+                <Reveal as="h2" id="perspective-heading" className="ruby-statement ruby-lines">
+                  <Lines lines={["Good design", "gets noticed.", { accent: "Great thinking" }, "moves you forward."]} />
+                </Reveal>
+                <div className="ruby-positioning-bottom">
+                  <Reveal as="p">AB Web Studio brings design, development and practical technology together. To make your business easier to understand, more compelling to choose, and ready for what comes next.</Reveal>
+                  <Link href="/about" className="cinema-link">The studio behind the work <ArrowIcon /></Link>
+                </div>
               </div>
-              <div className="hero-marquee-group" aria-hidden="true">
-                <span>Web design</span><i>/</i><span>Development</span><i>/</i><span>Business systems</span><i>/</i><span>AI + automation</span><i>/</i><span>Performance</span><i>/</i>
-              </div>
+              <span className="ruby-vertical-note cinema-label" aria-hidden="true">Design with intent / Develop with purpose</span>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <PortfolioSection />
+          <PortfolioSection />
 
-        <VirtualStudioPreview />
-
-        <BrandFilmSection />
-
-
-        <section className="section ruby-band" id="services" aria-labelledby="services-heading">
-          <div className="container">
-            <div className="section-heading" data-reveal>
-              <div>
-                <p className="eyebrow section-index"><span className="section-index-num">02</span><span className="micro-rule" aria-hidden="true" />Capabilities</p>
-                <h2 id="services-heading" className="gr-display-xl">From first impression to <span className="accent-serif">everyday operation.</span></h2>
-              </div>
-              <p>From the first strategic decision to post-launch support, every recommendation is tied to a clear business goal.</p>
-            </div>
-            <StudioCapabilities />
-          </div>
-        </section>
-
-        <section className="section services-section gr-services" aria-label="Services">
-          <div className="container">
-            <div className="gr-service-index">
-              <p className="eyebrow supporting-services-label">The details that bring it together</p>
-              <ol className="services-list">
-                {serviceRows.map((service) => (
-                  <li key={service.number}>
-                    <Link className="service-card" data-reveal href={`/services/${service.slug}`}>
-                      <span className="service-card-index">{service.number}</span>
-                      <h3>{service.title}</h3>
-                      <span className="gr-service-body">
-                        <span className="gr-service-desc">{service.description}</span>
-                        <span className="gr-service-tags">
-                          {service.details.map((detail) => <span key={detail}>{detail}</span>)}
-                        </span>
-                      </span>
-                      <span className="service-card-arrow" aria-hidden="true"><ArrowIcon /></span>
-                    </Link>
+          <section id="services" className="ruby-services" aria-labelledby="services-heading">
+            <div className="cinema-shell">
+              <header className="ruby-section-header">
+                <Reveal as="p" className="cinema-label ruby-eyebrow">03 / The possibilities</Reveal>
+                <Reveal as="h2" id="services-heading" className="ruby-lines"><Lines lines={["Beautiful is only", { accent: "the beginning." }]} /></Reveal>
+                <p>Design that earns attention.<br />Technology that does the work.</p>
+              </header>
+              <ol className="ruby-disciplines">
+                {disciplines.map(discipline => (
+                  <li key={discipline.number}>
+                    <Reveal variant="line">
+                      <Link href={discipline.href} className="ruby-discipline" data-ruby-depth>
+                        <span className="cinema-label ruby-discipline-number">{discipline.number}</span>
+                        <h3>{discipline.title}<small>{discipline.name}</small></h3>
+                        <span className="ruby-discipline-copy">{discipline.description}<span className="cinema-label">{discipline.detail}</span></span>
+                        <span className="ruby-discipline-arrow"><ArrowIcon /></span>
+                      </Link>
+                    </Reveal>
                   </li>
                 ))}
               </ol>
+              <div className="ruby-service-foot">
+                <span className="cinema-label">A considered digital practice</span>
+                <ul aria-label="All digital services">
+                  {servicePages.map(service => (
+                    <li key={service.slug}>
+                      <Link href={`/services/${service.slug}`}>{service.title}</Link>
+                      <Link className="ruby-service-enquire" href={serviceContactHref(service)} aria-label={`Enquire about ${service.title}`}>Enquire <ArrowIcon direction="right" /></Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="section process-section" id="process" aria-labelledby="process-heading">
-          <div className="container process-layout">
-            <div className="process-intro" data-reveal>
-              <p className="eyebrow section-index"><span className="section-index-num">03</span><span className="micro-rule" aria-hidden="true" />How we work</p>
-              <h2 id="process-heading">A clear path from ambition to <span className="accent-serif">launch.</span></h2>
-              <p>No black box. No unnecessary technical fog. Just collaborative decisions, visible progress and a dependable finish.</p>
-              <a className="text-link" href="#contact">Start Your Project <ArrowIcon /></a>
+          <BrandFilmSection />
+
+          <section className="ruby-contact" aria-labelledby="ruby-contact-heading">
+            <div className="ruby-contact-scene" data-ruby-depth>
+              <div className="ruby-contact-plate" aria-hidden="true">
+                <Image src="/cinematic/sydney-plate-harbour.webp" alt="" width={1920} height={868} sizes="100vw" />
+              </div>
+              <div className="cinema-shell ruby-contact-intro">
+                <Reveal as="p" className="cinema-label ruby-eyebrow">05 / A new beginning</Reveal>
+                <Reveal as="h2" id="ruby-contact-heading" className="ruby-lines"><Lines lines={["Your next chapter.", { accent: "Let’s make it matter." }]} /></Reveal>
+                <div className="ruby-contact-intro-bottom">
+                  <p>Tell us where you want to go.<br />We’ll help you find the way.</p>
+                  <a href={`tel:${siteConfig.phoneInternational}`} className="cinema-link">{siteConfig.phoneDisplay} <ArrowIcon /></a>
+                </div>
+              </div>
             </div>
-            <ProcessTimeline>
-              <span className="process-rail-fill" aria-hidden="true" />
-              <ol className="process-list">
-              {processSteps.map(([number, title, description]) => (
-                <li data-process-step key={number}>
-                  <span>{number}</span>
-                  <div><h3>{title}</h3><p>{description}</p></div>
-                  <span aria-hidden="true"><ArrowIcon direction="down-right" /></span>
-                </li>
-              ))}
-              </ol>
-            </ProcessTimeline>
-          </div>
-        </section>
-
-        <StackLedger />
-
-        <section className="standard-section" aria-labelledby="standard-heading">
-          <div className="container standard-layout">
-            <div className="standard-statement" data-reveal>
-              <p className="eyebrow section-index"><span className="section-index-num">05</span><span className="micro-rule" aria-hidden="true" />The AB standard</p>
-              <h2 id="standard-heading">Feel the quality. <span className="accent-serif">Then see the thinking.</span></h2>
-            </div>
-            <div className="standard-points">
-              <article data-reveal><span>01 / Show</span><h3>Show the work first.</h3><p>Visitors understand who you help, what you offer and why your business is worth choosing.</p></article>
-              <article data-reveal><span>02 / Explain</span><h3>Explain the business value.</h3><p>Information hierarchy and calls to action work together to turn attention into genuine enquiries.</p></article>
-              <article data-reveal><span>03 / Guide</span><h3>Keep the next step obvious.</h3><p>Responsive, accessible, <Link href="/services/seo-local-visibility">search-ready website foundations</Link> engineered to feel fast on the devices customers actually use.</p></article>
-            </div>
-          </div>
-        </section>
-
-        <StudioAbout id="about" index="06" showStudioLink />
-
-        <EnquirySection id="contact" index="07">
-          <ContactForm />
-        </EnquirySection>
-      </main>
+            <EnquirySection id="contact" index="05"><ContactForm /></EnquirySection>
+            <div className="cinema-shell ruby-colophon"><span>AB Web Studio / Sydney, Australia</span><span>{projects.length} genuine project case studies</span><a href={`mailto:${siteConfig.email}`}>{siteConfig.email} <ArrowIcon /></a></div>
+          </section>
+        </main>
       </PageTransition>
-
       <SiteFooter currentYear={currentYear} />
     </>
   );

@@ -102,6 +102,11 @@ const nextConfig: NextConfig = {
         source: `/studio/${STUDIO_ASSET_REV}/:path*`,
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
+      {
+        // Cinematic filenames are versioned; never replace bytes under an existing URL.
+        source: "/cinematic/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
       // Film and brand files keep stable filenames, so they cannot be immutable:
       // a day of browser caching plus a week of stale-while-revalidate lets the
       // CDN and repeat visitors skip revalidating multi-megabyte media.
