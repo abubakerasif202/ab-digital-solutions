@@ -144,7 +144,7 @@ test("stale play rejection after source detachment cannot block a newer attempt"
   assert.equal(media.video.src, "");
 });
 
-test("real autoplay denial waits for explicit Play rather than retrying on visibility", async () => {
+test("real autoplay denial leaves the still frame rather than retrying on visibility", async () => {
   const media = await mountCinematicMedia();
   media.intersect(true);
   media.video.paused = true;
@@ -153,8 +153,6 @@ test("real autoplay denial waits for explicit Play rather than retrying on visib
   media.intersect(false);
   media.intersect(true);
   assert.equal(media.video.plays, 1);
-  media.click();
-  assert.equal(media.video.plays, 2);
   media.unmount();
 });
 

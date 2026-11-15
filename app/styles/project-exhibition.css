@@ -59,7 +59,6 @@
 .exhibition-controls { display: flex; gap: 7px; }
 .exhibition-controls button { display: inline-flex; align-items: center; justify-content: center; min-width: 46px; min-height: 46px; border: 1px solid #ffffff36; background: #08070b; color: #f4ecec; cursor: pointer; transition: border-color 250ms, background 250ms; }
 .exhibition-controls button:is(:hover, :focus-visible) { border-color: #e32655; background: #470d224d; }
-.exhibition-controls .exhibition-pause { gap: 10px; min-width: 148px; padding: 0 15px; font: var(--fs-label)/1.5 var(--mono); }
 .exhibition-controls button:disabled { cursor: default; color: #bdb1b7; background: transparent; border-color: #ffffff25; }
 .exhibition-counter { display: flex; align-items: baseline; gap: 8px; margin: 0; color: #e5c59a; font: 400 1.6rem/1 var(--sans); letter-spacing: -.05em; }
 .exhibition-counter > span:not(.sr-only) { color: #a7959e; font: var(--fs-label)/1 var(--mono); letter-spacing: 0; }
@@ -105,14 +104,12 @@
   .exhibition-number { bottom: -10px; font-size: 8rem; }
   .exhibition-footer { gap: 12px; margin-top: 24px; }
   .exhibition-controls { gap: 5px; }
-  .exhibition-controls .exhibition-pause { min-width: 122px; padding-inline: 10px; font-size: var(--fs-label); }
   .exhibition-counter { font-size: 1.2rem; }
   .exhibition-thumbnails { margin-top: 23px; }
   .exhibition-thumbnails > div { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
   .exhibition-thumbnails span:nth-child(n + 4) { display: none; }
 }
 @media (max-width: 380px) {
-  .exhibition-controls .exhibition-pause { min-width: 98px; gap: 5px; padding-inline: 6px; font-size: var(--fs-label); }
   .exhibition-controls button { min-width: 44px; min-height: 44px; }
   .exhibition-counter { gap: 4px; font-size: 1rem; }
   .exhibition-counter > span:not(.sr-only) { font-size: var(--fs-label); }

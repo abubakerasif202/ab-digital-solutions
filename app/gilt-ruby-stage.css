@@ -182,20 +182,6 @@
 @keyframes ticker-pulse { 70%, 100% { box-shadow: 0 0 0 7px rgba(210, 23, 54, 0); } }
 .live-ticker-copy strong { overflow: hidden; font-family: var(--display); font-size: 1.15rem; font-weight: 500; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
 .live-ticker-copy > span { color: var(--paper-dim); font-size: 0.8125rem; }
-.live-ticker-toggle {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 44px;
-  min-height: 44px;
-  padding: 0;
-  border: 1px solid var(--line-strong);
-  background: rgba(15, 15, 18, 0.92);
-  color: var(--paper);
-  cursor: pointer;
-  transition: border-color 420ms var(--stage-ease), background 420ms var(--stage-ease), color 420ms var(--stage-ease);
-}
-.live-ticker-toggle:is(:hover, :focus-visible) { border-color: var(--gold); background: var(--panel); color: var(--gold-bright); }
 
 .stage-bar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 18px; border-top: 1px solid var(--line); color: var(--paper-dim); font-family: var(--mono); font-size: var(--text-micro, var(--fs-label)); letter-spacing: 0.14em; text-transform: uppercase; }
 .stage-bar p { margin: 0; }
@@ -266,7 +252,6 @@
   .metal-gilt, .metal-ruby, .stage-ring--outer, .stage-ring--inner, .stage-line > span,
   .live-ticker-thumb img, .live-ticker-copy small i, .stage-scroll-line::after { animation: none !important; }
   .stage-scroll-line::after { transform: none; }
-  .live-ticker-toggle { display: none; }
 }
 
 /* Keep the authentic mark separate from reading and enquiry surfaces. */

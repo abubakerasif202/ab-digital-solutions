@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { canAutoplayCinematicMedia, cinematicMediaVariant } from "./media-policy";
 
 type Connection = EventTarget & { saveData?: boolean; effectiveType?: string };
-type MediaController = { toggle: () => void };
 
 const base = "/cinematic/sydney-ruby-v3";
 
@@ -12,8 +11,6 @@ const base = "/cinematic/sydney-ruby-v3";
 export function CinematicMedia({ className = "" }: { className?: string }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const controllerRef = useRef<MediaController | null>(null);
-  const [ready, setReady] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -25,8 +22,6 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
     const connection = (navigator as Navigator & { connection?: Connection }).connection;
     let inView = false;
     let disposed = false;
-    let userPaused = false;
-    let manualPlayback = false;
     let blocked = false;
     let mediaFailed = false;
     let hasSource = false;
@@ -52,13 +47,13 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
     };
     const reconcile = () => {
       if (disposed) return;
-      const allowed = manualPlayback || canAutoplayCinematicMedia({
+      const allowed = canAutoplayCinematicMedia({
         reducedMotion: motion.matches,
         saveData: connection?.saveData,
         effectiveType: connection?.effectiveType,
       });
       if (!allowed || mediaFailed) return detach();
-      if (!inView || document.hidden || userPaused || blocked) return pause();
+      if (!inView || document.hidden || blocked) return pause();
       if (!hasSource) {
         video.poster = variant === "mobile" ? `${base}-mobile-poster.webp` : `${base}-poster.webp`;
         video.src = `${base}-${variant}.${extension}`;
@@ -75,10 +70,7 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
         });
       }
     };
-    const preferencesChanged = () => {
-      manualPlayback = false;
-      reconcile();
-    };
+    const preferencesChanged = () => reconcile();
     const onError = () => {
       if (disposed || !hasSource) return;
       mediaFailed = true;
@@ -86,23 +78,8 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
       setPlaying(false);
       detach();
     };
-    controllerRef.current = {
-      toggle: () => {
-        if (mediaFailed) return;
-        if (!video.paused) {
-          userPaused = true;
-          pause();
-        } else {
-          userPaused = false;
-          manualPlayback = true;
-          blocked = false;
-          reconcile();
-        }
-      },
-    };
     const observer = new IntersectionObserver(([entry]) => {
       inView = entry?.isIntersecting ?? false;
-      setReady(true);
       reconcile();
     }, { threshold: 0.01 });
     observer.observe(root);
@@ -112,7 +89,6 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
     video.addEventListener("error", onError);
     return () => {
       disposed = true;
-      controllerRef.current = null;
       observer.disconnect();
       motion.removeEventListener("change", preferencesChanged);
       connection?.removeEventListener("change", preferencesChanged);
@@ -143,17 +119,6 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
         onPlaying={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
       />
-      <button
-        className="cinema-media-toggle"
-        type="button"
-        hidden={!ready}
-        disabled={failed}
-        onClick={() => controllerRef.current?.toggle()}
-        aria-label={failed ? "Background motion unavailable" : playing ? "Pause background motion" : "Play background motion"}
-      >
-        <span aria-hidden="true">{playing ? "Ⅱ" : "▷"}</span>
-        {failed ? "Still frame" : playing ? "Pause motion" : "Play motion"}
-      </button>
     </div>
   );
 }

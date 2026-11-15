@@ -52,13 +52,9 @@
 @keyframes ruby-scene-1 { 0% { transform: scaleX(0); } 33.7%,97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
 @keyframes ruby-scene-2 { 0%,33.7% { transform: scaleX(0); } 64.9%,97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
 @keyframes ruby-scene-3 { 0%,64.9% { transform: scaleX(0); } 97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
-.ruby-page .ruby-hero .cinema-media-toggle { top: 84px; bottom: auto; }
-/* Desktop: CTAs sit directly under the supporting line, and "Pause motion" lives in the bottom rail
-   (the rail is 90px: 23px padding around a 44px control) instead of floating over the footage. */
+/* Desktop: CTAs sit directly under the supporting line. */
 @media (min-width: 1024px) {
   .ruby-hero-actionline { flex-direction: column; align-items: flex-start; gap: 28px; }
-  .ruby-page .ruby-hero .cinema-media-toggle { top: auto; bottom: 23px; right: max(4vw,20px); min-height: 44px; }
-  .ruby-hero-bottomline > .cinema-label:last-child { margin-right: 176px; }
 }
 
 /* 2. Kinetic band: the studio's offer, drifting between the film and the first chapter. */
@@ -173,7 +169,6 @@
   .ruby-hero-actionline { align-items: stretch; gap: 20px; }
   .ruby-hero-actions { width: 100%; }
   .ruby-project-cta, .ruby-ghost-cta { flex: 1 1 100%; min-height: 54px; padding: 15px 20px; font-size: var(--fs-label); }
-  .ruby-page .ruby-hero .cinema-media-toggle { top: 92px; bottom: auto; right: 20px; }
   .ruby-discover-icon { width: 30px; height: 30px; }
   .ruby-band p { font-size: 42px; }
   .ruby-positioning { padding-block: 70px 100px; }
@@ -213,4 +208,12 @@
 @media (max-width: 720px) {
   .ruby-page { --section-gap: 96px; }
   .ruby-process-steps { grid-template-columns: 1fr; gap: 36px; }
+}
+
+/* Mobile: the fixed header covers the top of the hero, so the opening line starts below it and stacks
+   instead of wrapping into clipped fragments. */
+@media (max-width: 600px) {
+  .ruby-hero-topline { flex-direction: column; align-items: flex-start; gap: 4px; padding-block: 88px 0; }
+  .ruby-hero-topline p, .ruby-hero-topline p:last-child { max-width: none; text-align: left; }
+  .ruby-hero-topline p { flex-wrap: wrap; gap: 2px 8px; }
 }
