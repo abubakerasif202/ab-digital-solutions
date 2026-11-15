@@ -47,7 +47,7 @@
   color: #c7a96d;
   font-family: monospace;
   margin-right: 24px;
-  font-size: 12px;
+  font-size: var(--fs-label);
 }
 .studio-system-image {
   display: block;
@@ -65,7 +65,7 @@
   min-height: 44px;
   padding: 12px 4px 0;
   font-family: monospace;
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: #c7a96d;
 }
 .studio-system-media { display: block; position: relative; aspect-ratio: 1.5; overflow: hidden; }

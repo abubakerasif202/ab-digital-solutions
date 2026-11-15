@@ -6,11 +6,11 @@ import { siteConfig } from "../site-config";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: `How ${siteConfig.name} handles website enquiries and personal information.`,
+  description: `How ${siteConfig.name} uses enquiry information, which service providers process it, how long records are kept and how to request access, correction or deletion.`,
   alternates: { canonical: "/privacy" },
   openGraph: {
     title: `Privacy Policy | ${siteConfig.name}`,
-    description: `How ${siteConfig.name} handles enquiries and website information.`,
+    description: `How ${siteConfig.name} uses enquiry information, which service providers process it, how long records are kept and how to request access, correction or deletion.`,
     url: "/privacy",
     siteName: siteConfig.name,
     type: "website",
@@ -20,9 +20,29 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `Privacy Policy | ${siteConfig.name}`,
-    description: `How ${siteConfig.name} handles enquiries and website information.`,
+    description: `How ${siteConfig.name} uses enquiry information, which service providers process it, how long records are kept and how to request access, correction or deletion.`,
     images: ["/opengraph-image"],
   },
+};
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      name: "Privacy Policy",
+      description: `How ${siteConfig.name} uses enquiry information, which service providers process it, how long records are kept and how to request access, correction or deletion.`,
+      url: `${siteConfig.url}/privacy`,
+      isPartOf: { "@id": `${siteConfig.url}/#website` },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
+        { "@type": "ListItem", position: 2, name: "Privacy Policy", item: `${siteConfig.url}/privacy` },
+      ],
+    },
+  ],
 };
 
 const sections = [
@@ -39,6 +59,11 @@ export default function PrivacyPage() {
       <SiteHeader />
       <main className="content-page legal-page" id="main-content">
         <div className="container content-shell">
+          <nav className="content-breadcrumb" aria-label="Breadcrumb">
+            <Link href="/">Home</Link>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Privacy policy</span>
+          </nav>
           <p className="eyebrow">Privacy / Australia</p>
           <h1>Privacy policy</h1>
           <p className="content-lead">This policy explains how AB Web Studio handles enquiry details and technical information collected when you use this website.</p>
@@ -59,6 +84,7 @@ export default function PrivacyPage() {
           </div>
           </div>
         </div>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       </main>
       <SiteFooter currentYear={new Date().getUTCFullYear()} />
     </>

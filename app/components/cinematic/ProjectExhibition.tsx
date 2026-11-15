@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore, type PointerEvent } from "react";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
@@ -151,7 +150,7 @@ export function ProjectExhibition() {
               {!imageReady && <div className="exhibition-image-fallback exhibition-image-loading"><span>Loading project preview</span></div>}
               {imageReady && previous && previous.slug !== active.slug && <div className="exhibition-image exhibition-image--previous" key={`previous-${previous.slug}`}><ProjectArtwork project={previous} sizes="(max-width: 720px) 92vw, 70vw" /></div>}
               <div className="exhibition-image exhibition-image--current" key={active.slug} data-ready={loaded.has(active.slug)}>
-                <Image src={active.image} alt={active.alt} fill loading="lazy" sizes="(max-width: 720px) 92vw, 70vw" onLoad={() => setLoaded((current) => new Set(current).add(active.slug))} onError={() => setFailed((current) => new Set(current).add(active.slug))} />
+                <ProjectArtwork project={active} sizes="(max-width: 767px) 92vw, 70vw" onLoad={() => setLoaded((current) => new Set(current).add(active.slug))} onError={() => setFailed((current) => new Set(current).add(active.slug))} />
               </div>
             </>}
           </div>

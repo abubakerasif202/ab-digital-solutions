@@ -32,7 +32,7 @@
   --section-y: clamp(80px, 12vw, 160px);
   /* Type scale */
   --t-display: clamp(2.6rem, 5.4vw, 4.5rem);
-  --t-label: 0.75rem;
+  --t-label: var(--fs-label);
   /* Motion */
   --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-ui: 300ms;
@@ -360,7 +360,7 @@ body { background: var(--obsidian); color: var(--ivory); }
 }
 
 .studio-footer-col ul { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 1.0625rem; }
-.studio-footer-col li > :is(a, span) { display: inline-block; padding: 8px 0; color: var(--ivory-muted); text-decoration: none; }
+.studio-footer-col li > :is(a, span) { display: inline-flex; align-items: center; min-height: 44px; padding: 0; color: var(--ivory-muted); text-decoration: none; }
 .studio-footer-col a { transition: color var(--dur-ui) var(--ease-lux); }
 .studio-footer-col a:is(:hover, :focus-visible) { color: var(--ivory); }
 .studio-footer-col a.studio-footer-strong { color: var(--ivory); }
@@ -385,7 +385,7 @@ body { background: var(--obsidian); color: var(--ivory); }
 
 .studio-footer-legal p { margin: 0; }
 .studio-footer-legal-links { display: flex; gap: 24px; }
-.studio-footer-legal a { display: inline-flex; align-items: center; gap: 8px; padding: 10px 0; color: var(--ivory-muted); text-decoration: none; }
+.studio-footer-legal a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0; color: var(--ivory-muted); text-decoration: none; }
 .studio-footer-legal a:is(:hover, :focus-visible) { color: var(--ivory); }
 
 /* Breadcrumbs ------------------------------------------------------------------- */
@@ -400,10 +400,12 @@ body { background: var(--obsidian); color: var(--ivory); }
   text-transform: uppercase;
 }
 
-.studio-crumbs a { color: var(--ivory-muted); text-decoration: none; }
+.studio-crumbs a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ivory-muted); text-decoration: none; }
 .studio-crumbs a:is(:hover, :focus-visible) { color: var(--ivory); }
 .studio-crumbs [aria-current] { color: var(--gilt); }
 
-.studio-footer-social { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+/* Higher specificity than `.studio-footer-col li > a`, which would otherwise win and stack the icon above the label. */
+.studio-footer-col .studio-footer-social { display: inline-flex; flex-direction: row; align-items: center; gap: 8px; min-height: 44px; }
+.studio-footer-social svg { flex: none; }
 .studio-footer-profiles { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 0; padding: 0; list-style: none; }
 .studio-footer-profiles a { display: inline-flex; align-items: center; min-height: 44px; }

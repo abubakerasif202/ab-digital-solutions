@@ -5,8 +5,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Reveal } from "../../components/motion/Reveal";
-import { ProjectArtwork, projectArtworkRatio } from "../../project-artwork";
+import { artworkDimensions } from "../../artwork-dimensions";
+import { ProjectArtwork, fillFrame, projectArtworkRatio } from "../../project-artwork";
 import { findProject, formatCategory, isSoftwareProject, projectDestinationLabel, projectVisitLabel, projects } from "../../project-data";
+import { findService, servicePages } from "../../services/service-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
 import { siteConfig } from "../../site-config";
@@ -22,7 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = findProject((await params).slug);
   if (!project) return {};
   const projectType = isSoftwareProject(project) ? "software" : "website";
-  const title = project.seoTitle ?? `${project.name} Case Study`;
+  // One pattern for all case studies so titles stay predictable and within 60 characters with the brand suffix.
+  const title = `${project.titleName ?? project.name} Case Study`;
   const description = project.seoDescription ?? project.description;
   return {
     title,
@@ -60,6 +63,11 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
 
   const currentIndex = projects.findIndex((p) => p.slug === project.slug);
   const nextProject = projects[(currentIndex + 1) % projects.length];
+  const previousProject = projects[(currentIndex - 1 + projects.length) % projects.length];
+  // The service whose published proof cites this project; otherwise the service that matches the project type.
+  const relatedService =
+    servicePages.find((service) => service.proof.some((entry) => entry.slug === project.slug))
+    ?? findService(softwareProject ? "custom-software-business-systems" : "web-design-sydney");
   const currentYear = new Date().getUTCFullYear();
 
   const schema = {
@@ -225,7 +233,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                   <Reveal as="div" delay={idx * 110}>
                     <figure>
                     <div className="gr-cs-gallery-frame" style={{ aspectRatio: shot.aspectRatio ?? projectArtworkRatio(project) }}>
-                      <Image src={shot.src} alt={shot.alt} fill loading="lazy" sizes="(max-width: 860px) 100vw, 33vw" />
+                      <Image src={shot.src} alt={shot.alt} {...artworkDimensions(shot.aspectRatio ?? projectArtworkRatio(project))} style={fillFrame} loading="lazy" sizes="(max-width: 860px) 100vw, 33vw" />
                     </div>
                     <figcaption>{shot.caption}</figcaption>
                     </figure>
@@ -264,6 +272,14 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             </a>
           </Reveal>
         </section>
+
+        <nav className="container gr-cs-more" aria-label="Related pages">
+          {relatedService ? (
+            <Link href={`/services/${relatedService.slug}`}><span>Related service</span>{relatedService.title} <ArrowIcon direction="right" /></Link>
+          ) : null}
+          <Link href={`/work/${previousProject.slug}`}><span>Previous project</span>{previousProject.name} <ArrowIcon direction="right" /></Link>
+          <Link href="/work"><span>All work</span>{projects.length} case studies <ArrowIcon direction="right" /></Link>
+        </nav>
 
         <nav className="next-project-nav gr-cs-next" aria-label="Next Project">
           <Link className="gr-cs-next-link" href={`/work/${nextProject.slug}`} data-cursor="VIEW">

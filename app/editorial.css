@@ -9,7 +9,7 @@
 :root {
   --ease-studio: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-ui: 420ms;
-  --text-micro: 0.75rem;
+  --text-micro: var(--fs-label);
   --track-micro: 0.18em;
   --track-display: -0.025em;
   --ruby-glow: 0 14px 36px -14px rgba(210, 23, 54, 0.75);
@@ -538,7 +538,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 }
 
 .cursor-ring.has-label { border-color: var(--red); background: rgba(7, 7, 8, 0.86); }
-.cursor-label { color: var(--paper); font-size: 0.75rem; font-weight: 500; letter-spacing: var(--track-micro); }
+.cursor-label { color: var(--paper); font-size: var(--fs-label); font-weight: 500; letter-spacing: var(--track-micro); }
 
 /* Hero entry choreography (desktop, motion allowed) ------------------------
    label → line 1 → line 2 → accent line → intro → CTAs → showcase → proof.

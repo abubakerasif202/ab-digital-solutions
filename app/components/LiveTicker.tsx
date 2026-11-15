@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { Glyph } from "../icons";
+import { fillFrame } from "../project-artwork";
 
 export interface LiveTickerItem {
   slug: string;
@@ -48,7 +49,7 @@ export function LiveTicker({ items }: { items: readonly LiveTickerItem[] }) {
         onBlur={() => setHeld(false)}
       >
         <span className="live-ticker-thumb" aria-hidden="true">
-          <Image key={item.slug} src={item.image} alt="" fill sizes="96px" />
+          <Image key={item.slug} src={item.image} alt="" width={192} height={132} style={fillFrame} sizes="96px" />
         </span>
         <span className="live-ticker-copy">
           <small><i aria-hidden="true" />Featured · {String(index + 1).padStart(2, "0")}/{String(items.length).padStart(2, "0")}</small>

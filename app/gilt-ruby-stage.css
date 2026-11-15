@@ -117,7 +117,7 @@
 .stage-hero-body,
 .stage-bar { position: relative; z-index: 2; }
 .stage-hero-top { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-.stage-edition { color: var(--muted); font-family: var(--mono); font-size: var(--text-micro, 0.75rem); letter-spacing: 0.18em; text-transform: uppercase; }
+.stage-edition { color: var(--muted); font-family: var(--mono); font-size: var(--text-micro, var(--fs-label)); letter-spacing: 0.18em; text-transform: uppercase; }
 
 .stage-hero-body { display: flex; flex: 1; flex-direction: column; justify-content: center; gap: clamp(20px, 3vh, 44px); padding-block: clamp(20px, 3vh, 44px); }
 
@@ -177,7 +177,7 @@
 .live-ticker-thumb img { object-fit: cover; object-position: top; animation: ticker-in 700ms var(--stage-ease) backwards; }
 @keyframes ticker-in { from { opacity: 0; transform: scale(1.06); } }
 .live-ticker-copy { display: grid; gap: 4px; min-width: 0; }
-.live-ticker-copy small { display: flex; align-items: center; gap: 8px; color: var(--gold-bright); font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.live-ticker-copy small { display: flex; align-items: center; gap: 8px; color: var(--gold-bright); font-family: var(--mono); font-size: var(--fs-label); letter-spacing: 0.1em; text-transform: uppercase; }
 .live-ticker-copy small i { width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 0 rgba(210, 23, 54, 0.6); animation: ticker-pulse 2.4s ease-out infinite; }
 @keyframes ticker-pulse { 70%, 100% { box-shadow: 0 0 0 7px rgba(210, 23, 54, 0); } }
 .live-ticker-copy strong { overflow: hidden; font-family: var(--display); font-size: 1.15rem; font-weight: 500; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
@@ -197,7 +197,7 @@
 }
 .live-ticker-toggle:is(:hover, :focus-visible) { border-color: var(--gold); background: var(--panel); color: var(--gold-bright); }
 
-.stage-bar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 18px; border-top: 1px solid var(--line); color: var(--paper-dim); font-family: var(--mono); font-size: var(--text-micro, 0.75rem); letter-spacing: 0.14em; text-transform: uppercase; }
+.stage-bar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 18px; border-top: 1px solid var(--line); color: var(--paper-dim); font-family: var(--mono); font-size: var(--text-micro, var(--fs-label)); letter-spacing: 0.14em; text-transform: uppercase; }
 .stage-bar p { margin: 0; }
 .stage-bar a { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: var(--paper); text-decoration: none; transition: color 300ms ease; }
 .stage-bar a:is(:hover, :focus-visible) { color: var(--gold-bright); }

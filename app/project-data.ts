@@ -19,7 +19,8 @@ export type Project = {
   techStack: readonly string[];
   kind?: "software";
   ctaLabel?: string;
-  seoTitle?: string;
+  /** Shorter name for the page title when the full name would push it past 60 characters. */
+  titleName?: string;
   seoDescription?: string;
   destination?: "hosted-showcase" | "unavailable";
   gallery?: readonly ProjectShot[];
@@ -35,6 +36,7 @@ export type ProjectShot = {
 export const projects = [
   {
     slug: "jufaja-homes",
+    titleName: "Jufaja Homes",
     name: "Jufaja Construction / Jufaja Homes",
     category: "Construction / Property Digital Platform",
     sector: "Property & construction",
@@ -55,8 +57,7 @@ export const projects = [
       "Responsive interface with reduced-motion-aware opening animation",
     ],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
-    seoTitle: "Jufaja — Web Design & Development",
-    seoDescription: "Premium website and digital experience created for Jufaja by AB Web Studio.",
+    seoDescription: "Jufaja case study: a responsive website for a construction and property business, with a home design catalogue and dedicated enquiry pathways.",
   },
   {
     slug: "milestone-renovate",
@@ -98,12 +99,12 @@ export const projects = [
         caption: "Approvals guide: a general pathway guide, not planning advice.",
       },
     ],
-    seoTitle: "Milestone Renovate — Renovation Planning Website",
     seoDescription:
       "Renovation planning website with a cost planner, design studio and NSW approvals guide, built by AB Web Studio.",
   },
   {
     slug: "aftab-sons-transport",
+    seoDescription: "Aftab & Sons Transport case study: a quote-focused website for an Australian heavy-vehicle transport company covering truck, B-double and interstate freight.",
     name: "Aftab & Sons Transport",
     category: "Transport / Logistics Website",
     sector: "Transport & logistics",
@@ -202,6 +203,7 @@ export const projects = [
   },
   {
     slug: "maple-rentals",
+    seoDescription: "Maple Rentals case study: a driver rental website with a fleet and rental tier showcase and a streamlined online application path.",
     name: "Maple Rentals",
     category: "Mobility / Car rentals",
     sector: "Mobility",
@@ -225,6 +227,7 @@ export const projects = [
   },
   {
     slug: "gala-rentals",
+    seoDescription: "Gala Rentals case study: a weekly car rental website for Sydney drivers with clear terms, a vehicle catalogue and a quick booking enquiry flow.",
     name: "Gala Rentals",
     category: "Mobility / Car rentals",
     sector: "Mobility",
@@ -248,6 +251,7 @@ export const projects = [
   },
   {
     slug: "zq-removals",
+    seoDescription: "ZQ Removals case study: an Adelaide removals website presenting residential and commercial moving services with a direct path to quote requests.",
     name: "ZQ Removals",
     category: "Services / Removals",
     sector: "Removals",
@@ -271,6 +275,7 @@ export const projects = [
   },
   {
     slug: "decent-development",
+    seoDescription: "DECENT Development case study: a dark, refined website for a Sydney construction business with a full-width architectural project gallery.",
     name: "DECENT Development",
     category: "Property / Development",
     sector: "Property & construction",
@@ -294,6 +299,7 @@ export const projects = [
   },
   {
     slug: "milestone-development",
+    seoDescription: "Milestone Development case study: a clean corporate showcase of residential and commercial construction with a filterable project portfolio.",
     name: "Milestone Development",
     category: "Property / Construction",
     sector: "Property & construction",
@@ -317,6 +323,7 @@ export const projects = [
   },
   {
     slug: "4-point-concrete",
+    seoDescription: "4 Point Concrete case study: a website presenting concrete placement and structural civil services for commercial and industrial projects.",
     destination: "hosted-showcase",
     name: "4 Point Concrete",
     category: "Construction / Civil",
@@ -389,6 +396,7 @@ export const projects = [
   },
   {
     slug: "cheap-adelaide-removalist",
+    seoDescription: "Cheap Adelaide Removalist case study: a removals website with published hourly rates, service pages and a fast quote path across Greater Adelaide.",
     name: "Cheap Adelaide Removalist",
     category: "Services / Removals",
     sector: "Removals",
@@ -436,7 +444,6 @@ export const projects = [
       "Responsive presentation and navigation across screen sizes",
     ],
     techStack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
-    seoTitle: "Fresh Stop — Grocery Catalogue Website Case Study",
     seoDescription:
       "Fresh Stop's Sydney grocery catalogue website by AB Web Studio: indicative prices, cart-based enquiries, wholesale pathways and home delivery contact options.",
   },
@@ -463,7 +470,6 @@ export const projects = [
     ],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "SEO Structure"],
     ctaLabel: "Visit Live Website",
-    seoTitle: "Wild Pest Solutions Website Project",
     seoDescription: "Explore the Wild Pest Solutions website project by AB Web Studio, showcasing a professional digital presence for NSW feral animal management.",
     gallery: [
       { src: `${assetBase}/ab-portfolio-wild-pest-solutions-mobile.webp`, alt: "Wild Pest Solutions homepage at a 390 pixel mobile viewport", caption: "The homepage, designed for smaller screens.", aspectRatio: "390 / 844" },
@@ -488,7 +494,6 @@ export const projects = [
     keyFeatures: ["Single-vial, ten-vial bulk pack and accessory collections", "Product strength selection and AUD price presentation", "Quick-view product controls", "Email and WhatsApp support pathways"],
     techStack: ["React", "TypeScript", "Tailwind CSS", "Responsive UI"],
     ctaLabel: "Visit Live Website",
-    seoTitle: "Pept Up Labs Website Project",
     seoDescription: "Explore the Pept Up Labs website project by AB Web Studio: distinctive catalogue design, responsive product navigation and a bold visual identity.",
     gallery: [
       { src: `${assetBase}/ab-portfolio-pept-up-labs-mobile.webp`, alt: "Pept Up Labs product catalogue homepage on mobile", caption: "The catalogue experience on a smaller screen.", aspectRatio: "390 / 844" },
@@ -520,7 +525,6 @@ export const projects = [
     ],
     techStack: ["Next.js", "React", "Responsive UI"],
     ctaLabel: "Visit Live Website",
-    seoTitle: "On Call Trailers Website Project",
     seoDescription:
       "Explore the On Call Trailers website project by AB Web Studio: a Sydney trailer hire website with fleet comparison, towing guidance and clear booking pathways.",
   },

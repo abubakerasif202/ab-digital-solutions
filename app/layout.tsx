@@ -49,7 +49,6 @@ export const metadata: Metadata = {
   creator: siteConfig.name,
   publisher: siteConfig.name,
   category: "Web design and development",
-  alternates: { canonical: "/" },
   robots: {
     index: true,
     follow: true,

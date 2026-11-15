@@ -17,6 +17,9 @@ export function SiteHeader() {
   const prefetchNavigation = (pathname !== "/" && pathname !== "/studio") || menuOpen;
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const mobileCtaRef = useRef<HTMLAnchorElement>(null);
+  const topSentinelRef = useRef<HTMLDivElement>(null);
+  const ctaShown = mobileCtaVisible && !menuOpen;
 
   useEffect(() => {
     let frameId = 0;
@@ -100,83 +103,190 @@ export function SiteHeader() {
     };
   }, [menuOpen]);
 
+  // Sticky "Start a project" bar (mobile). Entirely IntersectionObserver-driven, no scroll listeners:
+  //  - hidden until the hero (or, on routes without one, the top sentinel) has scrolled out of view
+  //  - hidden while the enquiry form, the footer or a [data-conversion-area] is on screen
+  //  - hidden whenever a link, button, heading or text block sits in the band the bar occupies
+  //  - revealed only after the band has been clear for a beat, so it never flickers over content
   useEffect(() => {
     const mobileViewport = window.matchMedia("(max-width: 720px)");
     const eligibleRoute = pathname !== "/privacy";
-    // Sections that already carry their own enquiry actions (and need the screen to themselves) opt in
-    // with data-conversion-area, so the sticky button never covers them.
-    const conversionAreas = [
+    const heroTarget = document.querySelector(".ruby-hero, .cinema-hero") ?? topSentinelRef.current;
+    // De-duplicated: #contact may also carry data-conversion-area, and readiness compares counts.
+    const conversionAreas = Array.from(new Set([
       document.getElementById("contact"),
       document.querySelector(".site-footer"),
       ...Array.from(document.querySelectorAll("[data-conversion-area]")),
-    ].filter((element): element is Element => element !== null);
+    ].filter((element): element is Element => element !== null)));
+    // Queried lazily, once tracking starts: it matches several hundred elements on long pages.
+    const BAND_SELECTOR = "#main-content :is(a[href], button, input, select, textarea, summary, h1, h2, h3, h4, p, li, dt, dd, label, figcaption)";
+    const BAND_CHUNK = 80;
+
+    const SHOW_DELAY_MS = 240;
     const visibleConversionAreas = new Set<Element>();
     const observedConversionAreas = new Set<Element>();
-    let animationFrameId: number | null = null;
-    let mobileTrackingActive = false;
-    let renderedVisibility = false;
+    const bandOccupants = new Set<Element>();
+    let heroObserved = false;
+    let heroInView = true;
+    let showTimer: number | null = null;
+    let rendered = false;
+    let tracking = false;
+    let heroObserver: IntersectionObserver | null = null;
+    let conversionObserver: IntersectionObserver | null = null;
+    let bandObserver: IntersectionObserver | null = null;
+    let resizeTimer: number | null = null;
+    let bandReady = false;
+    let bandGeneration = 0;
+    let chunkHandle: number | null = null;
 
-    const publishVisibility = (visible: boolean) => {
-      if (visible === renderedVisibility) return;
-      renderedVisibility = visible;
+    const publish = (visible: boolean) => {
+      if (visible === rendered) return;
+      rendered = visible;
       setMobileCtaVisible(visible);
     };
-    const updateVisibility = () => {
-      animationFrameId = null;
-      const observerReady = observedConversionAreas.size === conversionAreas.length;
-      publishVisibility(
-        eligibleRoute
+    const evaluate = () => {
+      if (showTimer !== null) {
+        window.clearTimeout(showTimer);
+        showTimer = null;
+      }
+      const clear = eligibleRoute
         && mobileViewport.matches
-        && observerReady
-        && window.scrollY > window.innerHeight * 0.72
-        && visibleConversionAreas.size === 0,
-      );
+        && heroObserved
+        && !heroInView
+        && observedConversionAreas.size === conversionAreas.length
+        && visibleConversionAreas.size === 0
+        && bandReady
+        && bandOccupants.size === 0;
+      if (!clear) {
+        publish(false);
+        return;
+      }
+      if (rendered) return;
+      showTimer = window.setTimeout(() => {
+        showTimer = null;
+        publish(true);
+      }, SHOW_DELAY_MS);
     };
-    const scheduleVisibilityUpdate = () => {
-      if (animationFrameId !== null) return;
-      animationFrameId = window.requestAnimationFrame(updateVisibility);
-    };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        observedConversionAreas.add(entry.target);
-        if (entry.isIntersecting) visibleConversionAreas.add(entry.target);
-        else visibleConversionAreas.delete(entry.target);
-      });
-      scheduleVisibilityUpdate();
-    }, { threshold: 0 });
 
-    const stopMobileTracking = () => {
-      if (!mobileTrackingActive) return;
-      mobileTrackingActive = false;
-      observer.disconnect();
+    // The band is the strip of viewport the bar covers: its offset from the bottom, its height and a little clearance.
+    const buildBandObserver = () => {
+      bandObserver?.disconnect();
+      bandOccupants.clear();
+      bandReady = false;
+      const generation = ++bandGeneration;
+      const bar = mobileCtaRef.current;
+      const offset = bar ? parseFloat(getComputedStyle(bar).bottom) || 12 : 12;
+      const band = (bar?.offsetHeight ?? 54) + offset + 12;
+      bandObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) bandOccupants.add(entry.target);
+          else bandOccupants.delete(entry.target);
+        });
+        evaluate();
+      }, { rootMargin: `${-Math.max(0, window.innerHeight - band)}px 0px 0px 0px`, threshold: 0 });
+      // Observe in small chunks so no single task registers every element.
+      const targets = Array.from(document.querySelectorAll(BAND_SELECTOR));
+      const observer = bandObserver;
+      let index = 0;
+      const step = () => {
+        chunkHandle = null;
+        if (generation !== bandGeneration || !tracking) return;
+        const end = Math.min(index + BAND_CHUNK, targets.length);
+        for (; index < end; index += 1) observer.observe(targets[index]);
+        if (index < targets.length) {
+          chunkHandle = window.setTimeout(step, 24);
+        } else {
+          bandReady = true;
+          evaluate();
+        }
+      };
+      step();
+    };
+    const onResize = () => {
+      if (resizeTimer !== null) window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        resizeTimer = null;
+        if (tracking) buildBandObserver();
+      }, 150);
+    };
+
+    const stopTracking = () => {
+      if (!tracking) return;
+      tracking = false;
+      heroObserver?.disconnect();
+      conversionObserver?.disconnect();
+      bandObserver?.disconnect();
       visibleConversionAreas.clear();
       observedConversionAreas.clear();
-      window.removeEventListener("scroll", scheduleVisibilityUpdate);
-      window.removeEventListener("resize", scheduleVisibilityUpdate);
-      if (animationFrameId !== null) {
-        window.cancelAnimationFrame(animationFrameId);
-        animationFrameId = null;
-      }
-      publishVisibility(false);
+      bandOccupants.clear();
+      bandReady = false;
+      bandGeneration += 1;
+      if (chunkHandle !== null) window.clearTimeout(chunkHandle);
+      chunkHandle = null;
+      heroObserved = false;
+      heroInView = true;
+      window.removeEventListener("resize", onResize);
+      if (showTimer !== null) window.clearTimeout(showTimer);
+      if (resizeTimer !== null) window.clearTimeout(resizeTimer);
+      showTimer = null;
+      resizeTimer = null;
+      publish(false);
     };
-    const startMobileTracking = () => {
-      if (mobileTrackingActive || !mobileViewport.matches) return;
-      mobileTrackingActive = true;
-      conversionAreas.forEach((element) => observer.observe(element));
-      window.addEventListener("scroll", scheduleVisibilityUpdate, { passive: true });
-      window.addEventListener("resize", scheduleVisibilityUpdate, { passive: true });
-      scheduleVisibilityUpdate();
+    const startTracking = () => {
+      if (tracking || !mobileViewport.matches || !eligibleRoute || !heroTarget) return;
+      tracking = true;
+      heroObserver = new IntersectionObserver(([entry]) => {
+        if (!entry) return;
+        heroObserved = true;
+        heroInView = entry.isIntersecting;
+        evaluate();
+      }, { threshold: 0 });
+      heroObserver.observe(heroTarget);
+      conversionObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          observedConversionAreas.add(entry.target);
+          if (entry.isIntersecting) visibleConversionAreas.add(entry.target);
+          else visibleConversionAreas.delete(entry.target);
+        });
+        evaluate();
+      }, { threshold: 0 });
+      conversionAreas.forEach((element) => conversionObserver?.observe(element));
+      buildBandObserver();
+      window.addEventListener("resize", onResize, { passive: true });
+    };
+    // The bar cannot show until the hero has scrolled past, so none of this is needed for first paint:
+    // wait for the page to settle, then start when the main thread is idle.
+    const START_DELAY_MS = 2500;
+    const hasIdle = typeof window.requestIdleCallback === "function";
+    let idleHandle: number | null = null;
+    let startTimer: number | null = null;
+    const cancelIdle = () => {
+      if (startTimer !== null) window.clearTimeout(startTimer);
+      startTimer = null;
+      if (idleHandle === null) return;
+      if (hasIdle) window.cancelIdleCallback(idleHandle);
+      else window.clearTimeout(idleHandle);
+      idleHandle = null;
     };
     const handleViewportChange = () => {
-      if (eligibleRoute && mobileViewport.matches) startMobileTracking();
-      else stopMobileTracking();
+      cancelIdle();
+      if (!mobileViewport.matches) return stopTracking();
+      const begin = () => {
+        idleHandle = null;
+        startTracking();
+      };
+      startTimer = window.setTimeout(() => {
+        startTimer = null;
+        idleHandle = hasIdle ? window.requestIdleCallback(begin, { timeout: 1500 }) : window.setTimeout(begin, 0);
+      }, START_DELAY_MS);
     };
 
     mobileViewport.addEventListener("change", handleViewportChange);
     handleViewportChange();
 
     return () => {
-      stopMobileTracking();
+      cancelIdle();
+      stopTracking();
       mobileViewport.removeEventListener("change", handleViewportChange);
     };
   }, [pathname]);
@@ -267,7 +377,7 @@ export function SiteHeader() {
           >
             <Link href="/work" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
             <Link href="/services" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
-            <Link href="/studio" prefetch={false} onClick={handleNavLinkClick} className={navLinkClass("studio")} aria-current={navLinkCurrent("studio")}>Studio</Link>
+            <Link href="/studio" prefetch={false} onClick={handleNavLinkClick} className={navLinkClass("studio")} aria-current={navLinkCurrent("studio")}>Virtual Studio</Link>
             <Link href="/#process" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
             <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
             <Link href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("contact")} aria-current={navLinkCurrent("contact")}>Contact</Link>
@@ -278,11 +388,19 @@ export function SiteHeader() {
           </nav>
         </div>
       </header>
-      {mobileCtaVisible && !menuOpen ? (
-        <Link prefetch={prefetchNavigation} className="mobile-project-cta" href={pathname === "/" ? "#contact" : "/contact"}>
-          Start a project <ArrowIcon />
-        </Link>
-      ) : null}
+      {/* Marks the top of the page on routes without a hero, so the bar still waits for the first screen to pass. */}
+      <div ref={topSentinelRef} className="cta-sentinel" aria-hidden="true" />
+      <Link
+        ref={mobileCtaRef}
+        prefetch={prefetchNavigation}
+        className={`mobile-project-cta${ctaShown ? " is-visible" : ""}`}
+        href={pathname === "/" ? "#contact" : "/contact"}
+        inert={!ctaShown}
+        aria-hidden={ctaShown ? undefined : true}
+        tabIndex={ctaShown ? undefined : -1}
+      >
+        Start a project <ArrowIcon />
+      </Link>
     </>
   );
 }
