@@ -107,6 +107,21 @@ export function ProjectExhibition() {
       pointerFrame.current = 0;
     });
   };
+  // A finger moves the featured frame a little ahead of the swipe, then it settles back.
+  const dragFinger = (event: PointerEvent<HTMLDivElement>) => {
+    const start = gesture.current;
+    const element = root.current;
+    if (!start || !element || event.pointerType !== "touch" || reduced) return;
+    const dx = event.clientX - start.x;
+    if (Math.abs(dx) < Math.abs(event.clientY - start.y) * 1.2) return;
+    element.dataset.dragging = "true";
+    element.style.setProperty("--exhibition-drag", `${Math.max(-64, Math.min(64, dx * 0.4))}px`);
+  };
+  const settleFinger = () => {
+    if (!root.current) return;
+    root.current.dataset.dragging = "false";
+    root.current.style.removeProperty("--exhibition-drag");
+  };
   const jumpAhead = (offset: number) => setShow((current) => jumpExhibition(current, offset, projects.length, Math.random));
   const updatePointerInteraction = (target: EventTarget) => {
     const interactive = target instanceof Element && Boolean(target.closest("a, button"));
@@ -114,18 +129,19 @@ export function ProjectExhibition() {
   };
 
   return (
-    <div className="exhibition" ref={root} data-running={running} data-project={active.slug} data-image-failed={imageFailed} data-image-state={imageFailed ? "failed" : imageReady ? "ready" : "loading"} data-composition={exhibitionComposition(show.step)} data-step={show.step} role="region" aria-roledescription="carousel" aria-label="Project exhibition"
+    <div className="exhibition" ref={root} data-running={running} data-dragging="false" data-project={active.slug} data-image-failed={imageFailed} data-image-state={imageFailed ? "failed" : imageReady ? "ready" : "loading"} data-composition={exhibitionComposition(show.step)} data-step={show.step} role="region" aria-roledescription="carousel" aria-label="Project exhibition"
       onPointerEnter={(event) => { if (event.pointerType === "mouse") { updatePointerInteraction(event.target); bounds.current = event.currentTarget.getBoundingClientRect(); } }}
       onPointerLeave={resetPointer}
-      onPointerMove={(event) => { if (event.pointerType === "mouse") updatePointerInteraction(event.target); movePointer(event); }}
+      onPointerMove={(event) => { if (event.pointerType === "mouse") updatePointerInteraction(event.target); movePointer(event); dragFinger(event); }}
       onPointerDown={(event) => {
         if (event.pointerType === "mouse") setInteraction((current) => current.focusVisible ? { ...current, focusVisible: false } : current);
         if (event.pointerType === "touch" && !(event.target instanceof Element && event.target.closest("button"))) gesture.current = { x: event.clientX, y: event.clientY };
       }}
-      onPointerCancel={() => { gesture.current = null; }}
+      onPointerCancel={() => { gesture.current = null; settleFinger(); }}
       onPointerUp={(event) => {
         const start = gesture.current;
         gesture.current = null;
+        settleFinger();
         if (!start || event.pointerType !== "touch") return;
         const direction = exhibitionSwipeDirection(event.clientX - start.x, event.clientY - start.y);
         if (direction) { suppressClickUntil.current = Date.now() + 500; setShow((current) => advanceExhibition(current, direction, projects.length, Math.random)); }

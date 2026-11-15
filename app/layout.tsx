@@ -28,6 +28,7 @@ import "./styles/cinematic-interiors.css";
 import "./styles/ruby-cinematic.css";
 import "./styles/project-exhibition.css";
 import "./styles/ruby-kinetic.css";
+import "./styles/ruby-mobile-motion.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),

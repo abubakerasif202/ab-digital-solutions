@@ -71,6 +71,13 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
       }
     };
     const preferencesChanged = () => reconcile();
+    // iOS Low Power Mode and Android data savers refuse silent autoplay until a gesture:
+    // the first touch lifts the block so the film starts without any visible control.
+    const gesture = () => {
+      if (!blocked) return;
+      blocked = false;
+      reconcile();
+    };
     const onError = () => {
       if (disposed || !hasSource) return;
       mediaFailed = true;
@@ -87,7 +94,11 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
     connection?.addEventListener("change", preferencesChanged);
     document.addEventListener("visibilitychange", reconcile);
     video.addEventListener("error", onError);
+    document.addEventListener("pointerdown", gesture, { passive: true });
+    document.addEventListener("touchend", gesture, { passive: true });
     return () => {
+      document.removeEventListener("pointerdown", gesture);
+      document.removeEventListener("touchend", gesture);
       disposed = true;
       observer.disconnect();
       motion.removeEventListener("change", preferencesChanged);
@@ -114,6 +125,8 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
         height="900"
         muted
         playsInline
+        disablePictureInPicture
+        disableRemotePlayback
         loop
         preload="none"
         onPlaying={() => setPlaying(true)}
