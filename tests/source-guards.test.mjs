@@ -251,12 +251,14 @@ test("mobile navigation keeps keyboard focus within its open menu", async () => 
   assert.match(chrome, /document\.activeElement === firstLink/);
   assert.match(chrome, /firstLink\.focus\(\)/);
   assert.match(chrome, /ref=\{navRef\}/);
-  assert.match(chrome, /className="mobile-project-cta"/);
-  assert.match(chrome, /window\.scrollY > window\.innerHeight \* 0\.72/);
+  assert.match(chrome, /className=\{`mobile-project-cta\$\{ctaShown \? " is-visible" : ""\}`\}/);
+  // The bar is observer-driven (hero, conversion areas, occupied band): no scroll listeners or scrollY thresholds.
+  assert.doesNotMatch(chrome, /addEventListener\("scroll", scheduleVisibilityUpdate|window\.scrollY > window\.innerHeight/);
+  assert.match(chrome, /bandOccupants/);
+  assert.match(chrome, /inert=\{!ctaShown\}/);
   assert.match(chrome, /const pathname = usePathname\(\)/);
   assert.match(chrome, /const visibleConversionAreas = new Set<Element>\(\)/);
   assert.doesNotMatch(chrome, /getBoundingClientRect/);
-  assert.match(chrome, /window\.requestAnimationFrame\(updateVisibility\)/);
   assert.match(chrome, /\}, \[pathname\]\);/);
 });
 
