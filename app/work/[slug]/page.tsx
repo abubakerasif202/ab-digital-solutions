@@ -23,7 +23,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = findProject((await params).slug);
   if (!project) return {};
   const projectType = isSoftwareProject(project) ? "software" : "website";
-  const title = project.seoTitle ?? `${project.name} Case Study`;
+  // One pattern for all case studies so titles stay predictable and within 60 characters with the brand suffix.
+  const title = `${project.titleName ?? project.name} Case Study`;
   const description = project.seoDescription ?? project.description;
   return {
     title,

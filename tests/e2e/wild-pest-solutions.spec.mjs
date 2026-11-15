@@ -6,7 +6,7 @@ for (const width of [320, 375, 768, 1024, 1440]) {
     page.on("pageerror", error => errors.push(error.message));
     await page.setViewportSize({ width, height: 1000 });
     await page.goto("/work/wild-pest-solutions", { waitUntil: "networkidle" });
-    await expect(page).toHaveTitle("Wild Pest Solutions Website Project | AB Web Studio");
+    await expect(page).toHaveTitle("Wild Pest Solutions Case Study | AB Web Studio");
     await expect(page.locator("h1")).toHaveText("Wild Pest Solutions");
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/work\/wild-pest-solutions$/);
     await expect(page.getByRole("link", { name: /Visit Live Website/ }).first()).toHaveAttribute("href", "https://wildpestsolutions.com.au/");
@@ -47,7 +47,7 @@ test("Pept Up Labs metadata, gallery and responsive layouts", async ({ page }) =
   for (const width of [320, 375, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto("/work/pept-up-labs", { waitUntil: "networkidle" });
-    await expect(page).toHaveTitle("Pept Up Labs Website Project | AB Web Studio");
+    await expect(page).toHaveTitle("Pept Up Labs Case Study | AB Web Studio");
     await expect(page.locator("h1")).toHaveText("Pept Up Labs");
     await expect(page.getByRole("link", { name: /Visit Live Website/ }).first()).toHaveAttribute("href", "https://peptuplabs.com.au/");
     await page.locator(".gr-cs-gallery").scrollIntoViewIfNeeded();

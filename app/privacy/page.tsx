@@ -6,11 +6,11 @@ import { siteConfig } from "../site-config";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: `How ${siteConfig.name} handles website enquiries and personal information.`,
+  description: `How ${siteConfig.name} uses enquiry information, which service providers process it, how long records are kept and how to request access, correction or deletion.`,
   alternates: { canonical: "/privacy" },
   openGraph: {
     title: `Privacy Policy | ${siteConfig.name}`,
-    description: `How ${siteConfig.name} handles enquiries and website information.`,
+    description: `How ${siteConfig.name} uses enquiry information, which service providers process it, how long records are kept and how to request access, correction or deletion.`,
     url: "/privacy",
     siteName: siteConfig.name,
     type: "website",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `Privacy Policy | ${siteConfig.name}`,
-    description: `How ${siteConfig.name} handles enquiries and website information.`,
+    description: `How ${siteConfig.name} uses enquiry information, which service providers process it, how long records are kept and how to request access, correction or deletion.`,
     images: ["/opengraph-image"],
   },
 };
