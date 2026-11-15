@@ -360,7 +360,7 @@ body { background: var(--obsidian); color: var(--ivory); }
 }
 
 .studio-footer-col ul { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 1.0625rem; }
-.studio-footer-col li > :is(a, span) { display: inline-block; padding: 8px 0; color: var(--ivory-muted); text-decoration: none; }
+.studio-footer-col li > :is(a, span) { display: inline-flex; align-items: center; min-height: 44px; padding: 0; color: var(--ivory-muted); text-decoration: none; }
 .studio-footer-col a { transition: color var(--dur-ui) var(--ease-lux); }
 .studio-footer-col a:is(:hover, :focus-visible) { color: var(--ivory); }
 .studio-footer-col a.studio-footer-strong { color: var(--ivory); }
@@ -385,7 +385,7 @@ body { background: var(--obsidian); color: var(--ivory); }
 
 .studio-footer-legal p { margin: 0; }
 .studio-footer-legal-links { display: flex; gap: 24px; }
-.studio-footer-legal a { display: inline-flex; align-items: center; gap: 8px; padding: 10px 0; color: var(--ivory-muted); text-decoration: none; }
+.studio-footer-legal a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0; color: var(--ivory-muted); text-decoration: none; }
 .studio-footer-legal a:is(:hover, :focus-visible) { color: var(--ivory); }
 
 /* Breadcrumbs ------------------------------------------------------------------- */

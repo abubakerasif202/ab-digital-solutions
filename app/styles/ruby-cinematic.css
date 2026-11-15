@@ -114,7 +114,7 @@
 .ruby-film .film-controls { background: #110b14; }
 .ruby-film .film-scrub { accent-color: #e32655; }
 .ruby-film-credit { display: flex; gap: 25px; align-items: baseline; justify-content: space-between; margin-top: 22px; color: #aa98a6; font-size: var(--fs-label); line-height: 1.7; }
-.ruby-film-credit a { color: #d7c0cf; text-underline-offset: 4px; }
+.ruby-film-credit a { display: inline-flex; align-items: center; min-height: 44px; color: #d7c0cf; text-underline-offset: 4px; }
 /* Enquiry is the final scene, with its original validated form intact. */
 .ruby-contact { background: #110912; }
 .ruby-contact-intro { position: relative; padding-block: clamp(90px,12vw,170px) 65px; }
@@ -129,7 +129,7 @@
 .ruby-cinematic .studio-contact-rows a:hover strong { color: #f3a4bd; }
 .ruby-cinematic .studio-enquiry .studio-form-panel { background: #140d18; border-color: #e3265533; }
 .ruby-colophon { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; padding-block: 35px; border-top: 1px solid #ffffff1f; font-size: var(--fs-label); color: #ac98a8; }
-.ruby-colophon a { display: flex; gap: 14px; align-items: center; color: #dac2d1; }
+.ruby-colophon a { display: flex; gap: 14px; align-items: center; min-height: 44px; color: #dac2d1; }
 .ruby-colophon svg { width: 14px; }
 /* Interior language follows the identity without altering its factual content. */
 .ruby-cinematic .cinema-interior { --cinema-ink: #08070b; --cinema-gold: #e5c59a; --accent-ink: #ef86a2; }
