@@ -228,15 +228,32 @@ export function SiteHeader() {
       buildBandObserver();
       window.addEventListener("resize", onResize, { passive: true });
     };
+    // Observing every text block is not needed for first paint, so start once the main thread is idle.
+    const hasIdle = typeof window.requestIdleCallback === "function";
+    let idleHandle: number | null = null;
+    const cancelIdle = () => {
+      if (idleHandle === null) return;
+      if (hasIdle) window.cancelIdleCallback(idleHandle);
+      else window.clearTimeout(idleHandle);
+      idleHandle = null;
+    };
     const handleViewportChange = () => {
-      if (mobileViewport.matches) startTracking();
-      else stopTracking();
+      cancelIdle();
+      if (!mobileViewport.matches) return stopTracking();
+      const begin = () => {
+        idleHandle = null;
+        startTracking();
+      };
+      idleHandle = hasIdle
+        ? window.requestIdleCallback(begin, { timeout: 2000 })
+        : window.setTimeout(begin, 300);
     };
 
     mobileViewport.addEventListener("change", handleViewportChange);
     handleViewportChange();
 
     return () => {
+      cancelIdle();
       stopTracking();
       mobileViewport.removeEventListener("change", handleViewportChange);
     };
