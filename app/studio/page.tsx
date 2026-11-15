@@ -22,7 +22,7 @@ export default function StudioPage() {
     <SiteHeader />
     <main id="main-content" className={styles.page}>
       <header className={styles.introduction}>
-        <div><p className={styles.kicker}>AB / Spatial edition · 01</p><h1>A different <em>perspective.</em></h1></div>
+        <div><p className={styles.kicker}>The Virtual Studio / Spatial edition · 01</p><h1>A different <em>perspective.</em></h1></div>
         <p>A place for ideas to take shape.<br /> Step inside our virtual studio.</p>
       </header>
       <StudioExperience projects={studioProjects} services={studioServices} />

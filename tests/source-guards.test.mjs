@@ -273,7 +273,10 @@ test("SEO routes and metadata are configured", async () => {
     read("../app/site-footer.tsx"),
   ]);
 
-  assert.match(layout, /alternates: \{ canonical: "\/" \}/);
+  // Canonicals are per page; the root layout must not set one or the 404 page would inherit the home page's.
+  assert.doesNotMatch(layout, /alternates: \{ canonical/);
+  assert.match(await read("../app/page.tsx"), /alternates: \{ canonical: "\/" \}/);
+  assert.doesNotMatch(await read("../app/not-found.tsx"), /canonical/);
   assert.match(layout, /application\/ld\+json/);
   assert.match(layout, /ProfessionalService/);
   assert.match(robots, /sitemap\.xml/);

@@ -8,6 +8,7 @@ import { Reveal } from "../../components/motion/Reveal";
 import { artworkDimensions } from "../../artwork-dimensions";
 import { ProjectArtwork, fillFrame, projectArtworkRatio } from "../../project-artwork";
 import { findProject, formatCategory, isSoftwareProject, projectDestinationLabel, projectVisitLabel, projects } from "../../project-data";
+import { findService, servicePages } from "../../services/service-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
 import { siteConfig } from "../../site-config";
@@ -62,6 +63,11 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
 
   const currentIndex = projects.findIndex((p) => p.slug === project.slug);
   const nextProject = projects[(currentIndex + 1) % projects.length];
+  const previousProject = projects[(currentIndex - 1 + projects.length) % projects.length];
+  // The service whose published proof cites this project; otherwise the service that matches the project type.
+  const relatedService =
+    servicePages.find((service) => service.proof.some((entry) => entry.slug === project.slug))
+    ?? findService(softwareProject ? "custom-software-business-systems" : "web-design-sydney");
   const currentYear = new Date().getUTCFullYear();
 
   const schema = {
@@ -266,6 +272,14 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
             </a>
           </Reveal>
         </section>
+
+        <nav className="container gr-cs-more" aria-label="Related pages">
+          {relatedService ? (
+            <Link href={`/services/${relatedService.slug}`}><span>Related service</span>{relatedService.title} <ArrowIcon direction="right" /></Link>
+          ) : null}
+          <Link href={`/work/${previousProject.slug}`}><span>Previous project</span>{previousProject.name} <ArrowIcon direction="right" /></Link>
+          <Link href="/work"><span>All work</span>{projects.length} case studies <ArrowIcon direction="right" /></Link>
+        </nav>
 
         <nav className="next-project-nav gr-cs-next" aria-label="Next Project">
           <Link className="gr-cs-next-link" href={`/work/${nextProject.slug}`} data-cursor="VIEW">

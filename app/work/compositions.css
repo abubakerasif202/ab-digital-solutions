@@ -68,6 +68,9 @@
 /* Full opacity on the red active chip: 70% white on #d21736 is only 3.2:1. */
 .gr-wi-filter-bar .work-index-filter.is-active small { opacity: 1; color: #fff; }
 
+/* The page has no top padding of its own (the header is fixed), so the breadcrumb clears it itself. */
+.work-index-page .work-breadcrumb { margin-top: var(--header-height); margin-bottom: 0; padding-top: 28px; }
+
 .gr-wi-list { padding: clamp(64px, 8vw, 120px) 0 clamp(80px, 9vw, 140px); }
 .gr-wi-block + .gr-wi-block { margin-top: clamp(104px, 12vw, 184px); }
 
@@ -365,6 +368,16 @@
 .gr-cs-live .button-primary:hover { background: var(--ivory, var(--white)); color: var(--obsidian, var(--ink)); }
 
 .gr-cs-next { margin: 0; }
+
+/* Related service, previous project and index links above the next-project band. */
+.gr-cs-more { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; padding-block: clamp(32px, 4vw, 56px); border-top: 1px solid var(--line); }
+.gr-cs-more a { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 12px; min-height: 44px; padding-block: 14px; color: var(--paper); font-size: 1.05rem; text-decoration: none; }
+.gr-cs-more a span { grid-column: 1 / -1; color: var(--gold-bright); font-family: var(--mono); font-size: var(--fs-label); letter-spacing: 0.14em; text-transform: uppercase; }
+.gr-cs-more a svg { grid-row: 2; grid-column: 2; width: 16px; }
+.gr-cs-more a:is(:hover, :focus-visible) { color: var(--gold-bright); }
+@media (max-width: 720px) {
+  .gr-cs-more { grid-template-columns: 1fr; }
+}
 
 .gr-cs-next-link {
   display: block;

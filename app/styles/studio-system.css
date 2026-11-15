@@ -400,7 +400,7 @@ body { background: var(--obsidian); color: var(--ivory); }
   text-transform: uppercase;
 }
 
-.studio-crumbs a { color: var(--ivory-muted); text-decoration: none; }
+.studio-crumbs a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ivory-muted); text-decoration: none; }
 .studio-crumbs a:is(:hover, :focus-visible) { color: var(--ivory); }
 .studio-crumbs [aria-current] { color: var(--gilt); }
 

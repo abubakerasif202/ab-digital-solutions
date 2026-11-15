@@ -67,6 +67,11 @@ export default function WorkPage() {
       <SiteHeader />
       <PageTransition>
       <main className="work-index-page cinema-interior cinema-work" id="main-content">
+        <nav className="container content-breadcrumb work-breadcrumb" aria-label="Breadcrumb">
+          <Link href="/">Home</Link>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Work</span>
+        </nav>
         <WorkIndexBody />
 
         <aside className="gr-final-cta gr-final-cta--work" aria-labelledby="work-cta-heading">
