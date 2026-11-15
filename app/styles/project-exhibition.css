@@ -83,13 +83,16 @@
   .exhibition-rail { gap: 22px; }
   .exhibition-preview-copy > span { font-size: var(--fs-label); }
 }
-@media (max-width: 720px) {
+@media (max-width: 767.98px) {
   .exhibition-section .exhibition-section-head { margin-bottom: 35px; }
   .exhibition-topline { font-size: var(--fs-label); margin-bottom: 18px; }
   .exhibition-topline > span:last-child { max-width: 18ch; text-align: right; }
   .exhibition-stage { display: block; height: auto; aspect-ratio: auto; padding-bottom: 0; box-sizing: border-box; }
-  .exhibition-feature { position: relative; width: 100%; aspect-ratio: 1.06 / 1; transform: none; }
-  .exhibition-feature-link { padding: 25px; }
+  /* The screenshot is shown whole (captures are 1348 x 926) with the project text beneath it, never over it. */
+  .exhibition-feature { position: relative; width: 100%; aspect-ratio: auto; overflow: visible; border: 0; background: transparent; transform: none; }
+  .exhibition-image-stack { position: relative; inset: auto; aspect-ratio: 1348 / 926; overflow: hidden; border: 1px solid #ffffff2b; background: #17131b; }
+  .exhibition-image img { object-fit: contain; object-position: center; }
+  .exhibition-feature-link { position: static; inset: auto; padding: 20px 0 0; background: none; }
   .exhibition-feature-caption strong { max-width: 17ch; font-size: clamp(1.65rem, 6vw, 2.8rem); }
   .exhibition-feature-open { width: 44px; height: 44px; right: 15px; top: 15px; }
   .exhibition-destination { top: 20px; left: 15px; font-size: var(--fs-label); max-width: calc(100% - 85px); }
