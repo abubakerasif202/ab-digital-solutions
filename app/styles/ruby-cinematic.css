@@ -14,7 +14,8 @@
   background: #08070b;
 }
 .ruby-cinematic ::selection { background: #9b1535; color: #fff; }
-.ruby-cinematic .site-header { background: #08070bf5; border-bottom-color: #e3265538; }
+/* Fully opaque at every scroll position and width: section headings must never read through the header. */
+.ruby-cinematic .site-header, .ruby-cinematic .site-header.is-scrolled { background: #08070b; backdrop-filter: none; border-bottom-color: #e3265538; }
 .ruby-cinematic .site-header .brand-lockup { gap: 10px; }
 .ruby-cinematic .brand-monogram-image { width: 42px; height: 42px; }
 .ruby-cinematic .brand-wordmark { font-family: var(--sans), sans-serif; font-size: 15px; letter-spacing: -.025em; font-weight: 600; text-transform: none; }
