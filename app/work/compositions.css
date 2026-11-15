@@ -194,6 +194,19 @@
   .gr-wi-block + .gr-wi-block { margin-top: clamp(72px, 12vw, 104px); }
 }
 
+/* Tablet: every project card sits in a two-column grid (the editorial blocks dissolve into it)
+   instead of one very tall column. */
+@media (min-width: 700px) and (max-width: 960px) {
+  .gr-wi-list .container { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(48px, 7vw, 72px) clamp(24px, 4vw, 40px); align-items: start; }
+  .gr-wi-block { display: contents; }
+  .gr-wi-block + .gr-wi-block { margin-top: 0; }
+  .gr-wi-title, .gr-wi-block--feature .gr-wi-title { font-size: clamp(1.7rem, 3.6vw, 2.2rem); }
+  /* Same card anatomy in both columns: text stacked under the image, no side number. */
+  .gr-wi-meta, .gr-wi-block--feature .gr-wi-meta { grid-template-columns: 1fr; margin-top: 22px; }
+  .gr-wi-number { display: none; }
+  .gr-wi-detail, .gr-wi-block--feature .gr-wi-detail { grid-column: 1; }
+}
+
 @media (max-width: 560px) {
   .gr-wi-meta { grid-template-columns: 1fr; }
   .gr-wi-number { display: none; }
