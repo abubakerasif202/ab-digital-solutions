@@ -1,10 +1,14 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
+import { artworkDimensions } from "./artwork-dimensions";
 import type { Project } from "./project-data";
 
 type Props = {
   project: Project;
   sizes: string;
   priority?: boolean;
+  onLoad?: () => void;
+  onError?: () => void;
 };
 
 /** Intrinsic proportions of the supplied public desktop captures. */
@@ -16,15 +20,26 @@ export function projectArtworkRatio(project: Project): string {
   return "1348 / 926";
 }
 
-export function ProjectArtwork({ project, sizes, priority = false }: Props) {
+/**
+ * Lets an image with real width/height attributes fill a sized, aspect-ratio wrapper,
+ * so the browser reserves space from the attributes while the wrapper controls layout.
+ */
+export const fillFrame: CSSProperties = { position: "absolute", inset: 0, width: "100%", height: "100%" };
+
+export function ProjectArtwork({ project, sizes, priority = false, onLoad, onError }: Props) {
+  const { width, height } = artworkDimensions(projectArtworkRatio(project));
   return (
     <Image
       src={project.image}
       alt={project.alt}
-      fill
+      width={width}
+      height={height}
+      style={fillFrame}
       preload={priority}
       loading={priority ? undefined : "lazy"}
       sizes={sizes}
+      onLoad={onLoad}
+      onError={onError}
     />
   );
 }

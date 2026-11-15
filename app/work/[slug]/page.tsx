@@ -5,7 +5,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Reveal } from "../../components/motion/Reveal";
-import { ProjectArtwork, projectArtworkRatio } from "../../project-artwork";
+import { artworkDimensions } from "../../artwork-dimensions";
+import { ProjectArtwork, fillFrame, projectArtworkRatio } from "../../project-artwork";
 import { findProject, formatCategory, isSoftwareProject, projectDestinationLabel, projectVisitLabel, projects } from "../../project-data";
 import { SiteHeader } from "../../site-chrome";
 import { SiteFooter } from "../../site-footer";
@@ -225,7 +226,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                   <Reveal as="div" delay={idx * 110}>
                     <figure>
                     <div className="gr-cs-gallery-frame" style={{ aspectRatio: shot.aspectRatio ?? projectArtworkRatio(project) }}>
-                      <Image src={shot.src} alt={shot.alt} fill loading="lazy" sizes="(max-width: 860px) 100vw, 33vw" />
+                      <Image src={shot.src} alt={shot.alt} {...artworkDimensions(shot.aspectRatio ?? projectArtworkRatio(project))} style={fillFrame} loading="lazy" sizes="(max-width: 860px) 100vw, 33vw" />
                     </div>
                     <figcaption>{shot.caption}</figcaption>
                     </figure>
