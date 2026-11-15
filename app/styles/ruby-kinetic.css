@@ -6,7 +6,11 @@
 /* 1. Hero: three graded Sydney shots, headline set as a cinematic lower third. */
 .ruby-page .ruby-hero { min-height: max(760px,calc(100svh - var(--header-height))); background: #0a0912; overflow: clip; }
 .ruby-hero .cinema-media-poster img, .ruby-hero .cinema-media-video { object-position: center 40%; filter: none; }
-.ruby-hero-shade { background: linear-gradient(0deg,#08070b 0%,#08070bc4 15%,#08070b40 46%,transparent 70%),linear-gradient(90deg,#08070bd1 0%,#08070b85 32%,transparent 68%),linear-gradient(180deg,#08070ba6 0%,transparent 24%); }
+.ruby-hero-shade { background: linear-gradient(0deg,#08070b 0%,#08070bc4 15%,#08070b40 46%,transparent 70%),linear-gradient(90deg,#08070bed 0%,#08070bb8 36%,#08070b61 58%,transparent 76%),linear-gradient(180deg,#08070ba6 0%,transparent 24%); }
+/* Below desktop the headline spans most of the width, past where the left scrim has faded, so add a soft overall veil. */
+@media (min-width: 601px) and (max-width: 1279px) {
+  .ruby-hero-shade { background: linear-gradient(0deg,#08070b 0%,#08070bc4 15%,#08070b40 46%,transparent 70%),linear-gradient(90deg,#08070bed 0%,#08070bb8 36%,#08070b61 58%,transparent 76%),linear-gradient(180deg,#08070ba6 0%,transparent 24%),linear-gradient(#08070b73,#08070b73); }
+}
 .ruby-hero-light { opacity: 1; background: radial-gradient(ellipse 62% 56% at var(--ruby-x,20%) var(--ruby-y,80%),#e326554d,transparent 62%),radial-gradient(ellipse 42% 44% at 90% 10%,#5b2bd633,transparent 70%); }
 .ruby-hero-sweep, .ruby-grain { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
 .ruby-hero-sweep::before { content: ""; position: absolute; inset: -20% auto -20% 0; width: 36%; background: linear-gradient(100deg,transparent,#ff315c2b 44%,#ffe3ea24 50%,#ff315c2b 56%,transparent); mix-blend-mode: screen; transform: translateX(-140%) skewX(-12deg); animation: ruby-sweep 9.5s cubic-bezier(.6,0,.2,1) 1.6s infinite; }
@@ -22,7 +26,7 @@
 .ruby-title-row--signature em { font-family: var(--display),serif; font-size: 1.2em; font-weight: 400; letter-spacing: -.055em; }
 .ruby-word { display: inline-block; overflow: hidden; vertical-align: bottom; padding: .12em .09em .22em; margin: -.12em -.09em -.22em; }
 .ruby-word > span { display: inline-block; animation: ruby-word-in 1.3s cubic-bezier(.16,1,.3,1) both; animation-delay: calc(.2s + var(--word) * .12s); }
-.ruby-title-row--signature .ruby-word > span { padding: .02em .06em .2em 0; background: linear-gradient(100deg,#fff 0%,#ffd6de 34%,#ff7a9b 66%,#ffe1c4 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; filter: drop-shadow(0 3px 26px #08070bb3); }
+.ruby-title-row--signature .ruby-word > span { padding: .02em .06em .2em 0; color: #ff9db8; text-shadow: none; filter: drop-shadow(0 3px 26px #08070bb3); }
 @keyframes ruby-word-in { from { opacity: 0; transform: translateY(112%) rotate(4deg); } to { opacity: 1; transform: none; } }
 .ruby-hero-actionline { max-width: none; align-items: center; animation-delay: .85s; }
 .ruby-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -49,6 +53,13 @@
 @keyframes ruby-scene-2 { 0%,33.7% { transform: scaleX(0); } 64.9%,97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
 @keyframes ruby-scene-3 { 0%,64.9% { transform: scaleX(0); } 97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
 .ruby-page .ruby-hero .cinema-media-toggle { top: 84px; bottom: auto; }
+/* Desktop: CTAs sit directly under the supporting line, and "Pause motion" lives in the bottom rail
+   (the rail is 90px: 23px padding around a 44px control) instead of floating over the footage. */
+@media (min-width: 1024px) {
+  .ruby-hero-actionline { flex-direction: column; align-items: flex-start; gap: 28px; }
+  .ruby-page .ruby-hero .cinema-media-toggle { top: auto; bottom: 23px; right: max(4vw,20px); min-height: 44px; }
+  .ruby-hero-bottomline > .cinema-label:last-child { margin-right: 176px; }
+}
 
 /* 2. Kinetic band: the studio's offer, drifting between the film and the first chapter. */
 .ruby-band { position: relative; overflow: hidden; padding-block: clamp(24px,3.2vw,50px); background: #08070b; border-block: 1px solid #e3265538; }
@@ -154,7 +165,8 @@
 @media (max-width: 600px) {
   .ruby-page .ruby-hero { min-height: max(680px,calc(100svh - var(--header-height))); }
   .ruby-hero .cinema-media-poster img, .ruby-hero .cinema-media-video { object-position: center; }
-  .ruby-hero-shade { background: linear-gradient(0deg,#08070b 0%,#08070bd9 26%,#08070b59 58%,transparent 82%),linear-gradient(180deg,#08070bb3 0%,transparent 22%); }
+  /* The copy spans most of the screen on mobile, so a soft overall veil sits under the directional gradients. */
+  .ruby-hero-shade { background: linear-gradient(0deg,#08070b 0%,#08070bd9 26%,#08070b59 58%,transparent 82%),linear-gradient(180deg,#08070bb3 0%,transparent 22%),linear-gradient(#08070b73,#08070b73); }
   .ruby-hero-composition { padding-block: 30px 26px; }
   .ruby-page .ruby-title { margin-bottom: 24px; font-size: clamp(39px,12.4vw,60px); line-height: 1.02; letter-spacing: -.065em; }
   .ruby-title-row--signature em { font-size: 1.1em; letter-spacing: -.05em; line-height: 1.05; }
