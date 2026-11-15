@@ -1,0 +1,69 @@
+/* Ruby Cinematic / mobile motion: recomposes the desktop motion for a portrait touch screen.
+   Capability queries (hover, pointer) choose touch behaviour; width only adjusts layout.
+   Transform / opacity only. Everything here yields to prefers-reduced-motion. */
+
+/* 1. Hero chapters: Harbour / Arteries / Skyline stay visible as a progress rule under the headline. */
+@media (max-width: 960px) {
+  .ruby-hero-bottomline { flex-wrap: wrap; row-gap: 16px; }
+  .ruby-scenes { display: flex; order: 3; flex: 1 0 100%; gap: 10px; }
+  .ruby-scenes li { flex: 1 1 0; min-width: 0; gap: 6px; font-size: var(--fs-label); letter-spacing: .06em; }
+}
+
+/* 2. Touch lighting: an ambient ruby drift stands in for the cursor, and a finger lights the surface. */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .ruby-hero-light { animation: ruby-light-drift 16s ease-in-out infinite alternate; will-change: transform; }
+  .ruby-project-cta::after { animation: ruby-cta-sheen 6.5s cubic-bezier(.16,1,.3,1) 2.4s infinite; }
+  .ruby-project-cta:active { background: linear-gradient(120deg,#9b1535,#d42353); }
+  .ruby-ghost-cta:active { border-color: #ff7f9d; background: #470d2299; }
+  .ruby-ghost-cta:active svg, .ruby-service-enquire:active svg { transform: translateX(5px); }
+  .ruby-discipline:active::before { opacity: 1; }
+  .ruby-discipline:active h3 { color: #9b1535; }
+  .ruby-discover:active .ruby-discover-icon { transform: translateY(5px); background: #9b153588; }
+  .ruby-hero-light, .ruby-discipline::before { transition: opacity .5s; }
+}
+@keyframes ruby-light-drift {
+  from { transform: translate3d(-4%, 3%, 0) scale(1.06); opacity: .82; }
+  to { transform: translate3d(5%, -3%, 0) scale(1.16); opacity: 1; }
+}
+@keyframes ruby-cta-sheen {
+  0%, 62% { transform: translateX(-130%) skewX(-18deg); }
+  100% { transform: translateX(330%) skewX(-18deg); }
+}
+
+/* 3. Touch grain is the costliest layer on a phone: keep it, but slower. */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .ruby-grain::before { animation-duration: 1.8s; }
+}
+
+/* 4. Headline: shorter stagger so the second line never waits behind a slow first reveal. */
+@media (max-width: 600px) and (prefers-reduced-motion: no-preference) {
+  .ruby-word > span { animation-duration: 1s; animation-delay: calc(.12s + var(--word) * .085s); }
+  .ruby-hero-actionline { animation-delay: .6s; }
+}
+
+/* 5. Exhibition: the stage follows a finger, then settles. Set by ProjectExhibition while dragging. */
+.exhibition-image--current { translate: var(--exhibition-drag, 0px) 0; }
+.exhibition[data-dragging="false"] .exhibition-image--current { transition: translate 520ms cubic-bezier(.16,1,.3,1), opacity 1200ms ease; }
+@media (prefers-reduced-motion: reduce) {
+  .exhibition-image--current { translate: none; }
+}
+
+/* 6. Narrow stage: a slow depth drift keeps the whole-screenshot frame alive between rotations. */
+@media (max-width: 767.98px) and (prefers-reduced-motion: no-preference) {
+  .exhibition[data-running="true"] .exhibition-image--current img { animation: exhibition-mobile-drift 7200ms ease-out both; }
+  .exhibition-preview:active img { transform: scale(1.035); }
+}
+@keyframes exhibition-mobile-drift { from { transform: scale(1); } to { transform: scale(1.045); } }
+
+/* 7. Brand film: keep the elapsed time on phones, and never let the fullscreen control be squeezed out. */
+@media (max-width: 560px) {
+  .film-btn { flex: none; }
+  .film-time { display: inline; flex: none; font-size: var(--fs-label); letter-spacing: 0; white-space: nowrap; }
+  .film-scrub ~ .film-time { display: none; }
+  /* A range input keeps an intrinsic width; zero it so the bar yields to the buttons. */
+  .film-controls .film-scrub { flex: 1 1 0; width: 0; min-width: 24px; }
+  .film-controls { min-width: 0; }
+}
+@media (max-width: 340px) {
+  .film-controls .film-time { display: none; }
+}
