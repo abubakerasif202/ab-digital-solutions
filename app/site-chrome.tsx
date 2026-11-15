@@ -118,9 +118,9 @@ export function SiteHeader() {
       document.querySelector(".site-footer"),
       ...Array.from(document.querySelectorAll("[data-conversion-area]")),
     ].filter((element): element is Element => element !== null)));
-    const bandTargets = Array.from(
-      document.querySelectorAll("#main-content :is(a[href], button, input, select, textarea, summary, h1, h2, h3, h4, p, li, dt, dd, label, figcaption)"),
-    );
+    // Queried lazily, once tracking starts: it matches several hundred elements on long pages.
+    const BAND_SELECTOR = "#main-content :is(a[href], button, input, select, textarea, summary, h1, h2, h3, h4, p, li, dt, dd, label, figcaption)";
+    const BAND_CHUNK = 80;
 
     const SHOW_DELAY_MS = 240;
     const visibleConversionAreas = new Set<Element>();
@@ -135,6 +135,9 @@ export function SiteHeader() {
     let conversionObserver: IntersectionObserver | null = null;
     let bandObserver: IntersectionObserver | null = null;
     let resizeTimer: number | null = null;
+    let bandReady = false;
+    let bandGeneration = 0;
+    let chunkHandle: number | null = null;
 
     const publish = (visible: boolean) => {
       if (visible === rendered) return;
@@ -152,6 +155,7 @@ export function SiteHeader() {
         && !heroInView
         && observedConversionAreas.size === conversionAreas.length
         && visibleConversionAreas.size === 0
+        && bandReady
         && bandOccupants.size === 0;
       if (!clear) {
         publish(false);
@@ -168,6 +172,8 @@ export function SiteHeader() {
     const buildBandObserver = () => {
       bandObserver?.disconnect();
       bandOccupants.clear();
+      bandReady = false;
+      const generation = ++bandGeneration;
       const bar = mobileCtaRef.current;
       const offset = bar ? parseFloat(getComputedStyle(bar).bottom) || 12 : 12;
       const band = (bar?.offsetHeight ?? 54) + offset + 12;
@@ -178,7 +184,23 @@ export function SiteHeader() {
         });
         evaluate();
       }, { rootMargin: `${-Math.max(0, window.innerHeight - band)}px 0px 0px 0px`, threshold: 0 });
-      bandTargets.forEach((element) => bandObserver?.observe(element));
+      // Observe in small chunks so no single task registers every element.
+      const targets = Array.from(document.querySelectorAll(BAND_SELECTOR));
+      const observer = bandObserver;
+      let index = 0;
+      const step = () => {
+        chunkHandle = null;
+        if (generation !== bandGeneration || !tracking) return;
+        const end = Math.min(index + BAND_CHUNK, targets.length);
+        for (; index < end; index += 1) observer.observe(targets[index]);
+        if (index < targets.length) {
+          chunkHandle = window.setTimeout(step, 24);
+        } else {
+          bandReady = true;
+          evaluate();
+        }
+      };
+      step();
     };
     const onResize = () => {
       if (resizeTimer !== null) window.clearTimeout(resizeTimer);
@@ -197,6 +219,10 @@ export function SiteHeader() {
       visibleConversionAreas.clear();
       observedConversionAreas.clear();
       bandOccupants.clear();
+      bandReady = false;
+      bandGeneration += 1;
+      if (chunkHandle !== null) window.clearTimeout(chunkHandle);
+      chunkHandle = null;
       heroObserved = false;
       heroInView = true;
       window.removeEventListener("resize", onResize);
@@ -228,10 +254,15 @@ export function SiteHeader() {
       buildBandObserver();
       window.addEventListener("resize", onResize, { passive: true });
     };
-    // Observing every text block is not needed for first paint, so start once the main thread is idle.
+    // The bar cannot show until the hero has scrolled past, so none of this is needed for first paint:
+    // wait for the page to settle, then start when the main thread is idle.
+    const START_DELAY_MS = 2500;
     const hasIdle = typeof window.requestIdleCallback === "function";
     let idleHandle: number | null = null;
+    let startTimer: number | null = null;
     const cancelIdle = () => {
+      if (startTimer !== null) window.clearTimeout(startTimer);
+      startTimer = null;
       if (idleHandle === null) return;
       if (hasIdle) window.cancelIdleCallback(idleHandle);
       else window.clearTimeout(idleHandle);
@@ -244,9 +275,10 @@ export function SiteHeader() {
         idleHandle = null;
         startTracking();
       };
-      idleHandle = hasIdle
-        ? window.requestIdleCallback(begin, { timeout: 2000 })
-        : window.setTimeout(begin, 300);
+      startTimer = window.setTimeout(() => {
+        startTimer = null;
+        idleHandle = hasIdle ? window.requestIdleCallback(begin, { timeout: 1500 }) : window.setTimeout(begin, 0);
+      }, START_DELAY_MS);
     };
 
     mobileViewport.addEventListener("change", handleViewportChange);
