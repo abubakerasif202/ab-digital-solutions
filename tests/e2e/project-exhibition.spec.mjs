@@ -149,17 +149,19 @@ test("Save-Data starts in manual browsing without a heavy render surface", async
   expect(await section(page).locator("img").count()).toBeLessThanOrEqual(10);
 });
 
-test("1920px normal-motion compositions keep Pause and Next above the actual hit-test surface", async ({ page }) => {
+test("1920px normal-motion compositions keep Next above the actual hit-test surface", async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1200 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await enterExhibition(page);
-  await page.locator(".exhibition-pause").click();
+  await expect(page.locator(".exhibition-pause")).toHaveCount(0);
+  // Hovering holds the show still, as the pause button used to.
+  await page.locator(".exhibition-stage").hover();
   for (const composition of ["a", "b", "c"]) {
     await expect(section(page)).toHaveAttribute("data-composition", composition);
     await expect.poll(() => page.locator(".exhibition-feature").evaluate((element) => element.getAnimations().every((animation) => animation.playState !== "running"))).toBe(true);
     const geometry = await page.evaluate(() => ({ feature: document.querySelector(".exhibition-feature").getBoundingClientRect().bottom, controls: document.querySelector(".exhibition-footer").getBoundingClientRect().top }));
     expect(geometry.feature).toBeLessThanOrEqual(geometry.controls);
-    for (const control of [page.locator(".exhibition-pause"), page.getByRole("button", { name: "Next project", exact: true })]) {
+    for (const control of [page.getByRole("button", { name: "Next project", exact: true })]) {
       await control.scrollIntoViewIfNeeded();
       expect(await control.evaluate((element) => {
         const rect = element.getBoundingClientRect();

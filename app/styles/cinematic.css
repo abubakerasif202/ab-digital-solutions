@@ -28,7 +28,6 @@
 .cinema-media-poster, .cinema-media-poster img, .cinema-media-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .cinema-media-video { opacity: 0; transition: opacity 1s ease; }
 .cinema-media[data-playing="true"] .cinema-media-video { opacity: 1; }
-.cinema-media-toggle { position: absolute; z-index: 8; right: max(4vw, 20px); bottom: 70px; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px 14px; background: #080b0dbb; color: #f3efe7; border: 1px solid #ffffff5c; border-radius: 0; font-family: var(--mono), monospace; font-size: var(--fs-label); cursor: pointer; pointer-events: auto; }
 /* Media sits behind the composition; lift only its independently operable control. */
 .cinema-media { z-index: auto; pointer-events: none; }
 .cinema-media-poster, .cinema-media-video { z-index: -2; }
@@ -202,7 +201,6 @@
   .cinema-circle svg { width: 18px; }
   .cinema-hero-caption { font-size: var(--fs-label); letter-spacing: .035em; padding-block: 17px; }
   .cinema-hero-caption > span:last-child { max-width: 160px; text-align: right; }
-  .cinema-media-toggle { bottom: 75px; right: 20px; font-size: var(--fs-label); padding: 8px 10px; }
   .cinema-hero-wash { background: linear-gradient(0deg,#080b0d 0%,#080b0d9c 37%,#080b0d22 84%,#080b0d33),linear-gradient(90deg,#080b0d66,transparent); }
   .cinema-perspective-grid { grid-template-columns: 1fr; gap: 25px; }
   .cinema-perspective-grid > .cinema-label { font-size: var(--fs-label); }
@@ -255,7 +253,6 @@
   .cinema-title > span, .cinema-hero-kicker, .cinema-hero-bottom { opacity: 1; transform: none; }
 }
 
-.cinema-media-toggle[hidden] { display: none; }
 /* Contrast and control hierarchy verified against the real paper chapter. */
 .cinema-page .cinema-work :is(h2,h3) { color: var(--cinema-ink); }
 .after-hours .mobile-project-cta { background: var(--cinema-paper); color: var(--cinema-ink); border: 1px solid #080b0d44; box-shadow: 0 8px 30px #0004; }

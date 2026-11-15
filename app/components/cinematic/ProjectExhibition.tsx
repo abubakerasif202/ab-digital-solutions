@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore, type PointerEvent } from "react";
-import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ArrowIcon } from "../../icons";
 import { ProjectArtwork } from "../../project-artwork";
 import { projectDestinationLabel, projects } from "../../project-data";
 import { advanceExhibition, createExhibitionBag, exhibitionCanRun, exhibitionComposition, exhibitionSwipeDirection, jumpExhibition, upcomingExhibition, type ExhibitionShow, type ExhibitionInteraction } from "./exhibition-sequence";
 
-const pauseKey = "ab-project-exhibition-paused";
 const duration = 7200;
 const previewDeadline = 8000;
 type Network = EventTarget & { saveData?: boolean };
@@ -33,7 +32,6 @@ export function ProjectExhibition() {
   const bounds = useRef<DOMRect | null>(null);
   const [show, setShow] = useState<ExhibitionShow>({ timeline: { sequence: projects.map((_, index) => index), cursor: 0, previous: null }, step: 0 });
   const timeline = show.timeline;
-  const [paused, setPaused] = useState(false);
   const [interaction, setInteraction] = useState<ExhibitionInteraction>({ pointerInside: false, pointerOverInteractive: false, focusInside: false, focusVisible: false });
   const gesture = useRef<{ x: number; y: number } | null>(null);
   const suppressClickUntil = useRef(0);
@@ -43,7 +41,7 @@ export function ProjectExhibition() {
   const environment = useSyncExternalStore(subscribeEnvironment, environmentSnapshot, serverEnvironment);
   const reduced = Boolean(environment & 1);
   const saveData = Boolean(environment & 2);
-  const running = exhibitionCanRun({ ...interaction, paused, visible, hidden: Boolean(environment & 4), reduced, saveData });
+  const running = exhibitionCanRun({ ...interaction, paused: false, visible, hidden: Boolean(environment & 4), reduced, saveData });
   const activeIndex = timeline.sequence[timeline.cursor];
   const active = projects[activeIndex];
   const imageFailed = failed.has(active.slug);
@@ -57,7 +55,6 @@ export function ProjectExhibition() {
     // The server and first hydrated frame share one predictable genuine project.
     const initialize = window.setTimeout(() => {
       if (!root.current?.contains(document.activeElement)) setShow({ timeline: { sequence: createExhibitionBag(projects.length, Math.random), cursor: 0, previous: null }, step: 0 });
-      try { setPaused(localStorage.getItem(pauseKey) === "true"); } catch { /* Storage is optional; in-memory pause still works. */ }
     }, 0);
     return () => window.clearTimeout(initialize);
   }, []);
@@ -92,11 +89,6 @@ export function ProjectExhibition() {
     root.current?.style.removeProperty("--exhibition-y");
   }, [reduced, saveData]);
 
-  const togglePause = () => {
-    const next = !paused;
-    setPaused(next);
-    try { localStorage.setItem(pauseKey, String(next)); } catch { /* Privacy modes may disable storage. */ }
-  };
   const resetPointer = () => {
     setInteraction((current) => ({ ...current, pointerInside: false, pointerOverInteractive: false }));
     if (pointerFrame.current) cancelAnimationFrame(pointerFrame.current);
@@ -174,10 +166,9 @@ export function ProjectExhibition() {
       <div className="exhibition-footer">
         <div className="exhibition-controls" role="group" aria-label="Project exhibition controls">
           <button type="button" onClick={selectPrevious} disabled={timeline.cursor === 0} aria-label="Previous project"><ArrowLeft size={18} /></button>
-          <button className="exhibition-pause" type="button" onClick={togglePause} aria-pressed={paused} disabled={reduced || saveData} aria-label={reduced || saveData ? "Automatic project motion disabled by your preferences" : paused ? "Resume automatic project motion" : "Pause automatic project motion"}>{paused || reduced || saveData ? <Play size={15} /> : <Pause size={15} />}<span>{reduced || saveData ? "Manual browsing" : paused ? "Motion paused" : "Pause motion"}</span></button>
           <button type="button" onClick={selectNext} aria-label="Next project"><ArrowRight size={18} /></button>
         </div>
-        <p className="exhibition-counter" aria-live={interaction.focusVisible || paused || reduced || saveData ? "polite" : "off"}>{String(activeIndex + 1).padStart(2, "0")} <span>/ {String(projects.length).padStart(2, "0")}</span><span className="sr-only"> · {active.name}</span></p>
+        <p className="exhibition-counter" aria-live={interaction.focusVisible || reduced || saveData ? "polite" : "off"}>{String(activeIndex + 1).padStart(2, "0")} <span>/ {String(projects.length).padStart(2, "0")}</span><span className="sr-only"> · {active.name}</span></p>
         <div className="exhibition-progress" key={`${active.slug}-${running}`} aria-hidden="true"><span /></div>
       </div>
       <div className="exhibition-thumbnails" aria-hidden="true"><div key={active.slug}>{upcoming.map(({ index, offset }) => <span key={`${offset}-${projects[index].slug}`}><ProjectArtwork project={projects[index]} sizes="(max-width: 720px) 30vw, 15vw" /></span>)}</div></div>

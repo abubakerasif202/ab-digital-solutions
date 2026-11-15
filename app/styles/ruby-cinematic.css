@@ -60,7 +60,6 @@
 .ruby-filmstrip { display: flex; gap: 5px; align-items: center; }
 .ruby-filmstrip i { width: 29px; height: 3px; background: #ffffff25; }
 .ruby-filmstrip i:nth-child(-n+3) { background: #e32655; }
-.ruby-page .ruby-hero .cinema-media-toggle { bottom: 125px; right: max(4vw,20px); background: #08070b99; border-color: #f7f1eb55; backdrop-filter: blur(8px); }
 /* The identity chapter is an oversized typographic composition, not a paragraph block. */
 .ruby-positioning { position: relative; padding-block: clamp(100px,13vw,200px); background: #08070b; overflow: hidden; }
 .ruby-positioning-grid { position: relative; display: grid; grid-template-columns: .7fr 2fr; column-gap: clamp(60px,9vw,150px); }
@@ -193,7 +192,6 @@
   .ruby-discover { gap: 12px; font-size: var(--fs-label); }
   .ruby-hero-bottomline > .cinema-label { font-size: var(--fs-label); max-width: 85px; text-align: right; }
   .ruby-filmstrip { display: none; }
-  .ruby-page .ruby-hero .cinema-media-toggle { bottom: 165px; right: 20px; font-size: var(--fs-label); padding: 8px; }
   .ruby-positioning { padding-block: 75px 90px; }
   .ruby-positioning-grid { grid-template-columns: 1fr; gap: 35px; }
   .ruby-identity-mark { flex-direction: row; align-items: center; gap: 23px; padding: 0; }

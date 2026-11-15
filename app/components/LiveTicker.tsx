@@ -3,8 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Pause, Play } from "lucide-react";
-import { Glyph } from "../icons";
 import { fillFrame } from "../project-artwork";
 
 export interface LiveTickerItem {
@@ -18,20 +16,18 @@ const ROTATE_MS = 3800;
 
 /**
  * Cycles through real client projects. Stays on the first project under reduced
- * motion, holds while focused or hovered, and stops for good once the visitor
- * presses the pause control (WCAG 2.2.2: touch has no hover to hold it with).
+ * motion and holds while focused or hovered.
  */
 export function LiveTicker({ items }: { items: readonly LiveTickerItem[] }) {
   const [index, setIndex] = useState(0);
   const [held, setHeld] = useState(false);
-  const [stopped, setStopped] = useState(false);
 
   useEffect(() => {
-    if (held || stopped || items.length < 2) return;
+    if (held || items.length < 2) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const timer = window.setInterval(() => setIndex((current) => (current + 1) % items.length), ROTATE_MS);
     return () => window.clearInterval(timer);
-  }, [items.length, held, stopped]);
+  }, [items.length, held]);
 
   const item = items[index];
   if (!item) return null;
@@ -57,16 +53,6 @@ export function LiveTicker({ items }: { items: readonly LiveTickerItem[] }) {
           <span>{item.sector}</span>
         </span>
       </Link>
-      {items.length > 1 ? (
-        <button
-          className="live-ticker-toggle"
-          type="button"
-          onClick={() => setStopped((current) => !current)}
-          aria-label={stopped ? "Play featured projects" : "Pause featured projects"}
-        >
-          <Glyph icon={stopped ? Play : Pause} size={14} />
-        </button>
-      ) : null}
     </div>
   );
 }

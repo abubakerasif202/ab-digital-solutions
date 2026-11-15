@@ -72,17 +72,11 @@ for (const width of [320, 375, 390, 768, 1440, 1920]) {
   });
 }
 
-test("cinematic motion plays, pauses persistently, resumes and respects live reduced motion", async ({ page }) => {
+test("cinematic motion plays by default, has no pause toggle and respects live reduced motion", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   const video = page.locator(".cinema-media-video");
   await expect.poll(() => video.evaluate((element) => element.currentTime)).toBeGreaterThan(0);
-  await page.getByRole("button", { name: "Pause background motion", exact: true }).click();
-  await expect.poll(() => video.evaluate((element) => element.paused)).toBe(true);
-  await page.locator("#work").scrollIntoViewIfNeeded();
-  await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
-  await expect(page.getByRole("button", { name: "Play background motion", exact: true })).toBeVisible();
-  await expect.poll(() => video.evaluate((element) => element.paused)).toBe(true);
-  await page.getByRole("button", { name: "Play background motion", exact: true }).click();
+  await expect(page.getByRole("button", { name: /background motion/i })).toHaveCount(0);
   await expect(page.locator(".cinema-media")).toHaveAttribute("data-playing", "true");
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(video).not.toHaveAttribute("src");

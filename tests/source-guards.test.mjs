@@ -664,7 +664,7 @@ test("second-pass compositions: real pages, varied portfolio and case-study syst
   assert.match(compositions, /@media \(prefers-reduced-motion: reduce\)/);
 });
 
-test("hero headline stays on the display scale, showcase images fit their slot and auto-rotation can be paused", async () => {
+test("hero headline stays on the display scale, showcase images fit their slot and the ticker has no pause toggle", async () => {
   const [stage, showcase, ticker] = await Promise.all([
     read("../app/gilt-ruby-stage.css"),
     read("../app/components/ProjectShowcase.tsx"),
@@ -680,8 +680,7 @@ test("hero headline stays on the display scale, showcase images fit their slot a
   // browser does not pick a file too small for it.
   assert.match(showcase, /sizes="\(max-width: 1286px\) 92vw, 1182px"/);
 
-  // WCAG 2.2.2: the featured-project ticker has an explicit pause control.
-  assert.match(ticker, /className="live-ticker-toggle"/);
-  assert.match(ticker, /Pause featured projects/);
-  assert.match(stage, /\.live-ticker-toggle \{[^}]*width: 44px/s);
+  // Motion plays by default: there are no pause or play toggles on the ticker.
+  assert.doesNotMatch(ticker, /live-ticker-toggle|Pause featured projects/);
+  assert.doesNotMatch(stage, /live-ticker-toggle/);
 });
