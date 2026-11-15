@@ -47,7 +47,7 @@
 .ruby-title-mask--signature { padding-right: 10px; margin-top: -.03em; }
 .ruby-title-mask--signature > em { font-size: 1.32em; font-family: var(--display),serif; font-weight: 400; letter-spacing: -.065em; line-height: 1.12; animation-delay: .16s; }
 .ruby-hero-actionline { display: flex; justify-content: space-between; align-items: flex-end; max-width: 1080px; gap: 35px; animation: ruby-rise 1.1s .35s both; }
-.ruby-hero-actionline > p { margin: 0; font-size: 14px; line-height: 1.8; color: #fff5f6; text-shadow: 0 1px 12px #000; }
+.ruby-hero-actionline > p { margin: 0; font-size: var(--fs-copy); line-height: 1.7; color: #fff5f6; text-shadow: 0 1px 12px #000; }
 .ruby-project-cta { display: inline-flex; gap: 45px; min-height: 60px; padding: 19px 25px; align-items: center; justify-content: space-between; background: #a7133b; border: 1px solid #ff617e; color: #fff6f8; font-size: 13px; font-weight: 500; text-decoration: none; box-shadow: 0 8px 35px #470d2255; transform: translate3d(var(--ruby-dx,0px),var(--ruby-dy,0px),0); transition: background .3s,box-shadow .3s,transform .25s; }
 .ruby-project-cta svg { width: 22px; transition: transform .3s; }
 .ruby-project-cta:hover { background: #c51c4c; box-shadow: 0 10px 45px #e3265544; }
@@ -69,7 +69,7 @@
 .ruby-positioning-copy > .cinema-label { margin-bottom: 40px; }
 .ruby-page .ruby-statement { font-size: clamp(48px,6.5vw,106px); line-height: 1.05; font-weight: 400; letter-spacing: -.06em; margin-bottom: 42px; }
 .ruby-positioning-bottom { display: flex; align-items: flex-end; gap: 65px; justify-content: space-between; }
-.ruby-positioning-bottom > p { max-width: 365px; line-height: 1.9; font-size: 13px; color: #bcb2bb; margin: 0; }
+.ruby-positioning-bottom > p { max-width: 420px; line-height: 1.75; font-size: var(--fs-copy); color: #bcb2bb; margin: 0; }
 .ruby-positioning-bottom .cinema-link { flex-shrink: 0; font-size: var(--fs-label); gap: 20px; }
 .ruby-vertical-note { position: absolute; top: 0; right: 0; writing-mode: vertical-rl; font-size: var(--fs-label); color: #a491a3; }
 /* Three practices carry the commercial story; the complete service registry stays linked. */
@@ -77,7 +77,7 @@
 .ruby-section-header { display: grid; grid-template-columns: 1.7fr 1fr; column-gap: 80px; align-items: end; margin-bottom: 70px; }
 .ruby-section-header > .cinema-label { grid-column: 1/-1; margin-bottom: 34px; }
 .ruby-section-header h2 { font-size: clamp(48px,6vw,94px); line-height: 1.04; font-weight: 400; letter-spacing: -.06em; margin-bottom: 0; }
-.ruby-section-header > p:last-child { color: #c3b4c1; font-size: 14px; line-height: 1.8; margin: 0 0 7px; justify-self: end; }
+.ruby-section-header > p:last-child { color: #c3b4c1; font-size: var(--fs-copy); line-height: 1.7; margin: 0 0 7px; justify-self: end; }
 .ruby-disciplines { list-style: none; padding: 0; margin: 0; border-top: 1px solid #f7f1eb33; }
 .ruby-disciplines > li { border-bottom: 1px solid #f7f1eb26; }
 .ruby-discipline { position: relative; isolation: isolate; overflow: hidden; padding: 38px 0; display: grid; grid-template-columns: 40px 1.15fr 1fr 52px; gap: 28px; align-items: center; text-decoration: none; color: #f7f1eb; }
@@ -85,9 +85,9 @@
 .ruby-discipline:hover::before, .ruby-discipline:focus-visible::before { opacity: 1; }
 .ruby-discipline-number { color: #e58da7; align-self: start; padding-top: 12px; }
 .ruby-discipline h3 { font-size: clamp(38px,4.7vw,73px); font-weight: 400; letter-spacing: -.06em; line-height: 1.1; margin: 0; transition: transform .45s,color .45s; }
-.ruby-discipline h3 small { display: block; font-size: var(--fs-label); color: #bcb2bb; letter-spacing: 0; margin-top: 14px; }
+.ruby-discipline h3 small { display: block; font-family: var(--sans),sans-serif; font-size: var(--fs-copy); line-height: 1.5; color: #bcb2bb; letter-spacing: 0; margin-top: 14px; }
 .ruby-discipline:hover h3 { transform: translateX(7px); color: #ff94ad; }
-.ruby-discipline-copy { max-width: 330px; color: #c2b4c0; font-size: var(--fs-label); line-height: 1.9; }
+.ruby-discipline-copy { max-width: 400px; color: #c2b4c0; font-size: var(--fs-copy); line-height: 1.7; }
 .ruby-discipline-copy > .cinema-label { display: block; font-size: var(--fs-label); color: #a8899f; margin-top: 20px; }
 .ruby-discipline-arrow { width: 48px; height: 48px; border: 1px solid #f7f1eb44; border-radius: 50%; display: grid; place-items: center; transition: background .4s,border-color .4s,transform .4s; }
 .ruby-discipline-arrow svg { width: 22px; }
@@ -100,7 +100,7 @@
 /* A new, click-to-load editorial film replaces the old 3D showreel. */
 .ruby-page .ruby-film { padding-block: clamp(95px,12vw,180px); background: #08070b; }
 .ruby-film .ruby-section-header { margin-bottom: 60px; }
-.ruby-film .ruby-section-header > p:last-child { max-width: 290px; }
+.ruby-film .ruby-section-header > p:last-child { max-width: 340px; }
 .ruby-film-stage { position: relative; }
 .ruby-film-stage::before { content: ""; position: absolute; inset: -1px; border: 1px solid #e3265555; pointer-events: none; }
 .ruby-film .brand-film-grid { display: block; }
@@ -121,7 +121,7 @@
 .ruby-contact-intro > .cinema-label { margin-bottom: 40px; }
 .ruby-contact-intro h2 { position: relative; font-size: clamp(48px,7.7vw,124px); line-height: 1.06; font-weight: 400; letter-spacing: -.065em; margin-bottom: 40px; }
 .ruby-contact-intro-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; }
-.ruby-contact-intro-bottom p { margin: 0; color: #c7b7c5; font-size: 14px; line-height: 1.8; }
+.ruby-contact-intro-bottom p { margin: 0; color: #c7b7c5; font-size: var(--fs-copy); line-height: 1.7; }
 .ruby-contact-intro-bottom a { position: relative; font-size: 18px; gap: 65px; }
 .ruby-cinematic .ruby-contact .studio-enquiry { background: #110912; border-top-color: #e3265533; }
 .ruby-cinematic .ruby-contact .studio-enquiry .studio-display { font-size: clamp(32px,3.8vw,55px); }
@@ -186,7 +186,7 @@
   .ruby-page .ruby-title { font-size: clamp(28px,7.5vw,45px); line-height: 1.22; letter-spacing: -.07em; margin-bottom: 30px; }
   .ruby-title-mask--signature > em { font-size: 1.45em; letter-spacing: -.065em; line-height: 1.2; }
   .ruby-hero-actionline { flex-direction: column; align-items: flex-start; gap: 25px; max-width: 100%; }
-  .ruby-hero-actionline > p { font-size: var(--fs-label); line-height: 1.8; }
+  .ruby-hero-actionline > p { font-size: var(--fs-copy); line-height: 1.65; }
   .ruby-project-cta { min-height: 55px; gap: 38px; padding: 15px 20px; font-size: var(--fs-label); }
   .ruby-hero-bottomline { gap: 14px; padding-block: 18px; }
   .ruby-discover { gap: 12px; font-size: var(--fs-label); }
@@ -199,17 +199,17 @@
   .ruby-identity-mark .cinema-label { font-size: var(--fs-label); }
   .ruby-positioning-copy > .cinema-label { margin-bottom: 25px; font-size: var(--fs-label); }
   .ruby-page .ruby-statement { font-size: clamp(39px,10.6vw,62px); line-height: 1.06; margin-bottom: 30px; }
-  .ruby-positioning-bottom > p { font-size: var(--fs-label); max-width: 340px; }
+  .ruby-positioning-bottom > p { font-size: var(--fs-copy); max-width: 340px; }
   .ruby-positioning-bottom .cinema-link { font-size: var(--fs-label); }
   .ruby-section-header { grid-template-columns: 1fr; gap: 24px; margin-bottom: 42px; }
   .ruby-section-header > .cinema-label { margin-bottom: 0; font-size: var(--fs-label); }
   .ruby-section-header h2 { font-size: clamp(39px,10.5vw,60px); }
-  .ruby-section-header > p:last-child { justify-self: start; margin: 0; font-size: var(--fs-label); }
+  .ruby-section-header > p:last-child { justify-self: start; margin: 0; font-size: var(--fs-copy); }
   .ruby-discipline { grid-template-columns: 21px 1fr 38px; gap: 13px; padding-block: 29px; }
   .ruby-discipline-number { font-size: var(--fs-label); padding-top: 8px; }
   .ruby-discipline h3 { font-size: 39px; }
-  .ruby-discipline h3 small { font-size: var(--fs-label); line-height: 1.6; margin-top: 10px; }
-  .ruby-discipline-copy { grid-column: 2; font-size: var(--fs-label); }
+  .ruby-discipline h3 small { font-size: var(--fs-copy); line-height: 1.5; margin-top: 10px; }
+  .ruby-discipline-copy { grid-column: 2; font-size: var(--fs-copy); }
   .ruby-discipline-copy > .cinema-label { font-size: var(--fs-label); margin-top: 10px; }
   .ruby-discipline-arrow { grid-column: 3; grid-row: 1; width: 36px; height: 36px; }
   .ruby-discipline-arrow svg { width: 18px; }
@@ -221,7 +221,7 @@
   .ruby-contact-intro > .cinema-label { margin-bottom: 26px; font-size: var(--fs-label); }
   .ruby-contact-intro h2 { font-size: clamp(34px,9.4vw,56px); line-height: 1.12; margin-bottom: 30px; }
   .ruby-contact-intro-bottom { flex-direction: column; align-items: flex-start; gap: 20px; }
-  .ruby-contact-intro-bottom p { font-size: var(--fs-label); }
+  .ruby-contact-intro-bottom p { font-size: var(--fs-copy); }
   .ruby-contact-intro-bottom a { font-size: 16px; gap: 45px; }
   .ruby-colophon { flex-direction: column; gap: 12px; font-size: var(--fs-label); }
 }
