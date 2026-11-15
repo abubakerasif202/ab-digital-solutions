@@ -34,7 +34,10 @@
   --line-strong: rgba(255, 255, 255, 0.24);
   --container: min(100% - 64px, 1440px);
   --header-height: 92px;
-  --type-micro: 0.75rem;
+  --type-micro: var(--fs-label);
+  /* Floor for uppercase mono labels, eyebrows and captions: 12px from tablet up,
+     13px below 768px. Never set a visible text size under this token. */
+  --fs-label: 0.75rem;
   --type-small: 0.875rem;
   --type-action: 0.875rem;
   --display: var(--font-display), "Iowan Old Style", "Baskerville", "Times New Roman", serif;
@@ -46,6 +49,12 @@
   --ease-smooth: cubic-bezier(0.2, 0.7, 0.2, 1);
   --gold-glow: rgba(212, 163, 47, 0.18);
   --red-glow: rgba(181, 18, 27, 0.12);
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --fs-label: 0.8125rem;
+  }
 }
 
 * {
@@ -3067,7 +3076,7 @@ h1 em {
 .cursor-label {
   color: var(--gold-bright);
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: var(--fs-label);
   font-weight: 800;
   letter-spacing: 0.14em;
   opacity: 0;

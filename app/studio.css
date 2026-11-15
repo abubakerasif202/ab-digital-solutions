@@ -34,7 +34,7 @@
 .cinematic-home .client-proof a { text-decoration-color: var(--red); }
 .cinematic-home .hero-foot { padding-bottom: 24px; }
 .cinematic-home .hero-showcase-stack { padding-block: 28px; }
-.showcase-browser-bar { display: flex; min-height: 36px; gap: 16px; align-items: center; padding: 8px 14px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); font-family: var(--mono); font-size: 11px; }
+.showcase-browser-bar { display: flex; min-height: 36px; gap: 16px; align-items: center; padding: 8px 14px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); font-family: var(--mono); font-size: var(--fs-label); }
 .showcase-browser-dots { display: flex; gap: 5px; }
 .showcase-browser-dots i { width: 5px; height: 5px; background: #68646a; border-radius: 50%; }
 .showcase-browser-status { margin-left: auto; color: var(--paper-dim); white-space: nowrap; }
@@ -54,7 +54,7 @@
 .cinematic-home .hero-marquee-track { animation: none; width: auto; }
 .cinematic-home .hero-marquee-group { flex: 1; justify-content: space-evenly; gap: 24px; padding: 24px 32px; }
 .cinematic-home .hero-marquee-group + .hero-marquee-group { display: none; }
-.cinematic-home .hero-marquee-group span { font-size: 12px; letter-spacing: .16em; }
+.cinematic-home .hero-marquee-group span { font-size: var(--fs-label); letter-spacing: .16em; }
 .cinematic-home .hero-marquee-group i { color: var(--red); font-style: normal; }
 .cinematic-home .section { padding-block: clamp(72px, 8vw, 120px); }
 .cinematic-home .section-heading { margin-bottom: 48px; align-items: end; }
@@ -73,7 +73,7 @@
 .studio-capabilities { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
 .capability-card { background: var(--ink-soft); padding: 32px 24px; display: flex; flex-direction: column; transition: background var(--motion-fast); }
 .capability-card:hover { background: var(--panel); }
-.capability-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px; color: var(--muted); font-size: 12px; letter-spacing: .1em; }
+.capability-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px; color: var(--muted); font-size: var(--fs-label); letter-spacing: .1em; }
 .capability-symbol { position: relative; color: var(--red-ink); }
 .capability-card h3 { font-size: 26px; line-height: 1.12; }
 .capability-card p { color: var(--muted); font-size: 16px; line-height: 1.65; margin: 20px 0 28px; }
@@ -158,7 +158,7 @@
   .cinematic-home .slider-tabs button { flex: 1 0 44px; text-align: center; }
   .cinematic-home .hero-foot { display: none; }
   .cinematic-home .hero-marquee-group { padding: 20px 16px; gap: 12px 22px; }
-  .cinematic-home .hero-marquee-group span { font-size: 11px; }
+  .cinematic-home .hero-marquee-group span { font-size: var(--fs-label); }
   .cinematic-home .section-heading { margin-bottom: 32px; }
   .cinematic-home .section-heading h2 { font-size: 42px; }
 

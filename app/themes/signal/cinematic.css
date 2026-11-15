@@ -93,7 +93,7 @@
 .signal-studio .signal-work-meta h3 { letter-spacing: -.035em; line-height: 1.2; }
 .signal-studio .signal-home .gr-services .section-heading h2 .accent-serif { color: var(--cinema-cyan); }
 .signal-studio .signal-home .gr-services :focus-visible { outline: 2px solid var(--cinema-cyan); outline-offset: 5px; }
-.signal-studio .signal-home .gr-services .service-card-index { color: var(--cinema-champagne); font: 400 12px/1.5 var(--mono); }
+.signal-studio .signal-home .gr-services .service-card-index { color: var(--cinema-champagne); font: 400 var(--fs-label)/1.5 var(--mono); }
 .signal-studio .gr-services {
   background: radial-gradient(ellipse at 95% 5%, #39508524, transparent 45%), var(--cinema-onyx);
 }
@@ -109,7 +109,7 @@
   transform: scaleX(0); transform-origin: left; transition: transform 600ms var(--ease-lux);
 }
 .signal-studio .signal-home .capability-symbol { display: block; color: var(--cinema-cyan); }
-.signal-studio .signal-home .capability-top > span:first-child { font: 400 12px/1.5 var(--mono); -webkit-text-stroke: 0; color: var(--cinema-champagne); }
+.signal-studio .signal-home .capability-top > span:first-child { font: 400 var(--fs-label)/1.5 var(--mono); -webkit-text-stroke: 0; color: var(--cinema-champagne); }
 .signal-studio .signal-home .capability-top { margin: 0; flex-direction: column; gap: 16px; }
 .signal-studio .signal-home .capability-card:is(:hover, :focus-visible)::before { opacity: 1; }
 .signal-studio .signal-home .capability-card:is(:hover, :focus-visible)::after { transform: scaleX(1); }

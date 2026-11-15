@@ -25,7 +25,7 @@
 .odp [hidden] { display: none !important; }
 .odp .odp-wrap { width: var(--container); margin-inline: auto; }
 .odp .odp-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
-.odp .odp-mono-label { font-family: var(--mono, "IBM Plex Mono", monospace); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.odp .odp-mono-label { font-family: var(--mono, "IBM Plex Mono", monospace); font-size: var(--fs-label); letter-spacing: .08em; text-transform: uppercase; }
 .odp .odp-muted { color: var(--ivory-muted); }
 .odp .odp-eyebrow { color: var(--gilt); margin: 0; }
 .odp .odp-display { font-family: var(--display, "Bodoni Moda", Georgia, serif); font-weight: 400; letter-spacing: -.025em; line-height: 1.06; margin: 0; text-wrap: balance; }

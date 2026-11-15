@@ -32,7 +32,7 @@
 .signal-page .accent-serif { font-family: inherit; font-style: normal; color: #2446da; }
 .signal-page .eyebrow { color: #55565c; }
 .signal-page .content-lead { color: #45464b; line-height: 1.65; font-size: clamp(1.05rem, 1.4vw, 1.35rem); }
-.signal-page .content-breadcrumb { color: #55565c; margin-bottom: clamp(32px, 4vw, 64px); font-size: .7rem; }
+.signal-page .content-breadcrumb { color: #55565c; margin-bottom: clamp(32px, 4vw, 64px); font-size: var(--fs-label); }
 .signal-page .content-breadcrumb a:hover { color: #2446da; }
 .signal-page .content-actions { gap: 12px; }
 .signal-page .button { border-radius: 0; clip-path: none; }
@@ -283,7 +283,7 @@
   .signal-page .gr-contact-direct a > span:first-child { grid-column: 1 / -1; }
   .signal-page.gr-contact .gr-contact-layout { padding-bottom: 64px; }
   .signal-page .form-service-options { gap: 6px; }
-  .signal-page .form-service-option span { font-size: .75rem; padding-inline: 10px; }
+  .signal-page .form-service-option span { font-size: var(--fs-label); padding-inline: 10px; }
   .signal-page .gr-cs-story { gap: 48px; }
   .signal-page .gr-cs-feature-list li { grid-template-columns: 28px minmax(0, 1fr); }
   .signal-page .gr-cs-hero-media { margin-top: 40px; }

@@ -32,7 +32,7 @@
   --section-y: clamp(80px, 12vw, 160px);
   /* Type scale */
   --t-display: clamp(2.6rem, 5.4vw, 4.5rem);
-  --t-label: 0.75rem;
+  --t-label: var(--fs-label);
   /* Motion */
   --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-ui: 300ms;
