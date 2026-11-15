@@ -186,3 +186,31 @@
   .ruby-contact-intro { padding-block: 110px 50px; }
   .ruby-contact-plate::after { background: linear-gradient(0deg,#110912 0%,#110912b8 50%,#08070b 100%); }
 }
+
+/* 7. Rhythm: one spacing scale between home chapters (160px desktop, 120px tablet, 96px mobile).
+   Each chapter pads half the gap on both sides, so neighbours add up to the scale. */
+.ruby-page { --section-gap: 160px; }
+.ruby-positioning { padding-block: calc(var(--section-gap) / 2); }
+.ruby-page .exhibition-section.cinema-work, .ruby-page .ruby-film, .ruby-page .ruby-process { padding-block: calc(var(--section-gap) / 2); }
+/* The diagonal cut is at most 58px at desktop, inside the half-gap padding, so no extra allowance is needed. */
+.ruby-services { padding-block: calc(var(--section-gap) / 2); }
+.ruby-contact-intro { padding-block: calc(var(--section-gap) / 2) clamp(48px,6vw,96px); }
+
+/* 8. Process: four steps from the service pages, 4 columns / 2x2 / stacked. */
+.ruby-process { background: #08070b; scroll-margin-top: calc(var(--header-height) + 8px); }
+.ruby-process .ruby-section-header { grid-template-columns: 1fr; margin-bottom: clamp(40px,5vw,72px); }
+.ruby-process .ruby-section-header h2 { max-width: 15ch; font-size: clamp(40px,5.2vw,84px); }
+.ruby-process-steps { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 48px clamp(24px,3vw,48px); margin: 0; padding: 0; list-style: none; }
+.ruby-process-steps li { padding-top: 22px; border-top: 1px solid #d1a64c73; }
+.ruby-process-number { display: block; color: #efc96a; }
+.ruby-process-steps h3 { margin: 14px 0 12px; color: #f7f1eb; font-family: var(--sans),sans-serif; font-size: clamp(20px,1.7vw,26px); font-weight: 500; letter-spacing: -.02em; line-height: 1.2; }
+.ruby-process-steps p { margin: 0; color: #c3b4c1; font-size: 14px; line-height: 1.7; }
+
+@media (max-width: 1100px) {
+  .ruby-page { --section-gap: 120px; }
+  .ruby-process-steps { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 720px) {
+  .ruby-page { --section-gap: 96px; }
+  .ruby-process-steps { grid-template-columns: 1fr; gap: 36px; }
+}

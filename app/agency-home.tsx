@@ -13,6 +13,8 @@ import { siteConfig } from "./site-config";
 import { ArrowIcon } from "./icons";
 import { PortfolioSection } from "./components/PortfolioSection";
 import { BrandFilmSection } from "./components/film/BrandFilmSection";
+import { ProcessSection } from "./components/ProcessSection";
+import { sectionEyebrow, sectionNumber } from "./home-sections";
 import { EnquirySection } from "./components/studio/EnquirySection";
 import { CinematicMedia } from "./components/cinematic/CinematicMedia";
 import { RubyMotion } from "./components/cinematic/RubyMotion";
@@ -115,7 +117,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 </div>
               </Reveal>
               <div className="ruby-positioning-copy">
-                <Reveal as="p" className="cinema-label ruby-eyebrow">01 / A different perspective</Reveal>
+                <Reveal as="p" className="cinema-label ruby-eyebrow">{sectionEyebrow("about")}</Reveal>
                 <Reveal as="h2" id="perspective-heading" className="ruby-statement ruby-lines">
                   <Lines lines={["Good design", "gets noticed.", { accent: "Great thinking" }, "moves you forward."]} />
                 </Reveal>
@@ -133,7 +135,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <section id="services" className="ruby-services" aria-labelledby="services-heading">
             <div className="cinema-shell">
               <header className="ruby-section-header">
-                <Reveal as="p" className="cinema-label ruby-eyebrow">03 / The possibilities</Reveal>
+                <Reveal as="p" className="cinema-label ruby-eyebrow">{sectionEyebrow("services")}</Reveal>
                 <Reveal as="h2" id="services-heading" className="ruby-lines"><Lines lines={["Beautiful is only", { accent: "the beginning." }]} /></Reveal>
                 <p>Design that earns attention.<br />Technology that does the work.</p>
               </header>
@@ -166,6 +168,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           </section>
 
           <BrandFilmSection />
+          <ProcessSection />
 
           <section className="ruby-contact" aria-labelledby="ruby-contact-heading">
             <div className="ruby-contact-scene" data-ruby-depth>
@@ -173,7 +176,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <Image src="/cinematic/sydney-plate-harbour.webp" alt="" width={1920} height={868} sizes="100vw" />
               </div>
               <div className="cinema-shell ruby-contact-intro">
-                <Reveal as="p" className="cinema-label ruby-eyebrow">05 / A new beginning</Reveal>
+                <Reveal as="p" className="cinema-label ruby-eyebrow">{sectionEyebrow("contact")}</Reveal>
                 <Reveal as="h2" id="ruby-contact-heading" className="ruby-lines"><Lines lines={["Your next chapter.", { accent: "Let’s make it matter." }]} /></Reveal>
                 <div className="ruby-contact-intro-bottom">
                   <p>Tell us where you want to go.<br />We’ll help you find the way.</p>
@@ -181,7 +184,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 </div>
               </div>
             </div>
-            <EnquirySection id="contact" index="05"><ContactForm /></EnquirySection>
+            <EnquirySection id="contact" index={sectionNumber("enquiry")}><ContactForm /></EnquirySection>
             <div className="cinema-shell ruby-colophon"><span>AB Web Studio / Sydney, Australia</span><span>{projects.length} genuine project case studies</span><a href={`mailto:${siteConfig.email}`}>{siteConfig.email} <ArrowIcon /></a></div>
           </section>
         </main>

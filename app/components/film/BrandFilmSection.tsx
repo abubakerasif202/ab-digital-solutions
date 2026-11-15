@@ -1,3 +1,4 @@
+import { sectionEyebrow } from "../../home-sections";
 import { siteConfig } from "../../site-config";
 import { BrandFilmPlayer, type FilmChapter } from "./BrandFilmPlayer";
 import { Reveal } from "../motion/Reveal";
@@ -33,7 +34,7 @@ export function BrandFilmSection() {
     <section className="ruby-film" id="film" aria-labelledby="film-heading">
       <div className="cinema-shell">
         <header className="ruby-section-header">
-          <Reveal as="p" className="cinema-label ruby-eyebrow">04 / A studio in motion</Reveal>
+          <Reveal as="p" className="cinema-label ruby-eyebrow">{sectionEyebrow("film")}</Reveal>
           <Reveal as="h2" id="film-heading">Sydney, in motion.<br /><em>Ideas, made real.</em></Reveal>
           <p>A different perspective. Twenty-four seconds of real Sydney, genuine project work and the thinking that brings them together.</p>
         </header>
@@ -41,10 +42,6 @@ export function BrandFilmSection() {
           <BrandFilmPlayer title={FILM.title} poster={FILM.poster} sources={FILM.sources} chapters={chapters} duration={FILM.duration} />
         </Reveal>
         <div className="ruby-film-credit"><span>Original studio edit / Licensed Sydney footage / Actual project visuals / Silent film</span><a href="https://www.pexels.com/video/the-sydney-opera-house-and-harbour-bridge-26580902/" target="_blank" rel="noopener noreferrer">Footage via Pexels <span className="sr-only">(opens in a new tab)</span></a></div>
-        <div id="process" className="ruby-delivery">
-          <p className="cinema-label">The thinking behind the feeling</p>
-          <ol><li><span>01</span> Discover</li><li><span>02</span> Design</li><li><span>03</span> Build</li><li><span>04</span> Launch</li></ol>
-        </div>
       </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
     </section>
