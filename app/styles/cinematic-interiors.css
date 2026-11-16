@@ -129,6 +129,12 @@
 .cinema-about .studio-about-plate { box-shadow: none; }
 .cinema-about .studio-plate--mark { background: #101314; border: 1px solid #ffffff24; }
 .cinema-about .studio-plate-ring, .cinema-about .studio-plate-glint { display: none; }
+.cinema-about .studio-plate--photo { aspect-ratio: 4 / 5; overflow: hidden; background: #08070b; border: 1px solid #ffffff24; }
+.cinema-about .studio-plate-photo { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+@media (max-width: 720px) {
+  .cinema-about .studio-plate--photo { aspect-ratio: 1 / 1; }
+  .cinema-about .studio-plate-photo { object-position: 50% 58%; }
+}
 .cinema-about .gr-about-collage { background: #101314; border-color: #ffffff24; }
 .cinema-about .gr-about-collage-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; }
 .cinema-about .gr-about-tile--1 { grid-column: 1 / 9; }

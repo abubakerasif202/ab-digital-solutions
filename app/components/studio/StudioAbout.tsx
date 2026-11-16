@@ -39,17 +39,15 @@ export function StudioAbout({
       <div className="studio-shell studio-split">
         <Reveal as="div" className="studio-about-plate-wrap" variant="mask">
           <figure className="studio-about-plate">
-            <div className="studio-plate studio-plate--mark" data-tilt>
-              <span className="studio-plate-ring studio-plate-ring--outer" aria-hidden="true" />
-              <span className="studio-plate-ring studio-plate-ring--inner" aria-hidden="true" />
-              <span className="studio-plate-glint" aria-hidden="true" />
+            <div className="studio-plate studio-plate--photo">
               <Image
-                className="studio-plate-monogram"
-                src="/brand/ab-hero-monogram.webp"
-                width={960}
-                height={800}
-                sizes="(max-width: 720px) 48vw, 280px"
-                alt="AB Web Studio monogram"
+                className="studio-plate-photo"
+                src="/cinematic/sydney-gold-crimson-plate.webp"
+                width={1086}
+                height={1357}
+                sizes="(max-width: 860px) 90vw, 460px"
+                priority
+                alt="Sydney Opera House and Harbour Bridge at night beside the gold AB monogram and the line Independent by design"
               />
             </div>
             <figcaption className="studio-plate-caption">

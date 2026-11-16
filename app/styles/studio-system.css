@@ -392,6 +392,7 @@ body { background: var(--obsidian); color: var(--ivory); }
 .studio-crumbs {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.6em;
   color: var(--ivory-muted);
   font-family: var(--mono);
