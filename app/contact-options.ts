@@ -8,7 +8,7 @@ export const contactServices = [
   "Custom software & business systems",
 ] as const;
 
-/** Short `?service=` keys used by service-page CTAs, mapped to the form's service options. */
+/** Short keys and canonical service slugs accepted by the preselected enquiry form. */
 export const contactServiceKeys = {
   "web-design": "Website design & development",
   seo: "SEO & local visibility",
@@ -17,11 +17,18 @@ export const contactServiceKeys = {
   marketing: "Digital marketing",
   maintenance: "Website care & support",
   "custom-software": "Custom software & business systems",
+  "web-design-sydney": "Website design & development",
+  "seo-local-visibility": "SEO & local visibility",
+  "branding-content": "Branding & content",
+  "ecommerce-website-development": "E-commerce solutions",
+  "digital-marketing": "Digital marketing",
+  "website-maintenance": "Website care & support",
+  "custom-software-business-systems": "Custom software & business systems",
 } as const satisfies Record<string, (typeof contactServices)[number]>;
 
 export type ContactServiceKey = keyof typeof contactServiceKeys;
 
-export const contactBudgets = [
+export const BUDGET_OPTIONS = [
   "$2,000–$4,000",
   "$4,000–$8,000",
   "$8,000–$15,000",

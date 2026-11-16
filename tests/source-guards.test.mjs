@@ -638,7 +638,8 @@ test("second-pass compositions: real pages, varied portfolio and case-study syst
   assert.match(chrome, /href="\/work"/);
   assert.match(chrome, /href="\/services"/);
   assert.match(chrome, /href="\/about"/);
-  assert.match(chrome, /className="nav-cta" href="\/contact"/);
+  assert.doesNotMatch(chrome, /className="nav-cta" href="\/contact"/);
+  assert.match(chrome, /href="\/contact"[^>]*>Contact<\/Link>/);
   assert.match(about, /canonical: "\/about"/);
   assert.match(contact, /canonical: "\/contact"/);
   assert.match(contact, /<ContactForm\b[^>]*\/>/);
