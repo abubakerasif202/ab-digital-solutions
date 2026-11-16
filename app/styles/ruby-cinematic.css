@@ -133,6 +133,7 @@
 /* Interior language follows the identity without altering its factual content. */
 .ruby-cinematic .cinema-interior { --cinema-ink: #08070b; --cinema-gold: #e5c59a; --accent-ink: #ef86a2; }
 .ruby-cinematic .cinema-interior :is(.cinema-chapter-label,.case-kicker,.eyebrow) { color: #ef86a2; }
+.ruby-cinematic .cinema-interior .cinema-paper .eyebrow { color: var(--bone-gilt); }
 .ruby-cinematic .cinema-interior :is(.cinema-interior-hero,.case-hero,.studio-service-hero) { position: relative; background: radial-gradient(ellipse at 90% 10%,#470d2255,transparent 60%),#08070b; }
 .ruby-cinematic .cinema-work .work-index-filter.is-active { color: #ff9eb7; box-shadow: inset 0 -1px #e32655; }
 .ruby-cinematic .cinema-interior .cinema-chapter-label { border-top-color: #e3265555; }

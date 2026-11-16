@@ -40,6 +40,15 @@
 .cinema-work-chapter .eyebrow { max-width: 20ch; text-align: right; color: var(--cinema-muted); font-size: var(--fs-label); }
 .cinema-work .gr-wi-filter-bar { background: var(--cinema-ink); border-block-color: #ffffff24; }
 .cinema-work .work-index-filters { gap: 4px 24px; padding-block: 18px; }
+/* Scroll cue: edge shadows appear only on the side that still has hidden sectors. */
+.cinema-work .gr-wi-filter-bar .work-index-filters {
+  background:
+    linear-gradient(90deg, var(--cinema-ink), transparent) 0 0 / 56px 100% no-repeat local,
+    linear-gradient(270deg, var(--cinema-ink), transparent) 100% 0 / 56px 100% no-repeat local,
+    linear-gradient(90deg, #d1a64c55, transparent) 0 0 / 22px 100% no-repeat scroll,
+    linear-gradient(270deg, #d1a64c55, transparent) 100% 0 / 22px 100% no-repeat scroll;
+  scroll-padding-inline: 56px;
+}
 .cinema-work .work-index-filter { min-height: 44px; padding: 8px 0; border: 0; border-radius: 0; background: none; color: var(--cinema-muted); }
 .cinema-work .work-index-filter.is-active { color: var(--cinema-paper); box-shadow: inset 0 -1px var(--cinema-gold); }
 .cinema-work .gr-wi-list { padding-block: 70px 110px; }
@@ -59,13 +68,13 @@
 
 /* Capability pages: monumental introduction followed by a genuine cover. */
 .cinema-interior:is(.cinema-services, .cinema-service-detail) .service-hero {
-  display: grid; grid-template-columns: 1fr; gap: 58px; padding-top: 46px; padding-bottom: 80px;
+  display: grid; grid-template-columns: 1fr; gap: 36px; padding-top: 12px; padding-bottom: 64px;
 }
 .cinema-interior .service-hero-copy { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 28px 70px; }
 .cinema-interior .service-hero-copy > .eyebrow { grid-column: 1 / -1; margin-bottom: 0; }
 .cinema-interior .service-hero h1 {
-  grid-row: span 2; max-width: 14ch; margin: 0; font-family: var(--sans);
-  font-size: clamp(3rem, 6.7vw, 6.6rem); font-weight: 400; line-height: 1.01; letter-spacing: -0.06em;
+  grid-row: span 2; max-width: 18ch; margin: 0; font-family: var(--sans);
+  font-size: clamp(3rem, 5.4vw, 5.8rem); font-weight: 400; line-height: 1.01; letter-spacing: -0.06em;
 }
 .cinema-interior .service-hero .content-lead { align-self: end; margin: 0; max-width: 40ch; font-size: 1.05rem; }
 .cinema-interior .service-hero .content-actions { align-self: start; margin-top: 0; }
@@ -134,16 +143,18 @@
 :root .cinema-interior .cinema-paper {
   --ink: #171b1c; --paper: #f2eee6; --paper-warm: #f2eee6; --accent-ink: #75603d;
   --ivory: #171b1c; --ivory-muted: #4f5351; --gilt: #75603d; --hair: #171b1c33;
-  --bone: #f2eee6; --bone-ink: #171b1c; --bone-muted: #4f5351; --bone-gilt: #75603d;
+  --bone: #f2eee6; --bone-ink: #171b1c; --bone-muted: #414543; --bone-gilt: #75603d;
   background: #f2eee6; color: #171b1c; border-color: #171b1c33;
 }
 .cinema-interior .cinema-paper :is(h2, h3, strong) { color: #171b1c; }
-.cinema-interior .cinema-paper :is(p, li) { color: #4f5351; }
+/* Preserve small-text contrast even at the scroll reveal's starting opacity. */
+.cinema-interior .cinema-paper :is(p, li) { color: var(--bone-muted); }
 .cinema-interior .cinema-paper :is(.eyebrow, .gr-steps-num, .gr-cs-feature-num) { color: #75603d; }
 .cinema-interior .cinema-paper :is(.project-tag-pill, .tech-pill) { background: transparent; border-color: #171b1c40; color: #303634; }
 .cinema-interior .cinema-paper :focus-visible { outline-color: #75603d; }
 .cinema-service-detail .cinema-paper { padding: clamp(28px, 5vw, 70px); margin-bottom: 80px; }
 .cinema-interior .cinema-paper .studio-interface-layers li { border-color: #171b1c33; background: none; color: #171b1c; }
+.cinema-interior .cinema-paper .studio-interface-layers li span { color: var(--bone-gilt); }
 
 @media (max-width: 960px) {
   .cinema-services .cinema-service-index { grid-template-columns: 1fr; }

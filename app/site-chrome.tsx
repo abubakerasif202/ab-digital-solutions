@@ -382,9 +382,6 @@ export function SiteHeader() {
             <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
             <Link href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("contact")} aria-current={navLinkCurrent("contact")}>Contact</Link>
             <a className="nav-phone" href={`tel:${siteConfig.phoneInternational}`} onClick={handleNavLinkClick}>{siteConfig.phoneDisplay}</a>
-            <Link className="nav-cta" href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} data-magnetic>
-              Start a project <ArrowIcon direction="right" />
-            </Link>
           </nav>
         </div>
       </header>

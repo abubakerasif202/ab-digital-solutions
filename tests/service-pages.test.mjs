@@ -13,7 +13,7 @@ test("there are seven services, including the custom software page, with unique 
   const custom = findService("custom-software-business-systems");
   assert.equal(custom?.h1, "Custom Business Software & Web Applications");
   assert.equal(custom?.ctaLabel, "Scope Your System");
-  assert.equal(serviceContactHref(custom), "/contact?service=custom-software");
+  assert.equal(serviceContactHref(custom), "/contact?service=custom-software-business-systems");
   assert.equal(custom.benefits.length, 4);
   assert.equal(serviceDelivery[custom.slug].steps.length, 4);
 });

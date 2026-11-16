@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ArrowIcon } from "../icons";
 import { siteConfig } from "../site-config";
-import { contactBudgets, contactScopedServices, contactScopeNote, contactServiceKeys, contactServices } from "../contact-options";
+import { BUDGET_OPTIONS, contactScopedServices, contactScopeNote, contactServiceKeys, contactServices } from "../contact-options";
 import { trackEnquirySuccess } from "../lib/contact-analytics";
 
 type FormState = "idle" | "sending" | "success" | "error";
@@ -196,7 +196,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
       <fieldset className="form-chips form-budget">
         <legend>Budget <span className="form-optional">(optional)</span></legend>
         <div className="form-chip-row">
-          {contactBudgets.map((budget) => (
+          {BUDGET_OPTIONS.map((budget) => (
             <label className="form-chip form-chip--mono" key={budget}>
               <input type="radio" name="budget" value={budget} />
               <span>{budget}</span>

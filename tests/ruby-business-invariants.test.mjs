@@ -14,7 +14,7 @@ test("ruby redesign retains the owner-confirmed phone and WhatsApp destination",
 });
 
 test("project exhibition has a complete unique canonical pool and valid case-study targets", () => {
-  assert.equal(projects.length, 19);
+  assert.equal(projects.length, 20);
   assert.equal(new Set(projects.map(project => project.slug)).size, projects.length);
   for (const project of projects) {
     assert.ok(project.image.startsWith("/"));

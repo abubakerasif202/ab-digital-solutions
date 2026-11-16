@@ -659,7 +659,7 @@ h1 em {
 
 .content-page {
   min-height: 100vh;
-  padding: calc(var(--header-height) + clamp(70px, 8vw, 120px)) 0 clamp(80px, 9vw, 140px);
+  padding: calc(var(--header-height) + clamp(32px, 3.4vw, 52px)) 0 clamp(80px, 9vw, 140px);
   background: radial-gradient(circle at 82% 12%, rgba(212, 163, 47, 0.2), transparent 30%), var(--ink);
 }
 
@@ -681,7 +681,7 @@ h1 em {
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-bottom: clamp(56px, 7vw, 92px);
+  margin-bottom: clamp(28px, 4vw, 52px);
   color: #b8b7b4;
   font-family: var(--mono);
   font-size: var(--type-action);

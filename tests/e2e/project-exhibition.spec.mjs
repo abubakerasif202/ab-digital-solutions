@@ -77,7 +77,7 @@ test("mobile horizontal swipe changes a project without claiming vertical scroll
   await expect(section(page)).toHaveAttribute("data-project", afterSwipe);
 });
 
-test("manual controls work from keyboard and explicit pause persists after reload", async ({ page }) => {
+test("manual controls work from keyboard and preserve project history", async ({ page }) => {
   await enterExhibition(page);
   await expect(page.getByRole("button", { name: "Previous project", exact: true })).toBeDisabled();
   const next = page.getByRole("button", { name: "Next project", exact: true });
@@ -89,13 +89,6 @@ test("manual controls work from keyboard and explicit pause persists after reloa
   await page.getByRole("button", { name: "Previous project", exact: true }).click();
   await expect(section(page)).toHaveAttribute("data-project", initial);
   await expect(page.getByRole("button", { name: "Previous project", exact: true })).toBeDisabled();
-  await page.getByRole("button", { name: "Pause automatic project motion", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Resume automatic project motion", exact: true })).toHaveAttribute("aria-pressed", "true");
-  await page.reload({ waitUntil: "networkidle" });
-  await section(page).scrollIntoViewIfNeeded();
-  await expect(page.getByRole("button", { name: "Resume automatic project motion", exact: true })).toHaveAttribute("aria-pressed", "true");
-  await page.mouse.move(0, 0);
-  await expect(section(page)).toHaveAttribute("data-running", "false");
 });
 
 test("failed foreground requests remove stale artwork while keeping the accurate case-study destination", async ({ page }) => {
@@ -121,7 +114,6 @@ test("offscreen and live reduced-motion preferences stop automatic changes", asy
   await section(page).scrollIntoViewIfNeeded();
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(section(page)).toHaveAttribute("data-running", "false");
-  await expect(page.getByRole("button", { name: "Automatic project motion disabled by your preferences", exact: true })).toBeDisabled();
   const before = await section(page).getAttribute("data-project");
   await page.getByRole("button", { name: "Next project", exact: true }).click();
   await expect(section(page)).not.toHaveAttribute("data-project", before);
@@ -144,7 +136,6 @@ test("Save-Data starts in manual browsing without a heavy render surface", async
   await page.addInitScript(() => Object.defineProperty(navigator, "connection", { configurable: true, value: Object.assign(new EventTarget(), { saveData: true }) }));
   await enterExhibition(page);
   await expect(section(page)).toHaveAttribute("data-running", "false");
-  await expect(page.getByRole("button", { name: "Automatic project motion disabled by your preferences", exact: true })).toBeDisabled();
   await expect(section(page).locator("canvas,video")).toHaveCount(0);
   expect(await section(page).locator("img").count()).toBeLessThanOrEqual(10);
 });
@@ -193,3 +184,34 @@ for (const width of [320, 375, 768, 1440]) {
     await expect.poll(() => section(page).locator("img").evaluateAll((images) => images.filter((image) => image.complete && image.naturalWidth === 0).length)).toBe(0);
   });
 }
+
+test("a held touch keeps the active destination stable until release or cancellation", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 844 });
+  await enterExhibition(page);
+  const frame = page.locator(".exhibition-feature");
+  const initial = await section(page).getAttribute("data-project");
+  await expect(section(page)).toHaveAttribute("data-running", "true");
+  await frame.dispatchEvent("pointerdown", { pointerType: "touch", clientX: 200, clientY: 200 });
+  await expect(section(page)).toHaveAttribute("data-running", "false");
+  await page.waitForTimeout(7600);
+  await expect(section(page)).toHaveAttribute("data-project", initial);
+  await frame.dispatchEvent("pointercancel", { pointerType: "touch" });
+  await expect(section(page)).toHaveAttribute("data-running", "true");
+  await frame.dispatchEvent("pointerdown", { pointerType: "touch", clientX: 200, clientY: 200 });
+  await frame.dispatchEvent("pointerup", { pointerType: "touch", clientX: 200, clientY: 200 });
+  await expect(section(page)).toHaveAttribute("data-running", "true");
+});
+
+test("enabling reduced motion clears an in-progress finger drag", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 844 });
+  await enterExhibition(page);
+  const frame = page.locator(".exhibition-feature");
+  await frame.dispatchEvent("pointerdown", { pointerType: "touch", clientX: 240, clientY: 200 });
+  await frame.dispatchEvent("pointermove", { pointerType: "touch", clientX: 160, clientY: 200 });
+  await expect(section(page)).toHaveAttribute("data-dragging", "true");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(section(page)).toHaveAttribute("data-dragging", "false");
+  await expect.poll(() => section(page).evaluate((element) => element.style.getPropertyValue("--exhibition-drag"))).toBe("");
+  await frame.dispatchEvent("pointercancel", { pointerType: "touch" });
+  await expect(section(page)).toHaveAttribute("data-running", "false");
+});

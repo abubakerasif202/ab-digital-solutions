@@ -153,8 +153,8 @@ test("server HTML works without JavaScript; homepage preview loads no model", as
   await staticPage.screenshot({ path: `${output}/390-no-javascript.png`, fullPage: true });
   expect(await staticPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await context.close();
   const models = []; page.on("request", (request) => { if (/\.glb/.test(request.url())) models.push(request.url()); });
-  await page.goto("/"); await expect(page.getByRole("heading", { name: /Don.t Just Visit Our Website.*Step Inside Our Studio/ })).toBeAttached();
-  await expect(page.getByRole("link", { name: "Enter Our 3D Studio", exact: true }).first()).toHaveAttribute("href", "/studio"); expect(models).toEqual([]);
+  await page.goto("/"); await expect(page.getByRole("heading", { name: /Digital experiences.*Beyond ordinary/ })).toBeAttached();
+  await expect(page.getByRole("link", { name: "Virtual Studio", exact: true }).first()).toHaveAttribute("href", "/studio"); expect(models).toEqual([]);
 });
 
 test("touch orbit changes view and vertical swipe scrolls the page", async ({ browser }) => {
