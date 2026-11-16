@@ -1,5 +1,3 @@
-const configuredPublicEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();
-
 const optionalUrl = (value: string | undefined) => {
   const trimmed = value?.trim();
   return trimmed?.startsWith("https://") ? trimmed : undefined;
@@ -11,9 +9,8 @@ export const siteConfig = {
   description:
     "Sydney digital studio building premium websites, online stores and custom business systems for Australian businesses.",
   url: "https://www.abwebstudio.com.au",
-  // Keep public contact details centralised. Set NEXT_PUBLIC_CONTACT_EMAIL only
-  // after the branded mailbox has been created and verified.
-  email: configuredPublicEmail || "enquiry@abwebstudio.com.au",
+  // Public contact address is canonical; server-only delivery overrides remain separate.
+  email: "enquiry@abwebstudio.com.au",
   phoneDisplay: "0423 332 037",
   phoneInternational: "+61423332037",
   location: "Sydney, NSW, Australia",

@@ -6,6 +6,7 @@ import { AnchorSettle } from "./components/AnchorSettle";
 
 import { PointerFX } from "./components/PointerFX";
 import { siteConfig } from "./site-config";
+import { servicePages } from "./services/service-data";
 import { WebVitals } from "./web-vitals";
 import "./globals.css";
 import "./studio.css";
@@ -126,15 +127,7 @@ const structuredData = {
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Digital services",
-        itemListElement: [
-          "Website design and development",
-          "SEO and local visibility",
-          "Branding and content",
-          "E-commerce solutions",
-          "Digital marketing",
-          "Website care and support",
-          "Custom software and business systems",
-        ].map((name) => ({
+        itemListElement: servicePages.map(({ title: name }) => ({
           "@type": "Offer",
           itemOffered: { "@type": "Service", name },
         })),

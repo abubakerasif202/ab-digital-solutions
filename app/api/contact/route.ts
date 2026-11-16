@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { siteConfig } from "../../site-config";
 import { RATE_LIMIT_RETRY_SECONDS, withinRateLimit } from "./rate-limit";
-import { contactBudgets, contactServices } from "../../contact-options";
+import { BUDGET_OPTIONS, contactServices } from "../../contact-options";
 
 export const runtime = "nodejs";
 
@@ -29,7 +29,7 @@ function logDeliveryFailure(reason: string) {
   console.error(JSON.stringify({ event: "contact_delivery_failed", reason }));
 }
 const allowedServices = new Set<string>(contactServices);
-const allowedBudgets = new Set<string>(["", ...contactBudgets]);
+const allowedBudgets = new Set<string>(["", ...BUDGET_OPTIONS]);
 const allowedTimelines = new Set(["", "As soon as possible", "Within 1 month", "Within 2–3 months", "Just exploring"]);
 
 function value(payload: ContactPayload, key: string, max: number) {

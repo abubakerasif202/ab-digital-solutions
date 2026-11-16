@@ -63,7 +63,7 @@
   scrollbar-width: none;
 }
 
-.gr-wi-filter-bar .work-index-filter { flex: none; }
+.gr-wi-filter-bar .work-index-filter { flex: none; white-space: nowrap; }
 .gr-wi-filter-bar .work-index-filter small { margin-left: 8px; opacity: 0.7; font-size: var(--fs-label); }
 /* Full opacity on the red active chip: 70% white on #d21736 is only 3.2:1. */
 .gr-wi-filter-bar .work-index-filter.is-active small { opacity: 1; color: #fff; }
@@ -128,7 +128,8 @@
 
 .gr-wi-detail { grid-column: 2; }
 .gr-wi-description { max-width: 56ch; margin: 0; color: var(--muted); line-height: 1.65; }
-.gr-wi-stack { margin: 14px 0 0; color: var(--paper-dim); font-family: var(--mono); font-size: var(--type-micro); letter-spacing: 0.08em; }
+.gr-wi-stack { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; padding: 0; list-style: none; color: var(--paper-dim); font-family: var(--mono); font-size: var(--type-micro); letter-spacing: 0.04em; }
+.gr-wi-stack-badge { display: inline-flex; align-items: center; min-height: 30px; padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; }
 
 .gr-wi-cta {
   display: inline-flex;

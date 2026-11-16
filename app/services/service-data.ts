@@ -309,9 +309,9 @@ export function findService(slug: string): ServicePage | undefined {
   return servicePages.find((service) => service.slug === slug);
 }
 
-/** `/contact` link that opens the enquiry form with this service preselected. */
-export function serviceContactHref(service: Pick<ServicePage, "contactKey">): string {
-  return `/contact?service=${service.contactKey}`;
+/** `/contact` link that opens the enquiry form with this canonical service slug preselected. */
+export function serviceContactHref(service: Pick<ServicePage, "slug">): string {
+  return `/contact?service=${encodeURIComponent(service.slug)}`;
 }
 
 // Delivery details stay beside the canonical service definitions.

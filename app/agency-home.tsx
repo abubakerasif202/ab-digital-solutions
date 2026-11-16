@@ -72,7 +72,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             <div className="ruby-grain" aria-hidden="true" />
             <div className="cinema-shell ruby-hero-topline">
               <p className="cinema-label"><span className="ruby-signal" />Independent digital studio</p>
-              <p className="cinema-label">Sydney, Australia <i aria-hidden="true" /> Working Australia-wide</p>
+              <p className="cinema-label">{siteConfig.location} <i aria-hidden="true" /> Working Australia-wide</p>
             </div>
             <div className="cinema-shell ruby-hero-composition">
               <p className="cinema-label ruby-hero-overline">Thoughtful design. Exceptional presence.</p>
@@ -185,7 +185,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               </div>
             </div>
             <EnquirySection id="contact" index={sectionNumber("enquiry")}><ContactForm /></EnquirySection>
-            <div className="cinema-shell ruby-colophon"><span>AB Web Studio / Sydney, Australia</span><span>{projects.length} genuine project case studies</span><a href={`mailto:${siteConfig.email}`}>{siteConfig.email} <ArrowIcon /></a></div>
+            <div className="cinema-shell ruby-colophon"><span>AB Web Studio / {siteConfig.location}</span><span>{projects.length} genuine project case studies</span><a href={`mailto:${siteConfig.email}`}>{siteConfig.email} <ArrowIcon /></a></div>
           </section>
         </main>
       </PageTransition>

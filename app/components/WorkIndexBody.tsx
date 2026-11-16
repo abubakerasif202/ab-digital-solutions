@@ -165,12 +165,14 @@ function WorkIndexCard({ project, type }: { project: Project; type: BlockType })
         <div className="gr-wi-meta">
           <span className="gr-number gr-wi-number" aria-hidden="true">{number}</span>
           <div className="gr-wi-heading">
-            <p className="gr-kicker">{formatCategory(project.category)}</p>
+            <p className="gr-kicker">{project.sector} <span aria-hidden="true">/</span> {formatCategory(project.category)}</p>
             <h2 className="gr-wi-title">{project.name}</h2>
           </div>
           <div className="gr-wi-detail">
             <p className="gr-wi-description">{project.description}</p>
-            <p className="gr-wi-stack">{project.techStack.join(" · ")}</p>
+            <ul className="gr-wi-stack" aria-label="Project technology">
+              {project.techStack.map((technology) => <li className="gr-wi-stack-badge" key={technology}>{technology}</li>)}
+            </ul>
             <span className="gr-wi-cta">
               View case study <ArrowIcon />
             </span>
