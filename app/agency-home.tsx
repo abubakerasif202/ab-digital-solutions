@@ -109,10 +109,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             <div className="cinema-shell ruby-positioning-grid">
               <Reveal className="ruby-plate" variant="mask">
                 <div className="ruby-plate-frame">
-                  <Image src="/cinematic/sydney-plate-arteries.webp" alt="Sydney at night: light trails on the freeway beneath the lit North Sydney skyline" width={864} height={1080} sizes="(max-width: 600px) 88vw, (max-width: 1100px) 36vw, 30vw" />
+                  <Image src="/cinematic/sydney-studio-plate.webp" alt="The AB Web Studio workspace at night: a gold AB sign on a ruby-lit wall, a laptop showing code, and Sydney Opera House and Harbour Bridge through the window" width={864} height={1080} sizes="(max-width: 600px) 88vw, (max-width: 1100px) 36vw, 30vw" />
                 </div>
                 <div className="ruby-identity-mark">
-                  <Image src="/brand/ab-luxury-monogram.webp" alt="AB Web Studio monogram" width={220} height={220} sizes="(max-width: 600px) 72px, 120px" />
                   <span className="cinema-label">Independent<br />by design.</span>
                 </div>
               </Reveal>
