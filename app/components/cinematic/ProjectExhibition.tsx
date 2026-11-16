@@ -34,6 +34,8 @@ export function ProjectExhibition() {
   const timeline = show.timeline;
   const [interaction, setInteraction] = useState<ExhibitionInteraction>({ pointerInside: false, pointerOverInteractive: false, focusInside: false, focusVisible: false });
   const gesture = useRef<{ x: number; y: number } | null>(null);
+  // Keep the destination stable between finger-down and release, including on controls.
+  const [touchActive, setTouchActive] = useState(false);
   const suppressClickUntil = useRef(0);
   const [visible, setVisible] = useState(false);
   const [loaded, setLoaded] = useState<ReadonlySet<string>>(() => new Set());
@@ -41,7 +43,7 @@ export function ProjectExhibition() {
   const environment = useSyncExternalStore(subscribeEnvironment, environmentSnapshot, serverEnvironment);
   const reduced = Boolean(environment & 1);
   const saveData = Boolean(environment & 2);
-  const running = exhibitionCanRun({ ...interaction, paused: false, visible, hidden: Boolean(environment & 4), reduced, saveData });
+  const running = exhibitionCanRun({ ...interaction, paused: touchActive, visible, hidden: Boolean(environment & 4), reduced, saveData });
   const activeIndex = timeline.sequence[timeline.cursor];
   const active = projects[activeIndex];
   const imageFailed = failed.has(active.slug);
@@ -87,6 +89,8 @@ export function ProjectExhibition() {
     if (!reduced && !saveData) return;
     root.current?.style.removeProperty("--exhibition-x");
     root.current?.style.removeProperty("--exhibition-y");
+    root.current?.style.removeProperty("--exhibition-drag");
+    if (root.current) root.current.dataset.dragging = "false";
   }, [reduced, saveData]);
 
   const resetPointer = () => {
@@ -111,13 +115,14 @@ export function ProjectExhibition() {
   const dragFinger = (event: PointerEvent<HTMLDivElement>) => {
     const start = gesture.current;
     const element = root.current;
-    if (!start || !element || event.pointerType !== "touch" || reduced) return;
+    if (!start || !element || event.pointerType !== "touch" || reduced || saveData) return;
     const dx = event.clientX - start.x;
     if (Math.abs(dx) < Math.abs(event.clientY - start.y) * 1.2) return;
     element.dataset.dragging = "true";
     element.style.setProperty("--exhibition-drag", `${Math.max(-64, Math.min(64, dx * 0.4))}px`);
   };
   const settleFinger = () => {
+    setTouchActive(false);
     if (!root.current) return;
     root.current.dataset.dragging = "false";
     root.current.style.removeProperty("--exhibition-drag");
@@ -131,11 +136,14 @@ export function ProjectExhibition() {
   return (
     <div className="exhibition" ref={root} data-running={running} data-dragging="false" data-project={active.slug} data-image-failed={imageFailed} data-image-state={imageFailed ? "failed" : imageReady ? "ready" : "loading"} data-composition={exhibitionComposition(show.step)} data-step={show.step} role="region" aria-roledescription="carousel" aria-label="Project exhibition"
       onPointerEnter={(event) => { if (event.pointerType === "mouse") { updatePointerInteraction(event.target); bounds.current = event.currentTarget.getBoundingClientRect(); } }}
-      onPointerLeave={resetPointer}
+      onPointerLeave={(event) => { resetPointer(); if (event.pointerType === "touch") { gesture.current = null; settleFinger(); } }}
       onPointerMove={(event) => { if (event.pointerType === "mouse") updatePointerInteraction(event.target); movePointer(event); dragFinger(event); }}
       onPointerDown={(event) => {
         if (event.pointerType === "mouse") setInteraction((current) => current.focusVisible ? { ...current, focusVisible: false } : current);
-        if (event.pointerType === "touch" && !(event.target instanceof Element && event.target.closest("button"))) gesture.current = { x: event.clientX, y: event.clientY };
+        if (event.pointerType === "touch") {
+          setTouchActive(true);
+          if (!(event.target instanceof Element && event.target.closest("button"))) gesture.current = { x: event.clientX, y: event.clientY };
+        }
       }}
       onPointerCancel={() => { gesture.current = null; settleFinger(); }}
       onPointerUp={(event) => {
@@ -162,7 +170,7 @@ export function ProjectExhibition() {
               </div>
             </>}
           </div>
-          <Link className="exhibition-feature-link" href={`/work/${active.slug}`} aria-label={`${active.name} — View case study`}>
+          <Link className="exhibition-feature-link" href={`/work/${active.slug}`}>
             <span className="exhibition-feature-open" aria-hidden="true"><ArrowIcon /></span>
             <span className="exhibition-destination">{projectDestinationLabel(active)}</span>
             <span className="exhibition-feature-caption" key={active.slug}><span>{active.sector}</span><strong>{active.name}</strong><span className="exhibition-view">View case study <ArrowIcon /></span></span>
@@ -171,8 +179,8 @@ export function ProjectExhibition() {
         <div className="exhibition-rail" aria-label="Upcoming projects">
           {upcoming.slice(0, 2).map(({ index, offset }) => {
             const project = projects[index];
-            return <button className="exhibition-preview" key={`slot-${offset}`} onClick={() => jumpAhead(offset)} type="button" aria-label={`Feature ${project.name}`}>
-              <span className="exhibition-preview-image" key={project.slug}><ProjectArtwork project={project} sizes="(max-width: 720px) 42vw, 25vw" /></span>
+            return <button className="exhibition-preview" key={`slot-${offset}`} onClick={() => jumpAhead(offset)} type="button">
+              <span className="exhibition-preview-image" key={project.slug} aria-hidden="true"><ProjectArtwork project={project} sizes="(max-width: 720px) 42vw, 25vw" /></span>
               <span className="exhibition-preview-copy"><span>{offset === 1 ? "Up next" : "Another perspective"}</span><strong>{project.name}</strong><ArrowIcon /></span>
             </button>;
           })}

@@ -528,6 +528,31 @@ export const projects = [
     seoDescription:
       "Explore the On Call Trailers website project by AB Web Studio: a Sydney trailer hire website with fleet comparison, towing guidance and clear booking pathways.",
   },
+  {
+    slug: "mrk-removals-adelaide",
+    titleName: "MRK Removals Adelaide",
+    seoDescription: "MRK Removals Adelaide case study: a website for an Adelaide removalist covering house, apartment and office moves, with clear quote and call actions.",
+    name: "MRK Removals Adelaide",
+    category: "Services / Removals",
+    sector: "Removals",
+    description: "A cinematic Adelaide removalist website with a clear path to quotes.",
+    overview:
+      "MRK Removals Adelaide offers house, apartment and office moves across Adelaide, coordinated directly with the owner.",
+    solution:
+      "We built a website that leads with the MRK truck and a direct promise, then sets out house, office and furniture moves, how quotes are explained, a four-step move process and a quote request form.",
+    url: "https://mrkremovalsadelaide.com.au/",
+    displayUrl: "mrkremovalsadelaide.com.au",
+    image: `${assetBase}/ab-portfolio-mrk-removals-adelaide.jpg`,
+    alt: "MRK Removals Adelaide website homepage with a branded MRK removals truck, the headline Adelaide removalists, planned with precision, and quote and call buttons",
+    tags: ["Lead Conversion", "Local Service SEO", "Brand Presentation"],
+    keyFeatures: [
+      "Quote request and one-tap call actions from the first screen",
+      "House, apartment and office move services",
+      "Furniture, packing and heavy-item service sections",
+      "Four-step explanation of how a move works",
+    ],
+    techStack: ["Vite", "JSON-LD"],
+  },
 ] as const satisfies readonly Project[];
 
 export const sectors: readonly string[] = Array.from(new Set(projects.map((project) => project.sector)));

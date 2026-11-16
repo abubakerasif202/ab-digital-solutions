@@ -102,7 +102,7 @@ test("structure: one h1, ordered headings, landmarks, unique ids, labelled contr
 test("projects: filters, counts and show-all follow the registry", async ({ page }) => {
   await open(page);
   await expect(page.locator("#projects .project")).toHaveCount(6);
-  await expect(page.locator("#showAll")).toHaveText("Show all 19 projects");
+  await expect(page.locator("#showAll")).toHaveText("Show all 20 projects");
   await page.locator("#showAll").click();
   await expect(page.locator("#projects .project")).toHaveCount(19);
   const chip = page.locator('#filters .chip[data-filter="Removals"]');

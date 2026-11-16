@@ -9,8 +9,8 @@ import { serviceContactHref, servicePages } from "../app/services/service-data.t
 
 const read = (relativePath) => readFile(new URL(relativePath, import.meta.url), "utf8");
 
-test("all 19 project records are complete and indexed in canonical order", () => {
-  assert.equal(projects.length, 19);
+test("all 20 project records are complete and indexed in canonical order", () => {
+  assert.equal(projects.length, 20);
   assert.equal(new Set(projects.map(({ slug }) => slug)).size, projects.length);
   assert.deepEqual(studioProjects.map(({ slug }) => slug), projects.map(({ slug }) => slug));
   for (const [index, project] of projects.entries()) {
@@ -26,11 +26,11 @@ test("all 19 project records are complete and indexed in canonical order", () =>
   }
   assert.equal(projects[0].slug, "jufaja-homes");
   assert.deepEqual(projects.slice(-3).map(({ slug }) => slug), [
-    "wild-pest-solutions", "pept-up-labs", "on-call-trailers",
+    "pept-up-labs", "on-call-trailers", "mrk-removals-adelaide",
   ]);
 });
 
-test("case study previous/next links form one complete 19-project ring", async () => {
+test("case study previous/next links form one complete 20-project ring", async () => {
   const route = await read("../app/work/[slug]/page.tsx");
   assert.match(route, /projects\.findIndex\(\(p\) => p\.slug === project\.slug\)/);
   assert.match(route, /projects\[\(currentIndex \+ 1\) % projects\.length\]/);
@@ -41,7 +41,7 @@ test("case study previous/next links form one complete 19-project ring", async (
     assert.equal(projects[(projects.indexOf(next) - 1 + projects.length) % projects.length], projects[index]);
     assert.equal(projects[(projects.indexOf(previous) + 1) % projects.length], projects[index]);
   }
-  assert.equal(projects.at(-1).slug, "on-call-trailers");
+  assert.equal(projects.at(-1).slug, "mrk-removals-adelaide");
   assert.equal(projects[0].slug, "jufaja-homes");
 });
 

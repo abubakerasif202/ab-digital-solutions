@@ -655,6 +655,36 @@
         "height": 1500,
         "alt": "On Call Trailers homepage with a galvanised cage trailer and a flatbed trailer in front of the Sydney Harbour Bridge at night"
       }
+    },
+    {
+      "slug": "mrk-removals-adelaide",
+      "name": "MRK Removals Adelaide",
+      "sector": "Removals",
+      "category": "Services · Removals",
+      "description": "A cinematic Adelaide removalist website with a clear path to quotes.",
+      "solution": "We built a website that leads with the MRK truck and a direct promise, then sets out house, office and furniture moves, how quotes are explained, a four-step move process and a quote request form.",
+      "keyFeatures": [
+        "Quote request and one-tap call actions from the first screen",
+        "House, apartment and office move services",
+        "Furniture, packing and heavy-item service sections",
+        "Four-step explanation of how a move works"
+      ],
+      "techStack": [
+        "Vite",
+        "JSON-LD"
+      ],
+      "url": "https://mrkremovalsadelaide.com.au/",
+      "displayUrl": "mrkremovalsadelaide.com.au",
+      "statusLabel": "Case study",
+      "visitLabel": "View Live Website",
+      "isSoftware": false,
+      "caseStudyUrl": "https://www.abwebstudio.com.au/work/mrk-removals-adelaide",
+      "image": {
+        "src": "/site/ab-digital-premium/assets/ab-portfolio-mrk-removals-adelaide.jpg",
+        "width": 1348,
+        "height": 926,
+        "alt": "MRK Removals Adelaide website homepage with a branded MRK removals truck, the headline Adelaide removalists, planned with precision, and quote and call buttons"
+      }
     }
   ]
 }

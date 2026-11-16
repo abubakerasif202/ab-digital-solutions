@@ -83,10 +83,10 @@ test("production gate: the route is a 404 when VERCEL_ENV=production", async ({ 
   expect(response.status()).toBe(404);
 });
 
-test("the live homepage is unchanged", async ({ page }) => {
+test("the live homepage stays separate from the isolated preview", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator("h1.stage-title")).toContainText("Websites with");
-  await expect(page.locator(".stage-hero")).toBeVisible();
+  await expect(page.locator("h1.ruby-title")).toContainText("Digital experiences.");
+  await expect(page.locator(".ruby-hero")).toBeVisible();
   await expect(page.locator(".odp")).toHaveCount(0);
 });
 
@@ -111,7 +111,7 @@ test("work: server-rendered cards, six shown first, filters, case-study links, h
   const visible = () => page.locator(".odp-project:visible");
   await expect(page.locator(".odp-project")).toHaveCount(19);
   await expect(visible()).toHaveCount(6);
-  await page.getByRole("button", { name: "Show all 19 projects" }).click();
+  await page.getByRole("button", { name: "Show all 20 projects" }).click();
   await expect(visible()).toHaveCount(19);
   const chip = page.locator(".odp-chip", { hasText: "Removals" });
   await chip.click();

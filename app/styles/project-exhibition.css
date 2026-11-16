@@ -100,6 +100,11 @@
   .exhibition[data-composition] .exhibition-preview { transform: none; }
   .exhibition-preview-copy { padding-top: 11px; }
   .exhibition-preview-copy strong { font-size: .8rem; }
+  /* Reserve fixed text space so a long project title never moves the controls beneath a finger. */
+  .exhibition-feature-caption { align-content: start; min-height: calc(var(--fs-label) * 3 + 11px + 3.2 * clamp(1.65rem, 6vw, 2.8rem)); }
+  .exhibition-feature-caption strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+  .exhibition-preview-copy { min-height: 7.5rem; align-content: start; }
+  .exhibition-preview-copy strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .exhibition-preview-copy > svg { top: 20px; }
   .exhibition-number { bottom: -10px; font-size: 8rem; }
   .exhibition-footer { gap: 12px; margin-top: 24px; }

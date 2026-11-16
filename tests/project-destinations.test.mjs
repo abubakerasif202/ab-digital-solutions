@@ -38,7 +38,7 @@ test("destination helpers retain a graceful unavailable-site state", () => {
 
 test("Fresh Stop is the approved sixteenth project on its published custom domain", () => {
   const project = findProject("fresh-stop");
-  assert.equal(projects.length, 19);
+  assert.equal(projects.length, 20);
   assert.equal(projects[15], project);
   assert.equal(project.url, "https://www.freshstop.com.au/");
   assert.equal(project.displayUrl, "freshstop.com.au");

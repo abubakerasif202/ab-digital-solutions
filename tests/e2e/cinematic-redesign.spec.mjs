@@ -99,7 +99,8 @@ test("reduced-motion and Save-Data start poster-only; failed media retains a usa
     await expect(page.locator(".cinema-media-poster img")).toBeVisible();
     if (mode === "error") {
       await expect(page.locator(".cinema-media")).toHaveAttribute("data-failed", "true");
-      await expect(page.getByRole("button", { name: "Background motion unavailable" })).toBeDisabled();
+      await expect(page.locator(".cinema-media-video")).not.toHaveAttribute("src");
+      await expect(page.locator(".cinema-media")).toHaveAttribute("data-playing", "false");
     } else {
       expect(downloads).toEqual([]);
       await expect(page.locator(".cinema-media-video")).not.toHaveAttribute("src");

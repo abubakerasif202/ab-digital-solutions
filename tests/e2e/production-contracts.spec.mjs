@@ -26,10 +26,10 @@ test("homepage and contact use identical budget choices and preselect canonical 
   await expect(page.locator('form.enquiry-form input[name="service"]:checked')).toHaveValue("Custom software & business systems");
 });
 
-test("work index displays all 19 case-study cards, current Jufaja domain and technology badges", async ({ page }) => {
+test("work index displays all 20 case-study cards, current Jufaja domain and technology badges", async ({ page }) => {
   await page.goto("/work");
   const cards = page.locator("article.gr-wi-card");
-  await expect(cards).toHaveCount(19);
+  await expect(cards).toHaveCount(20);
   await expect(cards.first().locator(".gr-browser-bar")).toContainText("jufajaconstructions.com.au");
   await expect(cards.first().locator(".live-label")).toContainText("Live website");
   for (const index of [16, 17, 18]) {
@@ -56,12 +56,13 @@ test("mobile category pills stay on one horizontally scrollable row", async ({ p
   expect(result.buttonWraps).toBeFalsy();
 });
 
-test("case-study pagination includes project 17 to 19 before wrapping", async ({ page }) => {
+test("case-study pagination includes project 17 to 20 before wrapping", async ({ page }) => {
   for (const [slug, next] of [
     ["fresh-stop", "wild-pest-solutions"],
     ["wild-pest-solutions", "pept-up-labs"],
     ["pept-up-labs", "on-call-trailers"],
-    ["on-call-trailers", "jufaja-homes"],
+    ["on-call-trailers", "mrk-removals-adelaide"],
+    ["mrk-removals-adelaide", "jufaja-homes"],
   ]) {
     await page.goto(`/work/${slug}`);
     await expect(page.locator("nav.gr-cs-next a.gr-cs-next-link")).toHaveAttribute("href", `/work/${next}`);

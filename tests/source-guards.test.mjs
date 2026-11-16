@@ -45,6 +45,7 @@ test("portfolio contains every required live project", async () => {
     "https://www.maplerentals.com.au/",
     "https://www.galarentals.com.au/",
     "https://zqremovalsadelaide.com.au/",
+    "https://mrkremovalsadelaide.com.au/",
     "https://www.decentdevelopment.com.au/",
     "https://milestonedevelopment.com.au/",
     "https://4point-concrete-website.vercel.app/",
