@@ -300,13 +300,19 @@ test("studio and portfolio panel pass automated accessibility checks", async ({ 
 });
 
 
-test("reset view restores the establishing camera after orbit without reloading assets", async ({ page }) => {
+test("reset view restores the current room framing after orbit without reloading assets", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 1000 });
   const models = [];
   page.on("request", request => { if (/\.glb/.test(request.url())) models.push(request.url()); });
   await page.goto("/studio", { waitUntil: "networkidle" }); await enter(page);
   await page.waitForTimeout(2300);
   await expect(page.locator('[class*="sceneCaption"]')).toContainText(/scroll/i);
+  // Reset view re-frames the current room, not the first-visit whole-studio overview.
+  // Establish a room-level baseline before manual orbit so we test that contract.
+  await space(page, "Reception");
+  await page.keyboard.press("Escape");
+  await expect(page.locator("aside[aria-labelledby='studio-panel-heading']")).toHaveCount(0);
+  await page.waitForTimeout(2300);
   const canvas = page.locator("canvas");
   // Ambient traffic and people keep a few pixels moving, so compare views by similarity, not byte equality.
   const similarity = async (a, b) => {
