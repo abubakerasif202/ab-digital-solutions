@@ -147,7 +147,10 @@ try {
     await page.keyboard.press("Tab");
     await page.keyboard.press("Tab");
     await page.keyboard.up("Shift");
-    check(`Mobile menu keyboard wraps backwards @${width}`, await page.evaluate(() => document.activeElement === document.querySelector(".site-nav .nav-cta")));
+    check(`Mobile menu keyboard wraps backwards @${width}`, await page.evaluate(() => {
+      const items = document.querySelectorAll('.site-nav a[href], .site-nav button:not([disabled]), .site-nav [tabindex]:not([tabindex="-1"])');
+      return items.length > 0 && document.activeElement === items[items.length - 1];
+    }));
     await page.keyboard.press("Tab");
     check(`Mobile menu keyboard wraps forwards @${width}`, await page.evaluate(() => document.activeElement === document.querySelector(".menu-toggle")));
     await page.screenshot({ path: path.join(output, `${width}-menu.png`) });

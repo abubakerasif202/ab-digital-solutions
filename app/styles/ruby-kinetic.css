@@ -97,11 +97,24 @@
 .ruby-services .ruby-discipline::before { background: radial-gradient(ellipse at var(--ruby-x,50%) var(--ruby-y,50%),#e326552e,transparent 72%); }
 .ruby-services .ruby-discipline-number { color: #9b1535; }
 .ruby-services .ruby-discipline h3 small { color: #5a4651; }
-.ruby-services .ruby-discipline:hover h3 { color: #9b1535; }
+.ruby-services .ruby-discipline:is(:hover, :focus-visible) h3 { color: var(--ruby-deep); }
 .ruby-services .ruby-discipline-copy { color: #4d3a45; }
 .ruby-services .ruby-discipline-copy > .cinema-label { color: #7a5568; }
 .ruby-services .ruby-discipline-arrow { border-color: #170b1259; }
-.ruby-services .ruby-discipline:hover .ruby-discipline-arrow { color: #fff6f8; }
+.ruby-services .ruby-discipline:is(:hover, :focus-visible) .ruby-discipline-arrow { color: #fff6f8; }
+/* One decisive rule connects the active service to its destination, for mouse and keyboard. */
+.ruby-discipline::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: var(--ruby-deep);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 420ms var(--ease-lux);
+}
+.ruby-discipline:is(:hover, :focus-visible)::after { transform: scaleX(1); }
+.ruby-discipline:focus-visible { outline-offset: -3px; }
 .ruby-services .ruby-service-foot > .cinema-label { color: #7a5568; }
 .ruby-service-foot ul { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 44px; margin: 0; padding: 0; list-style: none; }
 .ruby-service-foot li { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 50px; border-bottom: 1px solid #170b1221; }
@@ -228,7 +241,7 @@
   .ruby-contact-intro-bottom a { display: none; }
   .ruby-contact .studio-enquiry { padding-block: 36px 52px; scroll-margin-top: calc(var(--header-height, 72px) + 8px); }
   .ruby-contact .studio-enquiry-copy .studio-body--lead { display: none; }
-  .ruby-colophon a, .studio-contact-rows a { flex-wrap: nowrap; }
+  .ruby-colophon a { flex-wrap: nowrap; }
   .ruby-colophon a { overflow-wrap: anywhere; min-width: 0; }
   .ruby-colophon svg, .studio-contact-rows svg { flex: none; }
 }

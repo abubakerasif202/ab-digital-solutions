@@ -41,7 +41,7 @@ export function LocalsPanel({ open, selected, caption, bubbles, active, onPick, 
     </div>
     <div className={styles.localsCard}>
       <h3>{info.name}</h3>
-      <p>{info.personality}</p>
+      <p>{info.personality} <span className={styles.muted}>{info.reaction}</span></p>
       <div className={styles.localsActions}>
         <button type="button" className={styles.primary} onClick={() => onInteract(selected)}>{info.action}</button>
         <label className={styles.check}><input type="checkbox" checked={bubbles} onChange={(event) => onBubbles(event.currentTarget.checked)} /> Speech bubbles</label>

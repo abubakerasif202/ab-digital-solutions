@@ -25,7 +25,10 @@ export const animals: Record<AnimalId, AnimalInfo> = {
     personality: "Confident, welcoming and a little cheeky. Runs the front step.",
     action: "Say g’day",
     reaction: "The kangaroo waves, tilts its head, then gives a small hop.",
-    lines: ["Big ideas. Bigger hops.", "Hop in. Let’s build something.", "Just checking the website has bounce."],
+    lines: [
+      "Big ideas. Bigger hops.", "Hop in. Let’s build something.", "Just checking the website has bounce.",
+      "My debugging method? One jump at a time.", "I asked for padding. They gave me a pouch.", "Zero bugs in the pouch. I checked.",
+    ],
   },
   koala: {
     id: "koala",
@@ -33,7 +36,10 @@ export const animals: Record<AnimalId, AnimalInfo> = {
     personality: "Relaxed and quietly witty. Conserves energy for good ideas.",
     action: "Wake the koala",
     reaction: "The koala wakes briefly, looks towards you and waves, then drifts back to sleep.",
-    lines: ["Big dreams. Small energy budget.", "Fast sites. Slow afternoons.", "I only wake for a good brief."],
+    lines: [
+      "Big dreams. Small energy budget.", "Fast sites. Slow afternoons.", "I only wake for a good brief.",
+      "Not asleep. Just lazy loading.", "My favourite feature is the rest API.", "Wake me when the build is green.",
+    ],
   },
   cockatoo: {
     id: "cockatoo",
@@ -41,7 +47,10 @@ export const animals: Record<AnimalId, AnimalInfo> = {
     personality: "Curious and expressive. Has opinions about everything.",
     action: "Greet the cockatoo",
     reaction: "The cockatoo raises its crest, bobs and flutters a short lap before settling back on the rail.",
-    lines: ["Good design? Worth squawking about.", "Someone said launch?", "Is that a new project I smell?"],
+    lines: [
+      "Good design? Worth squawking about.", "Someone said launch?", "Is that a new project I smell?",
+      "I do the loud part of the brainstorm.", "Polly wants a pull request.", "I reviewed the brief. Needs more feathers.",
+    ],
   },
 };
 
@@ -142,12 +151,13 @@ export function koalaPose(time: number, awakeFor: number, visitorYaw: number, re
   const wake = awake ? smoothstep(awakeFor / 0.9) * (1 - smoothstep((awakeFor - 4.6) / 0.8)) : 0;
   const waveEnvelope = awake ? bump(awakeFor, 1.1, 3.9) : 0;
   const wave = reduced ? waveEnvelope * 0.6 : waveEnvelope * (0.7 + 0.3 * Math.sin(awakeFor * 9));
+  const curious = awake && !reduced ? bump(awakeFor, 0.7, 1.8) * 0.16 : 0;
   return {
     breath,
     eyeOpen: clamp(peek + wake * (1 - 0.1 * Math.sin(time * 2.1)), 0, 1),
     headPitch: (1 - wake) * (0.28 + sleepy * 0.22) - wake * 0.08,
     headYaw: wake * clamp(visitorYaw, -0.9, 0.9),
-    headRoll: (1 - wake) * (Math.sin(time * 0.35 + 1) * 0.12) + wake * Math.sin(time * 0.9) * 0.05,
+    headRoll: (1 - wake) * (Math.sin(time * 0.35 + 1) * 0.12) + wake * Math.sin(time * 0.9) * 0.05 + curious,
     armWave: wave,
     earTwitch: reduced ? 0 : bump((time % 11), 8.6, 9.0) + wake * 0.2,
     bodyLean: (1 - wake) * 0.05,
@@ -189,13 +199,14 @@ export function cockatooPose(time: number, reactFor: number, reduced = false): C
   const inFlight = !reduced && reacting && reactFor >= flightStart && reactFor < flightStart + FLIGHT_SECONDS;
   const path = inFlight ? cockatooFlightPath((reactFor - flightStart) / FLIGHT_SECONDS) : { dx: 0, dy: 0, dz: 0, heading: 0 };
   const bobs = reacting && !reduced ? Math.max(0, Math.sin(reactFor * 11)) * bump(reactFor, 0.2, 1.3) * 0.18 : 0;
+  const landingBow = reacting && !reduced ? bump(reactFor, flightStart + FLIGHT_SECONDS, 3.4) : 0;
   return {
     dx: path.dx, dy: path.dy, dz: path.dz, heading: inFlight ? path.heading : 0,
     bodyPitch: inFlight ? 0.55 : bowing * 0.3 + Math.sin(time * 1.2) * 0.015,
     headRoll: reacting ? Math.sin(reactFor * 6) * 0.35 * bump(reactFor, 0.1, 1.4) : tilt,
     headYaw: reacting ? Math.sin(reactFor * 3.2) * 0.4 * bump(reactFor, 0, 3) : Math.sin(time * 0.7) * 0.18,
-    headPitch: bowing * 0.35,
-    crest: reacting ? clamp(bump(reactFor, 0.05, 3.2) * 1.25, 0, 1) : crestIdle,
+    headPitch: bowing * 0.35 + landingBow * 0.22,
+    crest: reacting ? clamp(Math.max(bump(reactFor, 0.05, 3.2) * 1.25, landingBow * 0.4), 0, 1) : crestIdle,
     wingSpread: inFlight ? 1 : Math.max(stretch, reacting && !reduced ? bump(reactFor, 0.6, 1.4) * 0.5 : 0),
     wingFlap: inFlight ? Math.sin(reactFor * 38) : stretch * Math.sin(time * 6) * 0.15,
     bob: bobs,
