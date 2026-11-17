@@ -138,6 +138,27 @@ test("staff are deterministic for a seed", () => {
   assert.notEqual(trace(9), trace(10));
 });
 
+test("staff take bounded stretch breaks and welcome visitors without moving their stations", () => {
+  const sim = createStaff(20260427);
+  let stretched = false, welcomed = false;
+  for (let t = 0; t < 600; t += 1 / 30) {
+    sim.step(1 / 30, { walking: false, visitor: { x: 8, z: 1 } });
+    stretched ||= sim.designer.lShoulderPitch > 2 && sim.designer.rShoulderPitch > 2;
+    welcomed ||= sim.developer.rShoulderRoll > 0.8 && sim.developer.rShoulderPitch > 1.5;
+    for (const [pose, station] of [[sim.designer, STATIONS.designer], [sim.developer, STATIONS.developer]]) {
+      assert.equal(pose.rootX, station.x); assert.equal(pose.rootZ, station.z);
+      assert.equal(pose.rootLift, station.floor);
+      const soles = landmarks(pose).sole;
+      assert.ok(Math.min(soles.l, soles.r) > -0.02, "gesture keeps feet grounded");
+    }
+  }
+  assert.ok(stretched, "designer takes an occasional stretch break");
+  assert.ok(welcomed, "developer occasionally waves to the visitor");
+  const snapshot = JSON.stringify([sim.designer, sim.developer, sim.walker]);
+  sim.step(0, { walking: false, visitor: { x: 8, z: 1 } });
+  assert.equal(JSON.stringify([sim.designer, sim.developer, sim.walker]), snapshot, "no elapsed time means no motion");
+});
+
 test("poses stay finite and bounded for dt up to 0.1 s and bad frames", () => {
   const sim = createStaff(11);
   const rnd = lcg(5);

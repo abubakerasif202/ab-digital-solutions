@@ -24,3 +24,54 @@ test("exhibition controls expose their complete visible labels as accessible nam
     await expect(control).toHaveAccessibleName(visibleLabel, { ignoreCase: true });
   }
 });
+
+test("direct contact values remain readable inside their rows at every layout width", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [320, 375, 390, 640, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const route of ["/", "/contact"]) {
+      await page.goto(route, { waitUntil: "networkidle" });
+      const contacts = page.locator(".studio-contact-rows strong");
+      await expect(contacts).toHaveCount(3);
+      for (const contact of await contacts.all()) {
+        await contact.scrollIntoViewIfNeeded();
+        const geometry = await contact.evaluate((element) => {
+          const value = element.getBoundingClientRect();
+          const row = element.closest("a").getBoundingClientRect();
+          return { width: value.width, left: value.left, right: value.right, rowLeft: row.left, rowRight: row.right, scroll: element.scrollWidth, client: element.clientWidth };
+        });
+        expect(geometry.width, `${route} contact width at ${width}px`).toBeGreaterThan(100);
+        expect(geometry.left).toBeGreaterThanOrEqual(geometry.rowLeft);
+        expect(geometry.right).toBeLessThanOrEqual(geometry.rowRight);
+        expect(geometry.scroll).toBeLessThanOrEqual(geometry.client + 1);
+      }
+    }
+  }
+});
+
+test("interior editorial accents use warm gilt while the homepage keeps its ruby identity", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const route of ["/work", "/services", "/about", "/contact"]) {
+    await page.goto(route, { waitUntil: "networkidle" });
+    const accent = page.locator("h1 em, h1 .accent-serif").first();
+    await expect(accent).toHaveCSS("color", "rgb(229, 197, 154)");
+    await expect(page.locator(".button-primary").first()).toHaveCSS("background-color", "rgb(167, 19, 59)");
+  }
+  await page.goto("/", { waitUntil: "networkidle" });
+  await expect(page.locator(".ruby-hero h1 em")).toHaveCSS("color", "rgb(255, 232, 236)");
+});
+
+test("service rows give keyboard visitors the same bounded motion and a still alternative", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+  const service = page.locator(".ruby-discipline").first();
+  const arrow = service.locator(".ruby-discipline-arrow");
+  await service.scrollIntoViewIfNeeded();
+  await service.focus();
+  await expect(service).toBeFocused();
+  await expect(arrow).toHaveCSS("transform", "matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0)");
+  await expect(arrow).toHaveCSS("color", "rgb(255, 246, 248)");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(arrow).toHaveCSS("transform", "none");
+  await expect(service.locator("h3")).toHaveCSS("transform", "none");
+  await expect(arrow).toHaveCSS("transition-duration", "0s");
+});

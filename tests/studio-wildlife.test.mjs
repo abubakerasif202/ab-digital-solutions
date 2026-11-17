@@ -28,6 +28,22 @@ test("speech lines rotate without immediate repeats and use every line before re
   let previous = first[2];
   for (let i = 0; i < 30; i++) { const line = next(); assert.notEqual(line, previous); previous = line; }
 });
+test("every local has an extended joke rotation with complete shuffled cycles", () => {
+  for (const id of animalOrder) {
+    const lines = animals[id].lines;
+    assert.ok(lines.length >= 6, `${id} has at least six distinct quips`);
+    assert.equal(new Set(lines).size, lines.length);
+    const next = createLinePicker(lines, 19);
+    let previous;
+    for (let cycle = 0; cycle < 4; cycle++) {
+      const seen = [];
+      for (let i = 0; i < lines.length; i++) {
+        const line = next(); assert.notEqual(line, previous); previous = line; seen.push(line);
+      }
+      assert.deepEqual([...seen].sort(), [...lines].sort());
+    }
+  }
+});
 test("repeat taps are rate limited", () => {
   assert.equal(cooldownReady(0, 100, 1800), true);
   assert.equal(cooldownReady(1000, 1500, 1800), false);
@@ -118,6 +134,21 @@ test("cockatoo reacts with crest and a lap, but reduced motion never flies", () 
   assert.ok(flew && crest > 0.9);
   for (let t = 0; t < 3.4; t += 0.05) { const p = cockatooPose(10, t, true); assert.equal(p.flying, false); assert.equal(Math.hypot(p.dx, p.dz), 0); }
   assert.equal(cockatooPose(5, -1).flying, false);
+});
+test("wildlife add a curious wake tilt and a final landing bow only in full motion", () => {
+  assert.ok(koalaPose(2, 1.25, 0).headRoll - koalaPose(2, 1.25, 0, true).headRoll > 0.12);
+  const landing = cockatooPose(2, 3.2);
+  assert.equal(landing.flying, false);
+  assert.equal(Math.hypot(landing.dx, landing.dy, landing.dz), 0);
+  assert.ok(landing.headPitch > 0.2 && landing.crest > 0.3);
+  assert.equal(cockatooPose(2, 3.2, true).headPitch, 0);
+  assert.deepEqual(cockatooPose(2, 3.4), cockatooPose(2, -1), "reaction returns to idle");
+  for (let t = 0; t < 6; t += 0.05) {
+    for (const reduced of [false, true]) {
+      for (const value of Object.values(koalaPose(2, t, 0.5, reduced))) assert.ok(Number.isFinite(value) && Math.abs(value) <= 1);
+      for (const value of Object.values(cockatooPose(2, t, reduced))) if (typeof value === "number") assert.ok(Number.isFinite(value) && Math.abs(value) < 7);
+    }
+  }
 });
 
 /* ---------------- state ---------------- */

@@ -4,7 +4,7 @@
 import { mulberry32, range, pick } from "./rng";
 import type { Rng } from "./rng";
 import {
-  approach, aimHead, armToward, blendPose, clamp, createPose, lerp, poseReview, poseSeatedRest, poseSeatedTyping, poseStanding, poseWalk, smooth, wrapAngle,
+  approach, aimHead, armToward, blendPose, clamp, createPose, lerp, poseReview, poseSeatedRest, poseSeatedTyping, poseStanding, poseWalk, poseWave, smooth, wrapAngle,
 } from "./humanoid-pose";
 import type { Pose, Side } from "./humanoid-pose";
 
@@ -78,7 +78,7 @@ export function routePoints(a: StaffNode, b: StaffNode): Pt[] {
   return pts.filter((p, i) => i === 0 || Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) > 1e-6);
 }
 
-type Beat = { kind: "idle" | "look" | "review" | "point" | "talk" | "type" | "mouse" | "think" | "lean" | "glance" | "touch" | "camera"; dur: number; side: 1 | -1; aux: number };
+type Beat = { kind: "idle" | "look" | "review" | "point" | "talk" | "type" | "mouse" | "think" | "lean" | "glance" | "touch" | "camera" | "stretch" | "welcome"; dur: number; side: 1 | -1; aux: number };
 type Track = { beats: Beat[]; i: number; t: number };
 const env = (b: Beat, t: number) => smooth(Math.min(t / 0.45, (b.dur - t) / 0.45, 1));
 const beat = (rng: Rng, kind: Beat["kind"], lo: number, hi: number): Beat => ({ kind, dur: range(rng, lo, hi), side: pick(rng, [1, -1] as const), aux: rng() });
@@ -113,7 +113,7 @@ export function createStaff(seed: number) {
   let dGain = 0, dBurst = 1, dBurstT = range(rng, 2, 5), dYaw = 0, dYawT = 0;
   const nextDesignerBeat = (): Beat => {
     const r = rng();
-    return r < 0.5 ? beat(rng, "type", 5, 11) : r < 0.68 ? beat(rng, "mouse", 3, 6) : r < 0.82 ? beat(rng, "think", 3, 5) : r < 0.92 ? beat(rng, "lean", 2.5, 4) : beat(rng, "glance", 1.5, 2.6);
+    return r < 0.5 ? beat(rng, "type", 5, 11) : r < 0.68 ? beat(rng, "mouse", 3, 6) : r < 0.82 ? beat(rng, "think", 3, 5) : r < 0.92 ? beat(rng, "lean", 2.5, 4) : r < 0.96 ? beat(rng, "glance", 1.5, 2.6) : beat(rng, "stretch", 2.6, 3.5);
   };
   dTrack.beats = [nextDesignerBeat()];
 
@@ -122,7 +122,7 @@ export function createStaff(seed: number) {
   let vYaw: number = STATIONS.developer.yaw, vShift = 0, vShiftT = 0;
   const nextDevBeat = (): Beat => {
     const r = rng();
-    return r < 0.3 ? beat(rng, "point", 2.2, 3.4) : r < 0.55 ? beat(rng, "review", 3, 5) : r < 0.7 ? beat(rng, "touch", 1.8, 2.8) : r < 0.82 ? beat(rng, "camera", 1.6, 2.6) : beat(rng, "idle", 2, 4);
+    return r < 0.3 ? beat(rng, "point", 2.2, 3.4) : r < 0.55 ? beat(rng, "review", 3, 5) : r < 0.7 ? beat(rng, "touch", 1.8, 2.8) : r < 0.82 ? beat(rng, "camera", 1.6, 2.6) : r < 0.91 ? beat(rng, "welcome", 2.5, 3.5) : beat(rng, "idle", 2, 4);
   };
   vTrack.beats = [nextDevBeat()];
 
@@ -253,6 +253,14 @@ export function createStaff(seed: number) {
     } else if (b.kind === "lean") {
       poseSeatedRest(alt); blendPose(p, p, alt, e * 0.85);
       p.spinePitch = lerp(p.spinePitch, -0.16, e); p.headPitch = lerp(p.headPitch, -0.12, e); p.headRoll = 0.06 * e;
+    } else if (b.kind === "stretch") {
+      // A short desk break: upper body only, keeping the seated legs and station unchanged.
+      for (const side of ["l", "r"] as const) {
+        p[`${side}ShoulderPitch`] = lerp(p[`${side}ShoulderPitch`], 2.35, e);
+        p[`${side}ShoulderRoll`] = lerp(p[`${side}ShoulderRoll`], 0.25, e);
+        p[`${side}Elbow`] = lerp(p[`${side}Elbow`], 0.45, e);
+      }
+      p.spinePitch = lerp(p.spinePitch, -0.08, e); p.headPitch = lerp(p.headPitch, -0.12, e);
     } else if (b.kind === "glance") aimHead(p, (b.aux > 0.5 ? 0.9 : -0.7) * e, -0.05 * e, 1);
     p.rootX = STATIONS.designer.x; p.rootZ = STATIONS.designer.z; p.rootLift = STATIONS.designer.floor; p.rootYaw = STATIONS.designer.yaw + dYaw;
     p.smile = 0.2; p.brow = 0.05; blink(p, t);
@@ -280,6 +288,9 @@ export function createStaff(seed: number) {
     else if (b.kind === "review") { lookAt(p, eyeScreen, e * 0.8); poseReview(p, e, "r"); }
     else if (b.kind === "camera" && input.visitor) {
       lookAt(p, localDir(S.developer.x, S.developer.z, S.developer.floor, vYaw, [input.visitor.x, 1.6, input.visitor.z], 1.58), e); p.smile = 0.45 * e;
+    } else if (b.kind === "welcome" && input.visitor) {
+      lookAt(p, localDir(S.developer.x, S.developer.z, S.developer.floor, vYaw, [input.visitor.x, 1.6, input.visitor.z], 1.58), e);
+      poseWave(p, vTrack.t, e); p.smile = 0.6 * e;
     } else lookAt(p, eyeScreen, 0.6 + 0.2 * Math.sin(t * 0.5));
     p.rootX = S.developer.x; p.rootZ = S.developer.z; p.rootLift = S.developer.floor; p.rootYaw = vYaw;
     if (!chat && b.kind !== "camera") p.smile = Math.max(p.smile, 0.12);

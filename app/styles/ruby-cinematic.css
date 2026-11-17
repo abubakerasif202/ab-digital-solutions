@@ -86,12 +86,12 @@
 .ruby-discipline-number { color: #e58da7; align-self: start; padding-top: 12px; }
 .ruby-discipline h3 { font-size: clamp(38px,4.7vw,73px); font-weight: 400; letter-spacing: -.06em; line-height: 1.1; margin: 0; transition: transform .45s,color .45s; }
 .ruby-discipline h3 small { display: block; font-size: var(--fs-label); color: #bcb2bb; letter-spacing: 0; margin-top: 14px; }
-.ruby-discipline:hover h3 { transform: translateX(7px); color: #ff94ad; }
+.ruby-discipline:is(:hover, :focus-visible) h3 { transform: translateX(7px); color: #ff94ad; }
 .ruby-discipline-copy { max-width: 330px; color: #c2b4c0; font-size: var(--fs-label); line-height: 1.9; }
 .ruby-discipline-copy > .cinema-label { display: block; font-size: var(--fs-label); color: #a8899f; margin-top: 20px; }
 .ruby-discipline-arrow { width: 48px; height: 48px; border: 1px solid #f7f1eb44; border-radius: 50%; display: grid; place-items: center; transition: background .4s,border-color .4s,transform .4s; }
 .ruby-discipline-arrow svg { width: 22px; }
-.ruby-discipline:hover .ruby-discipline-arrow { background: #9b1535; border-color: #e32655; transform: rotate(45deg); }
+.ruby-discipline:is(:hover, :focus-visible) .ruby-discipline-arrow { background: #9b1535; border-color: #e32655; transform: rotate(45deg); }
 .ruby-service-foot { display: grid; grid-template-columns: 1fr 2fr; gap: 50px; padding-top: 35px; }
 .ruby-service-foot > .cinema-label { color: #ac92a4; font-size: var(--fs-label); }
 .ruby-service-foot nav { display: flex; flex-wrap: wrap; gap: 8px 23px; justify-content: flex-end; }
@@ -131,7 +131,8 @@
 .ruby-colophon a { display: flex; gap: 14px; align-items: center; min-height: 44px; color: #dac2d1; }
 .ruby-colophon svg { width: 14px; }
 /* Interior language follows the identity without altering its factual content. */
-.ruby-cinematic .cinema-interior { --cinema-ink: #08070b; --cinema-gold: #e5c59a; --accent-ink: #ef86a2; }
+.ruby-cinematic .cinema-interior { --cinema-ink: #08070b; --cinema-gold: #e5c59a; --accent-ink: var(--cinema-gold); }
+.ruby-cinematic .studio-page--contact { --accent-ink: var(--cinema-gold); }
 .ruby-cinematic .cinema-interior :is(.cinema-chapter-label,.case-kicker,.eyebrow) { color: #ef86a2; }
 .ruby-cinematic .cinema-interior .cinema-paper .eyebrow { color: var(--bone-gilt); }
 .ruby-cinematic .cinema-interior :is(.cinema-interior-hero,.case-hero,.studio-service-hero) { position: relative; background: radial-gradient(ellipse at 90% 10%,#470d2255,transparent 60%),#08070b; }
@@ -229,6 +230,7 @@
 @media (prefers-reduced-motion: reduce) {
   .ruby-page *, .ruby-page *::before, .ruby-page *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .ruby-page [data-ruby-magnet] { transform: none; }
+  .ruby-discipline:is(:hover, :focus-visible) :is(h3, .ruby-discipline-arrow) { transform: none; }
   .ruby-title-mask > span, .ruby-title-mask > em, .ruby-hero-overline, .ruby-hero-actionline { opacity: 1; transform: none; }
 }
 .ruby-film .film-big-play-ring { border-color: #ff6388; background: #9b1535cc; color: #fff; box-shadow: 0 0 65px #e3265522; }
