@@ -48,16 +48,16 @@ for (const width of [390, 1150]) {
     });
 
     test("can be paused and resumed with the keyboard", async ({ page }) => {
-      await page.goto("/");
-      const control = page.getByRole("checkbox", { name: "Pause ticker" });
+      await page.goto("/", { waitUntil: "networkidle" });
+      const control = page.getByRole("button", { name: "Pause ticker" });
       const track = page.locator(".ruby-service-ticker-track");
       await expect(track).toHaveCSS("animation-play-state", "running");
       await control.focus();
       await page.keyboard.press("Space");
-      await expect(control).toBeChecked();
+      await expect(control).toHaveAttribute("aria-pressed", "true");
       await expect(track).toHaveCSS("animation-play-state", "paused");
       await page.keyboard.press("Space");
-      await expect(control).not.toBeChecked();
+      await expect(control).toHaveAttribute("aria-pressed", "false");
       await expect(track).toHaveCSS("animation-play-state", "running");
     });
 
@@ -68,7 +68,7 @@ for (const width of [390, 1150]) {
       await expect(ticker.getByRole("listitem")).toHaveText(words);
       await expect(ticker.locator(".ruby-service-ticker-track")).toHaveCSS("animation-name", "none");
       await expect(ticker.locator("[aria-hidden=true].ruby-service-ticker-group")).toBeHidden();
-      await expect(ticker.getByRole("checkbox")).toHaveCount(0);
+      await expect(ticker.getByRole("button", { name: "Pause ticker" })).toHaveCount(0);
       expect(await ticker.evaluate((band) => [...band.querySelectorAll("li")].filter((item) => item.getClientRects().length).every((item) => {
         const rect = item.getBoundingClientRect();
         const strip = band.getBoundingClientRect();

@@ -30,6 +30,7 @@ import "./styles/ruby-cinematic.css";
 import "./styles/project-exhibition.css";
 import "./styles/ruby-kinetic.css";
 import "./styles/ruby-mobile-motion.css";
+import "./styles/homepage-refinement.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),

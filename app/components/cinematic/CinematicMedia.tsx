@@ -21,6 +21,9 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const connection = (navigator as Navigator & { connection?: Connection }).connection;
     let inView = false;
+    let ready = false;
+    let idle: number | undefined;
+    let timer: number | undefined;
     let disposed = false;
     let blocked = false;
     let mediaFailed = false;
@@ -53,10 +56,10 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
         effectiveType: connection?.effectiveType,
       });
       if (!allowed || mediaFailed) return detach();
-      if (!inView || document.hidden || blocked) return pause();
+      if (!ready || !inView || document.hidden || blocked) return pause();
       if (!hasSource) {
         video.poster = variant === "mobile" ? `${base}-mobile-poster.webp` : `${base}-poster.webp`;
-        video.src = `${base}-${variant}.${extension}`;
+        video.src = `${base}-${variant}-lite.${extension}`;
         hasSource = true;
       }
       if (video.paused) {
@@ -70,6 +73,17 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
         });
       }
     };
+    const allowLoad = () => { ready = true; reconcile(); };
+    const queueLoad = () => {
+      if (typeof window.requestIdleCallback === "function") {
+        idle = window.requestIdleCallback(allowLoad, { timeout: 1300 });
+      } else {
+        timer = window.setTimeout(allowLoad, 300);
+      }
+    };
+    if (document.readyState === "complete") queueLoad();
+    else window.addEventListener("load", queueLoad, { once: true });
+
     const preferencesChanged = () => reconcile();
     // iOS Low Power Mode and Android data savers refuse silent autoplay until a gesture:
     // the first touch lifts the block so the film starts without any visible control.
@@ -100,6 +114,9 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
       document.removeEventListener("pointerdown", gesture);
       document.removeEventListener("touchend", gesture);
       disposed = true;
+      window.removeEventListener("load", queueLoad);
+      if (idle !== undefined) window.cancelIdleCallback(idle);
+      if (timer !== undefined) window.clearTimeout(timer);
       observer.disconnect();
       motion.removeEventListener("change", preferencesChanged);
       connection?.removeEventListener("change", preferencesChanged);

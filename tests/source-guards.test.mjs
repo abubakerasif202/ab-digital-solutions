@@ -659,7 +659,7 @@ test("second-pass compositions: real pages, varied portfolio and case-study syst
   assert.match(compositions, /\.gr-cs--system/);
 
   // Homepage services and enquiry destinations derive from the canonical registry.
-  assert.match(home, /servicePages\.map/);
+  assert.match(home, /servicePages\.find\(item => item\.slug === slug\)/);
   assert.match(home, /serviceContactHref\(service\)/);
 
   // Scroll-linked motion is opt-in and switched off for reduced motion.

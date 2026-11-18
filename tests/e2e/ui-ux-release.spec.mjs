@@ -64,17 +64,22 @@ test("interior editorial accents use warm gilt while the homepage keeps its ruby
   await expect(signature).toHaveCSS("filter", "none");
 });
 
-test("service rows give keyboard visitors the same bounded motion and a still alternative", async ({ page }) => {
-  await page.goto("/", { waitUntil: "networkidle" });
-  const service = page.locator(".ruby-discipline").first();
-  const arrow = service.locator(".ruby-discipline-arrow");
-  await service.scrollIntoViewIfNeeded();
-  await service.focus();
-  await expect(service).toBeFocused();
-  await expect(arrow).toHaveCSS("transform", "matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0)");
-  await expect(arrow).toHaveCSS("color", "rgb(255, 246, 248)");
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(arrow).toHaveCSS("transform", "none");
-  await expect(service.locator("h3")).toHaveCSS("transform", "none");
-  await expect(arrow).toHaveCSS("transition-duration", "0s");
+test("service pillars expose a keyboard focus indicator and expand with or without motion", async ({ page }) => {
+  for (const reducedMotion of ["no-preference", "reduce"]) {
+    await page.emulateMedia({ reducedMotion });
+    await page.goto("/", { waitUntil: "networkidle" });
+    const pillars = page.locator(".ruby-disciplines details");
+    const summary = pillars.nth(1).locator("summary");
+    await expect(pillars.first()).toHaveAttribute("open", "");
+    await summary.focus();
+    await expect(summary).toBeFocused();
+    await expect(summary).toHaveCSS("outline-style", "solid");
+    await page.keyboard.press("Space");
+    await expect(pillars.nth(1)).toHaveAttribute("open", "");
+    await expect(pillars.first()).not.toHaveAttribute("open");
+    await expect(pillars.nth(1).getByRole("link", { name: "Enquire about Custom Software & Business Systems" })).toBeVisible();
+    if (reducedMotion === "reduce") {
+      await expect(summary.locator(".ruby-discipline-arrow")).toHaveCSS("transition-duration", "0s");
+    }
+  }
 });
