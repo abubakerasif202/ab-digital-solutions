@@ -66,6 +66,7 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const kangarooBeat = useRef(0);
   const welcomed = useRef(false);
   const active = state.mode === "loading" || state.mode === "arrival" || state.mode === "intro" || state.mode === "explore";
+  const showBubble = active && bubblesOn && caption !== null;
   const pendingIntro = state.mode === "loading" || state.mode === "arrival" || state.mode === "intro";
   const onFailure = useCallback(() => dispatch({ type: "fail" }), []);
   const onReady = useCallback(() => { setSceneReady(true); dispatch({ type: "ready" }); }, []);
@@ -300,8 +301,8 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
           <button ref={skipButton} type="button" className={styles.smallButton} onClick={() => dispatch({ type: "skip" })}>Skip intro</button>
         </div>}
       </div>}
-      {active && <div className={styles.sceneCaption}><span>{state.outside ? "Sydney / Studio entrance" : state.mode === "arrival" ? "Sydney / Arrival" : `${String(roomNumber).padStart(2, "0")} / ${areaLabels[state.area]}`}</span>{hintOn && <span className={styles.hint}>{hint}</span>}</div>}
-      {active && bubblesOn && <LocalBubble caption={caption} onDismiss={dismissCaption} />}
+      {active && !showBubble && <div className={styles.sceneCaption}><span>{state.outside ? "Sydney / Studio entrance" : state.mode === "arrival" ? "Sydney / Arrival" : `${String(roomNumber).padStart(2, "0")} / ${areaLabels[state.area]}`}</span>{hintOn && <span className={styles.hint}>{hint}</span>}</div>}
+      {showBubble && <LocalBubble caption={caption} onDismiss={dismissCaption} />}
       {!active && (state.panel || state.still) && <div className={styles.sceneCaption}><span>{String(roomNumber).padStart(2, "0")} / {areaLabels[state.area]}</span><span>Still view</span></div>}
     </div>
     <div className={styles.controls}>
