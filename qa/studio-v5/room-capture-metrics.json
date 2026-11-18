@@ -1,0 +1,158 @@
+[
+  {
+    "width": 1440,
+    "room": "reception",
+    "heading": "Ideas start here.",
+    "selectionMs": 264.3011999999999,
+    "canvas": {
+      "width": 1440,
+      "height": 708,
+      "drawWidth": 1440,
+      "drawHeight": 708
+    },
+    "file": "1440-reception.png"
+  },
+  {
+    "width": 1440,
+    "room": "gallery",
+    "heading": "Work with purpose.",
+    "selectionMs": 101.30329999999958,
+    "canvas": {
+      "width": 1440,
+      "height": 708,
+      "drawWidth": 1440,
+      "drawHeight": 708
+    },
+    "file": "1440-gallery.png"
+  },
+  {
+    "width": 1440,
+    "room": "atelier",
+    "heading": "What we can build for you.",
+    "selectionMs": 68.9966000000004,
+    "canvas": {
+      "width": 1440,
+      "height": 708,
+      "drawWidth": 1440,
+      "drawHeight": 708
+    },
+    "file": "1440-atelier.png"
+  },
+  {
+    "width": 1440,
+    "room": "lounge",
+    "heading": "Tell us what you’re building.",
+    "selectionMs": 47.865099999999074,
+    "canvas": {
+      "width": 1440,
+      "height": 708,
+      "drawWidth": 1440,
+      "drawHeight": 708
+    },
+    "file": "1440-lounge.png"
+  },
+  {
+    "width": 768,
+    "room": "reception",
+    "heading": "Ideas start here.",
+    "selectionMs": 67.5630999999994,
+    "canvas": {
+      "width": 768,
+      "height": 458,
+      "drawWidth": 768,
+      "drawHeight": 458
+    },
+    "file": "768-reception.png"
+  },
+  {
+    "width": 768,
+    "room": "gallery",
+    "heading": "Work with purpose.",
+    "selectionMs": 72.97350000000006,
+    "canvas": {
+      "width": 768,
+      "height": 458,
+      "drawWidth": 768,
+      "drawHeight": 458
+    },
+    "file": "768-gallery.png"
+  },
+  {
+    "width": 768,
+    "room": "atelier",
+    "heading": "What we can build for you.",
+    "selectionMs": 64.51239999999962,
+    "canvas": {
+      "width": 768,
+      "height": 458,
+      "drawWidth": 768,
+      "drawHeight": 458
+    },
+    "file": "768-atelier.png"
+  },
+  {
+    "width": 768,
+    "room": "lounge",
+    "heading": "Tell us what you’re building.",
+    "selectionMs": 55.24170000000231,
+    "canvas": {
+      "width": 768,
+      "height": 458,
+      "drawWidth": 768,
+      "drawHeight": 458
+    },
+    "file": "768-lounge.png"
+  },
+  {
+    "width": 390,
+    "room": "reception",
+    "heading": "Ideas start here.",
+    "selectionMs": 52.5711999999985,
+    "canvas": {
+      "width": 390,
+      "height": 386,
+      "drawWidth": 487,
+      "drawHeight": 482
+    },
+    "file": "390-reception.png"
+  },
+  {
+    "width": 390,
+    "room": "gallery",
+    "heading": "Work with purpose.",
+    "selectionMs": 84.70490000000427,
+    "canvas": {
+      "width": 390,
+      "height": 386,
+      "drawWidth": 487,
+      "drawHeight": 482
+    },
+    "file": "390-gallery.png"
+  },
+  {
+    "width": 390,
+    "room": "atelier",
+    "heading": "What we can build for you.",
+    "selectionMs": 50.271700000004785,
+    "canvas": {
+      "width": 390,
+      "height": 386,
+      "drawWidth": 487,
+      "drawHeight": 482
+    },
+    "file": "390-atelier.png"
+  },
+  {
+    "width": 390,
+    "room": "lounge",
+    "heading": "Tell us what you’re building.",
+    "selectionMs": 44.71839999999793,
+    "canvas": {
+      "width": 390,
+      "height": 386,
+      "drawWidth": 487,
+      "drawHeight": 482
+    },
+    "file": "390-lounge.png"
+  }
+]

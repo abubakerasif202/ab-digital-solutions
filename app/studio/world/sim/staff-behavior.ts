@@ -7,6 +7,7 @@ import {
   approach, aimHead, armToward, blendPose, clamp, createPose, lerp, poseReview, poseSeatedRest, poseSeatedTyping, poseStanding, poseWalk, poseWave, smooth, wrapAngle,
 } from "./humanoid-pose";
 import type { Pose, Side } from "./humanoid-pose";
+import { idleAccent, poseAccent } from "./cast-idle";
 
 export const MAX_DT = 0.1;
 export const BODY_MARGIN = 0.28; // metres of clearance the walker keeps from every obstacle edge
@@ -238,8 +239,7 @@ export function createStaff(seed: number) {
   }
 
   function blink(p: Pose, t: number) {
-    const c = (t * 0.43) % 1;
-    p.blink = c > 0.94 ? Math.sin(((c - 0.94) / 0.06) * Math.PI) : 0;
+    p.blink = idleAccent(t, seed, 4.8, 0.18);
   }
 
   function composeDesigner() {
@@ -267,6 +267,9 @@ export function createStaff(seed: number) {
     p.spinePitch += 0.01 * Math.sin(t * 1.5);
   }
 
+  // The chat partners use the same visit clock, not their independent idle phases.
+  const chatTurn = () => Math.max(0, settleT - 0.6) % 4.8;
+
   function composeDeveloper(input: StaffInput) {
     const t = clock + phase.v, p = developer, S = STATIONS;
     const chat = self.chatting;
@@ -278,10 +281,11 @@ export function createStaff(seed: number) {
     if (chat) {
       const toWalker = localDir(S.developer.x, S.developer.z, S.developer.floor, vYaw, [wx, 1.55, wz], 1.58);
       lookAt(p, toWalker, 1);
-      const talking = Math.sin(t * 0.8) > 0.2; // takes turns with the walker
-      if (talking) {
-        mixArm(p, "r", [-0.3, -0.7, 0.8], 0.9, 1.2 + 0.2 * Math.sin(t * 3.1)); p.headPitch += 0.04 * Math.sin(t * 3.1);
-      } else p.headPitch += Math.max(0, Math.sin(t * 2.2)) * 0.1;
+      const turn = chatTurn();
+      const speaking = poseAccent(turn - 0.15, 1.8);
+      const listening = poseAccent(turn - 3.15, 1);
+      if (speaking > 0) mixArm(p, "r", [-0.3, -0.7, 0.8], 0.9 * speaking, 1.2 + 0.2 * Math.sin(t * 3.1));
+      p.headPitch += 0.04 * speaking * Math.sin(t * 3.1) + 0.08 * listening;
       p.smile = 0.55;
     } else if (b.kind === "point") { lookAt(p, eyeScreen, e); mixArm(p, "r", toScreen, e, 0.1); p.smile = 0.15; }
     else if (b.kind === "touch") { lookAt(p, eyeScreen, e); mixArm(p, "l", toScreen, e, 0.35 + 0.08 * Math.sin(t * 4)); }
@@ -294,7 +298,8 @@ export function createStaff(seed: number) {
     } else lookAt(p, eyeScreen, 0.6 + 0.2 * Math.sin(t * 0.5));
     p.rootX = S.developer.x; p.rootZ = S.developer.z; p.rootLift = S.developer.floor; p.rootYaw = vYaw;
     if (!chat && b.kind !== "camera") p.smile = Math.max(p.smile, 0.12);
-    p.brow = 0.05; blink(p, t);
+    p.brow = 0.05 + (chat ? 0.2 * poseAccent(chatTurn() - 3.15, 1) : 0);
+    blink(p, t);
   }
 
   function composeWalker() {
@@ -311,17 +316,25 @@ export function createStaff(seed: number) {
         case "talk": {
           lookAt(dwellPose, eye, 0.9);
           const s = Math.sin(t * 3.3 + b.aux * 6);
-          if (self.chatting && Math.sin(t * 0.8) <= 0.2) mixArm(dwellPose, sideOf(b), [0.2 * b.side, -0.7, 0.8], 0.9 * e, 1.25 + 0.25 * s);
           dwellPose.headPitch += 0.04 * s; dwellPose.smile = 0.5; break;
         }
         default: aimHead(dwellPose, 0.5 * Math.sin(t * 0.45 + b.aux * 6), 0, 1 - e * 0.2);
       }
     }
+    const turn = self.chatting ? chatTurn() : -1;
+    const speaking = poseAccent(turn - 2.5, 1.95);
+    const listening = poseAccent(turn - 0.85, 0.95);
+    if (self.chatting) {
+      lookAt(dwellPose, eye, 0.9);
+      if (speaking > 0) mixArm(dwellPose, "l", [0.2, -0.7, 0.8], 0.9 * speaking, 1.25 + 0.2 * Math.sin(t * 3.3));
+      dwellPose.headPitch += 0.08 * listening;
+    }
     poseWalk(alt, walkPhase, clamp(speed / 1.1, 0, 1));
     blendPose(p, dwellPose, alt, smooth(walkW));
     if (walkW > 0.05) p.smile = lerp(p.smile, 0.12, walkW);
     p.rootX = wx; p.rootZ = wz; p.rootLift = wlift; p.rootYaw = wyaw;
-    p.brow = 0.05; blink(p, t);
+    p.brow = 0.05 + 0.2 * listening;
+    blink(p, t);
   }
   compose({ walking: false });
   return self;

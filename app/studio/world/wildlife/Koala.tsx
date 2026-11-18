@@ -60,7 +60,11 @@ function createKoalaRig() {
     body.scale.set(1 + pose.breath * 0.012, 1 + pose.breath * 0.028, 1 + pose.breath * 0.02);
     body.rotation.x = -pose.bodyLean;
     head.rotation.set(pose.headPitch, pose.headYaw, pose.headRoll);
-    lids.forEach((lid) => { lid.scale.y = 0.026 * (1 - pose.eyeOpen) + 0.0008; lid.visible = pose.eyeOpen < 0.97; });
+    lids.forEach((lid, i) => {
+      const openness = i === 0 ? pose.eyeOpen : pose.rightEyeOpen;
+      lid.scale.y = 0.026 * (1 - openness) + 0.0008;
+      lid.visible = openness < 0.97;
+    });
     ears.forEach((ear, i) => { ear.rotation.z = (i === 0 ? 1 : -1) * pose.earTwitch * 0.25; });
     // Resting arms fold over the belly; the right arm lifts and waves when the koala is awake.
     arms.forEach((arm, i) => {

@@ -168,8 +168,8 @@
 .accessNote { padding: 6px 0 16px; }
 .directory .process { margin-block: 16px; }
 
-/* Below 700px (and on short landscape screens) details sit under the scene as normal page content. */
-@media (max-width: 699px), (max-height: 500px) and (orientation: landscape) {
+/* On phones and narrow tablets, details stack below the scene so the exhibits keep their width. */
+@media (max-width: 899px), (max-height: 500px) and (orientation: landscape) {
   .panel { position: static; width: auto; max-height: none; overflow: visible; margin: 0; padding: 18px 18px 28px; border-inline: 0; border-radius: 0; box-shadow: none; }
   .panel h2 { font-size: 27px; line-height: 1.12; margin: 4px 0 12px; }
   .panel h3 { font-size: 20px; margin: 14px 0 8px; }

@@ -49,7 +49,7 @@ for (const width of [390, 768, 1440]) {
       await space(page, label);
       await expect(page.locator("#studio-panel-heading")).toHaveText(heading);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-      if (width === 390) {
+      if (width <= 768) {
         const sheet = await page.locator("aside[aria-labelledby='studio-panel-heading']").boundingBox();
         const stage = await mode(page).boundingBox();
         // Details sit below the scene as page content, never over it or in a nested scroller.

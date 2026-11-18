@@ -1,0 +1,17 @@
+{
+  "passed": 24,
+  "failed": 0,
+  "skipped": 0,
+  "durationMs": 336976.449,
+  "browser": "Chrome 157.0.8103.80 (Intel Iris Xe / D3D11)",
+  "viewportWidths": [
+    320,
+    360,
+    375,
+    390,
+    430,
+    768,
+    1440
+  ],
+  "landscape": true
+}

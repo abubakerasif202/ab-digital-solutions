@@ -34,9 +34,9 @@ function createCockatooRig() {
   b.blob(head, bill, [0.024, 0.032, 0.03], [0, 0.0, 0.058]); // upper bill
   b.blob(head, bill, [0.012, 0.026, 0.018], [0, -0.03, 0.074]); // hooked tip
   b.blob(head, bill, [0.019, 0.016, 0.022], [0, -0.018, 0.052]);
-  ([-1, 1] as const).forEach((m) => {
+  const pupils = ([-1, 1] as const).map((m) => {
     b.blob(head, ring, [0.017, 0.017, 0.012], [m * 0.045, 0.04, 0.028]);
-    b.blob(head, eye, [0.011, 0.012, 0.01], [m * 0.047, 0.04, 0.034]);
+    return b.blob(head, eye, [0.011, 0.012, 0.01], [m * 0.047, 0.04, 0.034]);
   });
   // Crest: a fan of curved yellow feathers that lie back and lift when the bird is excited.
   const crest = b.group(head, 0, 0.074, -0.012, "XYZ");
@@ -65,6 +65,7 @@ function createCockatooRig() {
     body.rotation.x = pose.bodyPitch;
     body.position.y = 0.12 + pose.bob;
     head.rotation.set(pose.headPitch, pose.headYaw, pose.headRoll);
+    for (const pupil of pupils) pupil.scale.y = 0.012 * (0.12 + 0.88 * pose.eyeOpen);
     const lift = THREE.MathUtils.lerp(-1.3, -0.12, pose.crest);
     feathers.forEach((feather, i) => { feather.rotation.x = lift + (i % 2 ? 0.05 : -0.03); });
     wings.forEach(({ wing, side }) => {

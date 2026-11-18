@@ -3,6 +3,7 @@
 // Idle life: ear twitches, looking around, natural short hops inside a fenced-off zone. Interactions: wave,
 // head tilt, playful hop. Reduced motion replaces hops with gentle poses.
 import { mulberry32, range } from "./rng";
+import { idleAccent } from "./cast-idle";
 import { GROUND_Y, ROO, legIK } from "./kangaroo-behavior";
 import type { KangarooPose } from "./kangaroo-behavior";
 import { KANGAROO_ZONE, damp, footprintClear, inKangarooZone, wildlifePlacement } from "./wildlife";
@@ -98,6 +99,13 @@ export function createResidentKangaroo(seed = 20261105) {
     }
     if (airborne) { T.bodyPitch = 0.72; T.neckPitch = -0.3; T.armL = T.armR = 0.9; T.elbowL = T.elbowR = 1.5; T.tail1 = -0.1; T.tail2 = 0.05; T.tail3 = 0.1; T.headPitch = -0.05; }
     if (crouch > 0) { T.bodyPitch = 0.62; T.headPitch = 0.1; }
+
+    if (!reduced && !hop && !reaction) {
+      // Scent check at the front step; only the head and neck move.
+      const sniff = idleAccent(clock, seed, 7, 1.05);
+      T.neckPitch += 0.1 * sniff;
+      T.headPitch += 0.22 * sniff;
+    }
 
     if (reaction) {
       const r = reaction, u = r.t / r.dur;
