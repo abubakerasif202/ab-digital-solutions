@@ -87,9 +87,11 @@ test("all seven SEO-named services use one registry across the hub and footer", 
   assert.match(hub, /servicePages\.map/);
   assert.match(footer, /servicePages\.map/);
   assert.match(layout, /servicePages\.map/);
-  for (const label of ["Work", "Services", "Virtual Studio", "Process", "About", "Contact"]) {
+  for (const label of ["Work", "Services", "Process", "About", "Contact"]) {
     assert.ok(header.includes(`>${label}</Link>`), label);
   }
+  assert.match(header, /href="\/studio"[^>]*>\{pathname === "\/" \? "Studio" : "Virtual Studio"\}/);
+  assert.match(header, /href="#film"[^>]*>Film<\/a>/);
   for (const platform of ["WhatsApp", "LinkedIn", "GitHub", "Facebook", "Instagram"]) {
     assert.ok(footer.includes(platform), platform);
   }

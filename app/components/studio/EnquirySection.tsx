@@ -8,6 +8,7 @@ interface EnquirySectionProps {
   id?: string;
   index?: string;
   showIndex?: boolean;
+  showNextSteps?: boolean;
   headingAs?: "h1" | "h2";
   headingId?: string;
   /** Optional breadcrumb or context line rendered above the eyebrow. */
@@ -27,6 +28,7 @@ export function EnquirySection({
   id,
   index = "07",
   showIndex = true,
+  showNextSteps = false,
   headingAs: Heading = "h2",
   headingId = "contact-heading",
   before,
@@ -46,6 +48,16 @@ export function EnquirySection({
           <Reveal as="p" className="studio-body studio-body--lead" variant="blur" delay={80}>
             Tell us what you are building and where you want the business to go. We will come back with a practical next step.
           </Reveal>
+          {showNextSteps && (
+            <div className="ruby-next-steps">
+              <h3>What happens next</h3>
+              <ol>
+                <li>We read your brief and ask any questions that help clarify the goal.</li>
+                <li>We discuss scope and priorities in a first conversation.</li>
+                <li>We recommend a practical next step.</li>
+              </ol>
+            </div>
+          )}
           <Reveal as="ul" className="studio-contact-rows" variant="fade-up" delay={140} aria-label="Contact directly">
             <li>
               <a href={`tel:${siteConfig.phoneInternational}`}>

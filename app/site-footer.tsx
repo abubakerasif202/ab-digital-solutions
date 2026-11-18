@@ -1,6 +1,7 @@
 import { ABBrandImage } from "./components/brand/ABBrandImage";
 import Link from "next/link";
 import { siteConfig } from "./site-config";
+import { projects } from "./project-data";
 import { servicePages } from "./services/service-data";
 import { MessageCircle } from "lucide-react";
 import { ArrowIcon, Glyph } from "./icons";
@@ -23,9 +24,18 @@ const profileLinks = [
   ["Instagram", siteConfig.social.instagram],
 ].filter((entry): entry is [string, string] => Boolean(entry[1]));
 
-export function SiteFooter({ currentYear }: { currentYear: number }) {
+export function SiteFooter({ currentYear, home = false }: { currentYear: number; home?: boolean }) {
   return (
-    <footer className="site-footer studio-footer">
+    <footer className={`site-footer studio-footer${home ? " studio-footer--home" : ""}`}>
+      {home && (
+        <div className="studio-footer-closing">
+          <div className="studio-shell">
+            <p className="cinema-label">The next move</p>
+            <h2>Let’s build something <em>worth noticing.</em></h2>
+            <a className="ruby-project-cta" href="#contact">Start a project <ArrowIcon /></a>
+          </div>
+        </div>
+      )}
       <div className="studio-shell studio-footer-main">
         <div className="studio-footer-brand">
           <Link className="brand" href="/" aria-label="AB Web Studio home">
@@ -40,8 +50,9 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
         <nav className="studio-footer-col" aria-label="Footer studio navigation">
           <h2>Studio</h2>
           <ul>
-            {studioLinks.map(([href, label]) => (
-              <li key={href}><Link href={href}>{label}</Link></li>
+            {home && <li><a href="#film">Film</a></li>}
+            {studioLinks.filter(([href]) => !home || !["/work", "/services", "/contact"].includes(href)).map(([href, label]) => (
+              <li key={href}><Link href={href} prefetch={home ? false : undefined}>{label}</Link></li>
             ))}
           </ul>
         </nav>
@@ -50,13 +61,25 @@ export function SiteFooter({ currentYear }: { currentYear: number }) {
           <h2>Services</h2>
           <ul>
             {servicePages.map((service) => (
-              <li key={service.slug}><Link href={`/services/${service.slug}`}>{service.title}</Link></li>
+              <li key={service.slug}><Link href={`/services/${service.slug}`} prefetch={home ? false : undefined}>{service.title}</Link></li>
             ))}
           </ul>
         </nav>
 
+        {home && (
+          <nav className="studio-footer-col" aria-label="Footer work">
+            <h2>Work</h2>
+            <ul>
+              <li><Link href="/work" prefetch={false}>All case studies</Link></li>
+              {projects.slice(0, 3).map(project => (
+                <li key={project.slug}><Link href={`/work/${project.slug}`} prefetch={false}>{"titleName" in project ? project.titleName : project.name}</Link></li>
+              ))}
+            </ul>
+          </nav>
+        )}
+
         <div className="studio-footer-col">
-          <h2>Contact</h2>
+          <h2>{home ? "Contact & socials" : "Contact"}</h2>
           <ul>
             <li><a className="studio-footer-strong" href={`tel:${siteConfig.phoneInternational}`}>{siteConfig.phoneDisplay}</a></li>
             <li><a className="studio-footer-strong studio-footer-email" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></li>

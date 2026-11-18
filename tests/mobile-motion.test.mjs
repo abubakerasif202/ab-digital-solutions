@@ -10,8 +10,10 @@ test("mobile motion layer is loaded after the kinetic layer it overrides", () =>
   assert.ok(layout.indexOf("ruby-kinetic.css") < layout.indexOf("ruby-mobile-motion.css"));
 });
 
-test("hero chapters stay visible on phones instead of being hidden", () => {
-  assert.match(css, /@media \(max-width: 960px\)[\s\S]*\.ruby-scenes \{ display: flex;/);
+test("hero shows case study links rather than film chapter labels", () => {
+  const home = read("app/agency-home.tsx");
+  assert.match(home, /aria-label="Selected case studies"/);
+  assert.doesNotMatch(home, /Harbour|Arteries|Skyline/);
 });
 
 test("touch lighting and sheen are chosen by input capability and respect reduced motion", () => {

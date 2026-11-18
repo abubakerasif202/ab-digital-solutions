@@ -314,6 +314,19 @@ export function serviceContactHref(service: Pick<ServicePage, "slug">): string {
   return `/contact?service=${encodeURIComponent(service.slug)}`;
 }
 
+export type ServiceDiscipline = {
+  name: string;
+  description: string;
+  services: readonly ServicePage["slug"][];
+};
+
+/** Homepage pillars. Slugs are type-checked, and a test asserts every service appears exactly once. */
+export const serviceDisciplines: readonly ServiceDiscipline[] = [
+  { name: "Websites & digital experiences", description: "Distinctive design, a clear story and a considered journey from first impression to enquiry.", services: ["web-design-sydney", "branding-content"] },
+  { name: "Software & connected systems", description: "Practical technology shaped around how your business already works.", services: ["custom-software-business-systems", "website-maintenance"] },
+  { name: "Commerce & digital growth", description: "Thoughtful online stores and search-ready foundations for what comes next.", services: ["ecommerce-website-development", "seo-local-visibility", "digital-marketing"] },
+];
+
 // Delivery details stay beside the canonical service definitions.
 export const serviceDelivery: Record<ServicePage["slug"], {
   steps: readonly [string, string][];

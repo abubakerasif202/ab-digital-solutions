@@ -13,6 +13,12 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [failed, setFailed] = useState(false);
+  // A visitor pause outranks every automatic resume (visibility, gestures, preferences).
+  const [userPaused, setUserPaused] = useState(false);
+  // Once the film has moved, keep its control mounted so keyboard focus survives resume.
+  const [controllable, setControllable] = useState(false);
+  const userPausedRef = useRef(false);
+  const reconcileRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     const root = rootRef.current;
@@ -21,6 +27,9 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const connection = (navigator as Navigator & { connection?: Connection }).connection;
     let inView = false;
+    let ready = false;
+    let idle: number | undefined;
+    let timer: number | undefined;
     let disposed = false;
     let blocked = false;
     let mediaFailed = false;
@@ -44,6 +53,8 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
         video.load();
         hasSource = false;
       }
+      // No source means no motion, so there is nothing left to pause.
+      if (!disposed) setControllable(false);
     };
     const reconcile = () => {
       if (disposed) return;
@@ -53,10 +64,10 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
         effectiveType: connection?.effectiveType,
       });
       if (!allowed || mediaFailed) return detach();
-      if (!inView || document.hidden || blocked) return pause();
+      if (!ready || !inView || document.hidden || blocked || userPausedRef.current) return pause();
       if (!hasSource) {
         video.poster = variant === "mobile" ? `${base}-mobile-poster.webp` : `${base}-poster.webp`;
-        video.src = `${base}-${variant}.${extension}`;
+        video.src = `${base}-${variant}-lite.${extension}`;
         hasSource = true;
       }
       if (video.paused) {
@@ -70,6 +81,18 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
         });
       }
     };
+    reconcileRef.current = reconcile;
+    const allowLoad = () => { ready = true; reconcile(); };
+    const queueLoad = () => {
+      if (typeof window.requestIdleCallback === "function") {
+        idle = window.requestIdleCallback(allowLoad, { timeout: 1300 });
+      } else {
+        timer = window.setTimeout(allowLoad, 300);
+      }
+    };
+    if (document.readyState === "complete") queueLoad();
+    else window.addEventListener("load", queueLoad, { once: true });
+
     const preferencesChanged = () => reconcile();
     // iOS Low Power Mode and Android data savers refuse silent autoplay until a gesture:
     // the first touch lifts the block so the film starts without any visible control.
@@ -100,14 +123,24 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
       document.removeEventListener("pointerdown", gesture);
       document.removeEventListener("touchend", gesture);
       disposed = true;
+      window.removeEventListener("load", queueLoad);
+      if (idle !== undefined) window.cancelIdleCallback(idle);
+      if (timer !== undefined) window.clearTimeout(timer);
       observer.disconnect();
       motion.removeEventListener("change", preferencesChanged);
       connection?.removeEventListener("change", preferencesChanged);
       document.removeEventListener("visibilitychange", reconcile);
       video.removeEventListener("error", onError);
+      reconcileRef.current = () => {};
       detach();
     };
   }, []);
+
+  const togglePause = () => {
+    userPausedRef.current = !userPausedRef.current;
+    setUserPaused(userPausedRef.current);
+    reconcileRef.current();
+  };
 
   return (
     <div ref={rootRef} className={`cinema-media ${className}`} data-playing={playing} data-failed={failed}>
@@ -129,9 +162,16 @@ export function CinematicMedia({ className = "" }: { className?: string }) {
         disableRemotePlayback
         loop
         preload="none"
-        onPlaying={() => setPlaying(true)}
+        onPlaying={() => { setPlaying(true); setControllable(true); }}
         onPause={() => setPlaying(false)}
       />
+      {controllable && (
+        <button type="button" className="cinema-media-control" aria-label="Pause background film" aria-pressed={userPaused} onClick={togglePause}>
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+            {userPaused ? <path d="M4 2.5v11l9-5.5z" fill="currentColor" /> : <path d="M4 2.5h3v11H4zm5 0h3v11H9z" fill="currentColor" />}
+          </svg>
+        </button>
+      )}
     </div>
   );
 }

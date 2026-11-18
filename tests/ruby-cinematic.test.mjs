@@ -46,8 +46,8 @@ test("V3 mounts documented real-footage derivatives instead of the archived AI s
   assert.ok(provenance.includes("sydney-ruby-v3"), "mounted V3 processing must have provenance");
   for (const variant of ["desktop", "mobile"]) {
     for (const extension of ["mp4", "webm"]) {
-      const asset = await stat(new URL(`../public/cinematic/sydney-ruby-v3-${variant}.${extension}`, import.meta.url));
-      assert.ok(asset.size > 10000 && asset.size < (variant === "mobile" ? 1100000 : 2250000));
+      const asset = await stat(new URL(`../public/cinematic/sydney-ruby-v3-${variant}-lite.${extension}`, import.meta.url));
+      assert.ok(asset.size > 10000 && asset.size < (variant === "mobile" ? 500000 : 950000));
     }
   }
 });

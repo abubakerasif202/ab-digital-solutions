@@ -13,7 +13,8 @@ export const metadata: Metadata = {
   title: "The Virtual Studio",
   description,
   alternates: { canonical: "/studio" },
-  openGraph: { title: "The Virtual Studio | AB Web Studio", description, url: "/studio", images: [{ url: "/studio/studio-poster.png", width: 1440, height: 900, alt: "AB Web Studio original architectural virtual studio" }] },
+  // A page openGraph replaces the layout's entirely, so restate the shared fields.
+  openGraph: { title: "The Virtual Studio | AB Web Studio", description, url: "/studio", siteName: siteConfig.name, type: "website", locale: "en_AU", images: [{ url: "/studio/studio-poster.png", width: 1440, height: 900, alt: "AB Web Studio original architectural virtual studio" }] },
   twitter: { card: "summary_large_image", title: "The Virtual Studio | AB Web Studio", description, images: ["/studio/studio-poster.png"] },
 };
 

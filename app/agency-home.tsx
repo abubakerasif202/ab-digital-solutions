@@ -4,8 +4,8 @@ import type { CSSProperties } from "react";
 import { PageTransition } from "./components/motion/PageTransition";
 import { Reveal } from "./components/motion/Reveal";
 import { ContactForm } from "./components/ContactForm";
-import { projects } from "./project-data";
-import { serviceContactHref, servicePages } from "./services/service-data";
+import { projects, type Project } from "./project-data";
+import { findService, serviceContactHref, serviceDisciplines } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
@@ -16,30 +16,27 @@ import { ProcessSection } from "./components/ProcessSection";
 import { EnquirySection } from "./components/studio/EnquirySection";
 import { CinematicMedia } from "./components/cinematic/CinematicMedia";
 import { RubyMotion } from "./components/cinematic/RubyMotion";
+import { TickerToggle } from "./components/cinematic/TickerToggle";
+import { CapabilityCount } from "./components/cinematic/CapabilityCount";
+import { ProjectArtwork } from "./project-artwork";
 
-const disciplines = [
-  { number: "01", name: "Websites & digital experiences", description: "Distinctive design. A clear story. A considered journey from first impression to enquiry.", href: "/services/web-design-sydney", detail: "Strategy / Design / Development" },
-  { number: "02", name: "Software & connected systems", description: "Practical technology shaped around the way your business works, not the other way around.", href: "/services/custom-software-business-systems", detail: "Platforms / Workflows / Integrations" },
-  { number: "03", name: "Commerce & digital growth", description: "Thoughtful online stores, search-ready foundations and ongoing care for what comes next.", href: "/services/ecommerce-website-development", detail: "Commerce / Visibility / Support" },
-] as const;
-
-const scenes = ["Harbour", "Arteries", "Skyline"] as const;
+const featuredSlugs = ["jufaja-homes", "aftab-sons-transport", "247-inventory-system"];
+const proofProjects: readonly Project[] = featuredSlugs.flatMap(slug => projects.filter(project => project.slug === slug));
+const deviceProject = projects.find(project => project.slug === "wild-pest-solutions");
+const phoneCapture = deviceProject?.gallery?.find(shot => shot.aspectRatio === "390 / 844");
+const preferredStack = ["Next.js", "React", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL", "Prisma", "Vercel"];
+const documentedStack = preferredStack.filter(tool => projects.some(project => project.techStack.some(used => used === tool)));
 const bandWords = ["Websites", "Online stores", "Business systems", "Made in Sydney"] as const;
 
-/** Per-line mask reveal: each line rises out of its own clipping row, staggered by index. */
 function Lines({ lines }: { lines: readonly (string | { accent: string })[] }) {
-  return (
-    <>
-      {lines.map((line, index) => {
-        const text = typeof line === "string" ? line : line.accent;
-        return (
-          <span className="ruby-line" key={text} style={{ "--line": index } as CSSProperties}>
-            <span>{typeof line === "string" ? text : <em>{text}</em>}</span>
-          </span>
-        );
-      })}
-    </>
-  );
+  return lines.map((line, index) => {
+    const text = typeof line === "string" ? line : line.accent;
+    return (
+      <span className="ruby-line" key={text} style={{ "--line": index } as CSSProperties}>
+        <span>{typeof line === "string" ? text : <em>{text}</em>}</span>
+      </span>
+    );
+  });
 }
 
 export default function AgencyHome({ currentYear }: { currentYear: number }) {
@@ -64,7 +61,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <span className="ruby-title-row ruby-title-row--signature"><em>Beyond ordinary.</em></span>
               </h1>
               <div className="ruby-hero-actionline">
-                <p>Premium websites, online stores and purpose-built business systems.</p>
+                <p>Distinctive design. Precise engineering. Premium websites, online stores and purpose-built business systems.</p>
                 <div className="ruby-hero-actions">
                   <a className="ruby-project-cta" href="#contact"><span>Start your project</span><ArrowIcon /></a>
                   <a className="ruby-ghost-cta" href="#work"><span>See the work</span><ArrowIcon direction="right" /></a>
@@ -72,17 +69,24 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               </div>
             </div>
             <div className="cinema-shell ruby-hero-bottomline">
-              <ol className="ruby-scenes" aria-hidden="true">
-                {scenes.map((scene, index) => <li key={scene}><span>{String(index + 1).padStart(2, "0")}</span>{scene}<i /></li>)}
-              </ol>
+              <div className="ruby-proof">
+                <Link href="/work" prefetch={false} className="ruby-proof-index"><strong>{projects.length}</strong><span>Case studies</span></Link>
+                <ul role="list" aria-label="Selected case studies">
+                  {proofProjects.map(project => (
+                    <li key={project.slug}>
+                      <Link href={`/work/${project.slug}`} prefetch={false} aria-label={project.name}>
+                        <ProjectArtwork project={project} sizes="90px" decorative />
+                        <span aria-hidden="true">{project.titleName ?? project.name}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </section>
 
           <section className="ruby-service-ticker" aria-label="Studio capabilities">
-            <label className="ruby-service-ticker-control">
-              <input type="checkbox" aria-controls="services-ticker-track" />
-              Pause ticker
-            </label>
+            <TickerToggle />
             <div className="ruby-service-ticker-viewport">
               <div id="services-ticker-track" className="ruby-service-ticker-track">
                 {[0, 1].map(copy => (
@@ -96,18 +100,24 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
           <section id="about" className="ruby-positioning" aria-labelledby="perspective-heading">
             <div className="cinema-shell ruby-positioning-grid">
-              <Reveal className="ruby-plate" variant="mask">
-                <div className="ruby-plate-frame">
-                  <Image src="/cinematic/sydney-studio-plate.webp" alt="The AB Web Studio workspace at night: a gold AB sign on a ruby-lit wall, a laptop showing code, and Sydney Opera House and Harbour Bridge through the window" width={864} height={1080} sizes="(max-width: 720px) calc(100vw - 68px), (max-width: 960px) 30vw, (max-width: 1100px) 26vw, min(34vw, 535px)" />
-                </div>
-              </Reveal>
+              {deviceProject && phoneCapture && (
+                <figure className="ruby-device-study">
+                  <div className="ruby-device-laptop"><div className="ruby-device-screen">
+                    <ProjectArtwork project={deviceProject} sizes="(max-width: 720px) 82vw, 35vw" />
+                  </div></div>
+                  <div className="ruby-device-phone">
+                    <Image src={phoneCapture.src} alt={phoneCapture.alt} width={390} height={844} sizes="(max-width: 720px) 24vw, 11vw" />
+                  </div>
+                  <figcaption><Link href={`/work/${deviceProject.slug}`} prefetch={false}>{deviceProject.name} <ArrowIcon /></Link><span>Desktop / Mobile</span></figcaption>
+                </figure>
+              )}
               <div className="ruby-positioning-copy">
                 <Reveal as="h2" id="perspective-heading" className="ruby-statement ruby-lines">
                   <Lines lines={["Good design", "gets noticed.", { accent: "Great thinking" }, "moves you forward."]} />
                 </Reveal>
                 <div className="ruby-positioning-bottom">
                   <Reveal as="p">AB Web Studio brings design, development and practical technology together. To make your business easier to understand, more compelling to choose, and ready for what comes next.</Reveal>
-                  <Link href="/about" className="cinema-link">The studio behind the work <ArrowIcon /></Link>
+                  <Link href="/about" prefetch={false} className="cinema-link">The studio behind the work <ArrowIcon /></Link>
                 </div>
               </div>
             </div>
@@ -115,37 +125,57 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
           <PortfolioSection />
 
+          <section className="ruby-capabilities" aria-labelledby="capability-heading">
+            <div className="cinema-shell ruby-capability-grid">
+              <div className="ruby-capability-intro">
+                <p className="cinema-label">Engineering / 01</p>
+                <h2 id="capability-heading">Built to perform.</h2>
+                <p>Technology choices drawn from the work, not a wishlist.</p>
+              </div>
+              <div className="ruby-capability-stack">
+                <p><CapabilityCount value={documentedStack.length} /> tools from our case studies</p>
+                <ul aria-label="Documented project technologies">{documentedStack.map(tool => <li key={tool}>{tool}</li>)}</ul>
+              </div>
+              <dl className="ruby-capability-metrics" role="group" aria-label="Performance measurement">
+                {/* TODO: Publish dated Lighthouse runs and field data only when measured. */}
+                <div><dt>Lighthouse</dt><dd>Not yet benchmarked</dd></div>
+                <div><dt>Core Web Vitals</dt><dd>Field data pending</dd></div>
+              </dl>
+            </div>
+          </section>
+
           <section id="services" className="ruby-services" aria-labelledby="services-heading">
             <div className="cinema-shell">
               <header className="ruby-section-header">
                 <Reveal as="h2" id="services-heading" className="ruby-lines"><Lines lines={["Design & development."]} /></Reveal>
                 <p>Design that earns attention.<br />Technology that does the work.</p>
               </header>
-              <ol className="ruby-disciplines">
-                {disciplines.map(discipline => (
-                  <li key={discipline.number}>
-                    <Reveal variant="line">
-                      <Link href={discipline.href} className="ruby-discipline" data-ruby-depth>
-                        <span className="cinema-label ruby-discipline-number">{discipline.number}</span>
-                        <h3>{discipline.name}</h3>
-                        <span className="ruby-discipline-copy">{discipline.description}<span className="cinema-label">{discipline.detail}</span></span>
-                        <span className="ruby-discipline-arrow"><ArrowIcon /></span>
-                      </Link>
-                    </Reveal>
+              <ol className="ruby-disciplines" aria-label="Service pillars">
+                {serviceDisciplines.map((discipline, index) => (
+                  <li key={discipline.name}>
+                    <details name="studio-services" open={index === 0}>
+                      <summary className="ruby-discipline">
+                        <span className="cinema-label ruby-discipline-number">{String(index + 1).padStart(2, "0")}</span>
+                        <h3 className="ruby-discipline-title">{discipline.name}</h3>
+                        <span className="ruby-discipline-copy">{discipline.description}</span>
+                        <span className="ruby-discipline-arrow" aria-hidden="true" />
+                      </summary>
+                      <ul className="ruby-service-options">
+                        {discipline.services.map(slug => {
+                          const service = findService(slug);
+                          if (!service) throw new Error(`Unknown homepage service slug: ${slug}`);
+                          return (
+                            <li key={service.slug}>
+                              <Link href={`/services/${service.slug}`} prefetch={false}>{service.title}</Link>
+                              <Link className="ruby-service-enquire" href={serviceContactHref(service)} prefetch={false} aria-label={`Enquire about ${service.title}`}>Enquire <ArrowIcon direction="right" /></Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </details>
                   </li>
                 ))}
               </ol>
-              <div className="ruby-service-foot">
-                <span className="cinema-label">All services</span>
-                <ul aria-label="All digital services">
-                  {servicePages.map(service => (
-                    <li key={service.slug}>
-                      <Link href={`/services/${service.slug}`}>{service.title}</Link>
-                      <Link className="ruby-service-enquire" href={serviceContactHref(service)} aria-label={`Enquire about ${service.title}`}>Enquire <ArrowIcon direction="right" /></Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
           </section>
 
@@ -153,12 +183,11 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <ProcessSection />
 
           <div className="ruby-contact">
-            <EnquirySection id="contact" showIndex={false}><ContactForm /></EnquirySection>
-            <div className="cinema-shell ruby-colophon"><span>AB Web Studio / {siteConfig.location}</span><span>{projects.length} genuine project case studies</span><a href={`mailto:${siteConfig.email}`}>{siteConfig.email} <ArrowIcon /></a></div>
+            <EnquirySection id="contact" showIndex={false} showNextSteps><ContactForm /></EnquirySection>
           </div>
         </main>
       </PageTransition>
-      <SiteFooter currentYear={currentYear} />
+      <SiteFooter currentYear={currentYear} home />
     </>
   );
 }

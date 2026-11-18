@@ -30,6 +30,7 @@ import "./styles/ruby-cinematic.css";
 import "./styles/project-exhibition.css";
 import "./styles/ruby-kinetic.css";
 import "./styles/ruby-mobile-motion.css";
+import "./styles/homepage-refinement.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -103,7 +104,7 @@ const structuredData = {
       "@id": `${siteConfig.url}/#organization`,
       name: siteConfig.name,
       url: siteConfig.url,
-      logo: `${siteConfig.url}/brand/ab-logo-luxury-source.png`,
+      logo: `${siteConfig.url}/brand/ab-luxury-mark-512.png`,
       image: `${siteConfig.url}/opengraph-image`,
       description: siteConfig.description,
       telephone: siteConfig.phoneInternational,
