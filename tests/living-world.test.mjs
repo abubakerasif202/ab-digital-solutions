@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { initialStudioState, studioReducer } from "../app/studio/studio-state.ts";
 import { AnimationScheduler, MAX_STEP } from "../app/studio/world/sim/scheduler.ts";
-import { pickTier, shouldDowngrade, tierConfig, DOWNGRADE_WINDOW } from "../app/studio/world/sim/quality.ts";
+import { canvasPixelRatio, pickTier, shouldDowngrade, tierConfig, DOWNGRADE_WINDOW } from "../app/studio/world/sim/quality.ts";
 import { ARRIVAL_SECONDS, GREET_AT, SUMMON_KANGAROO_AT, arrivalPose } from "../app/studio/world/sim/arrival.ts";
 import { mulberry32 } from "../app/studio/world/sim/rng.ts";
 
@@ -82,4 +82,11 @@ test("quality tier follows measured capability, not width, and degrades one way"
 test("seeded random is reproducible", () => {
   const a = mulberry32(7), b = mulberry32(7);
   assert.deepEqual([a(), a(), a()], [b(), b(), b()]);
+});
+
+test("renderer caps software fill rate and respects quality on high-DPR phones", () => {
+  const ratio = canvasPixelRatio({ width: 1440, height: 708, deviceDpr: 1, tier: "low", software: true });
+  assert.ok(1440 * 708 * ratio ** 2 <= 420001);
+  assert.equal(canvasPixelRatio({ width: 390, height: 460, deviceDpr: 3, tier: "low", software: false }), 1);
+  assert.equal(canvasPixelRatio({ width: 390, height: 460, deviceDpr: 3, tier: "high", software: false }), 1.5);
 });

@@ -6,8 +6,10 @@ import { monogramUrl, screenTextureUrl } from "../studio-assets";
 import { Block, MarbleBlock, brass } from "./Architecture";
 import { useStudioModel } from "./load-model";
 import { BrassMaterial, MarbleMaterial } from "./Materials";
+import { ConsultationDetail, GalleryStatusLight, ReceptionDetail, ServiceExhibit } from "./RoomDetails";
 import type { Area } from "../studio-state";
 import type { StudioProject } from "../studio-data";
+import { collectHotspotOccluders } from "./hotspot-occlusion";
 
 /** Room labels step aside while an animal is framed, so they never cover it or swallow taps meant for it. */
 export const HotspotsHiddenContext = createContext(false);
@@ -16,6 +18,8 @@ export const HotspotPortalContext = createContext<RefObject<HTMLDivElement | nul
 type HotspotSlot = { distance: number; x: number; y: number; occluded: boolean; frame: number };
 const hotspotSlots = new Map<string, HotspotSlot>();
 const hotspotRay = new THREE.Raycaster();
+const hotspotOccluders: THREE.Object3D[] = [];
+const hotspotHits: THREE.Intersection[] = [];
 const hotspotNdc = new THREE.Vector2();
 const hotspotA = new THREE.Vector3();
 const hotspotB = new THREE.Vector3();
@@ -51,8 +55,11 @@ function Hotspot({ area, label, position, onSelect }: { area: Area; label: strin
       hotspotNdc.set(projected.x, projected.y);
       hotspotRay.setFromCamera(hotspotNdc, camera);
       hotspotRay.far = distance;
-      const hits = hotspotRay.intersectObjects(scene.children, true);
-      occluded = hits.length > 0 && hits[0].distance + 0.2 < distance;
+      collectHotspotOccluders(scene, hotspotOccluders);
+      hotspotRay.intersectObjects(hotspotOccluders, false, hotspotHits);
+      occluded = hotspotHits.length > 0 && hotspotHits[0].distance + 0.2 < distance;
+      hotspotHits.length = 0;
+      hotspotOccluders.length = 0;
       hotspotRay.far = Infinity;
     }
     hotspotSlots.set(label, { distance, x, y, occluded, frame });
@@ -91,6 +98,27 @@ function Sculpture({ animate }: { animate: boolean }) {
   return <group ref={group} position={[-5, 3.15, 1.7]} scale={.4}><primitive object={model} /></group>;
 }
 
+function HarbourInlay() {
+  const arch = useMemo(() => {
+    const shape = new THREE.Shape();
+    shape.moveTo(-.52, -.045);
+    shape.quadraticCurveTo(0, .39, .52, -.045);
+    shape.lineTo(.46, -.045);
+    shape.quadraticCurveTo(0, .28, -.46, -.045);
+    shape.closePath();
+    return shape;
+  }, []);
+  // A small harbour-bridge maker's mark, using the studio's ruby and brass palette.
+  return <group position={[-5,.58,4.556]}>
+    <Block position={[0,0,-.004]} size={[1.3,.46,.034]} color="#481923" roughness={.38} />
+    <Block position={[0,-.09,.016]} size={[1.09,.024,.01]} color="#d8b879" metalness={.65} />
+    <mesh position={[0,0,.016]}>
+      <shapeGeometry args={[arch, 16]} />
+      <meshStandardMaterial {...brass} color="#e2c386" />
+    </mesh>
+  </group>;
+}
+
 export function Reception({ animate, onSelect }: { animate: boolean; onSelect: (area: Area) => void }) {
   return <group>
     <Block position={[-5,.08,3.4]} size={[7,.08,5]} color="#171d20" roughness={.8} />
@@ -98,6 +126,8 @@ export function Reception({ animate, onSelect }: { animate: boolean; onSelect: (
     <Block position={[-5,.15,4.56]} size={[5.5,.09,.03]} color="#c2a166" metalness={.8} />
     <RoundedBox position={[-5,.94,4.25]} args={[5.8,.12,.9]} radius={.06} smoothness={1} bevelSegments={2}><MarbleMaterial /></RoundedBox>
     <mesh position={[-5,.23,4.55]}><boxGeometry args={[5.3,.018,.02]} /><meshBasicMaterial color="#f4ce89" /></mesh>
+    <HarbourInlay />
+    <ReceptionDetail />
     <Bench position={[-8.6,0,5.9]} />
     {/* Staff-side work shelf: the receptionist’s keyboard and monitor sit here, hidden from visitors by the counter. */}
     <Block position={[-5.6,.755,3.52]} size={[4.4,.05,.85]} color="#2b2f31" metalness={.3} roughness={.45} />
@@ -130,15 +160,14 @@ function DisplayImage({ image }: { image: string }) {
 function ProjectDisplay({ project, position, selected, crisp, onOpen }: { project: StudioProject; position: [number,number,number]; selected: boolean; crisp: boolean; onOpen: () => void }) {
   const [hover, setHover] = useState(false);
   return <group position={position}>
-    <Block position={[0,-1.5,0]} size={[.09,1,.09]} color="#ad9361" metalness={.8} />
-    <Block position={[0,-2,.1]} size={[1,.05,.65]} color="#423e34" metalness={.6} />
+    <Block position={[0,-1.55,0]} size={[.19,.95,.15]} color="#ad9361" metalness={.8} />
+    <Block position={[0,-2.01,.1]} size={[1.2,.07,.69]} color="#423e34" metalness={.6} />
     <mesh onClick={(event) => { event.stopPropagation(); onOpen(); }} onPointerOver={() => setHover(true)} onPointerOut={() => setHover(false)}>
       <boxGeometry args={[3.65,2.58,.22]} />
-      <meshStandardMaterial color={selected ? "#f0d49a" : hover ? "#e1c18a" : "#9a8055"} emissive={selected ? "#6b4f1c" : "#000000"} emissiveIntensity={selected ? .55 : 0} metalness={.75} roughness={.3} />
+      <meshStandardMaterial color={selected ? "#c4a06c" : hover ? "#9e825d" : "#655543"} emissive={selected ? "#6b4f1c" : "#000000"} emissiveIntensity={selected ? .3 : 0} metalness={.75} roughness={.36} />
     </mesh>
     <Suspense fallback={null}><DisplayImage image={screenTextureUrl(project.slug, crisp)} /></Suspense>
-    {/* A brass plinth light marks the selected frame without relying on colour alone. */}
-    {selected && <Block position={[0,-1.45,.14]} size={[1.6,.035,.02]} color="#f4ce89" metalness={.4} />}
+    <GalleryStatusLight active={selected} animate={crisp} />
   </group>;
 }
 const FRAMES = 3;
@@ -160,10 +189,7 @@ export function Services({ onSelect, onService }: { onSelect: (area: Area) => vo
     {[0,1,2,3].map((index) => <group key={index} position={[2.2 + index*2.2,0,-4.4]}>
       <MarbleBlock position={[0,.5,0]} size={[1.35,1,1.35]} />
       <Block position={[0,1.03,0]} size={[1.4,.05,1.4]} color="#a38a5e" metalness={.8} />
-      <mesh position={[0,1.8,0]} scale={.78} rotation={[.3,index*.45,.2]} onClick={(event) => { event.stopPropagation(); onService(index); }}>
-        {index === 0 ? <boxGeometry args={[.9,.9,.9]} /> : index === 1 ? <torusGeometry args={[.53,.13,8,24]} /> : index === 2 ? <octahedronGeometry args={[.7,0]} /> : <icosahedronGeometry args={[.65,0]} />}
-        <meshStandardMaterial color={index === 2 ? "#812d40" : "#c2a16b"} metalness={.72} roughness={.22} />
-      </mesh>
+      <ServiceExhibit index={index} onOpen={() => onService(index)} />
       <mesh position={[0,.08,0]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[.95,.98,32]} /><meshBasicMaterial color="#b99a61" /></mesh>
     </group>)}
     <Hotspot area="services" label="Services" position={[5.5,.5,-1.6]} onSelect={onSelect} />
@@ -172,7 +198,7 @@ export function Services({ onSelect, onService }: { onSelect: (area: Area) => vo
 
 function Chair({ position, rotation = 0 }: { position: [number,number,number]; rotation?: number }) {
   return <group position={position} rotation={[0,rotation,0]}>
-    <RoundedBox position={[0,.64,0]} args={[1.12,.28,1.08]} radius={.12} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#672333" roughness={.88} /></RoundedBox>
+    <RoundedBox position={[0,.64,0]} args={[1.12,.28,1.08]} radius={.12} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#52232f" roughness={.9} /></RoundedBox>
     <RoundedBox position={[0,1.08,-.43]} rotation={[-.12,0,0]} args={[1.22,1.02,.24]} radius={.11} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#792c40" roughness={.88} /></RoundedBox>
     {[-.57,.57].map(x => <RoundedBox key={x} position={[x,.91,0]} args={[.17,.36,.88]} radius={.08} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#672333" roughness={.88} /></RoundedBox>)}
     <mesh position={[0,.3,0]}><cylinderGeometry args={[.075,.075,.58,12]} /><BrassMaterial /></mesh>
@@ -191,8 +217,9 @@ export function Consultation({ onSelect }: { onSelect: (area: Area) => void }) {
     <mesh position={[5.6,1.13,4.3]}><cylinderGeometry args={[1.8,1.8,.14,48]} /><MarbleMaterial /></mesh>
     <mesh position={[5.6,.56,4.3]}><cylinderGeometry args={[.42,.7,1.02,24]} /><meshStandardMaterial {...brass} /></mesh>
     {[0,1,2,3].map((i) => { const angle = i * Math.PI/2; return <Chair key={i} position={[5.6+Math.sin(angle)*2.45,0,4.3+Math.cos(angle)*2.45]} rotation={angle+Math.PI} />; })}
-    <mesh position={[5.6,1.4,4.3]}><cylinderGeometry args={[.12,.2,.45,12]} /><meshStandardMaterial {...brass} /></mesh>
-    <mesh position={[5.6,3.8,4.3]} rotation={[Math.PI/2,0,0]}><torusGeometry args={[1.5,.045,8,48]} /><meshBasicMaterial color="#ffe1a6" /></mesh>
+    <ConsultationDetail />
+    <mesh position={[5.6,3.82,4.3]} rotation={[Math.PI/2,0,0]}><torusGeometry args={[1.5,.068,8,48]} /><meshStandardMaterial {...brass} /></mesh>
+    <mesh position={[5.6,3.75,4.3]} rotation={[Math.PI/2,0,0]}><torusGeometry args={[1.5,.029,6,48]} /><meshBasicMaterial color="#ffe1a6" /></mesh>
     {[4.6,6.6].map((x) => <Block key={x} position={[x,4.2,4.3]} size={[.015,.8,.015]} color="#bca06b" metalness={.8} />)}
     <Hotspot area="consultation" label="Let’s talk" position={[5.6,.4,7.3]} onSelect={onSelect} />
   </group>;

@@ -1,6 +1,7 @@
 // Pure data and behaviour for the resident wildlife: kangaroo, koala and sulphur-crested cockatoo.
 // No three/React here, so everything is unit-testable and the scene components stay thin.
 import { layout } from "../world-layout";
+import { idleAccent } from "./cast-idle";
 
 export type AnimalId = "kangaroo" | "koala" | "cockatoo";
 export const animalOrder: AnimalId[] = ["kangaroo", "koala", "cockatoo"];
@@ -137,7 +138,7 @@ const smoothstep = (t: number) => { const c = clamp(t, 0, 1); return c * c * (3 
 const bump = (t: number, start: number, end: number) => { const u = (t - start) / (end - start); return u <= 0 || u >= 1 ? 0 : Math.sin(Math.PI * u); };
 
 /* ---------------- Koala ---------------- */
-export type KoalaPose = { breath: number; eyeOpen: number; headPitch: number; headYaw: number; headRoll: number; armWave: number; earTwitch: number; bodyLean: number };
+export type KoalaPose = { breath: number; eyeOpen: number; rightEyeOpen: number; headPitch: number; headYaw: number; headRoll: number; armWave: number; earTwitch: number; bodyLean: number };
 /**
  * `awakeFor` is seconds since the koala was woken (negative = asleep). It sleeps again 5 s after waking.
  * `visitorYaw` is the heading to the visitor relative to the koala's facing (radians).
@@ -146,15 +147,17 @@ export function koalaPose(time: number, awakeFor: number, visitorYaw: number, re
   const breathSpeed = 1.5;
   const breath = Math.sin(time * breathSpeed) * 0.5 + 0.5;
   const sleepy = Math.sin(time * 0.35) * 0.5 + 0.5;
-  const peek = reduced ? 0 : bump((time % 17), 15.2, 16.2) * 0.55; // a rare half-open eye while asleep
+  const peek = reduced ? 0 : idleAccent(time, 43, 17, 1.25) * 0.55;
   const awake = awakeFor >= 0 && awakeFor < 5.4;
   const wake = awake ? smoothstep(awakeFor / 0.9) * (1 - smoothstep((awakeFor - 4.6) / 0.8)) : 0;
   const waveEnvelope = awake ? bump(awakeFor, 1.1, 3.9) : 0;
   const wave = reduced ? waveEnvelope * 0.6 : waveEnvelope * (0.7 + 0.3 * Math.sin(awakeFor * 9));
   const curious = awake && !reduced ? bump(awakeFor, 0.7, 1.8) * 0.16 : 0;
+  const awakeEye = clamp(wake * (1 - 0.1 * Math.sin(time * 2.1)), 0, 1);
   return {
     breath,
-    eyeOpen: clamp(peek + wake * (1 - 0.1 * Math.sin(time * 2.1)), 0, 1),
+    eyeOpen: Math.max(awakeEye, (1 - wake) * peek),
+    rightEyeOpen: awakeEye,
     headPitch: (1 - wake) * (0.28 + sleepy * 0.22) - wake * 0.08,
     headYaw: wake * clamp(visitorYaw, -0.9, 0.9),
     headRoll: (1 - wake) * (Math.sin(time * 0.35 + 1) * 0.12) + wake * Math.sin(time * 0.9) * 0.05 + curious,
@@ -169,7 +172,7 @@ export type CockatooPose = {
   /** Offset from the perch: x/z in metres, y height; zero when perched. */
   dx: number; dy: number; dz: number; heading: number;
   bodyPitch: number; headRoll: number; headYaw: number; headPitch: number;
-  crest: number; wingSpread: number; wingFlap: number; bob: number; flying: boolean;
+  crest: number; eyeOpen: number; wingSpread: number; wingFlap: number; bob: number; flying: boolean;
 };
 export const FLIGHT_SECONDS = 1.7;
 export const FLIGHT_RADIUS = 0.55;
@@ -189,10 +192,9 @@ export function cockatooFlightPath(u: number): { dx: number; dy: number; dz: num
 /** `reactFor` is seconds since the reaction began (negative = idle). Reduced motion replaces the lap with a gentle crest-and-bow pose. */
 export function cockatooPose(time: number, reactFor: number, reduced = false): CockatooPose {
   const reacting = reactFor >= 0 && reactFor < 3.4;
-  const tiltCycle = Math.floor(time / 4.2);
-  const tiltSign = tiltCycle % 2 === 0 ? 1 : -1;
-  const tilt = bump(time % 4.2, 0.4, 1.9) * 0.5 * tiltSign;
-  const crestIdle = bump(time % 9, 6.5, 8.0) * 0.8;
+  const tiltSign = Math.floor(time / 5.7) % 2 === 0 ? 1 : -1;
+  const tilt = reduced ? 0 : idleAccent(time, 71, 5.7, 1.55) * 0.44 * tiltSign;
+  const crestIdle = reduced ? 0 : idleAccent(time, 19, 8.5, 1.4) * 0.63;
   const stretch = reduced ? 0 : bump(time % 26, 21, 22.6);
   const bowing = reacting ? bump(reactFor, 0.2, 1.6) : 0;
   const flightStart = 1.3;
@@ -207,6 +209,7 @@ export function cockatooPose(time: number, reactFor: number, reduced = false): C
     headYaw: reacting ? Math.sin(reactFor * 3.2) * 0.4 * bump(reactFor, 0, 3) : Math.sin(time * 0.7) * 0.18,
     headPitch: bowing * 0.35 + landingBow * 0.22,
     crest: reacting ? clamp(Math.max(bump(reactFor, 0.05, 3.2) * 1.25, landingBow * 0.4), 0, 1) : crestIdle,
+    eyeOpen: reduced || inFlight ? 1 : 1 - idleAccent(time, 29, 5.6, 0.2),
     wingSpread: inFlight ? 1 : Math.max(stretch, reacting && !reduced ? bump(reactFor, 0.6, 1.4) * 0.5 : 0),
     wingFlap: inFlight ? Math.sin(reactFor * 38) : stretch * Math.sin(time * 6) * 0.15,
     bob: bobs,

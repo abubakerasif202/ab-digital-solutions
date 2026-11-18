@@ -2,6 +2,7 @@
 // that eases in, waves exactly once per greeting onset, then settles back. No three/React imports.
 import { mulberry32, range, pick } from "./rng";
 import type { Rng } from "./rng";
+import { poseAccent } from "./cast-idle";
 import { approach, aimHead, blendPose, clamp, createPose, lerp, poseSeatedRest, poseSeatedTyping, poseWave, smooth } from "./humanoid-pose";
 import type { Pose } from "./humanoid-pose";
 
@@ -47,7 +48,7 @@ export function createReceptionist(seed: number): Receptionist {
   let burstOn = true, burstT = range(rng, 2, 5), gain = 0;
   let glanceYaw = 0, glancePitch = 0, shiftDir = 1, gestureSide = 1;
   let blinkIn = range(rng, 2, 5), blinkT = -1;
-  let greetProgress = 0, wasGreeting = false;
+  let greetProgress = 0, wasGreeting = false, greetingAge = 0;
   let wavePending = false, waveActive = false, waveT = 0, waveClock = 0;
   const self: Receptionist = {
     pose, mode, greetBlend: 0, waveCount: 0, waveAmount: 0, typingGain: 0, time: 0,
@@ -57,7 +58,8 @@ export function createReceptionist(seed: number): Receptionist {
       const t = self.time + phase;
 
       // Greeting onset schedules exactly one wave; ending cancels one that has not started.
-      if (greeting && !wasGreeting) { wavePending = true; waveActive = false; }
+      if (greeting && !wasGreeting) { wavePending = true; waveActive = false; greetingAge = 0; }
+      if (greeting) greetingAge += dt;
       if (!greeting) wavePending = false;
       wasGreeting = greeting;
       greetProgress = clamp(greetProgress + (greeting ? dt / GREET_EASE_IN : -dt / GREET_EASE_OUT), 0, 1);
@@ -113,7 +115,8 @@ export function createReceptionist(seed: number): Receptionist {
       // Greeting pose: hands settle on the desk, back upright, eyes on the visitor, smiling.
       poseSeatedRest(attentive);
       attentive.spinePitch = -0.03;
-      const nod = Math.sin(t * 1.1) > 0.94 ? 0.1 : 0;
+      // One acknowledgement after the wave, then hold a steady, attentive gaze.
+      const nod = poseAccent(greetingAge - 2.7, 0.8) * 0.095;
       aimHead(attentive, clamp(visitor.yaw, -0.9, 0.9), clamp(visitor.pitch, -0.3, 0.4) + nod, 1);
 
       blendPose(pose, activity, attentive, w);

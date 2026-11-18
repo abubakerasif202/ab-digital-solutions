@@ -7,7 +7,7 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
 import { createStudioEnvironment } from "./environment";
 import { MaterialLibrary } from "./Materials";
-import { cameraProgress } from "./camera-motion";
+import { cameraFov, cameraProgress, cameraFieldOfView, facadeWaypoint, panelFrameOffset } from "./camera-motion";
 import { Architecture } from "./Architecture";
 import { environmentUrl, monogramUrl, screenTextureUrl } from "../studio-assets";
 import { Consultation, Gallery, galleryWindowStart, HotspotPortalContext, HotspotsHiddenContext, Reception, Services } from "./Spaces";
@@ -22,7 +22,7 @@ import { Receptionist } from "../world/characters/Receptionist";
 import { StudioStaff } from "../world/characters/StudioStaff";
 import { worldState } from "../world/worldState";
 import { ARRIVAL_SECONDS, GREET_AT, SUMMON_KANGAROO_AT, arrivalPose } from "../world/sim/arrival";
-import { pickTier, tierConfig, type Tier } from "../world/sim/quality";
+import { canvasPixelRatio, pickTier, type Tier } from "../world/sim/quality";
 import type { Area, StudioState } from "../studio-state";
 import type { StudioProject } from "../studio-data";
 
@@ -46,7 +46,7 @@ const shots: Record<Area, { position: [number,number,number]; target: [number,nu
 const mobileShots: typeof shots = {
   reception: { position: [-.5,1.8,8.2], target: [-5,1.9,3] },
   gallery: { position: [-5,1.75,1], target: [-5,1.8,-5] },
-  services: { position: [5.5,1.75,1.8], target: [5.5,1.5,-4] },
+  services: { position: [5.5,2.6,2.35], target: [5.5,1.5,-4.25] },
   consultation: { position: [2.5,1.8,7.5], target: [5.6,1.5,4.3] },
 };
 
@@ -90,20 +90,33 @@ function setLens(camera: THREE.Camera, fov: number) {
   if (camera instanceof THREE.PerspectiveCamera) { camera.fov = fov; camera.updateProjectionMatrix(); }
 }
 
+function applyCameraLens(camera: THREE.PerspectiveCamera, fov: number, width: number, height: number, x: number, y: number) {
+  const lensChanged = camera.fov !== fov;
+  camera.fov = fov;
+  const view = camera.view;
+  if ((x || y) && (!view?.enabled || view.offsetX !== x * width || view.offsetY !== y * height || view.fullWidth !== width || view.fullHeight !== height)) {
+    camera.setViewOffset(width, height, x * width, y * height, width, height);
+  } else if (!x && !y && view?.enabled) camera.clearViewOffset();
+  else if (lensChanged) camera.updateProjectionMatrix();
+}
+
 function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: StudioState; visible: boolean; onManual: () => void; onArrive: () => void; onGreet: () => void }) {
   const controls = useRef<OrbitControlsImpl>(null);
   const { invalidate, camera, size, gl } = useThree();
-  const mobile = size.width < 700 || (size.height < 500 && size.width < 1000);
-  const portrait = mobile && size.height > size.width;
-  const baseFov = mobile ? (portrait ? 80 : 52) : 42;
+  const mobile = size.width < 700 || matchMedia("(max-width: 999px) and (max-height: 500px) and (orientation: landscape)").matches;
+  const portrait = matchMedia("(orientation: portrait)").matches;
+  const baseFov = cameraFieldOfView(mobile, portrait);
   const moving = useRef(true);
   const targetPosition = useRef(new THREE.Vector3());
   const targetLook = useRef(new THREE.Vector3());
   const startPosition = useRef(new THREE.Vector3());
+  const doorway = useRef<THREE.Vector3 | null>(null);
   const startLook = useRef(new THREE.Vector3());
   const started = useRef(0);
   const arrivalStart = useRef(0);
   const arrivalFlags = useRef({ summoned: false, greeted: false, done: false });
+  const startFov = useRef(baseFov);
+  const targetFov = useRef(baseFov);
   const startLens = useRef(new THREE.Vector2());
   const targetLens = useRef(new THREE.Vector2());
   const arriving = state.mode === "arrival";
@@ -127,19 +140,23 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
     // Reset view and the tour all keep that room in frame; Back to entrance is the only street view.
     const overview = (state.mode === "loading" && !state.resume) || (state.overview && !state.panel && !state.tour && !state.outside && state.mode !== "intro");
     let shot = mobile ? mobileShots[state.area] : overview ? overviewShot : shots[state.area];
-    if (state.mode === "loading" && !state.resume) { const first = arrivalPose(0, portrait, baseFov); shot = { position: first.position, target: first.target }; }
+    if (state.mode === "loading" && !state.resume) { const first = arrivalPose(0, mobile && portrait, baseFov); shot = { position: first.position, target: first.target }; }
     else if (state.mode === "intro") shot = mobile ? mobileShots.reception : welcomeShot;
     else if (state.outside) shot = mobile ? mobileEntranceShot : entranceShot;
     if (state.animal && state.mode !== "loading" && state.mode !== "intro") shot = (mobile ? mobileWildlifeShots : wildlifeShots)[state.animal];
     if (camera instanceof THREE.PerspectiveCamera) {
+      startFov.current = camera.fov;
+      targetFov.current = cameraFieldOfView(mobile, portrait, state.mode === "explore" && state.area === "services" && state.panel && !state.outside && !state.animal);
       const view = camera.view;
       startLens.current.set(view?.enabled ? view.offsetX / view.fullWidth : 0, view?.enabled ? view.offsetY / view.fullHeight : 0);
       // Frame the room beside the desktop panel. On mobile the details sit below the scene, so no offset is needed.
-      targetLens.current.set(state.panel && size.width >= 700 && size.height >= 480 ? .2 : 0, 0);
+      targetLens.current.set(panelFrameOffset(size.width, state.panel, matchMedia("(max-width: 899px), (max-height: 500px) and (orientation: landscape)").matches), 0);
     }
     targetPosition.current.set(...shot.position);
     targetLook.current.set(...shot.target);
     startPosition.current.copy(camera.position);
+    const waypoint = facadeWaypoint(camera.position.toArray(), shot.position);
+    doorway.current = waypoint ? new THREE.Vector3(...waypoint) : null;
     startLook.current.copy(controls.current?.target ?? new THREE.Vector3());
     started.current = performance.now();
     moving.current = true;
@@ -174,7 +191,7 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
       const flags = arrivalFlags.current;
       if (!flags.summoned && seconds >= SUMMON_KANGAROO_AT) { flags.summoned = true; worldState.kangaroo.summon = true; }
       if (!flags.greeted && seconds >= GREET_AT) { flags.greeted = true; onGreet(); }
-      const pose = arrivalPose(seconds, portrait, baseFov);
+      const pose = arrivalPose(seconds, mobile && portrait, baseFov);
       camera.position.set(...pose.position);
       controls.current.target.set(...pose.target);
       if (camera instanceof THREE.PerspectiveCamera && Math.abs(camera.fov - pose.fov) > .01) setLens(camera, pose.fov);
@@ -186,16 +203,18 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
     if (state.manual || !moving.current) return;
     limit(true);
     // Wall-clock progress keeps a cinematic move bounded on slower GPUs too.
-    const progress = Math.min(1, (performance.now() - started.current) / 1700);
+    const progress = Math.min(1, (performance.now() - started.current) / (doorway.current ? 2150 : 1700));
     const eased = cameraProgress(progress);
-    camera.position.lerpVectors(startPosition.current, targetPosition.current, eased);
+    const door = doorway.current;
+    if (!door) camera.position.lerpVectors(startPosition.current, targetPosition.current, eased);
+    else if (progress < .5) camera.position.lerpVectors(startPosition.current, door, cameraProgress(progress * 2));
+    else camera.position.lerpVectors(door, targetPosition.current, cameraProgress(progress * 2 - 1));
     controls.current.target.lerpVectors(startLook.current, targetLook.current, eased);
     if (camera instanceof THREE.PerspectiveCamera) {
       const x = THREE.MathUtils.lerp(startLens.current.x, targetLens.current.x, eased);
       const y = THREE.MathUtils.lerp(startLens.current.y, targetLens.current.y, eased);
-      if (x || y) camera.setViewOffset(size.width, size.height, x * size.width, y * size.height, size.width, size.height);
-      else camera.clearViewOffset();
-      if (Math.abs(camera.fov - baseFov) > .01) setLens(camera, THREE.MathUtils.lerp(camera.fov, baseFov, Math.min(1, eased + .05)));
+      const fov = cameraFov(startFov.current, targetFov.current, progress);
+      applyCameraLens(camera, fov, size.width, size.height, x, y);
     }
     controls.current.update();
     moving.current = progress < 1;
@@ -285,37 +304,52 @@ export default function StudioScene({ state, projects, selectedProject, visible,
   state: StudioState; projects: StudioProject[]; selectedProject: number; visible: boolean;
   onReady: () => void; onFailure: () => void; onSelect: (area: Area) => void; onProject: (index: number) => void; onService: (index: number) => void; onManual: () => void; onArrive: () => void;
 }) {
-  const mobile = typeof window !== "undefined" && (window.innerWidth < 768 || (window.innerWidth < 1000 && window.innerHeight < 500));
+  const mobile = window.innerWidth < 700 || matchMedia("(max-width: 999px) and (max-height: 500px) and (orientation: landscape)").matches;
   const animate = false;
   const portal = useRef<HTMLDivElement>(null);
+  const viewport = useRef<HTMLDivElement>(null);
   const [tier, setTier] = useState<Tier>(readCapabilities);
   const [greetedShot, setGreetedShot] = useState(-1);
   const [phase, setPhase] = useState<StudioPhase>("core");
   const [environmentReady, setEnvironmentReady] = useState(false);
   const onEnvironmentReady = useCallback(() => setEnvironmentReady(true), []);
   const preparation = { environmentReady, onFailure };
-  const [dprCap, setDprCap] = useState(1.75);
-  const quality = tierConfig[tier];
-  const pixelRatio = mobile ? dprCap : Math.min(dprCap, quality.dpr);
+  const [software, setSoftware] = useState(false);
+  const [pixelRatio, setPixelRatio] = useState(1);
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const measure = () => setPixelRatio(canvasPixelRatio({
+      width: element.clientWidth, height: element.clientHeight, tier, software, deviceDpr: window.devicePixelRatio,
+    }));
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    window.addEventListener("resize", measure);
+    measure();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [tier, software]);
   const crispScreens = state.area === "gallery" && !state.overview && !state.outside && state.mode !== "loading" && state.mode !== "arrival";
-  const initialPose = arrivalPose(0, mobile && window.innerHeight > window.innerWidth, mobile ? 80 : 42);
+  const portrait = matchMedia("(orientation: portrait)").matches;
+  const initialPose = arrivalPose(0, mobile && portrait, cameraFieldOfView(mobile, portrait));
   const greeting = state.mode === "intro" || (state.mode === "explore" && state.area === "reception" && !state.outside) || (state.mode === "arrival" && greetedShot === state.shot);
-  const downgrade = useCallback(() => setTier((current) => (current === "high" ? "medium" : "low")), []);
+  const downgrade = useCallback(() => setTier((current) => (current === "high" ? "medium" : "low")), [setTier]);
   const onDecline = useCallback(() => {
     if (phase !== "done") return;
     downgrade();
-    setDprCap((value) => Math.max(1, Math.round((value - 0.25) * 100) / 100));
   }, [downgrade, phase]);
-  return <div className="ab-spatial-canvas" data-warmup={phase} style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+  return <div ref={viewport} className="ab-spatial-canvas" data-warmup={phase} style={{ position: "absolute", inset: 0, zIndex: 0 }}>
     <style>{`.ab-spatial-hotspot{display:flex;align-items:center;gap:8px;white-space:nowrap;min-height:44px;padding:6px 13px 6px 7px;border:1px solid #c4a56f88;background:#101619e8;color:#f1e2c2;font:11px var(--font-sans),sans-serif;cursor:pointer;box-shadow:0 4px 16px #0005}.ab-spatial-hotspot span{display:grid;place-items:center;width:25px;height:25px;border:1px solid #d4b67888;border-radius:50%;color:#e9cc96;font-size:17px}.ab-spatial-hotspot:hover{background:#3a3020;border-color:#efd49c}.ab-spatial-canvas canvas{touch-action:pan-y!important}`}</style>
     <div ref={portal} style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }} />
-    <Canvas frameloop={visible ? "demand" : "never"} dpr={[1, pixelRatio]} camera={{ position: initialPose.position, fov: initialPose.fov, near: .1, far: 560 }} gl={{ antialias: !mobile && quality.antialias, powerPreference: "low-power", alpha: false }} fallback={<p>3D unavailable. Explore the studio using the space buttons below.</p>} onCreated={({ gl, scene }) => {
+    <Canvas frameloop={visible ? "demand" : "never"} dpr={pixelRatio} camera={{ position: initialPose.position, fov: initialPose.fov, near: .1, far: 560 }} gl={{ antialias: false, powerPreference: "low-power", alpha: false }} fallback={<p>3D unavailable. Explore the studio using the space buttons below.</p>} onCreated={({ gl, scene }) => {
       // Software rasterizers can expose many CPU cores and large texture limits. Start them at
       // the bounded tier immediately instead of waiting for a prolonged frame-time probe.
       const context = gl.getContext();
       const debug = context.getExtension("WEBGL_debug_renderer_info");
       const renderer = debug ? String(context.getParameter(debug.UNMASKED_RENDERER_WEBGL)) : "";
-      if (/swiftshader|llvmpipe|software|microsoft basic render/i.test(renderer)) setTier("low");
+      if (/swiftshader|llvmpipe|software|microsoft basic render/i.test(renderer)) { setSoftware(true); setTier("low"); }
       gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.05;
       scene.background = new THREE.Color(skyFog);
       scene.fog = new THREE.Fog(skyFog, 42, 150);

@@ -2,7 +2,7 @@
 // frame-time probe) and never from screen width alone.
 export type Tier = "low" | "medium" | "high";
 export type Capabilities = { cores?: number; memoryGb?: number; coarsePointer?: boolean; saveData?: boolean; maxTexture?: number; medianFrameMs?: number };
-export type TierConfig = { tier: Tier; cars: number; pedestrians: number; walkingStaff: boolean; simHz: number; landmarkDetail: 0 | 1 | 2; trees: number; dpr: number; antialias: boolean };
+export type TierConfig = { tier: Tier; cars: number; pedestrians: number; walkingStaff: boolean; simHz: number; landmarkDetail: 0 | 1 | 2; trees: number; dpr: number };
 
 export function pickTier(c: Capabilities): Tier {
   if (c.saveData) return "low";
@@ -16,9 +16,9 @@ export function pickTier(c: Capabilities): Tier {
 }
 
 export const tierConfig: Record<Tier, TierConfig> = {
-  low: { tier: "low", cars: 4, pedestrians: 3, walkingStaff: false, simHz: 24, landmarkDetail: 0, trees: 4, dpr: 1, antialias: false },
-  medium: { tier: "medium", cars: 7, pedestrians: 7, walkingStaff: true, simHz: 30, landmarkDetail: 1, trees: 8, dpr: 1.25, antialias: false },
-  high: { tier: "high", cars: 10, pedestrians: 12, walkingStaff: true, simHz: 45, landmarkDetail: 2, trees: 12, dpr: 1.5, antialias: true },
+  low: { tier: "low", cars: 4, pedestrians: 3, walkingStaff: false, simHz: 24, landmarkDetail: 0, trees: 4, dpr: 1 },
+  medium: { tier: "medium", cars: 7, pedestrians: 7, walkingStaff: true, simHz: 30, landmarkDetail: 1, trees: 8, dpr: 1.25 },
+  high: { tier: "high", cars: 10, pedestrians: 12, walkingStaff: true, simHz: 45, landmarkDetail: 2, trees: 12, dpr: 1.5 },
 };
 
 // One-way runtime downgrade: two consecutive windows with a median frame above ~40 ms (<25 fps).
@@ -31,4 +31,12 @@ export function medianOf(values: number[]) {
 export function shouldDowngrade(previousWindowSlow: boolean, window: number[]) {
   const slow = window.length >= DOWNGRADE_WINDOW && medianOf(window) > DOWNGRADE_FRAME_MS;
   return { slow, downgrade: slow && previousWindowSlow };
+}
+
+/** Pixel-area ceilings bound compositor/readback cost on wide or high-DPR viewports. */
+export function canvasPixelRatio({ width, height, deviceDpr, tier, software }: {
+  width: number; height: number; deviceDpr: number; tier: Tier; software: boolean;
+}) {
+  const maxPixels = software ? 420_000 : tier === "low" ? 1_000_000 : tier === "medium" ? 1_800_000 : 2_600_000;
+  return Math.min(deviceDpr, tierConfig[tier].dpr, Math.sqrt(maxPixels / Math.max(1, width * height)));
 }
