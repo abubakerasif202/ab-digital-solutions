@@ -146,27 +146,10 @@ export function BrandFilmPlayer({ poster, sources, chapters, duration, title }: 
             onTimeUpdate={(event) => setTime(event.currentTarget.currentTime)}
             onEnded={() => { setPlaying(false); setEnded(true); }}
             onError={() => { setFailed(true); setLoading(false); setPlaying(false); }}
-            onClick={toggle}
           />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element -- static poster; the video is the only deferred asset
           <img className="film-poster" src={poster} width={1280} height={720} alt="" loading="lazy" decoding="async" />
-        )}
-
-        {(!playing || failed) && (
-          <button
-            type="button"
-            className="film-big-play"
-            onClick={() => (ended ? start(0) : toggle())}
-            aria-label={failed ? `Try again: ${title}` : ended ? `Replay ${title}` : started ? `Resume ${title}` : `Play the film: ${title}`}
-          >
-            <span className="film-big-play-ring" aria-hidden="true">
-              {loading ? <span className="film-spinner" /> : ended ? <ReplayGlyph /> : <PlayGlyph />}
-            </span>
-            <span className="film-big-play-label" aria-hidden="true">
-              {loading ? "Loading" : failed ? "Try again" : ended ? "Replay" : started ? "Resume" : "Play the film"}
-            </span>
-          </button>
         )}
 
         <p className="film-status" role="status" aria-live="polite">
@@ -175,11 +158,9 @@ export function BrandFilmPlayer({ poster, sources, chapters, duration, title }: 
       </div>
 
       <div className="film-controls" role="group" aria-label="Film controls">
-        <button type="button" className="film-btn" onClick={toggle} aria-label={playing ? "Pause" : "Play"}>
-          {playing ? <PauseGlyph /> : <PlayGlyph />}
-        </button>
-        <button type="button" className="film-btn" onClick={() => start(0)} aria-label="Replay from the start">
-          <ReplayGlyph />
+        <button type="button" className="film-btn film-primary" onClick={toggle}>
+          {playing ? <PauseGlyph /> : ended ? <ReplayGlyph /> : <PlayGlyph />}
+          <span>{playing ? "Pause" : failed ? "Try again" : ended ? "Replay" : started ? "Resume" : "Play the film"}</span>
         </button>
         <span className="film-time" aria-hidden="true">{formatTime(time)}</span>
         <input

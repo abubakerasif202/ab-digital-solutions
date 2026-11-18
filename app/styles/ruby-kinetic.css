@@ -60,17 +60,6 @@
 .ruby-hero-actions svg { width: 18px; }
 .ruby-hero-actions a:focus-visible { outline: 2px solid var(--cinema-paper); outline-offset: 4px; }
 .ruby-hero-bottomline { justify-content: flex-end; border-top-color: #f7f1eb46; }
-.ruby-scenes { display: flex; gap: 26px; margin: 0; padding: 0; list-style: none; font-family: var(--mono),monospace; font-size: var(--fs-label); letter-spacing: .14em; text-transform: uppercase; color: #dccdd5; }
-.ruby-scenes li { position: relative; display: flex; gap: 10px; min-width: 118px; padding-bottom: 11px; }
-.ruby-scenes li span { color: #ff8fa9; }
-.ruby-scenes li i { position: absolute; inset: auto 0 0; height: 2px; overflow: hidden; background: #ffffff2b; }
-.ruby-scenes li i::after { content: ""; position: absolute; inset: 0; background: #ff315c; transform: scaleX(0); transform-origin: 0 50%; animation: ruby-scene-1 13.8s linear infinite paused; }
-.ruby-scenes li:nth-child(2) i::after { animation-name: ruby-scene-2; }
-.ruby-scenes li:nth-child(3) i::after { animation-name: ruby-scene-3; }
-.ruby-hero:has(.cinema-media[data-playing="true"]) .ruby-scenes li i::after { animation-play-state: running; }
-@keyframes ruby-scene-1 { 0% { transform: scaleX(0); } 33.7%,97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
-@keyframes ruby-scene-2 { 0%,33.7% { transform: scaleX(0); } 64.9%,97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
-@keyframes ruby-scene-3 { 0%,64.9% { transform: scaleX(0); } 97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
 /* The two identical groups travel exactly one group width per loop. */
 .ruby-service-ticker {
   display: grid;
@@ -110,18 +99,19 @@
 
 .ruby-service-ticker-control {
   grid-area: 1 / 2;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  margin-inline: 8px 14px;
-  padding-inline: 8px;
-  font-size: .8125rem;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-inline: 8px clamp(10px, 2vw, 28px);
+  border: 1px solid #866573;
+  background: #170e17;
+  color: #ffdbe4;
   cursor: pointer;
 }
-.ruby-service-ticker-control input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent-ink); }
-.ruby-service-ticker-control:has(input:focus-visible) { outline: 2px solid var(--cinema-gold); outline-offset: 2px; }
-.ruby-service-ticker:has(.ruby-service-ticker-control input:checked) .ruby-service-ticker-track { animation-play-state: paused; }
+.ruby-service-ticker-control:is(:hover, [aria-pressed="true"]) { background: #74102d; border-color: #f28ca9; }
+.ruby-service-ticker-control:focus-visible { outline: 2px solid var(--cinema-gold); outline-offset: 3px; }
+.ruby-service-ticker:has(.ruby-service-ticker-control[aria-pressed="true"]) .ruby-service-ticker-track { animation-play-state: paused; }
 
 @media (max-width: 600px) {
   .ruby-service-ticker-group { font-size: clamp(26px, 8vw, 42px); }
@@ -138,11 +128,13 @@
 }
 
 /* Shared line reveal for chapter headings (armed and released by Reveal). */
-.ruby-line { display: block; overflow: hidden; padding: 0 .07em .16em; margin: 0 -.07em -.16em; }
+.ruby-page .reveal[data-reveal-state="armed"][data-reveal-variant="mask"] { clip-path: inset(-.2em -.18em 100% -.18em); }
+.ruby-page .reveal[data-reveal-state="in"][data-reveal-variant="mask"] { clip-path: inset(-.2em -.18em -.27em -.18em); }
+.ruby-line { display: block; overflow: hidden; padding: .3em .16em .32em; margin: -.3em -.16em -.32em; }
 .ruby-line > span { display: block; }
 .reveal[data-reveal-state="armed"] .ruby-line > span { transform: translateY(112%); }
 .reveal[data-reveal-state="in"] .ruby-line > span { animation: ruby-line-in 1.15s cubic-bezier(.16,1,.3,1) both; animation-delay: calc(var(--line) * .12s); }
-@keyframes ruby-line-in { from { transform: translateY(112%) rotate(1.5deg); } to { transform: none; } }
+@keyframes ruby-line-in { from { transform: translateY(112%); } to { transform: none; } }
 
 /* 3. Studio chapter: a real Sydney plate carries the identity instead of an empty black band. */
 .ruby-positioning-grid { grid-template-columns: minmax(240px, 1fr) 1.7fr; align-items: center; gap: clamp(32px, 6vw, 96px); }
@@ -239,15 +231,12 @@
 }
 @keyframes ruby-plate-drift { from { transform: translateY(-7%); } to { transform: translateY(0); } }
 @keyframes ruby-slide-in { from { opacity: .25; transform: translateX(-46px); } to { opacity: 1; transform: none; } }
-@keyframes ruby-screen-open { from { transform: scale(.9); clip-path: inset(7% 5% round 2px); } to { transform: none; clip-path: inset(0); } }
+@keyframes ruby-screen-open { from { transform: scale(.9); clip-path: inset(7% 5% round 2px); } to { transform: none; clip-path: inset(-8px); } }
 
 @media (max-width: 1100px) {
-  .ruby-scenes { gap: 16px; }
-  .ruby-scenes li { min-width: 92px; }
   .ruby-positioning-grid { grid-template-columns: minmax(200px,.8fr) 2fr; }
 }
 @media (max-width: 960px) {
-  .ruby-scenes { display: none; }
   .ruby-positioning-grid { grid-template-columns: 1fr 2fr; align-items: start; }
   .ruby-identity-mark img { width: 84px; }
   .ruby-service-foot ul { grid-template-columns: 1fr; }

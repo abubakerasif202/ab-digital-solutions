@@ -2,13 +2,6 @@
    Capability queries (hover, pointer) choose touch behaviour; width only adjusts layout.
    Transform / opacity only. Everything here yields to prefers-reduced-motion. */
 
-/* 1. Hero chapters: Harbour / Arteries / Skyline stay visible as a progress rule under the headline. */
-@media (max-width: 960px) {
-  .ruby-hero-bottomline { flex-wrap: wrap; row-gap: 16px; }
-  .ruby-scenes { display: flex; order: 3; flex: 1 0 100%; gap: 10px; }
-  .ruby-scenes li { flex: 1 1 0; min-width: 0; gap: 6px; font-size: var(--fs-label); letter-spacing: .06em; }
-}
-
 /* 2. Touch lighting: a subtle ruby drift stands in for the pointer. */
 @media (hover: none) and (prefers-reduced-motion: no-preference) {
   .ruby-hero-light { animation: ruby-light-drift 16s ease-in-out infinite alternate; will-change: transform; }

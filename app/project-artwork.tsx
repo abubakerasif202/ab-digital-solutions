@@ -7,6 +7,7 @@ type Props = {
   project: Project;
   sizes: string;
   priority?: boolean;
+  decorative?: boolean;
   onLoad?: () => void;
   onError?: () => void;
 };
@@ -26,12 +27,12 @@ export function projectArtworkRatio(project: Project): string {
  */
 export const fillFrame: CSSProperties = { position: "absolute", inset: 0, width: "100%", height: "100%" };
 
-export function ProjectArtwork({ project, sizes, priority = false, onLoad, onError }: Props) {
+export function ProjectArtwork({ project, sizes, priority = false, decorative = false, onLoad, onError }: Props) {
   const { width, height } = artworkDimensions(projectArtworkRatio(project));
   return (
     <Image
       src={project.image}
-      alt={project.alt}
+      alt={decorative ? "" : project.alt}
       width={width}
       height={height}
       style={fillFrame}

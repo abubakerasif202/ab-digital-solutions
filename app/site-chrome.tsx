@@ -19,7 +19,7 @@ export function SiteHeader() {
   const navRef = useRef<HTMLElement>(null);
   const mobileCtaRef = useRef<HTMLAnchorElement>(null);
   const topSentinelRef = useRef<HTMLDivElement>(null);
-  const ctaShown = mobileCtaVisible && !menuOpen;
+  const ctaShown = pathname !== "/" && mobileCtaVisible && !menuOpen;
 
   useEffect(() => {
     let frameId = 0;
@@ -72,6 +72,7 @@ export function SiteHeader() {
     const backgroundRegions = [
       document.querySelector(".skip-link"),
       document.querySelector(".brand"),
+      document.querySelector(".header-project-cta"),
       document.getElementById("main-content"),
       document.querySelector(".site-footer"),
     ].filter((element): element is HTMLElement => element !== null);
@@ -110,7 +111,7 @@ export function SiteHeader() {
   //  - revealed only after the band has been clear for a beat, so it never flickers over content
   useEffect(() => {
     const mobileViewport = window.matchMedia("(max-width: 720px)");
-    const eligibleRoute = pathname !== "/privacy";
+    const eligibleRoute = pathname !== "/" && pathname !== "/privacy";
     const heroTarget = document.querySelector(".ruby-hero, .cinema-hero") ?? topSentinelRef.current;
     // De-duplicated: #contact may also carry data-conversion-area, and readiness compares counts.
     const conversionAreas = Array.from(new Set([
@@ -293,7 +294,7 @@ export function SiteHeader() {
 
   useEffect(() => {
     if (pathname !== "/") return;
-    const sections = ["services", "work", "process", "about", "contact"]
+    const sections = ["services", "work", "film", "process", "about", "contact"]
       .map((id) => document.getElementById(id))
       .filter((element): element is HTMLElement => element !== null);
     if (sections.length === 0) return;
@@ -350,7 +351,7 @@ export function SiteHeader() {
     <>
       <a className="skip-link" href="#main-content">Skip to content</a>
       <header className={`site-header${scrolled ? " is-scrolled" : ""}`} id="top">
-        <div className="container nav-wrap">
+        <div className={`container nav-wrap${pathname === "/" ? " nav-wrap--home" : ""}`}>
           <Link prefetch={prefetchNavigation} className="brand" href="/" aria-label="AB Web Studio home">
             <ABBrandImage decorative eager />
           </Link>
@@ -377,12 +378,14 @@ export function SiteHeader() {
           >
             <Link href="/work" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
             <Link href="/services" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
-            <Link href="/studio" prefetch={false} onClick={handleNavLinkClick} className={navLinkClass("studio")} aria-current={navLinkCurrent("studio")}>Virtual Studio</Link>
+            <Link href="/studio" prefetch={false} onClick={handleNavLinkClick} className={navLinkClass("studio")} aria-current={navLinkCurrent("studio")}>{pathname === "/" ? "Studio" : "Virtual Studio"}</Link>
+            {pathname === "/" && <a href="#film" onClick={handleNavLinkClick} className={navLinkClass("film")} aria-current={navLinkCurrent("film")}>Film</a>}
             <Link href="/#process" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
             <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
             <Link href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("contact")} aria-current={navLinkCurrent("contact")}>Contact</Link>
             <a className="nav-phone" href={`tel:${siteConfig.phoneInternational}`} onClick={handleNavLinkClick}>{siteConfig.phoneDisplay}</a>
           </nav>
+          {pathname === "/" && <a className="header-project-cta" href="#contact">Start a project</a>}
         </div>
       </header>
       {/* Marks the top of the page on routes without a hero, so the bar still waits for the first screen to pass. */}

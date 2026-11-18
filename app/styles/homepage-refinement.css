@@ -1,0 +1,152 @@
+/* Home-only refinements. Keep the shared route chrome and the AB type palette intact. */
+.nav-wrap--home .header-project-cta {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: clamp(9px, 1.25vw, 18px);
+  border: 1px solid #e47996;
+  background: #901433;
+  color: #fff8f4;
+  font: 600 clamp(.75rem, 1.15vw, .94rem)/1 var(--sans);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.nav-wrap--home .header-project-cta:is(:hover, :focus-visible) { background: #b31e46; }
+.nav-wrap--home .header-project-cta:focus-visible { outline: 2px solid #fff8f4; outline-offset: 3px; }
+.site-header .nav-wrap--home .site-nav .nav-phone { display: none; }
+@media (max-width: 960px) {
+  .after-hours .site-header .nav-wrap--home { width: calc(100% - 32px); gap: 8px; flex-wrap: nowrap; }
+  .nav-wrap--home .brand { margin-inline-end: auto; min-width: 0; }
+  .nav-wrap--home .menu-toggle { flex: none; }
+  .site-header .nav-wrap--home .site-nav .nav-phone { display: inline-flex; }
+}
+
+.ruby-page .ruby-hero-bottomline { justify-content: flex-start; }
+.ruby-proof { width: 100%; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+.ruby-proof-index { display: flex; align-items: center; gap: .75rem; color: #fff4f2; text-decoration: none; font: 500 var(--fs-label)/1.3 var(--mono); text-transform: uppercase; letter-spacing: .1em; }
+.ruby-proof-index strong { color: #ffc0cf; font: 500 clamp(1.6rem, 2.8vw, 2.5rem)/1 var(--sans); letter-spacing: -.06em; }
+.ruby-proof-index:is(:hover, :focus-visible) span { text-decoration: underline; text-underline-offset: 4px; }
+.ruby-proof ul { display: flex; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.ruby-proof li a { position: relative; display: block; width: clamp(48px, 6.5vw, 88px); height: clamp(44px, 4vw, 54px); border: 1px solid #f9dbdf8c; background: #20151c; }
+.ruby-proof li a:is(:hover, :focus-visible) { z-index: 1; border-color: #ffc0cf; }
+.ruby-proof li img { object-fit: cover; object-position: top; }
+.ruby-proof li span { position: absolute; right: 0; bottom: calc(100% + 7px); width: max-content; max-width: 15ch; padding: 6px 9px; background: #160c13; color: #fff4f2; border: 1px solid #a46b7d; font: 500 .75rem/1.35 var(--sans); opacity: 0; pointer-events: none; }
+.ruby-proof li a:is(:hover, :focus-visible) span { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .ruby-proof li a { transition: translate 260ms var(--ease-lux); }
+  .ruby-proof li a:is(:hover, :focus-visible) { translate: 0 -4px; }
+}
+
+.ruby-page .ruby-positioning-grid { grid-template-columns: minmax(0, 1.02fr) minmax(0, 1.1fr); align-items: center; }
+.ruby-device-study { position: relative; min-width: 0; margin: 0; padding: clamp(12px, 2.1vw, 28px); border: 1px solid #624553; background: radial-gradient(ellipse at 25% 85%, #532637, #170d15 72%); }
+.ruby-device-laptop { width: 89%; margin-block: 8% 8%; margin-inline-start: 1%; }
+.ruby-device-screen { position: relative; aspect-ratio: 1440 / 1000; overflow: hidden; border: clamp(5px, .65vw, 10px) solid #100b11; border-radius: 5% 5% 0 0; box-shadow: 0 0 0 1px #796675; }
+.ruby-device-screen img { object-fit: contain; }
+.ruby-device-laptop::after { display: block; width: 108%; height: 8px; margin-left: -4%; background: #71626b; border-radius: 0 0 50% 50%; content: ""; }
+.ruby-device-phone { position: absolute; right: 7%; bottom: 22%; width: 23%; overflow: hidden; border-radius: 12% / 6%; border: clamp(3px, .45vw, 7px) solid #100b11; box-shadow: 0 0 0 1px #8e7483, 0 12px 26px #0a050ac9; }
+.ruby-device-phone img { display: block; width: 100%; height: auto; }
+.ruby-device-study figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 10px; padding-top: 4px; border-top: 1px solid #a16d874d; color: #dec5cf; font: var(--fs-label)/1.4 var(--mono); }
+.ruby-device-study figcaption a { display: inline-flex; min-height: 44px; align-items: center; gap: 7px; color: #fff6f2; text-decoration-color: #c3758d; text-underline-offset: 4px; }
+.ruby-device-study figcaption svg { width: 14px; }
+
+.ruby-capabilities { padding-block: clamp(34px, 5vw, 70px); border-block: 1px solid #61394b; background: #130c14; }
+.ruby-capability-grid { display: grid; grid-template-columns: 1.2fr 1.15fr .85fr; border: 1px solid #5b3b4a; }
+.ruby-capability-grid > * { min-width: 0; margin: 0; padding: clamp(18px, 2.5vw, 40px); }
+.ruby-capability-grid > * + * { border-inline-start: 1px solid #5b3b4a; }
+.ruby-capability-grid h2 { margin: 10px 0; color: #fff2ef; font: 550 clamp(2rem, 4vw, 4.2rem)/1.04 var(--display); font-variation-settings: "opsz" 26; letter-spacing: -.045em; }
+.ruby-capability-grid p { margin: 0; color: #e6ccd4; font: var(--fs-label)/1.6 var(--mono); }
+.ruby-capability-stack { align-content: center; }
+.ruby-capability-stack p > span[aria-hidden] { display: inline-block; min-width: 2ch; color: #ffaec4; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ruby-capability-stack ul { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 0; padding: 0; list-style: none; }
+.ruby-capability-stack li { padding: 5px 9px; color: #fff2ef; border: 1px solid #956177; font: var(--fs-label)/1.4 var(--mono); }
+.ruby-capability-metrics { display: grid; align-content: center; gap: 12px; font: var(--fs-label)/1.6 var(--mono); }
+.ruby-capability-metrics > div + div { padding-top: 12px; border-top: 1px solid #5b3b4a; }
+.ruby-capability-metrics dt { color: #ffc0cf; }
+.ruby-capability-metrics dd { margin: 2px 0 0; color: #e6ccd4; }
+
+.ruby-services .ruby-section-header h2,
+.ruby-discipline-title { font-family: var(--display); font-weight: 600; font-variation-settings: "opsz" 22; }
+.ruby-services summary.ruby-discipline { overflow: visible; list-style: none; cursor: pointer; }
+.ruby-services summary::-webkit-details-marker { display: none; }
+.ruby-discipline-title { font-size: clamp(1.55rem, 3.15vw, 3.1rem); line-height: 1.15; letter-spacing: -.04em; }
+.ruby-services .ruby-discipline-arrow { position: relative; width: 40px; height: 40px; }
+.ruby-services .ruby-discipline-arrow::before, .ruby-services .ruby-discipline-arrow::after { position: absolute; width: 13px; height: 1px; background: currentColor; content: ""; }
+.ruby-services details:not([open]) .ruby-discipline-arrow::after { transform: rotate(90deg); }
+.ruby-services .ruby-discipline:is(:hover, :focus-visible) .ruby-discipline-arrow { transform: none; }
+.ruby-service-options { display: grid; gap: 0 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; padding: 0 0 22px calc(40px + 28px); list-style: none; }
+.ruby-service-options li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: 10px; border-top: 1px solid #5f3d4b42; }
+.ruby-service-options a { display: inline-flex; align-items: center; min-height: 44px; color: #321b27; font-size: .95rem; line-height: 1.3; text-decoration-color: #9b15357a; text-underline-offset: 3px; }
+.ruby-service-options .ruby-service-enquire { gap: 6px; color: #84122f; font: 600 var(--fs-label)/1.3 var(--mono); text-transform: uppercase; }
+.ruby-services a:focus-visible, .ruby-services summary:focus-visible { outline: 2px solid #84122f; }
+
+.ruby-film .film-controls { padding: 8px 0; }
+.ruby-film .film-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: auto; padding-inline: 12px; border-color: #de829b; background: #911633; color: #fff2ef; font: 600 .82rem/1.2 var(--sans); }
+.ruby-film .film-primary:is(:hover, :focus-visible) { background: #b02149; }
+.ruby-film .film-primary svg { flex: none; }
+.ruby-film .film-status { padding: 8px; background: #130d13; }
+
+.ruby-page .ruby-process-steps { display: block; }
+.ruby-page .ruby-process-step { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); min-block-size: clamp(246px, 24vw, 280px); gap: clamp(24px, 5vw, 72px); padding-block: clamp(20px, 3.8vw, 56px); border-top: 1px solid #77515f; }
+.ruby-process-marker { position: sticky; top: calc(var(--header-height) + 24px); align-self: start; }
+.ruby-process-marker h3 { font-size: clamp(1.45rem, 3vw, 3.15rem); line-height: 1.17; }
+.ruby-process-detail { display: grid; align-content: start; gap: 20px; }
+.ruby-process-detail p { max-width: 52ch; font-size: clamp(.96rem, 1.35vw, 1.14rem); }
+.ruby-process-sketch { padding: clamp(14px, 2vw, 24px); border: 1px solid #76505f; background: #170e17; color: #f3e3e6; font: var(--fs-label)/1.45 var(--mono); }
+.ruby-process-sketch > span { display: flex; align-items: center; gap: 10px; padding-bottom: 10px; color: #ffafc5; }
+.ruby-process-sketch > span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #e32655; box-shadow: 10px 0 #aa677b, 20px 0 #725265; margin-right: 20px; }
+.ruby-process-sketch ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ruby-process-sketch li { padding: 10px 6px; border: 1px solid #5b3b4a; overflow-wrap: anywhere; }
+.ruby-process-sketch[data-sketch="1"] li:first-child { grid-column: 1 / -1; }
+.ruby-process-sketch[data-sketch="2"] ul { grid-template-columns: 1fr; }
+.ruby-process-sketch[data-sketch="3"] li::before { content: "□ "; color: #ffafc5; }
+
+.ruby-next-steps { margin-block: 8px; padding: 18px; border: 1px solid #5f4a45; background: #211918; }
+.ruby-next-steps h3 { margin: 0 0 8px; color: #f6dfd2; font: 600 var(--fs-label)/1.3 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.ruby-next-steps ol { display: grid; gap: 8px; margin: 0; padding-inline-start: 1.35em; color: #f1ddd4; font-size: .94rem; line-height: 1.4; }
+.ruby-next-steps li::marker { color: #f6a8bd; font-family: var(--mono); }
+.ruby-contact .studio-contact-rows { display: grid; gap: 6px; }
+.ruby-contact .studio-contact-rows a { padding-inline: 12px; border: 1px solid #654d4a; background: #221919; }
+.ruby-contact .studio-contact-rows a:is(:hover, :focus-visible) { border-color: #dd9ba9; }
+
+.site-footer.studio-footer--home { padding-top: 0; }
+.studio-footer-closing { padding-block: clamp(40px, 7.25vw, 116px); margin-bottom: clamp(32px, 5.6vw, 82px); background: #570f28; border-bottom: 1px solid #be5473; }
+.studio-footer-closing .studio-shell { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 14px 28px; }
+.studio-footer-closing .cinema-label { grid-column: 1 / -1; margin: 0; color: #ffd6df; }
+.studio-footer-closing h2 { margin: 0; color: #fff5ed; font: 500 clamp(2.5rem, 6.8vw, 7rem)/1.02 var(--display); font-variation-settings: "opsz" 28; letter-spacing: -.05em; }
+.studio-footer-closing h2 em { color: #ffc2d1; }
+.studio-footer-closing a { justify-self: start; }
+.studio-footer-closing a svg { width: 17px; }
+.studio-footer--home .studio-footer-main { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.3fr); gap: 26px clamp(14px, 4vw, 64px); }
+.studio-footer--home .studio-footer-brand { grid-column: 1 / -1; border-bottom: 1px solid var(--hair); padding-bottom: 18px; }
+.studio-footer--home .studio-footer-brand .footer-contact-cta { display: none; }
+
+@media (max-width: 960px) {
+  .ruby-capability-grid { grid-template-columns: 1fr 1fr; }
+  .ruby-capability-grid .ruby-capability-metrics { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; border-inline-start: 0; border-top: 1px solid #5b3b4a; }
+  .ruby-capability-metrics > div + div { padding-top: 0; padding-inline-start: 14px; border-top: 0; border-inline-start: 1px solid #5b3b4a; }
+}
+@media (max-width: 720px) {
+  .ruby-page .ruby-positioning-grid { grid-template-columns: minmax(0, 1fr); }
+  .ruby-device-study { grid-row: 2; }
+  .ruby-capability-grid { grid-template-columns: 1fr; }
+  .ruby-capability-grid > * + * { border-inline-start: 0; border-top: 1px solid #5b3b4a; }
+  .ruby-services summary.ruby-discipline { grid-template-columns: 24px minmax(0, 1fr) 40px; gap: 9px; padding-block: 16px; min-height: 64px; }
+  .ruby-services .ruby-discipline-number { padding-top: 6px; }
+  .ruby-services .ruby-discipline-copy { grid-row: 2; grid-column: 2; max-width: 36ch; font-size: .875rem; }
+  .ruby-services .ruby-discipline-arrow { grid-row: 1 / 3; grid-column: 3; }
+  .ruby-service-options { grid-template-columns: 1fr; padding-inline-start: 33px; padding-bottom: 10px; }
+  .ruby-page .ruby-process-step { grid-template-columns: minmax(0, 1fr); min-block-size: 0; gap: 12px; }
+  .ruby-process-marker { position: static; }
+  .ruby-process-marker h3 { margin-bottom: 2px; }
+  .studio-footer-closing .studio-shell { grid-template-columns: minmax(0, 1fr); }
+  .studio-footer--home .studio-footer-main { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 390px) {
+  .nav-wrap--home .brand-wordmark { font-size: 12px; }
+  .nav-wrap--home .brand-wordmark i { margin-inline: 4px; }
+  .ruby-proof { column-gap: 8px; }
+  .ruby-proof-index { gap: 5px; letter-spacing: .06em; }
+  .ruby-film .film-controls { gap: 4px; }
+  .ruby-film .film-primary { padding-inline: 6px; gap: 3px; }
+}

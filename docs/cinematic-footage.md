@@ -132,6 +132,10 @@ Timeline:
 
 Files under `public/film/`: `ab-studio-ruby-v2-1080.mp4` (1920×1080, 3,325,264 bytes), `ab-studio-ruby-v2-720.mp4` (1280×720, 1,131,433 bytes), `ab-studio-ruby-v2-poster.webp` (43,616 bytes). FFprobe confirms 24.000000 seconds and a video-only stream. Individual opening/project/closing frames were visually inspected. `BrandFilmPlayer` still downloads film bytes only after a visitor gesture, preserving enquiry performance. The page's chapters and VideoObject schema describe this actual edit. No soundtrack or spoken information was added.
 
+## Lightweight homepage playback
+
+The V3 posters remain the first paint. The homepage uses silent 20 fps derivatives of the same V3 desktop and portrait cuts, with light denoising and bitrate caps. The 1280 × 720 desktop loop is 910,018 bytes (VP9) or 774,392 bytes (H.264); the 432 × 768 portrait loop is 454,493 bytes (VP9) or 405,139 bytes (H.264). Playback is deferred until after page load and is suppressed for reduced motion, Save-Data, and slow connections. The original cuts remain available and unchanged.
+
 ## Limitations and optional future production
 
 This is a complete usable stock-footage-based web sequence and original studio edit, not a commissioned live-action shoot. A future commissioned aerial/architectural shoot or specifically cleared Vivid-festival material could add richer event lighting and more unique Sydney camera moves; those are not claimed as completed. The present footage shows authentic night illumination and a dusk timelapse, not fabricated festival displays.

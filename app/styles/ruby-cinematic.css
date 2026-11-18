@@ -160,4 +160,3 @@
   .ruby-page [data-ruby-magnet] { transform: none; }
   .ruby-discipline:is(:hover, :focus-visible) :is(h3, .ruby-discipline-arrow) { transform: none; }
 }
-.ruby-film .film-big-play-ring { border-color: #ff6388; background: #9b1535cc; color: #fff; box-shadow: 0 0 65px #e3265522; }

@@ -48,7 +48,7 @@ export function ProjectExhibition() {
   const active = projects[activeIndex];
   const imageFailed = failed.has(active.slug);
   const imageReady = loaded.has(active.slug);
-  const upcoming = upcomingExhibition(timeline, 6).map((index, order) => ({ index, offset: order + 1 }));
+  const upcoming = upcomingExhibition(timeline, 2).map((index, order) => ({ index, offset: order + 1 }));
   const selectNext = () => setShow((current) => advanceExhibition(current, 1, projects.length, Math.random));
   const selectPrevious = () => setShow((current) => advanceExhibition(current, -1, projects.length, Math.random));
 
@@ -152,25 +152,25 @@ export function ProjectExhibition() {
       <div className="exhibition-topline"><span><i aria-hidden="true" />Featured project</span><span>{projects.length} case studies</span></div>
       <div className="exhibition-stage">
         <div className="exhibition-feature">
-          <div className="exhibition-image-stack" aria-hidden="true">
+          <div className="exhibition-image-stack">
             {imageFailed ? <div className="exhibition-image-fallback"><span>Project preview unavailable</span><span>The case study is still available below.</span></div> : <>
               {!imageReady && <div className="exhibition-image-fallback exhibition-image-loading"><span>Loading project preview</span></div>}
               <div className="exhibition-image exhibition-image--current" key={active.slug}>
-                <ProjectArtwork project={active} sizes="(max-width: 767.98px) calc(100vw - 40px), min(68vw, 1125px)" onLoad={() => setLoaded((current) => new Set(current).add(active.slug))} onError={() => setFailed((current) => new Set(current).add(active.slug))} />
+                <ProjectArtwork project={active} sizes="(max-width: 767.98px) calc(100vw - 40px), min(62vw, 990px)" onLoad={() => setLoaded((current) => new Set(current).add(active.slug))} onError={() => setFailed((current) => new Set(current).add(active.slug))} />
               </div>
             </>}
           </div>
-          <Link className="exhibition-feature-link" href={`/work/${active.slug}`}>
-            <span className="exhibition-feature-open" aria-hidden="true"><ArrowIcon /></span>
-            <span className="exhibition-destination">{projectDestinationLabel(active)}</span>
-            <span className="exhibition-feature-caption" key={active.slug}><span>{active.sector}</span><strong>{active.name}</strong><span className="exhibition-view">View case study <ArrowIcon /></span></span>
+          <Link className="exhibition-feature-link" href={`/work/${active.slug}`} prefetch={false}>
+
+            <span className="exhibition-feature-caption" key={active.slug}><span>{active.sector}</span><strong>{active.name}</strong></span>
+            <span className="exhibition-feature-actions"><span className="exhibition-destination">{projectDestinationLabel(active)}</span><span className="exhibition-view">View case study <ArrowIcon /></span></span>
           </Link>
         </div>
         <div className="exhibition-rail" aria-label="Upcoming projects">
           {upcoming.slice(0, 2).map(({ index, offset }) => {
             const project = projects[index];
             return <button className="exhibition-preview" key={`slot-${offset}`} onClick={() => jumpAhead(offset)} type="button">
-              <span className="exhibition-preview-image" key={project.slug} aria-hidden="true"><ProjectArtwork project={project} sizes="(max-width: 720px) 42vw, 25vw" /></span>
+              <span className="exhibition-preview-image" key={project.slug} aria-hidden="true"><ProjectArtwork project={project} sizes="(max-width: 767.98px) 43vw, 29vw" decorative /></span>
               <span className="exhibition-preview-copy"><span>{offset === 1 ? "Up next" : "Another perspective"}</span><strong>{project.name}</strong><ArrowIcon /></span>
             </button>;
           })}
@@ -185,7 +185,6 @@ export function ProjectExhibition() {
         <p className="exhibition-counter" aria-live={interaction.focusVisible || reduced || saveData ? "polite" : "off"}>{String(activeIndex + 1).padStart(2, "0")} <span>/ {String(projects.length).padStart(2, "0")}</span><span className="sr-only"> · {active.name}</span></p>
         <div className="exhibition-progress" key={`${active.slug}-${running}`} aria-hidden="true"><span /></div>
       </div>
-      <div className="exhibition-thumbnails" aria-hidden="true"><div key={active.slug}>{upcoming.map(({ index, offset }) => <span key={`${offset}-${projects[index].slug}`}><ProjectArtwork project={projects[index]} sizes="(max-width: 720px) 30vw, 15vw" /></span>)}</div></div>
     </div>
   );
 }

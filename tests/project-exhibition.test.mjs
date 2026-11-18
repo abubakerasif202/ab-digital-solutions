@@ -188,11 +188,11 @@ test("pending foregrounds cannot retain another project's image and have a bound
   assert.match(component, /onError=\{/);
 });
 
-test("desktop stage reserves the complete foreground geometry plus maximum depth offset", async () => {
+test("desktop stage reserves the full in-flow caption and rail geometry", async () => {
   const { readFile } = await import("node:fs/promises");
   const css = await readFile(new URL("../app/styles/project-exhibition.css", import.meta.url), "utf8");
   const stage = css.match(/\.exhibition-stage\s*\{([^}]+)\}/)?.[1] ?? "";
-  assert.match(stage, /aspect-ratio:\s*2\s*\/\s*1/);
-  assert.match(stage, /padding-bottom:\s*50px/);
-  assert.doesNotMatch(stage, /710px|height:\s*clamp/);
+  assert.match(stage, /display:\s*grid/);
+  assert.match(stage, /grid-template-areas:\s*"feature rail"/);
+  assert.doesNotMatch(stage, /height:|aspect-ratio:|position:\s*absolute/);
 });
