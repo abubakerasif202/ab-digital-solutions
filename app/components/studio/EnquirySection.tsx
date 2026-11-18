@@ -7,6 +7,7 @@ interface EnquirySectionProps {
   /** Anchor used by the header CTA and the mobile conversion bar. */
   id?: string;
   index?: string;
+  showIndex?: boolean;
   headingAs?: "h1" | "h2";
   headingId?: string;
   /** Optional breadcrumb or context line rendered above the eyebrow. */
@@ -25,6 +26,7 @@ const whatsappHref = `https://wa.me/${siteConfig.phoneInternational.replace("+",
 export function EnquirySection({
   id,
   index = "07",
+  showIndex = true,
   headingAs: Heading = "h2",
   headingId = "contact-heading",
   before,
@@ -35,9 +37,9 @@ export function EnquirySection({
       <div className="studio-shell studio-split studio-split--enquiry">
         <div className="studio-enquiry-copy">
           {before}
-          <Reveal as="p" className="eyebrow section-index" variant="fade-up">
+          {showIndex && <Reveal as="p" className="eyebrow section-index" variant="fade-up">
             <span className="section-index-num">{index}</span><span className="micro-rule" aria-hidden="true" />Start a conversation
-          </Reveal>
+          </Reveal>}
           <Heading id={headingId} className="studio-display">
             Let’s build your next <em>digital advantage.</em>
           </Heading>

@@ -27,10 +27,10 @@ test("ruby film uses new local editorial footage and truthful narrative metadata
 });
 
 test("ruby palette and progressive motion have an explicit reduced-motion fallback", async () => {
-  const [styles, motion, layout] = await Promise.all([source("app/styles/ruby-cinematic.css"), source("app/components/cinematic/RubyMotion.tsx"), source("app/layout.tsx")]);
+  const [styles, motion, layout, kinetic] = await Promise.all([source("app/styles/ruby-cinematic.css"), source("app/components/cinematic/RubyMotion.tsx"), source("app/layout.tsx"), source("app/styles/ruby-kinetic.css")]);
   for (const color of ["#08070b", "#e32655", "#9b1535", "#e5c59a"]) assert.ok(styles.toLowerCase().includes(color));
   assert.ok(styles.includes("prefers-reduced-motion: reduce"));
-  assert.ok(styles.includes("@supports (animation-timeline: view())"));
+  assert.ok(kinetic.includes("@supports (animation-timeline: view())"));
   assert.ok(motion.includes("cancelAnimationFrame"));
   assert.ok(motion.includes("removeEventListener"));
   assert.ok(motion.includes("prefers-reduced-motion: reduce"));

@@ -165,10 +165,10 @@ try {
     heading: Boolean(document.querySelector("#hero-heading")?.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })),
     artwork: Boolean(document.querySelector(".cinema-media-poster img")?.naturalWidth),
     videoStatic: !document.querySelector(".cinema-media-video")?.hasAttribute("src"),
-    marqueeAnimation: getComputedStyle(document.querySelector(".ruby-band-track")).animationName,
+    headingAnimation: getComputedStyle(document.querySelector("#hero-heading")).animationName,
     intro: Boolean(document.querySelector(".brand-intro")),
   }));
-  check("Reduced-motion semantic hero, decorative video and content stay static", !motion.armed && motion.heading && motion.artwork && motion.videoStatic && motion.marqueeAnimation === "none" && !motion.intro, motion);
+  check("Reduced-motion semantic hero, decorative video and content stay static", !motion.armed && motion.heading && motion.artwork && motion.videoStatic && motion.headingAnimation === "none" && !motion.intro, motion);
   await page.screenshot({ path: path.join(output, "390-home-reduced-motion.png") });
   for (const route of ["/", "/contact"]) {
     for (const mock of [{ status: 200, body: { ok: true }, outcome: "success" }, { status: 200, body: {}, outcome: "error" }, { status: 503, body: { error: "Local QA simulated delivery failure" }, outcome: "error" }]) {
