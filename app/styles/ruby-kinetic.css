@@ -71,6 +71,72 @@
 @keyframes ruby-scene-1 { 0% { transform: scaleX(0); } 33.7%,97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
 @keyframes ruby-scene-2 { 0%,33.7% { transform: scaleX(0); } 64.9%,97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
 @keyframes ruby-scene-3 { 0%,64.9% { transform: scaleX(0); } 97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+/* The two identical groups travel exactly one group width per loop. */
+.ruby-service-ticker {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  padding-block: clamp(24px, 3.2vw, 50px);
+  border-block: 1px solid #e3265538;
+  background: #08070b;
+  color: var(--cinema-paper);
+}
+.ruby-service-ticker-viewport { grid-area: 1 / 1; overflow: clip; }
+.ruby-service-ticker-track { display: flex; width: max-content; animation: ruby-band 42s linear infinite; }
+.ruby-service-ticker-group {
+  display: flex;
+  flex: none;
+  justify-content: space-around;
+  min-width: 100vw;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: italic clamp(42px, 7vw, 116px)/1.1 var(--display), serif;
+  letter-spacing: -.04em;
+  white-space: nowrap;
+}
+.ruby-service-ticker-group li { display: inline-flex; align-items: center; }
+.ruby-service-ticker-group li:nth-child(even) { color: transparent; -webkit-text-stroke: 1px var(--accent-ink); }
+.ruby-service-ticker-group li::after {
+  content: "";
+  width: .15em;
+  height: .15em;
+  margin-inline: .42em;
+  border-radius: 50%;
+  background: var(--ruby-bright);
+  box-shadow: 0 0 26px var(--ruby-bright);
+}
+@keyframes ruby-band { to { transform: translateX(-50%); } }
+
+.ruby-service-ticker-control {
+  grid-area: 1 / 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-inline: 8px 14px;
+  padding-inline: 8px;
+  font-size: .8125rem;
+  cursor: pointer;
+}
+.ruby-service-ticker-control input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent-ink); }
+.ruby-service-ticker-control:has(input:focus-visible) { outline: 2px solid var(--cinema-gold); outline-offset: 2px; }
+.ruby-service-ticker:has(.ruby-service-ticker-control input:checked) .ruby-service-ticker-track { animation-play-state: paused; }
+
+@media (max-width: 600px) {
+  .ruby-service-ticker-group { font-size: clamp(26px, 8vw, 42px); }
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .ruby-service-ticker { grid-template-columns: minmax(0, 1fr); padding-block: 18px; }
+  .ruby-service-ticker-track { width: 100%; animation: none; }
+  .ruby-service-ticker-group { min-width: 0; width: 100%; flex-wrap: wrap; justify-content: center; gap: 8px 24px; padding-inline: 16px; font-size: clamp(20px, 3vw, 34px); white-space: normal; }
+  .ruby-service-ticker-group li:nth-child(even) { color: inherit; -webkit-text-stroke: 0; }
+  .ruby-service-ticker-group li::after,
+  .ruby-service-ticker-group[aria-hidden],
+  .ruby-service-ticker-control { display: none; }
+}
+
 /* Shared line reveal for chapter headings (armed and released by Reveal). */
 .ruby-line { display: block; overflow: hidden; padding: 0 .07em .16em; margin: 0 -.07em -.16em; }
 .ruby-line > span { display: block; }
