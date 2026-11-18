@@ -95,12 +95,11 @@ function attachTouchLight(element: HTMLElement) {
 
 /**
  * Browsers without CSS scroll-driven animations (notably iOS Safari before 26) still get the
- * scroll progress rule, hero exit and image drift: one passive listener writing transforms only.
+ * scroll progress rule and image drift: one passive listener writing transforms only.
  */
 function attachScrollDepth(root: Element) {
   const progress = root.querySelector<HTMLElement>(".ruby-scroll-progress");
-  const hero = root.querySelector<HTMLElement>(".ruby-hero-composition");
-  const plates = Array.from(root.querySelectorAll<HTMLElement>(".ruby-plate-frame img, .ruby-contact-plate img"));
+  const plates = Array.from(root.querySelectorAll<HTMLElement>(".ruby-plate-frame img"));
   const visible = new Set<HTMLElement>();
   let frame = 0;
   const paint = () => {
@@ -109,15 +108,10 @@ function attachScrollDepth(root: Element) {
     const scrolled = window.scrollY;
     const range = Math.max(1, document.documentElement.scrollHeight - viewport);
     if (progress) progress.style.transform = `scaleX(${Math.min(1, scrolled / range)})`;
-    if (hero) {
-      const t = Math.min(1, scrolled / (viewport * 0.85));
-      hero.style.opacity = String(1 - 0.85 * t);
-      hero.style.transform = `translate3d(0, ${-70 * t}px, 0)`;
-    }
     visible.forEach(img => {
       const rect = (img.parentElement ?? img).getBoundingClientRect();
       const t = Math.max(0, Math.min(1, (viewport - rect.top) / (viewport + rect.height)));
-      img.style.transform = `translate3d(0, ${(-12 + 12 * t).toFixed(2)}%, 0)`;
+      img.style.transform = `translate3d(0, ${(-7 + 7 * t).toFixed(2)}%, 0)`;
     });
   };
   const schedule = () => { if (!frame) frame = window.requestAnimationFrame(paint); };
@@ -141,8 +135,6 @@ function attachScrollDepth(root: Element) {
     window.removeEventListener("scroll", schedule);
     window.removeEventListener("resize", schedule);
     progress?.style.removeProperty("transform");
-    hero?.style.removeProperty("opacity");
-    hero?.style.removeProperty("transform");
     plates.forEach(img => img.style.removeProperty("transform"));
   };
 }

@@ -1,47 +1,65 @@
-/* Ruby Cinematic / V3 — kinetic layer: lower-third hero, moving band, image-led chapters, scroll-driven depth.
+/* Ruby Cinematic / V3 — kinetic layer: lower-third hero, image-led chapters, scroll-driven depth.
    Transform / opacity / clip-path only. Loaded after ruby-cinematic.css, which keeps the palette and base chapters. */
-.ruby-scroll-progress { position: fixed; inset: 0 0 auto; height: 2px; z-index: 999; pointer-events: none; background: linear-gradient(90deg,#9b1535,#ff315c 70%,#e5c59a); transform: scaleX(0); transform-origin: 0 50%; }
+.ruby-scroll-progress { position: fixed; inset: 0 0 auto; height: 2px; z-index: 999; pointer-events: none; background: #e32655; transform: scaleX(0); transform-origin: 0 50%; }
 @keyframes ruby-progress { to { transform: scaleX(1); } }
 
-/* 1. Hero: three graded Sydney shots, headline set as a cinematic lower third. */
-.ruby-page .ruby-hero { min-height: max(760px,calc(100svh - var(--header-height))); background: #0a0912; overflow: clip; }
-.ruby-hero .cinema-media-poster img, .ruby-hero .cinema-media-video { object-position: center 40%; filter: none; }
-.ruby-hero-shade { background: linear-gradient(0deg,#08070b 0%,#08070bc4 15%,#08070b40 46%,transparent 70%),linear-gradient(90deg,#08070bed 0%,#08070bb8 36%,#08070b61 58%,transparent 76%),linear-gradient(180deg,#08070ba6 0%,transparent 24%); }
-/* Below desktop the headline spans most of the width, past where the left scrim has faded, so add a soft overall veil. */
-@media (min-width: 601px) and (max-width: 1279px) {
-  .ruby-hero-shade { background: linear-gradient(0deg,#08070b 0%,#08070bc4 15%,#08070b40 46%,transparent 70%),linear-gradient(90deg,#08070bed 0%,#08070bb8 36%,#08070b61 58%,transparent 76%),linear-gradient(180deg,#08070ba6 0%,transparent 24%),linear-gradient(#08070b73,#08070b73); }
+/* Keep the film at native cover scale. Shade the copy side, not the whole frame. */
+.ruby-page .ruby-hero {
+  --hero-ink: #0d0b0a;
+  --hero-accent: #ffc0ca;
+  min-height: max(590px, calc(100svh - var(--header-height)));
+  overflow: clip;
+  background: var(--hero-ink);
 }
-.ruby-hero-light { opacity: 1; background: radial-gradient(ellipse 62% 56% at var(--ruby-x,20%) var(--ruby-y,80%),#e326554d,transparent 62%),radial-gradient(ellipse 42% 44% at 90% 10%,#5b2bd633,transparent 70%); }
-.ruby-hero-sweep, .ruby-grain { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
-.ruby-hero-sweep::before { content: ""; position: absolute; inset: -20% auto -20% 0; width: 36%; background: linear-gradient(100deg,transparent,#ff315c2b 44%,#ffe3ea24 50%,#ff315c2b 56%,transparent); mix-blend-mode: screen; transform: translateX(-140%) skewX(-12deg); animation: ruby-sweep 9.5s cubic-bezier(.6,0,.2,1) 1.6s infinite; }
-.ruby-grain::before { content: ""; position: absolute; inset: -50%; opacity: .1; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); animation: ruby-grain 1.2s steps(6) infinite; }
-@keyframes ruby-sweep { 0% { transform: translateX(-140%) skewX(-12deg); } 36%,100% { transform: translateX(430%) skewX(-12deg); } }
-@keyframes ruby-grain { 0% { transform: translate(0,0); } 20% { transform: translate(-4%,3%); } 40% { transform: translate(3%,-5%); } 60% { transform: translate(-2%,-3%); } 80% { transform: translate(5%,2%); } 100% { transform: translate(0,0); } }
-.ruby-hero-topline { padding-top: calc(var(--header-height) + 32px); }
-.ruby-hero-topline p i { width: 22px; height: 1px; background: #ff7f9d; }
-.ruby-hero-composition { margin-top: auto; padding-block: 40px clamp(30px,5.5vh,64px); }
-.ruby-hero-overline { margin-bottom: clamp(18px,2.6vh,30px); }
-.ruby-page .ruby-title { max-width: none; margin-bottom: clamp(28px,4.4vh,52px); font-size: clamp(60px,8.3vw,148px); line-height: .98; letter-spacing: -.07em; text-shadow: 0 4px 44px #08070b99; }
+.ruby-hero .cinema-media-poster img, .ruby-hero .cinema-media-video { object-position: center 40%; }
+.ruby-hero .cinema-media-video { transition-duration: .35s; }
+.ruby-hero-shade {
+  background: linear-gradient(90deg, #0d0b0aef 0%, #0d0b0ad9 35%, #0d0b0ac2 54%, #0d0b0a00 80%),
+    linear-gradient(0deg, #0d0b0ae8, transparent 25%, transparent 82%, #0d0b0aaf);
+}
+.ruby-hero-light {
+  opacity: .7;
+  background: radial-gradient(ellipse 45% 50% at var(--ruby-x, 20%) var(--ruby-y, 80%), #b7244638, transparent 68%);
+}
+.ruby-hero-topline { padding-block: calc(var(--header-height) + 24px) 0; }
+.ruby-hero-topline p { color: var(--cinema-paper); }
+.ruby-hero-composition { margin-top: auto; padding-block: 32px clamp(37px, 6vh, 72px); }
+.ruby-page .ruby-title {
+  margin-bottom: 27px;
+  font-size: clamp(45px, 7vw, 110px);
+  line-height: 1.05;
+  letter-spacing: -.055em;
+  color: var(--cinema-paper);
+}
 .ruby-title-row { display: block; }
-.ruby-title-row--signature { margin-top: .03em; }
-.ruby-title-row--signature em { font-family: var(--display),serif; font-size: 1.2em; font-weight: 400; letter-spacing: -.055em; }
-.ruby-word { display: inline-block; overflow: hidden; vertical-align: bottom; padding: .12em .09em .22em; margin: -.12em -.09em -.22em; }
-.ruby-word > span { display: inline-block; animation: ruby-word-in 1.3s cubic-bezier(.16,1,.3,1) both; animation-delay: calc(.2s + var(--word) * .12s); }
-.ruby-title-row--signature .ruby-word > span { padding: .02em .06em .2em 0; color: #ff9db8; text-shadow: none; filter: drop-shadow(0 3px 26px #08070bb3); }
-@keyframes ruby-word-in { from { opacity: 0; transform: translateY(112%) rotate(4deg); } to { opacity: 1; transform: none; } }
-.ruby-hero-actionline { max-width: none; align-items: center; animation-delay: .85s; }
+.ruby-title-row--signature em {
+  font-size: 1.07em;
+  letter-spacing: -.04em;
+  font-variation-settings: "opsz" 24;
+}
+.ruby-hero-actionline { display: grid; justify-content: start; gap: 22px; }
+.ruby-hero-actionline > p { max-width: 39ch; color: #f1e9df; font-size: clamp(16px, 1.5vw, 19px); line-height: 1.52; }
 .ruby-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
-.ruby-project-cta { position: relative; overflow: hidden; background: linear-gradient(120deg,#8a1130,#c21c49); border-color: #ff7f9d; box-shadow: 0 12px 48px #e3265559,inset 0 1px #ffffff3d; }
-.ruby-project-cta::after, .ruby-cinematic .site-nav > .nav-cta::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 45%; background: linear-gradient(100deg,transparent,#ffffff38,transparent); transform: translateX(-130%) skewX(-18deg); transition: transform .8s cubic-bezier(.16,1,.3,1); pointer-events: none; }
-.ruby-project-cta:hover::after, .ruby-cinematic .site-nav > .nav-cta:hover::after { transform: translateX(330%) skewX(-18deg); }
-.ruby-project-cta:hover { background: linear-gradient(120deg,#9b1535,#d42353); }
-.ruby-ghost-cta { display: inline-flex; align-items: center; justify-content: space-between; gap: 30px; min-height: 60px; padding: 19px 22px; border: 1px solid #f7f1eb5c; background: #08070b66; backdrop-filter: blur(10px); color: #fff6f8; font-size: 13px; font-weight: 500; text-decoration: none; transition: border-color .3s,background .3s; }
-.ruby-ghost-cta svg { width: 20px; transition: transform .3s; }
-.ruby-ghost-cta:hover { border-color: #ff7f9d; background: #470d2299; }
-.ruby-ghost-cta:hover svg { transform: translateX(5px); }
-.ruby-ghost-cta:focus-visible, .ruby-project-cta:focus-visible { outline: 2px solid #ffd6de; outline-offset: 4px; }
-.ruby-discover-icon { display: inline-grid; place-items: center; width: 34px; height: 34px; border: 1px solid #ff7f9d88; border-radius: 50%; color: #ff9db5; transition: transform .3s,background .3s; }
-.ruby-discover:hover .ruby-discover-icon { transform: translateY(5px); background: #9b153588; }
+.ruby-project-cta, .ruby-ghost-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 52px;
+  padding: 11px 20px;
+  color: var(--cinema-paper);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color .2s, background .2s;
+}
+.ruby-project-cta { border: 1px solid #ef849c; background: #a9183f; }
+.ruby-project-cta:is(:hover, :active) { border-color: #ffc0ca; background: #ba2148; }
+.ruby-ghost-cta { border: 1px solid #92857b; background: #0d0b0ad9; }
+.ruby-ghost-cta:is(:hover, :active) { border-color: var(--cinema-paper); background: #29231f; }
+.ruby-hero-actions svg { width: 18px; }
+.ruby-hero-actions a:focus-visible { outline: 2px solid var(--cinema-paper); outline-offset: 4px; }
+.ruby-hero-bottomline { justify-content: flex-end; border-top-color: #f7f1eb46; }
 .ruby-scenes { display: flex; gap: 26px; margin: 0; padding: 0; list-style: none; font-family: var(--mono),monospace; font-size: var(--fs-label); letter-spacing: .14em; text-transform: uppercase; color: #dccdd5; }
 .ruby-scenes li { position: relative; display: flex; gap: 10px; min-width: 118px; padding-bottom: 11px; }
 .ruby-scenes li span { color: #ff8fa9; }
@@ -53,20 +71,6 @@
 @keyframes ruby-scene-1 { 0% { transform: scaleX(0); } 33.7%,97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
 @keyframes ruby-scene-2 { 0%,33.7% { transform: scaleX(0); } 64.9%,97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
 @keyframes ruby-scene-3 { 0%,64.9% { transform: scaleX(0); } 97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
-/* Desktop: CTAs sit directly under the supporting line. */
-@media (min-width: 1024px) {
-  .ruby-hero-actionline { flex-direction: column; align-items: flex-start; gap: 28px; }
-}
-
-/* 2. Kinetic band: the studio's offer, drifting between the film and the first chapter. */
-.ruby-band { position: relative; overflow: hidden; padding-block: clamp(24px,3.2vw,50px); background: #08070b; border-block: 1px solid #e3265538; }
-.ruby-band-track { display: flex; width: max-content; animation: ruby-band 42s linear infinite; }
-.ruby-band p { display: flex; flex-shrink: 0; margin: 0; font-family: var(--display),serif; font-style: italic; font-size: clamp(44px,7vw,116px); line-height: 1.1; letter-spacing: -.04em; white-space: nowrap; }
-.ruby-band span { display: inline-flex; align-items: center; color: transparent; -webkit-text-stroke: 1px #e32655b3; }
-.ruby-band span:nth-child(odd) { color: #f7f1eb; -webkit-text-stroke: 0; }
-.ruby-band i { width: .15em; height: .15em; margin-inline: .42em; border-radius: 50%; background: #ff315c; box-shadow: 0 0 26px #ff315c; }
-@keyframes ruby-band { to { transform: translateX(-50%); } }
-
 /* Shared line reveal for chapter headings (armed and released by Reveal). */
 .ruby-line { display: block; overflow: hidden; padding: 0 .07em .16em; margin: 0 -.07em -.16em; }
 .ruby-line > span { display: block; }
@@ -75,15 +79,12 @@
 @keyframes ruby-line-in { from { transform: translateY(112%) rotate(1.5deg); } to { transform: none; } }
 
 /* 3. Studio chapter: a real Sydney plate carries the identity instead of an empty black band. */
-.ruby-positioning { padding-block: clamp(90px,11vw,170px) clamp(110px,12vw,190px); }
-.ruby-positioning-grid { grid-template-columns: minmax(280px,1.1fr) 2fr; align-items: end; }
+.ruby-positioning-grid { grid-template-columns: minmax(240px, 1fr) 1.7fr; align-items: center; gap: clamp(32px, 6vw, 96px); }
 .ruby-plate { position: relative; }
-.ruby-plate-frame { position: relative; overflow: hidden; aspect-ratio: 4 / 5; background: #140d18; }
-.ruby-plate-frame img { display: block; width: 100%; height: 114%; object-fit: cover; object-position: 0% 50%; }
-.ruby-plate-frame::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg,#08070bd9,transparent 46%),linear-gradient(125deg,#9b153559,transparent 52%); pointer-events: none; }
-.ruby-plate::before { content: ""; position: absolute; inset: 18px -18px -18px 18px; border: 1px solid #e3265566; pointer-events: none; }
-.ruby-identity-mark { position: absolute; left: 22px; bottom: 22px; z-index: 1; flex-direction: row; align-items: flex-end; align-self: auto; gap: 18px; padding: 0; }
-.ruby-identity-mark img { width: 112px; height: auto; filter: drop-shadow(0 8px 30px #08070b); }
+.ruby-plate-frame { position: relative; overflow: hidden; aspect-ratio: 6 / 5; background: #171412; }
+.ruby-plate-frame img { display: block; width: 100%; height: 108%; object-fit: cover; object-position: 50% 46%; }
+.ruby-plate-frame::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg,#0d0b0a50,transparent 30%); pointer-events: none; }
+.ruby-plate::before { content: ""; position: absolute; inset: 10px -10px -10px 10px; border: 1px solid #e5c59a66; pointer-events: none; }
 
 /* 4. Services: the one light chapter, cut on a diagonal so the page never stacks as plain rectangles. */
 .ruby-services { --cut: clamp(26px,4vw,72px); position: relative; padding-block: calc(clamp(90px,11vw,165px) + var(--cut)); background: #f4ece4; color: #170b12; clip-path: polygon(0 var(--cut),100% 0,100% calc(100% - var(--cut)),0 100%); }
@@ -96,10 +97,10 @@
 .ruby-services .ruby-discipline { color: #170b12; }
 .ruby-services .ruby-discipline::before { background: radial-gradient(ellipse at var(--ruby-x,50%) var(--ruby-y,50%),#e326552e,transparent 72%); }
 .ruby-services .ruby-discipline-number { color: #9b1535; }
-.ruby-services .ruby-discipline h3 small { color: #5a4651; }
+.ruby-services .ruby-discipline h3 { font-size: clamp(22px, 3.25vw, 49px); letter-spacing: -.04em; }
 .ruby-services .ruby-discipline:is(:hover, :focus-visible) h3 { color: var(--ruby-deep); }
 .ruby-services .ruby-discipline-copy { color: #4d3a45; }
-.ruby-services .ruby-discipline-copy > .cinema-label { color: #7a5568; }
+.ruby-services .ruby-discipline-copy > .cinema-label { color: #66564e; }
 .ruby-services .ruby-discipline-arrow { border-color: #170b1259; }
 .ruby-services .ruby-discipline:is(:hover, :focus-visible) .ruby-discipline-arrow { color: #fff6f8; }
 /* One decisive rule connects the active service to its destination, for mouse and keyboard. */
@@ -115,7 +116,7 @@
 }
 .ruby-discipline:is(:hover, :focus-visible)::after { transform: scaleX(1); }
 .ruby-discipline:focus-visible { outline-offset: -3px; }
-.ruby-services .ruby-service-foot > .cinema-label { color: #7a5568; }
+.ruby-services .ruby-service-foot > .cinema-label { color: #66564e; }
 .ruby-service-foot ul { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 44px; margin: 0; padding: 0; list-style: none; }
 .ruby-service-foot li { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 50px; border-bottom: 1px solid #170b1221; }
 .ruby-service-foot li a { display: inline-flex; align-items: center; min-height: 44px; color: #2a1721; font-size: var(--fs-label); text-decoration: none; transition: color .3s; }
@@ -127,14 +128,34 @@
 /* 5. Film stage opens like a screen. */
 .ruby-film-stage { box-shadow: 0 40px 120px #e3265521; }
 
-/* 6. Contact: the harbour returns as the closing scene. */
-.ruby-contact-scene { position: relative; isolation: isolate; overflow: hidden; }
-.ruby-contact-plate { position: absolute; inset: 0; z-index: -1; }
-.ruby-contact-plate img { display: block; width: 100%; height: 120%; object-fit: cover; object-position: center 38%; }
-.ruby-contact-plate::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at var(--ruby-x,82%) var(--ruby-y,48%),#e3265538,transparent 60%),linear-gradient(90deg,#110912f0 0%,#110912ad 44%,#11091247 100%),linear-gradient(0deg,#110912 0%,transparent 42%,#08070b 100%); }
-.ruby-contact-intro { padding-block: clamp(120px,15vw,220px) clamp(70px,8vw,120px); }
-.ruby-contact-intro::before { content: none; }
-.ruby-contact-intro h2, .ruby-contact-intro-bottom p { text-shadow: 0 3px 30px #08070bcc; }
+/* One enquiry introduction and a warm raised form surface. */
+.ruby-contact { --ivory-muted: #c8bab0; --placeholder: #c2b4aa; }
+.ruby-cinematic .ruby-contact .studio-enquiry {
+  padding-block: clamp(40px, 6vw, 88px);
+  scroll-margin-top: 0;
+  border-top-color: #473a32;
+  background: #151210;
+}
+.ruby-contact .studio-shell { width: calc(100% - clamp(40px, 8vw, 140px)); max-width: 1520px; }
+.ruby-cinematic .ruby-contact .studio-display em { color: var(--cinema-gold) !important; }
+.ruby-contact .contact-form.enquiry-form {
+  --surface: #201b18;
+  --surface-2: #2b2420;
+  --hair: #5c4c42;
+  --hair-strong: #89766a;
+  --ruby-text: #ffafbf;
+  --ruby-mark: #f48fa7;
+  padding-inline: clamp(16px, 3.2vw, 43px);
+  clip-path: none;
+}
+.ruby-contact .contact-form.enquiry-form .form-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+.ruby-contact .contact-form.enquiry-form :is(input:not([type="checkbox"], [type="radio"]), textarea):hover { border-color: #baaa9f; }
+.ruby-contact .contact-form.enquiry-form :is(input:not([type="checkbox"], [type="radio"]), textarea):focus {
+  border-color: var(--cinema-gold);
+  background: #2b2420;
+  box-shadow: none;
+}
+.ruby-contact .contact-form.enquiry-form [aria-invalid="true"]:not(:focus) { border-color: var(--ruby-mark); }
 
 /* Navigation: a ruby rule draws under the current and hovered destination. */
 .ruby-cinematic .site-nav > a:not(.nav-cta) { background: linear-gradient(#ff315c,#ff315c) 0 100% / 0 1px no-repeat; transition: background-size .5s cubic-bezier(.16,1,.3,1),color .3s; }
@@ -145,66 +166,66 @@
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .ruby-scroll-progress { animation: ruby-progress linear both; animation-timeline: scroll(root); }
-    .ruby-hero-composition { animation: ruby-hero-exit linear both; animation-timeline: scroll(root); animation-range: 0px 85vh; }
-    .ruby-plate-frame img, .ruby-contact-plate img { animation: ruby-plate-drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+    .ruby-plate-frame img { animation: ruby-plate-drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
     .ruby-discipline h3 { animation: ruby-slide-in linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
     .ruby-film-stage { animation: ruby-screen-open linear both; animation-timeline: view(); animation-range: entry 0% cover 32%; }
   }
 }
-@keyframes ruby-hero-exit { to { opacity: .15; transform: translateY(-70px); } }
-@keyframes ruby-plate-drift { from { transform: translateY(-12%); } to { transform: translateY(0); } }
+@keyframes ruby-plate-drift { from { transform: translateY(-7%); } to { transform: translateY(0); } }
 @keyframes ruby-slide-in { from { opacity: .25; transform: translateX(-46px); } to { opacity: 1; transform: none; } }
 @keyframes ruby-screen-open { from { transform: scale(.9); clip-path: inset(7% 5% round 2px); } to { transform: none; clip-path: inset(0); } }
 
 @media (max-width: 1100px) {
   .ruby-scenes { gap: 16px; }
   .ruby-scenes li { min-width: 92px; }
-  .ruby-hero-actionline { max-width: none; }
   .ruby-positioning-grid { grid-template-columns: minmax(200px,.8fr) 2fr; }
 }
 @media (max-width: 960px) {
-  .ruby-page .ruby-hero { min-height: max(720px,calc(100svh - var(--header-height))); }
-  .ruby-hero-composition { padding-block: 40px 40px; }
-  .ruby-page .ruby-title { font-size: clamp(52px,9.4vw,92px); }
-  .ruby-title-row--signature em { font-size: 1.16em; }
   .ruby-scenes { display: none; }
   .ruby-positioning-grid { grid-template-columns: 1fr 2fr; align-items: start; }
   .ruby-identity-mark img { width: 84px; }
   .ruby-service-foot ul { grid-template-columns: 1fr; }
 }
-@media (max-width: 600px) {
-  .ruby-page .ruby-hero { min-height: max(680px,calc(100svh - var(--header-height))); }
+@media (max-width: 720px) {
+  .ruby-page .ruby-hero { min-height: max(610px, calc(100svh - var(--header-height))); }
   .ruby-hero .cinema-media-poster img, .ruby-hero .cinema-media-video { object-position: center; }
-  /* The copy spans most of the screen on mobile, so a soft overall veil sits under the directional gradients. */
-  .ruby-hero-shade { background: linear-gradient(0deg,#08070b 0%,#08070bd9 26%,#08070b59 58%,transparent 82%),linear-gradient(180deg,#08070bb3 0%,transparent 22%),linear-gradient(#08070b73,#08070b73); }
-  .ruby-hero-composition { padding-block: 30px 26px; }
-  .ruby-page .ruby-title { margin-bottom: 24px; font-size: clamp(39px,12.4vw,60px); line-height: 1.02; letter-spacing: -.065em; }
-  .ruby-title-row--signature em { font-size: 1.1em; letter-spacing: -.05em; line-height: 1.05; }
-  .ruby-hero-actionline { align-items: stretch; gap: 20px; }
-  .ruby-hero-actions { width: 100%; }
-  .ruby-project-cta, .ruby-ghost-cta { flex: 1 1 100%; min-height: 54px; padding: 15px 20px; font-size: var(--fs-label); }
-  .ruby-discover-icon { width: 30px; height: 30px; }
-  .ruby-band p { font-size: 42px; }
-  .ruby-positioning { padding-block: 70px 100px; }
-  .ruby-positioning-grid { grid-template-columns: 1fr; gap: 54px; }
-  .ruby-plate { margin-right: 18px; }
-  .ruby-plate-frame { aspect-ratio: 5 / 4; }
-  .ruby-plate-frame img { object-position: 0% 42%; }
-  .ruby-identity-mark { left: 16px; bottom: 8px; gap: 14px; }
-  .ruby-identity-mark img { width: 68px; }
+  .ruby-hero-shade {
+    background: linear-gradient(0deg, #0d0b0afa 0%, #0d0b0adf 32%, #0d0b0acb 56%, transparent 79%),
+      linear-gradient(180deg, #0d0b0ace 0%, transparent 27%);
+  }
+  .ruby-hero-topline { padding-block: calc(var(--header-height) + 14px) 0; gap: 12px; }
+  .ruby-hero-topline p, .ruby-hero-topline p:last-child { font-size: var(--fs-label); line-height: 1.5; }
+  .ruby-hero-composition { padding-block: 130px 26px; }
+  .ruby-page .ruby-title { margin-bottom: 20px; font-size: clamp(27px, 8.9vw, 58px); line-height: 1.1; }
+  .ruby-hero-actionline { gap: 17px; }
+  .ruby-hero-actions { gap: 8px; }
+  .ruby-hero-actions a { min-height: 48px; padding-inline: 13px; gap: 11px; font-size: 14px; }
+  .ruby-hero-bottomline { padding-block: 16px; }
+  .ruby-positioning-grid { grid-template-columns: 1fr; gap: 28px; }
+  .ruby-plate { margin-right: 10px; }
+  .ruby-plate-frame { aspect-ratio: 1.8; }
+  .ruby-plate-frame img { object-position: 50% 37%; }
   .ruby-services { --cut: 22px; }
-  .ruby-contact-intro { padding-block: 110px 50px; }
-  .ruby-contact-plate::after { background: linear-gradient(0deg,#110912 0%,#110912b8 50%,#08070b 100%); }
+  .ruby-services .ruby-section-header { margin-bottom: 24px; }
+  .ruby-contact .studio-enquiry-copy { gap: 14px; }
+  .ruby-contact .studio-contact-rows a { min-height: 60px; padding-block: 8px; }
+  .ruby-contact .studio-contact-rows strong { font-size: 1.2rem; }
+  .ruby-contact .studio-split--enquiry { gap: 28px; }
+}
+@media (max-width: 360px) {
+  .ruby-hero-actions svg { width: 14px; }
+  .ruby-hero-actions a { gap: 8px; padding-inline: 11px; }
 }
 
 /* 7. Rhythm: one spacing scale between home chapters (160px desktop, 120px tablet, 96px mobile).
    Each chapter pads half the gap on both sides, so neighbours add up to the scale. */
 .ruby-page { --section-gap: 160px; }
-.ruby-positioning { padding-block: calc(var(--section-gap) / 2); }
-.ruby-page .exhibition-section.cinema-work, .ruby-page .ruby-film, .ruby-page .ruby-process { padding-block: calc(var(--section-gap) / 2); }
+.ruby-positioning { padding-block: clamp(38px, 5.5vw, 80px) clamp(18px, 2.8vw, 40px); }
+.ruby-page .ruby-statement { font-size: clamp(33px, 5.1vw, 76px); margin-bottom: 18px; }
+.ruby-positioning-bottom > p { font-size: 16px; line-height: 1.65; color: #c8bab0; }
+.ruby-page .ruby-film, .ruby-page .ruby-process { padding-block: calc(var(--section-gap) / 2); }
 /* The diagonal cut is at most 58px at desktop, inside the half-gap padding, so no extra allowance is needed. */
 .ruby-services { padding-block: calc(var(--section-gap) / 2); }
-.ruby-contact-intro { padding-block: calc(var(--section-gap) / 2) clamp(48px,6vw,96px); }
 
 /* 8. Process: four steps from the service pages, 4 columns / 2x2 / stacked. */
 .ruby-process { background: #08070b; scroll-margin-top: calc(var(--header-height) + 8px); }
@@ -225,24 +246,8 @@
   .ruby-process-steps { grid-template-columns: 1fr; gap: 36px; }
 }
 
-/* Mobile: the fixed header covers the top of the hero, so the opening line starts below it and stacks
-   instead of wrapping into clipped fragments. */
-@media (max-width: 600px) {
-  .ruby-hero-topline { flex-direction: column; align-items: flex-start; gap: 4px; padding-block: 88px 0; }
-  .ruby-hero-topline p, .ruby-hero-topline p:last-child { max-width: none; text-align: left; }
-  .ruby-hero-topline p { flex-wrap: wrap; gap: 2px 8px; }
-}
-
-/* Phone enquiry path: drop repeated introduction copy and padding so the form is reached sooner. */
 @media (max-width: 640px) {
-  .ruby-contact-intro { padding-block: 56px 24px; }
-  .ruby-contact-intro > .cinema-label { margin-bottom: 16px; }
-  .ruby-contact-intro h2 { margin-bottom: 16px; }
-  .ruby-contact-intro-bottom a { display: none; }
-  .ruby-contact .studio-enquiry { padding-block: 36px 52px; scroll-margin-top: calc(var(--header-height, 72px) + 8px); }
-  .ruby-contact .studio-enquiry-copy .studio-body--lead { display: none; }
-  .ruby-colophon a { flex-wrap: nowrap; }
-  .ruby-colophon a { overflow-wrap: anywhere; min-width: 0; }
+  .ruby-colophon a { flex-wrap: nowrap; overflow-wrap: anywhere; min-width: 0; }
   .ruby-colophon svg, .studio-contact-rows svg { flex: none; }
 }
 

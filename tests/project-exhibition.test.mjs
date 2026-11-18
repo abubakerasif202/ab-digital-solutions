@@ -181,7 +181,8 @@ test("pending foregrounds cannot retain another project's image and have a bound
   const { readFile } = await import("node:fs/promises");
   const component = await readFile(new URL("../app/components/cinematic/ProjectExhibition.tsx", import.meta.url), "utf8");
   assert.match(component, /const imageReady = loaded\.has\(active\.slug\)/);
-  assert.match(component, /imageReady && previous/);
+  assert.doesNotMatch(component, /exhibition-image--previous/);
+  assert.match(component, /key=\{active\.slug\}/);
   assert.match(component, /previewDeadline/);
   assert.match(component, /Loading project preview/);
   assert.match(component, /onError=\{/);

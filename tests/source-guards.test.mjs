@@ -27,8 +27,8 @@ test("homepage exposes content directly instead of using an iframe", async () =>
 
   assert.doesNotMatch(page, /<iframe\b/i);
   assert.match(homepage, /className="ruby-title"/);
-  assert.match(homepage, /<Words text="Digital experiences\."/);
-  assert.match(homepage, /<Words text="Beyond ordinary\."/);
+  assert.match(homepage, /<span className="ruby-title-row">Digital experiences\.<\/span>/);
+  assert.match(homepage, /<em>Beyond ordinary\.<\/em>/);
   assert.match(homepage, /purpose-built business systems/);
   assert.match(homepage, /Premium websites, online stores/);
   assert.match(homepage, /id="contact"/);
@@ -311,7 +311,8 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   assert.match(homepage, /className="ruby-title"/);
   assert.match(homepage, /className="ruby-ghost-cta" href="#work"/);
   assert.match(homepage, /<RubyMotion \/>/);
-  assert.match(homepage, /data-ruby-magnet/);
+  assert.match(homepage, /data-ruby-depth/);
+  assert.doesNotMatch(homepage, /className="ruby-project-cta"[^>]*data-ruby-magnet/);
   assert.doesNotMatch(homepage, /project-ghost-index/);
   assert.match(homepage, /href="\/about"/);
 

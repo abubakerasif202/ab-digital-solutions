@@ -58,7 +58,10 @@ test("interior editorial accents use warm gilt while the homepage keeps its ruby
     await expect(page.locator(".button-primary").first()).toHaveCSS("background-color", "rgb(167, 19, 59)");
   }
   await page.goto("/", { waitUntil: "networkidle" });
-  await expect(page.locator(".ruby-hero h1 em")).toHaveCSS("color", "rgb(255, 232, 236)");
+  const signature = page.locator(".ruby-hero h1 em");
+  await expect(signature).toHaveCSS("-webkit-text-fill-color", "rgb(255, 192, 202)");
+  await expect(signature).toHaveCSS("font-weight", "500");
+  await expect(signature).toHaveCSS("filter", "none");
 });
 
 test("service rows give keyboard visitors the same bounded motion and a still alternative", async ({ page }) => {

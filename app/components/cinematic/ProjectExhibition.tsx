@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ArrowIcon } from "../../icons";
 import { ProjectArtwork } from "../../project-artwork";
 import { projectDestinationLabel, projects } from "../../project-data";
-import { advanceExhibition, createExhibitionBag, exhibitionCanRun, exhibitionComposition, exhibitionSwipeDirection, jumpExhibition, upcomingExhibition, type ExhibitionShow, type ExhibitionInteraction } from "./exhibition-sequence";
+import { advanceExhibition, exhibitionCanRun, exhibitionComposition, exhibitionSwipeDirection, jumpExhibition, upcomingExhibition, type ExhibitionShow, type ExhibitionInteraction } from "./exhibition-sequence";
 
 const duration = 7200;
 const previewDeadline = 8000;
@@ -48,18 +48,9 @@ export function ProjectExhibition() {
   const active = projects[activeIndex];
   const imageFailed = failed.has(active.slug);
   const imageReady = loaded.has(active.slug);
-  const previous = timeline.previous === null ? null : projects[timeline.previous];
   const upcoming = upcomingExhibition(timeline, 6).map((index, order) => ({ index, offset: order + 1 }));
   const selectNext = () => setShow((current) => advanceExhibition(current, 1, projects.length, Math.random));
   const selectPrevious = () => setShow((current) => advanceExhibition(current, -1, projects.length, Math.random));
-
-  useEffect(() => {
-    // The server and first hydrated frame share one predictable genuine project.
-    const initialize = window.setTimeout(() => {
-      if (!root.current?.contains(document.activeElement)) setShow({ timeline: { sequence: createExhibitionBag(projects.length, Math.random), cursor: 0, previous: null }, step: 0 });
-    }, 0);
-    return () => window.clearTimeout(initialize);
-  }, []);
 
   useEffect(() => {
     const element = root.current;
@@ -158,15 +149,14 @@ export function ProjectExhibition() {
       onFocusCapture={(event) => setInteraction((current) => ({ ...current, focusInside: true, focusVisible: event.target.matches(":focus-visible") }))}
       onKeyDownCapture={() => setInteraction((current) => current.focusInside && !current.focusVisible ? { ...current, focusVisible: true } : current)}
       onBlurCapture={(event) => { if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) setInteraction((current) => ({ ...current, focusInside: false, focusVisible: false })); }}>
-      <div className="exhibition-topline"><span><i aria-hidden="true" />The digital exhibition</span><span>{projects.length} projects / Always in perspective</span></div>
+      <div className="exhibition-topline"><span><i aria-hidden="true" />Featured project</span><span>{projects.length} case studies</span></div>
       <div className="exhibition-stage">
         <div className="exhibition-feature">
           <div className="exhibition-image-stack" aria-hidden="true">
             {imageFailed ? <div className="exhibition-image-fallback"><span>Project preview unavailable</span><span>The case study is still available below.</span></div> : <>
               {!imageReady && <div className="exhibition-image-fallback exhibition-image-loading"><span>Loading project preview</span></div>}
-              {imageReady && previous && previous.slug !== active.slug && <div className="exhibition-image exhibition-image--previous" key={`previous-${previous.slug}`}><ProjectArtwork project={previous} sizes="(max-width: 720px) 92vw, 70vw" /></div>}
-              <div className="exhibition-image exhibition-image--current" key={active.slug} data-ready={loaded.has(active.slug)}>
-                <ProjectArtwork project={active} sizes="(max-width: 767px) 92vw, 70vw" onLoad={() => setLoaded((current) => new Set(current).add(active.slug))} onError={() => setFailed((current) => new Set(current).add(active.slug))} />
+              <div className="exhibition-image exhibition-image--current" key={active.slug}>
+                <ProjectArtwork project={active} sizes="(max-width: 767.98px) calc(100vw - 40px), min(68vw, 1125px)" onLoad={() => setLoaded((current) => new Set(current).add(active.slug))} onError={() => setFailed((current) => new Set(current).add(active.slug))} />
               </div>
             </>}
           </div>
