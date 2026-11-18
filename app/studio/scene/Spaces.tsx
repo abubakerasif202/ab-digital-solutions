@@ -47,7 +47,8 @@ function Hotspot({ area, label, position, onSelect }: { area: Area; label: strin
     const marginX = Math.min(78, Math.max(36, size.width * 0.14), Math.max(8, size.width / 2 - 8));
     const marginY = Math.min(28, Math.max(16, size.height * 0.06), Math.max(8, size.height / 2 - 8));
     const x = Math.min(Math.max(rawX, marginX), size.width - marginX);
-    const y = Math.min(Math.max(rawY, marginY), size.height - marginY);
+    // Reserve the stage footer for the room caption and orbit hint, including the button half-height.
+    const y = Math.max(marginY, Math.min(rawY, size.height - 84));
     const previous = hotspotSlots.get(label);
     const frame = (previous?.frame ?? 0) + 1;
     let occluded = previous?.occluded ?? false;

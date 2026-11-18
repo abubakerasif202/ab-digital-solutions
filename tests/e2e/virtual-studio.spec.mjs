@@ -523,3 +523,71 @@ test("failed baked environment recovers through the existing model retry", async
   await expect(mode(page)).toHaveAttribute("data-mode", /arrival|intro|explore/);
   expect(requests).toBeGreaterThan(1);
 });
+
+test("production audit: phone welcome leaves the exit unobstructed", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/studio");
+  await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
+  const intro = page.locator('[data-stage="intro"]');
+  await expect(intro).toBeVisible({ timeout: 30000 });
+  const back = page.locator("[data-mode]").getByRole("link", { name: "Back to website" });
+  const [introBox, backBox] = await Promise.all([intro.boundingBox(), back.boundingBox()]);
+  expect(introBox.y).toBeGreaterThanOrEqual(backBox.y + backBox.height);
+  await back.click({ trial: true });
+  await page.setViewportSize({ width: 500, height: 300 });
+  const shortStage = await mode(page).boundingBox();
+  const dismissIntro = intro.getByRole("button", { name: "Skip intro" });
+  const shortSkip = await dismissIntro.boundingBox();
+  expect(shortSkip.y + shortSkip.height).toBeLessThanOrEqual(shortStage.y + shortStage.height);
+  await dismissIntro.click({ trial: true });
+  await page.screenshot({ path: `${output}/500-short-landscape-intro.png` });
+});
+
+test("production audit: projected Portfolio label clears the room caption", async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 1000 });
+  await page.goto("/studio");
+  await enter(page);
+  await space(page, "Portfolio gallery");
+  const stage = mode(page);
+  await stage.evaluate((el) => el.scrollIntoView({ block: "start", behavior: "instant" }));
+  await page.waitForTimeout(1850);
+  const hotspot = stage.getByRole("button", { name: "Explore Portfolio" });
+  const caption = stage.getByText("02 / Portfolio gallery", { exact: true });
+  await expect(hotspot).toBeVisible();
+  const [buttonBox, captionBox] = await Promise.all([hotspot.boundingBox(), caption.boundingBox()]);
+  expect(buttonBox.y + buttonBox.height).toBeLessThanOrEqual(captionBox.y);
+});
+
+test("production audit: desktop gallery hands wheel scrolling back to the page", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/studio");
+  await enter(page);
+  await space(page, "Portfolio gallery");
+  await mode(page).evaluate((el) => el.scrollIntoView({ block: "start", behavior: "instant" }));
+  const panel = page.locator("aside[aria-labelledby='studio-panel-heading']");
+  const baseline = await panel.evaluate((el) => {
+    const maxScroll = el.scrollHeight - el.clientHeight;
+    el.scrollTop = maxScroll;
+    return { maxScroll, pageY: window.scrollY };
+  });
+  expect(baseline.maxScroll).toBeGreaterThan(0);
+  const box = await panel.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.wheel(0, 380);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(baseline.pageY);
+});
+
+test("production audit: wildlife speech replaces the on-canvas caption until dismissed", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/studio");
+  await enter(page);
+  await page.getByRole("button", { name: "Meet the locals", exact: true }).click();
+  await page.getByRole("button", { name: "Say g’day", exact: true }).click();
+  const stage = mode(page);
+  const dismiss = stage.getByRole("button", { name: "Dismiss speech bubble" });
+  const stageCaption = stage.locator('[class*="sceneCaption"]');
+  await expect(dismiss).toBeVisible();
+  await expect(stageCaption).toBeHidden();
+  await dismiss.click();
+  await expect(stageCaption).toBeVisible();
+});
