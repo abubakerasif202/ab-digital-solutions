@@ -177,7 +177,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .film-stage::after, .logo-reveal-replay { transition: none; }
-  .film-spinner { animation-duration: 2.4s; }
 }
 
 /* Controls stay visible and reachable without relying on hover. */

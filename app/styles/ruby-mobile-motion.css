@@ -7,7 +7,6 @@
   .ruby-hero-light { animation: ruby-light-drift 16s ease-in-out infinite alternate; will-change: transform; }
   .ruby-service-enquire:active svg { transform: translateX(5px); }
   .ruby-discipline:active::before { opacity: 1; }
-  .ruby-discipline:active h3 { color: #9b1535; }
   .ruby-hero-light, .ruby-discipline::before { transition: opacity .5s; }
 }
 @keyframes ruby-light-drift {

@@ -71,7 +71,9 @@
   color: var(--cinema-paper);
 }
 .ruby-service-ticker-viewport { grid-area: 1 / 1; overflow: clip; }
-.ruby-service-ticker-track { display: flex; width: max-content; animation: ruby-band 42s linear infinite; }
+.ruby-service-ticker-track { display: flex; width: max-content; }
+/* Motion starts only once the pause control is interactive. */
+.ruby-service-ticker:has(.ruby-service-ticker-control[data-ready]) .ruby-service-ticker-track { animation: ruby-band 42s linear infinite; }
 .ruby-service-ticker-group {
   display: flex;
   flex: none;
@@ -111,6 +113,7 @@
 }
 .ruby-service-ticker-control:is(:hover, [aria-pressed="true"]) { background: #74102d; border-color: #f28ca9; }
 .ruby-service-ticker-control:focus-visible { outline: 2px solid var(--cinema-gold); outline-offset: 3px; }
+.ruby-service-ticker-control:disabled { cursor: default; opacity: .55; }
 .ruby-service-ticker:has(.ruby-service-ticker-control[aria-pressed="true"]) .ruby-service-ticker-track { animation-play-state: paused; }
 
 @media (max-width: 600px) {
@@ -119,7 +122,8 @@
 
 @media (prefers-reduced-motion: reduce), (forced-colors: active) {
   .ruby-service-ticker { grid-template-columns: minmax(0, 1fr); padding-block: 18px; }
-  .ruby-service-ticker-track { width: 100%; animation: none; }
+  .ruby-service-ticker .ruby-service-ticker-track,
+  .ruby-service-ticker:has(.ruby-service-ticker-control[data-ready]) .ruby-service-ticker-track { width: 100%; animation: none; }
   .ruby-service-ticker-group { min-width: 0; width: 100%; flex-wrap: wrap; justify-content: center; gap: 8px 24px; padding-inline: 16px; font-size: clamp(20px, 3vw, 34px); white-space: normal; }
   .ruby-service-ticker-group li:nth-child(even) { color: inherit; -webkit-text-stroke: 0; }
   .ruby-service-ticker-group li::after,
@@ -136,13 +140,8 @@
 .reveal[data-reveal-state="in"] .ruby-line > span { animation: ruby-line-in 1.15s cubic-bezier(.16,1,.3,1) both; animation-delay: calc(var(--line) * .12s); }
 @keyframes ruby-line-in { from { transform: translateY(112%); } to { transform: none; } }
 
-/* 3. Studio chapter: a real Sydney plate carries the identity instead of an empty black band. */
+/* 3. Studio chapter. */
 .ruby-positioning-grid { grid-template-columns: minmax(240px, 1fr) 1.7fr; align-items: center; gap: clamp(32px, 6vw, 96px); }
-.ruby-plate { position: relative; }
-.ruby-plate-frame { position: relative; overflow: hidden; aspect-ratio: 6 / 5; background: #171412; }
-.ruby-plate-frame img { display: block; width: 100%; height: 108%; object-fit: cover; object-position: 50% 46%; }
-.ruby-plate-frame::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg,#0d0b0a50,transparent 30%); pointer-events: none; }
-.ruby-plate::before { content: ""; position: absolute; inset: 10px -10px -10px 10px; border: 1px solid #e5c59a66; pointer-events: none; }
 
 /* 4. Services: the one light chapter, cut on a diagonal so the page never stacks as plain rectangles. */
 .ruby-services { --cut: clamp(26px,4vw,72px); position: relative; padding-block: calc(clamp(90px,11vw,165px) + var(--cut)); background: #f4ece4; color: #170b12; clip-path: polygon(0 var(--cut),100% 0,100% calc(100% - var(--cut)),0 100%); }
@@ -155,8 +154,6 @@
 .ruby-services .ruby-discipline { color: #170b12; }
 .ruby-services .ruby-discipline::before { background: radial-gradient(ellipse at var(--ruby-x,50%) var(--ruby-y,50%),#e326552e,transparent 72%); }
 .ruby-services .ruby-discipline-number { color: #9b1535; }
-.ruby-services .ruby-discipline h3 { font-size: clamp(22px, 3.25vw, 49px); letter-spacing: -.04em; }
-.ruby-services .ruby-discipline:is(:hover, :focus-visible) h3 { color: var(--ruby-deep); }
 .ruby-services .ruby-discipline-copy { color: #4d3a45; }
 .ruby-services .ruby-discipline-copy > .cinema-label { color: #66564e; }
 .ruby-services .ruby-discipline-arrow { border-color: #170b1259; }
@@ -174,12 +171,6 @@
 }
 .ruby-discipline:is(:hover, :focus-visible)::after { transform: scaleX(1); }
 .ruby-discipline:focus-visible { outline-offset: -3px; }
-.ruby-services .ruby-service-foot > .cinema-label { color: #66564e; }
-.ruby-service-foot ul { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 44px; margin: 0; padding: 0; list-style: none; }
-.ruby-service-foot li { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 50px; border-bottom: 1px solid #170b1221; }
-.ruby-service-foot li a { display: inline-flex; align-items: center; min-height: 44px; color: #2a1721; font-size: var(--fs-label); text-decoration: none; transition: color .3s; }
-.ruby-service-foot li a:hover { color: #9b1535; }
-.ruby-service-foot li .ruby-service-enquire { flex-shrink: 0; gap: 8px; font-family: var(--mono),monospace; font-size: var(--fs-label); letter-spacing: .12em; text-transform: uppercase; color: #9b1535; }
 .ruby-service-enquire svg { width: 14px; transition: transform .3s; }
 .ruby-service-enquire:hover svg { transform: translateX(4px); }
 
@@ -224,13 +215,9 @@
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .ruby-scroll-progress { animation: ruby-progress linear both; animation-timeline: scroll(root); }
-    .ruby-plate-frame img { animation: ruby-plate-drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
-    .ruby-discipline h3 { animation: ruby-slide-in linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
     .ruby-film-stage { animation: ruby-screen-open linear both; animation-timeline: view(); animation-range: entry 0% cover 32%; }
   }
 }
-@keyframes ruby-plate-drift { from { transform: translateY(-7%); } to { transform: translateY(0); } }
-@keyframes ruby-slide-in { from { opacity: .25; transform: translateX(-46px); } to { opacity: 1; transform: none; } }
 @keyframes ruby-screen-open { from { transform: scale(.9); clip-path: inset(7% 5% round 2px); } to { transform: none; clip-path: inset(-8px); } }
 
 @media (max-width: 1100px) {
@@ -239,7 +226,6 @@
 @media (max-width: 960px) {
   .ruby-positioning-grid { grid-template-columns: 1fr 2fr; align-items: start; }
   .ruby-identity-mark img { width: 84px; }
-  .ruby-service-foot ul { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
   .ruby-page .ruby-hero { min-height: max(610px, calc(100svh - var(--header-height))); }
@@ -257,9 +243,6 @@
   .ruby-hero-actions a { min-height: 48px; padding-inline: 13px; gap: 11px; font-size: 14px; }
   .ruby-hero-bottomline { padding-block: 16px; }
   .ruby-positioning-grid { grid-template-columns: 1fr; gap: 28px; }
-  .ruby-plate { margin-right: 10px; }
-  .ruby-plate-frame { aspect-ratio: 1.8; }
-  .ruby-plate-frame img { object-position: 50% 37%; }
   .ruby-services { --cut: 22px; }
   .ruby-services .ruby-section-header { margin-bottom: 24px; }
   .ruby-contact .studio-enquiry-copy { gap: 14px; }

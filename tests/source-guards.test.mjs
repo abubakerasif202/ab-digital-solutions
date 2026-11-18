@@ -372,10 +372,24 @@ test("llms.txt stays in sync with the canonical project registry", async () => {
   const llms = await read("../public/llms.txt");
 
   assert.match(llms, /See the Work index for the current project count/);
+  const { servicePages } = await import("../app/services/service-data.ts");
+  assert.match(llms, new RegExp(`Selected Portfolio: ${projects.length} digital projects`), "llms.txt project count drifted from the registry");
+  assert.match(llms, new RegExp(`Index of all ${servicePages.length} services`), "llms.txt service count drifted from the registry");
+  for (const service of servicePages) {
+    assert.ok(llms.includes(`/services/${service.slug})`), `llms.txt is missing the ${service.slug} service page`);
+  }
+  assert.ok(llms.includes("abwebstudio.com.au/studio)"), "llms.txt is missing the /studio page");
   for (const project of projects) {
     assert.ok(llms.includes(project.name), `llms.txt is missing ${project.name}`);
     assert.ok(llms.includes(project.url), `llms.txt is missing ${project.name} (${project.url})`);
   }
+});
+
+test("homepage service pillars cover every service page exactly once", async () => {
+  const { servicePages, serviceDisciplines } = await import("../app/services/service-data.ts");
+  assert.ok(Array.isArray(serviceDisciplines), "serviceDisciplines must be exported from the service registry");
+  const linked = serviceDisciplines.flatMap((discipline) => discipline.services);
+  assert.deepEqual([...linked].sort(), servicePages.map((service) => service.slug).sort());
 });
 
 test("service featured projects resolve to canonical project slugs", async () => {
@@ -659,7 +673,9 @@ test("second-pass compositions: real pages, varied portfolio and case-study syst
   assert.match(compositions, /\.gr-cs--system/);
 
   // Homepage services and enquiry destinations derive from the canonical registry.
-  assert.match(home, /servicePages\.find\(item => item\.slug === slug\)/);
+  // Coverage of every service is asserted by "homepage service pillars cover every service page exactly once".
+  assert.match(home, /serviceDisciplines\.map\(/);
+  assert.match(home, /findService\(slug\)/);
   assert.match(home, /serviceContactHref\(service\)/);
 
   // Scroll-linked motion is opt-in and switched off for reduced motion.

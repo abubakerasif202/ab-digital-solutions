@@ -11,14 +11,23 @@ export function CapabilityCount({ value }: { value: number }) {
     if (!node || motion.matches || !("IntersectionObserver" in window)) return;
 
     let frame = 0;
+    let armed = false;
     const finish = () => {
       cancelAnimationFrame(frame);
       node.textContent = String(value);
     };
     const observer = new IntersectionObserver(([entry]) => {
-      if (!entry?.isIntersecting) return;
+      if (!entry) return;
+      if (!entry.isIntersecting) {
+        // Reset only while off screen, so the painted final value never visibly drops to 0.
+        if (!armed && entry.intersectionRatio === 0) {
+          armed = true;
+          node.textContent = "0";
+        }
+        return;
+      }
       observer.disconnect();
-      if (motion.matches) return;
+      if (!armed || motion.matches) return finish();
       const animate = (start: number) => {
         const tick = (now: number) => {
           const progress = Math.min(1, (now - start) / 480);

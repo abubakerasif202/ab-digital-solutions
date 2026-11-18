@@ -34,3 +34,4 @@ Cold-cache Chromium samples of the locally built homepage. An earlier repeat mea
 ## Content still needed
 
 Publish only verified Lighthouse benchmarks and field Core Web Vitals, including INP. The homepage labels these slots as unmeasured. No response-time promise was added because none was verified.
+

@@ -28,6 +28,26 @@ test("the exhibition advances automatically and hover and keyboard focus hold th
   expect(href).toMatch(/^\/work\/[a-z0-9-]+$/);
 });
 
+test("a visible pause control holds the exhibition until autoplay is resumed", async ({ page }) => {
+  await enterExhibition(page);
+  const pause = page.getByRole("button", { name: "Pause project autoplay", exact: true });
+  await expect(pause).toHaveAttribute("aria-pressed", "false");
+  // Leave the controls (pointer out, focus released) so only the explicit pause can hold it.
+  const release = async () => { await page.mouse.move(0, 0); await pause.evaluate((button) => button.blur()); };
+  await pause.click();
+  await expect(pause).toHaveAttribute("aria-pressed", "true");
+  await release();
+  await expect(section(page)).toBeInViewport({ ratio: 0.15 });
+  await expect(section(page)).toHaveAttribute("data-running", "false");
+  const held = await section(page).getAttribute("data-project");
+  await page.waitForTimeout(7600);
+  await expect(section(page)).toHaveAttribute("data-project", held);
+  await pause.click();
+  await release();
+  await expect(pause).toHaveAttribute("aria-pressed", "false");
+  await expect(section(page)).toHaveAttribute("data-running", "true");
+});
+
 test("resting over a non-interactive section area does not stall the living composition", async ({ page }) => {
   await enterExhibition(page);
   await page.locator(".exhibition-topline").hover();

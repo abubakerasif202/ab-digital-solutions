@@ -104,7 +104,7 @@ const structuredData = {
       "@id": `${siteConfig.url}/#organization`,
       name: siteConfig.name,
       url: siteConfig.url,
-      logo: `${siteConfig.url}/brand/ab-logo-luxury-source.png`,
+      logo: `${siteConfig.url}/brand/ab-luxury-mark-512.png`,
       image: `${siteConfig.url}/opengraph-image`,
       description: siteConfig.description,
       telephone: siteConfig.phoneInternational,

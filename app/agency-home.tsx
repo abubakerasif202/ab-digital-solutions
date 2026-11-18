@@ -5,7 +5,7 @@ import { PageTransition } from "./components/motion/PageTransition";
 import { Reveal } from "./components/motion/Reveal";
 import { ContactForm } from "./components/ContactForm";
 import { projects, type Project } from "./project-data";
-import { serviceContactHref, servicePages } from "./services/service-data";
+import { findService, serviceContactHref, serviceDisciplines } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
@@ -19,12 +19,6 @@ import { RubyMotion } from "./components/cinematic/RubyMotion";
 import { TickerToggle } from "./components/cinematic/TickerToggle";
 import { CapabilityCount } from "./components/cinematic/CapabilityCount";
 import { ProjectArtwork } from "./project-artwork";
-
-const disciplines = [
-  { name: "Websites & digital experiences", description: "Distinctive design, a clear story and a considered journey from first impression to enquiry.", services: ["web-design-sydney", "branding-content"] },
-  { name: "Software & connected systems", description: "Practical technology shaped around how your business already works.", services: ["custom-software-business-systems", "website-maintenance"] },
-  { name: "Commerce & digital growth", description: "Thoughtful online stores and search-ready foundations for what comes next.", services: ["ecommerce-website-development", "seo-local-visibility", "digital-marketing"] },
-] as const;
 
 const featuredSlugs = ["jufaja-homes", "aftab-sons-transport", "247-inventory-system"];
 const proofProjects: readonly Project[] = featuredSlugs.flatMap(slug => projects.filter(project => project.slug === slug));
@@ -142,7 +136,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <p><CapabilityCount value={documentedStack.length} /> tools from our case studies</p>
                 <ul aria-label="Documented project technologies">{documentedStack.map(tool => <li key={tool}>{tool}</li>)}</ul>
               </div>
-              <dl className="ruby-capability-metrics" aria-label="Performance measurement">
+              <dl className="ruby-capability-metrics" role="group" aria-label="Performance measurement">
                 {/* TODO: Publish dated Lighthouse runs and field data only when measured. */}
                 <div><dt>Lighthouse</dt><dd>Not yet benchmarked</dd></div>
                 <div><dt>Core Web Vitals</dt><dd>Field data pending</dd></div>
@@ -157,19 +151,19 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <p>Design that earns attention.<br />Technology that does the work.</p>
               </header>
               <ol className="ruby-disciplines" aria-label="Service pillars">
-                {disciplines.map((discipline, index) => (
+                {serviceDisciplines.map((discipline, index) => (
                   <li key={discipline.name}>
                     <details name="studio-services" open={index === 0}>
                       <summary className="ruby-discipline">
                         <span className="cinema-label ruby-discipline-number">{String(index + 1).padStart(2, "0")}</span>
-                        <span className="ruby-discipline-title">{discipline.name}</span>
+                        <h3 className="ruby-discipline-title">{discipline.name}</h3>
                         <span className="ruby-discipline-copy">{discipline.description}</span>
                         <span className="ruby-discipline-arrow" aria-hidden="true" />
                       </summary>
                       <ul className="ruby-service-options">
                         {discipline.services.map(slug => {
-                          const service = servicePages.find(item => item.slug === slug);
-                          if (!service) return null;
+                          const service = findService(slug);
+                          if (!service) throw new Error(`Unknown homepage service slug: ${slug}`);
                           return (
                             <li key={service.slug}>
                               <Link href={`/services/${service.slug}`} prefetch={false}>{service.title}</Link>

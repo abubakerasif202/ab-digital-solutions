@@ -4,11 +4,11 @@
 
 ## Key Facts
 
-- Primary Services: Custom Web Design, Next.js Development, Technical SEO, Brand Strategy, E-commerce Solutions, Digital Marketing & Website Maintenance.
+- Primary Services: Custom Web Design, Next.js Development, Technical SEO, Brand Strategy, E-commerce Solutions, Digital Marketing, Custom Software & Business Systems, and Website Maintenance.
 - Location: Sydney, NSW, Australia.
 - Service Area: Sydney and Australia-wide.
 - Website Stack: Next.js 16, React 19, TypeScript, CSS, and Vercel.
-- Selected Portfolio: 16 digital projects across grocery, fresh produce, transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services. See the Work index for the current project count.
+- Selected Portfolio: 20 digital projects across grocery, fresh produce, transport, logistics, automotive, e-commerce, custom software, mobility, property, construction, removalists, and local services. See the Work index for the current project count.
 
 ## Main Services & Pages
 
@@ -21,8 +21,9 @@
 - [Custom Software & Business Systems](https://www.abwebstudio.com.au/services/custom-software-business-systems): Role-protected web applications, inventory platforms and internal tools.
 - [Website Maintenance & Support](https://www.abwebstudio.com.au/services/website-maintenance): Ongoing support, technical health checks, and performance updates.
 - [Work & Case Studies](https://www.abwebstudio.com.au/work): Every portfolio project with its own case study.
-- [Services](https://www.abwebstudio.com.au/services): Index of all six services.
+- [Services](https://www.abwebstudio.com.au/services): Index of all 7 services.
 - [About](https://www.abwebstudio.com.au/about): The studio, its approach and principles.
+- [The Virtual Studio](https://www.abwebstudio.com.au/studio): An interactive studio tour of the same case studies and services, with or without 3D.
 - [Contact](https://www.abwebstudio.com.au/contact): Start a project — enquiry form, phone, email and WhatsApp.
 - [Privacy Policy](https://www.abwebstudio.com.au/privacy): Information handling and privacy guidelines under Australian law.
 

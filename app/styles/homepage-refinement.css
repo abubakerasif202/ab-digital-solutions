@@ -22,6 +22,11 @@
   .site-header .nav-wrap--home .site-nav .nav-phone { display: inline-flex; }
 }
 
+/* The background film's pause control (WCAG 2.2.2); the media layer itself ignores pointers. */
+.ruby-hero .cinema-media-control { position: absolute; z-index: 2; top: calc(var(--header-height) + 64px); right: clamp(20px, 4vw, 70px); display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid #f7f1eb6b; background: #0b070ac2; color: var(--cinema-paper); pointer-events: auto; cursor: pointer; }
+.ruby-hero .cinema-media-control:is(:hover, [aria-pressed="true"]) { background: #74102d; border-color: #f28ca9; }
+.ruby-hero .cinema-media-control:focus-visible { outline: 2px solid var(--cinema-gold); outline-offset: 3px; }
+
 .ruby-page .ruby-hero-bottomline { justify-content: flex-start; }
 .ruby-proof { width: 100%; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
 .ruby-proof-index { display: flex; align-items: center; gap: .75rem; color: #fff4f2; text-decoration: none; font: 500 var(--fs-label)/1.3 var(--mono); text-transform: uppercase; letter-spacing: .1em; }
@@ -69,7 +74,8 @@
 .ruby-discipline-title { font-family: var(--display); font-weight: 600; font-variation-settings: "opsz" 22; }
 .ruby-services summary.ruby-discipline { overflow: visible; list-style: none; cursor: pointer; }
 .ruby-services summary::-webkit-details-marker { display: none; }
-.ruby-discipline-title { font-size: clamp(1.55rem, 3.15vw, 3.1rem); line-height: 1.15; letter-spacing: -.04em; }
+/* A real h3 inside the summary, so screen readers can jump between pillars by heading. */
+.ruby-discipline-title { margin: 0; font-size: clamp(1.55rem, 3.15vw, 3.1rem); line-height: 1.15; letter-spacing: -.04em; }
 .ruby-services .ruby-discipline-arrow { position: relative; width: 40px; height: 40px; }
 .ruby-services .ruby-discipline-arrow::before, .ruby-services .ruby-discipline-arrow::after { position: absolute; width: 13px; height: 1px; background: currentColor; content: ""; }
 .ruby-services details:not([open]) .ruby-discipline-arrow::after { transform: rotate(90deg); }

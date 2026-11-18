@@ -72,11 +72,19 @@ for (const width of [320, 375, 390, 768, 1440, 1920]) {
   });
 }
 
-test("cinematic motion plays by default, has no pause toggle and respects live reduced motion", async ({ page }) => {
+test("cinematic motion plays by default, can be paused by the visitor and respects live reduced motion", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   const video = page.locator(".cinema-media-video");
   await expect.poll(() => video.evaluate((element) => element.currentTime)).toBeGreaterThan(0);
-  await expect(page.getByRole("button", { name: /background motion/i })).toHaveCount(0);
+  await expect(page.locator(".cinema-media")).toHaveAttribute("data-playing", "true");
+  // WCAG 2.2.2: moving background media needs a visitor-controlled pause.
+  const pause = page.getByRole("button", { name: "Pause background film", exact: true });
+  await pause.click();
+  await expect(pause).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".cinema-media")).toHaveAttribute("data-playing", "false");
+  await expect(video).toHaveJSProperty("paused", true);
+  await pause.click();
+  await expect(pause).toHaveAttribute("aria-pressed", "false");
   await expect(page.locator(".cinema-media")).toHaveAttribute("data-playing", "true");
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(video).not.toHaveAttribute("src");

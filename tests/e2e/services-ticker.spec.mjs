@@ -10,6 +10,8 @@ for (const width of [390, 1150]) {
       await page.goto("/");
       const ticker = page.locator(".ruby-hero + .ruby-service-ticker:has(+ #about)");
       await expect(ticker).toBeVisible();
+      // Motion begins only once the pause control has hydrated.
+      await expect(ticker.locator(".ruby-service-ticker-control[data-ready]")).toBeEnabled();
       await expect(ticker.getByRole("listitem")).toHaveText(words);
 
       const seam = await ticker.evaluate(async (band) => {
@@ -59,6 +61,16 @@ for (const width of [390, 1150]) {
       await page.keyboard.press("Space");
       await expect(control).toHaveAttribute("aria-pressed", "false");
       await expect(track).toHaveCSS("animation-play-state", "running");
+    });
+
+    test.describe("before the pause control works", () => {
+      test.use({ javaScriptEnabled: false });
+
+      test("keeps the ticker still while its pause control is inert", async ({ page }) => {
+        await page.goto("/");
+        await expect(page.getByRole("button", { name: "Pause ticker" })).toBeDisabled();
+        await expect(page.locator(".ruby-service-ticker-track")).toHaveCSS("animation-name", "none");
+      });
     });
 
     test("shows every label in a readable static strip for reduced motion", async ({ page }) => {

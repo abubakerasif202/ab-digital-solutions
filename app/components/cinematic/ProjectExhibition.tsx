@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore, type PointerEvent } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 import { ArrowIcon } from "../../icons";
 import { ProjectArtwork } from "../../project-artwork";
 import { projectDestinationLabel, projects } from "../../project-data";
@@ -36,6 +36,8 @@ export function ProjectExhibition() {
   const gesture = useRef<{ x: number; y: number } | null>(null);
   // Keep the destination stable between finger-down and release, including on controls.
   const [touchActive, setTouchActive] = useState(false);
+  // An explicit visitor pause (WCAG 2.2.2) that no hover, focus or swipe can lift.
+  const [userPaused, setUserPaused] = useState(false);
   const suppressClickUntil = useRef(0);
   const [visible, setVisible] = useState(false);
   const [loaded, setLoaded] = useState<ReadonlySet<string>>(() => new Set());
@@ -43,7 +45,7 @@ export function ProjectExhibition() {
   const environment = useSyncExternalStore(subscribeEnvironment, environmentSnapshot, serverEnvironment);
   const reduced = Boolean(environment & 1);
   const saveData = Boolean(environment & 2);
-  const running = exhibitionCanRun({ ...interaction, paused: touchActive, visible, hidden: Boolean(environment & 4), reduced, saveData });
+  const running = exhibitionCanRun({ ...interaction, paused: touchActive || userPaused, visible, hidden: Boolean(environment & 4), reduced, saveData });
   const activeIndex = timeline.sequence[timeline.cursor];
   const active = projects[activeIndex];
   const imageFailed = failed.has(active.slug);
@@ -161,13 +163,12 @@ export function ProjectExhibition() {
             </>}
           </div>
           <Link className="exhibition-feature-link" href={`/work/${active.slug}`} prefetch={false}>
-
             <span className="exhibition-feature-caption" key={active.slug}><span>{active.sector}</span><strong>{active.name}</strong></span>
             <span className="exhibition-feature-actions"><span className="exhibition-destination">{projectDestinationLabel(active)}</span><span className="exhibition-view">View case study <ArrowIcon /></span></span>
           </Link>
         </div>
-        <div className="exhibition-rail" aria-label="Upcoming projects">
-          {upcoming.slice(0, 2).map(({ index, offset }) => {
+        <div className="exhibition-rail" role="group" aria-label="Upcoming projects">
+          {upcoming.map(({ index, offset }) => {
             const project = projects[index];
             return <button className="exhibition-preview" key={`slot-${offset}`} onClick={() => jumpAhead(offset)} type="button">
               <span className="exhibition-preview-image" key={project.slug} aria-hidden="true"><ProjectArtwork project={project} sizes="(max-width: 767.98px) 43vw, 29vw" decorative /></span>
@@ -181,6 +182,11 @@ export function ProjectExhibition() {
         <div className="exhibition-controls" role="group" aria-label="Project exhibition controls">
           <button type="button" onClick={selectPrevious} disabled={timeline.cursor === 0} aria-label="Previous project"><ArrowLeft size={18} /></button>
           <button type="button" onClick={selectNext} aria-label="Next project"><ArrowRight size={18} /></button>
+          {!reduced && !saveData && (
+            <button type="button" onClick={() => setUserPaused((current) => !current)} aria-label="Pause project autoplay" aria-pressed={userPaused}>
+              {userPaused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
+            </button>
+          )}
         </div>
         <p className="exhibition-counter" aria-live={interaction.focusVisible || reduced || saveData ? "polite" : "off"}>{String(activeIndex + 1).padStart(2, "0")} <span>/ {String(projects.length).padStart(2, "0")}</span><span className="sr-only"> · {active.name}</span></p>
         <div className="exhibition-progress" key={`${active.slug}-${running}`} aria-hidden="true"><span /></div>

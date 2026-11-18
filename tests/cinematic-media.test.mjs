@@ -109,6 +109,7 @@ async function mountCinematicMedia() {
     visibility(hidden) { document.hidden = hidden; document.dispatchEvent(new Event("visibilitychange")); },
     preference(reduced) { motion.matches = reduced; motion.dispatchEvent(new Event("change")); },
     click: () => nodes(render()).find(node => node.type === "button").props.onClick(),
+    control: () => nodes(render()).find(node => node.type === "button"),
     mediaEvent(name) { nodes(render()).find(node => node.type === "video").props[name]?.(); },
     playing: () => render().props["data-playing"],
     unmount: () => cleanup.forEach(dispose => dispose?.()),
@@ -187,6 +188,38 @@ test("poster stays visible during pending play until a frame is actually playing
   assert.equal(media.playing(), true);
   media.mediaEvent("onPause");
   assert.equal(media.playing(), false);
+  media.unmount();
+});
+
+test("a visible pause control stops the hero film until the visitor resumes it", async () => {
+  const media = await mountCinematicMedia();
+  media.beginPlaybackWindow();
+  media.intersect(true);
+  media.mediaEvent("onPlaying");
+  assert.equal(media.control().props["aria-pressed"], false);
+  media.click();
+  assert.equal(media.video.paused, true);
+  assert.equal(media.playing(), false);
+  assert.equal(media.control().props["aria-pressed"], true);
+  media.intersect(false);
+  media.intersect(true);
+  assert.equal(media.video.plays, 1, "visibility changes must not override a visitor pause");
+  media.click();
+  assert.equal(media.video.plays, 2);
+  assert.equal(media.control().props["aria-pressed"], false);
+  media.unmount();
+});
+
+test("the pause control appears only while the film is actually moving", async () => {
+  const media = await mountCinematicMedia();
+  assert.equal(media.control(), undefined);
+  media.beginPlaybackWindow();
+  media.intersect(true);
+  assert.equal(media.control(), undefined, "pending playback still shows the still poster");
+  media.mediaEvent("onPlaying");
+  assert.ok(media.control());
+  media.preference(true);
+  assert.equal(media.control(), undefined, "reduced motion removes the film, so its control goes too");
   media.unmount();
 });
 

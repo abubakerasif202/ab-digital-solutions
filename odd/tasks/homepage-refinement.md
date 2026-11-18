@@ -55,3 +55,4 @@ VERIFY: run lint, type-check, tests and production build. Visually check at 1440
 - GREEN: final Node 22 build passed lint, typecheck and all 301 Node tests. All 46 scoped Chromium cases passed across the parallel run and isolated 1440 px screenshot rerun.
 - Normal-motion layout probes confirmed settled glyph bounds and sticky/mobile process behavior at 1440, 1280, 1024, 768, 390 and 360 px.
 - Local browser evidence and outstanding public performance measurements: docs/homepage-refinement-qa.md. Native review did not start because its workspace candidate inventory mixed in pre-existing unrelated files.
+

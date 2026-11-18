@@ -46,7 +46,7 @@ export function StudioAbout({
                 width={1086}
                 height={1357}
                 sizes="(max-width: 860px) 90vw, 460px"
-                priority
+                preload
                 alt="Sydney Opera House and Harbour Bridge at night beside the gold AB monogram and the line Independent by design"
               />
             </div>

@@ -31,6 +31,8 @@
 .exhibition-feature-caption, .exhibition-feature-actions { display: grid; align-content: start; gap: 8px; }
 .exhibition-feature-caption > span { color: #e5c59a; font: var(--fs-label)/1.5 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
 .exhibition-feature-caption strong { color: #fff8f4; font: 500 clamp(1.45rem, 3vw, 3.2rem)/1.13 var(--sans); letter-spacing: -.045em; overflow-wrap: anywhere; }
+/* Below 1280px the longest project names wrap; reserve two lines so autoplay never shifts the page. */
+@media (max-width: 1279.98px) { .exhibition-feature-caption strong { min-block-size: calc(2em * 1.13); } }
 .exhibition-destination { justify-self: start; padding: 4px 7px; border: 1px solid #9e687b; color: #ffd5e0; font: var(--fs-label)/1.45 var(--mono); text-transform: uppercase; }
 .exhibition-view { display: flex; gap: 9px; align-items: center; color: #fff8f4; font: var(--fs-label)/1.5 var(--mono); }
 .exhibition-view svg { width: 16px; }
@@ -67,9 +69,11 @@
     .exhibition-preview:hover img { transform: translateY(-15%) scale(1.18); transition-duration: 3.4s; }
   }
   @media (min-width: 768px) {
-    .exhibition[data-composition="b"] .exhibition-stage { grid-template-columns: minmax(0, 3fr) minmax(0, 7fr); grid-template-areas: "rail feature"; }
+    /* Compositions vary with transforms only, so autoplay never shifts layout (CLS). */
     .exhibition-feature { translate: var(--exhibition-x, 0) var(--exhibition-y, 0); }
-    .exhibition[data-composition="c"] .exhibition-stage { padding-top: 12px; }
+    .exhibition-rail { transition: transform 1400ms var(--ease-lux); }
+    .exhibition[data-composition="b"] .exhibition-rail { transform: translateY(18px); }
+    .exhibition[data-composition="c"] .exhibition-rail { transform: translateY(-10px); }
   }
 }
 @media (max-width: 767.98px) {
