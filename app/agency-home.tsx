@@ -24,6 +24,7 @@ const disciplines = [
 ] as const;
 
 const scenes = ["Harbour", "Arteries", "Skyline"] as const;
+const bandWords = ["Websites", "Online stores", "Business systems", "Made in Sydney"] as const;
 
 /** Per-line mask reveal: each line rises out of its own clipping row, staggered by index. */
 function Lines({ lines }: { lines: readonly (string | { accent: string })[] }) {
@@ -74,6 +75,22 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               <ol className="ruby-scenes" aria-hidden="true">
                 {scenes.map((scene, index) => <li key={scene}><span>{String(index + 1).padStart(2, "0")}</span>{scene}<i /></li>)}
               </ol>
+            </div>
+          </section>
+
+          <section className="ruby-service-ticker" aria-label="Studio capabilities">
+            <label className="ruby-service-ticker-control">
+              <input type="checkbox" aria-controls="services-ticker-track" />
+              Pause ticker
+            </label>
+            <div className="ruby-service-ticker-viewport">
+              <div id="services-ticker-track" className="ruby-service-ticker-track">
+                {[0, 1].map(copy => (
+                  <ul className="ruby-service-ticker-group" role="list" key={copy} aria-hidden={copy === 1 || undefined}>
+                    {bandWords.map(word => <li key={word}>{word}</li>)}
+                  </ul>
+                ))}
+              </div>
             </div>
           </section>
 
