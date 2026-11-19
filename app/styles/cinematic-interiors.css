@@ -1,9 +1,9 @@
 /* After Hours interiors. All rules are scoped to the redesigned routes. */
 .cinema-interior {
-  --cinema-ink: #080a0b;
+  --cinema-ink: #0a0909;
   --cinema-paper: #f2eee6;
   --cinema-muted: #b0ada6;
-  --cinema-gold: #c6ad7d;
+  --cinema-gold: #aca297;
   --accent-ink: var(--cinema-gold);
   background: var(--cinema-ink);
   color: var(--cinema-paper);
@@ -45,8 +45,8 @@
   background:
     linear-gradient(90deg, var(--cinema-ink), transparent) 0 0 / 56px 100% no-repeat local,
     linear-gradient(270deg, var(--cinema-ink), transparent) 100% 0 / 56px 100% no-repeat local,
-    linear-gradient(90deg, #d1a64c55, transparent) 0 0 / 22px 100% no-repeat scroll,
-    linear-gradient(270deg, #d1a64c55, transparent) 100% 0 / 22px 100% no-repeat scroll;
+    linear-gradient(90deg, #d16f4c55, transparent) 0 0 / 22px 100% no-repeat scroll,
+    linear-gradient(270deg, #d16f4c55, transparent) 100% 0 / 22px 100% no-repeat scroll;
   scroll-padding-inline: 56px;
 }
 .cinema-work .work-index-filter { min-height: 44px; padding: 8px 0; border: 0; border-radius: 0; background: none; color: var(--cinema-muted); }
@@ -60,7 +60,7 @@
 .cinema-work .gr-wi-title { font-family: var(--sans); font-size: clamp(1.7rem, 3vw, 3.3rem); font-weight: 400; letter-spacing: -0.045em; }
 .cinema-work .gr-wi-number { color: var(--cinema-gold); font-size: 0.8rem; }
 .cinema-work .gr-wi-stack { color: var(--cinema-muted); font-size: var(--fs-label); }
-.cinema-work .gr-wi-media .live-label { background: #080a0be8; color: var(--cinema-paper); border: 1px solid #ffffff30; border-radius: 0; }
+.cinema-work .gr-wi-media .live-label { background: #0a0909e8; color: var(--cinema-paper); border: 1px solid #ffffff30; border-radius: 0; }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .cinema-work .gr-wi-link .gr-wi-image img { transition: transform 900ms cubic-bezier(.2,.7,.2,1); }
   .cinema-work .gr-wi-link:is(:hover, :focus-visible) .gr-wi-image img { transform: scale(1.025); }
@@ -129,7 +129,7 @@
 .cinema-about .studio-about-plate { box-shadow: none; }
 .cinema-about .studio-plate--mark { background: #101314; border: 1px solid #ffffff24; }
 .cinema-about .studio-plate-ring, .cinema-about .studio-plate-glint { display: none; }
-.cinema-about .studio-plate--photo { aspect-ratio: 4 / 5; overflow: hidden; background: #08070b; border: 1px solid #ffffff24; }
+.cinema-about .studio-plate--photo { aspect-ratio: 4 / 5; overflow: hidden; background: #0a0908; border: 1px solid #ffffff24; }
 .cinema-about .studio-plate-photo { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 @media (max-width: 720px) {
   .cinema-about .studio-plate--photo { aspect-ratio: 1 / 1; }
@@ -147,17 +147,17 @@
 
 /* A deliberately contrasting chapter, with its own accessible text tokens. */
 :root .cinema-interior .cinema-paper {
-  --ink: #171b1c; --paper: #f2eee6; --paper-warm: #f2eee6; --accent-ink: #75603d;
-  --ivory: #171b1c; --ivory-muted: #4f5351; --gilt: #75603d; --hair: #171b1c33;
-  --bone: #f2eee6; --bone-ink: #171b1c; --bone-muted: #414543; --bone-gilt: #75603d;
+  --ink: #171b1c; --paper: #f2eee6; --paper-warm: #f2eee6; --accent-ink: #615951;
+  --ivory: #171b1c; --ivory-muted: #4f5351; --gilt: #615951; --hair: #171b1c33;
+  --bone: #f2eee6; --bone-ink: #171b1c; --bone-muted: #414543; --bone-gilt: #615951;
   background: #f2eee6; color: #171b1c; border-color: #171b1c33;
 }
 .cinema-interior .cinema-paper :is(h2, h3, strong) { color: #171b1c; }
 /* Preserve small-text contrast even at the scroll reveal's starting opacity. */
 .cinema-interior .cinema-paper :is(p, li) { color: var(--bone-muted); }
-.cinema-interior .cinema-paper :is(.eyebrow, .gr-steps-num, .gr-cs-feature-num) { color: #75603d; }
+.cinema-interior .cinema-paper :is(.eyebrow, .gr-steps-num, .gr-cs-feature-num) { color: #615951; }
 .cinema-interior .cinema-paper :is(.project-tag-pill, .tech-pill) { background: transparent; border-color: #171b1c40; color: #303634; }
-.cinema-interior .cinema-paper :focus-visible { outline-color: #75603d; }
+.cinema-interior .cinema-paper :focus-visible { outline-color: #615951; }
 .cinema-service-detail .cinema-paper { padding: clamp(28px, 5vw, 70px); margin-bottom: 80px; }
 .cinema-interior .cinema-paper .studio-interface-layers li { border-color: #171b1c33; background: none; color: #171b1c; }
 .cinema-interior .cinema-paper .studio-interface-layers li span { color: var(--bone-gilt); }

@@ -1,9 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowIcon } from "../../icons";
-import { projects } from "../../project-data";
+import { projects, type Project } from "../../project-data";
+import { ProjectArtwork } from "../../project-artwork";
 import { siteConfig } from "../../site-config";
 import { Reveal } from "../motion/Reveal";
+
+/** Real client sites shown on the studio plate, one per core industry. */
+const plateSlugs = ["jufaja-homes", "aftab-sons-transport", "maple-rentals"];
+const plateProjects: readonly Project[] = plateSlugs.flatMap(slug => projects.filter(project => project.slug === slug));
 
 const values = [
   ["Clear communication", "Simple advice and transparent decisions."],
@@ -23,9 +27,8 @@ interface StudioAboutProps {
 }
 
 /**
- * The studio introduction from the approved "about & enquiry" design: the
- * monogram plate on the left, editorial copy and verifiable studio facts on
- * the right. Shared by the homepage and /about so the two never drift.
+ * The studio introduction: a plate of real client sites on the left, editorial
+ * copy and verifiable studio facts on the right. Shared by the homepage and /about so the two never drift.
  */
 export function StudioAbout({
   id,
@@ -39,20 +42,16 @@ export function StudioAbout({
       <div className="studio-shell studio-split">
         <Reveal as="div" className="studio-about-plate-wrap" variant="mask">
           <figure className="studio-about-plate">
-            <div className="studio-plate studio-plate--photo">
-              <Image
-                className="studio-plate-photo"
-                src="/cinematic/sydney-gold-crimson-plate.webp"
-                width={1086}
-                height={1357}
-                sizes="(max-width: 860px) 90vw, 460px"
-                preload
-                alt="Sydney Opera House and Harbour Bridge at night beside the gold AB monogram and the line Independent by design"
-              />
+            <div className="studio-plate studio-plate--photo studio-plate--work">
+              {plateProjects.map((project, index) => (
+                <div className="studio-plate-shot" key={project.slug} data-shot={index}>
+                  <ProjectArtwork project={project} sizes="(max-width: 860px) 70vw, 340px" priority={index === 0} />
+                </div>
+              ))}
             </div>
             <figcaption className="studio-plate-caption">
-              <span>AB <i aria-hidden="true">/</i> Web Studio</span>
-              <span>Sydney <i aria-hidden="true">/</i> Australia</span>
+              <span>Selected client work</span>
+              <span>{projects.length} case studies</span>
             </figcaption>
           </figure>
         </Reveal>

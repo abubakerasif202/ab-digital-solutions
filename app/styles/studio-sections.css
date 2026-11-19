@@ -42,8 +42,8 @@
   place-items: center;
   overflow: hidden;
   background:
-    radial-gradient(60% 60% at var(--pointer-x, 50%) var(--pointer-y, 45%), rgba(209, 166, 76, 0.14), transparent 70%),
-    radial-gradient(90% 70% at 85% 110%, rgba(210, 23, 54, 0.1), transparent 60%),
+    radial-gradient(60% 60% at var(--pointer-x, 50%) var(--pointer-y, 45%), rgba(209, 111, 76, 0.14), transparent 70%),
+    radial-gradient(90% 70% at 85% 110%, rgba(232, 73, 43, 0.1), transparent 60%),
     var(--surface);
   perspective: 900px;
 }
@@ -54,7 +54,7 @@
   pointer-events: none;
 }
 
-.studio-plate-ring--outer { inset: 12%; border: 1px solid rgba(209, 166, 76, 0.28); }
+.studio-plate-ring--outer { inset: 12%; border: 1px solid rgba(209, 111, 76, 0.28); }
 .studio-plate-ring--inner { inset: 22%; border: 1px solid var(--hair); }
 
 /* A single gilt glint travels the outer ring: light, not ornament. */
@@ -62,7 +62,7 @@
   position: absolute;
   inset: 12%;
   border-radius: 50%;
-  background: conic-gradient(from var(--glint-angle, 0deg), transparent 0deg, rgba(239, 201, 106, 0.55) 18deg, transparent 40deg);
+  background: conic-gradient(from var(--glint-angle, 0deg), transparent 0deg, rgba(239, 141, 106, 0.55) 18deg, transparent 40deg);
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
   mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
   pointer-events: none;
@@ -169,7 +169,7 @@
   position: relative;
   padding-block: var(--section-y);
   border-top: 1px solid var(--hair);
-  background: radial-gradient(900px 480px at 12% 0%, rgba(210, 23, 54, 0.08), transparent 70%), var(--obsidian);
+  background: radial-gradient(900px 480px at 12% 0%, rgba(232, 73, 43, 0.08), transparent 70%), var(--obsidian);
   scroll-margin-top: calc(var(--header-height) + 24px);
 }
 
@@ -326,7 +326,7 @@
 .contact-form.enquiry-form :is(input:not([type="checkbox"], [type="radio"]), textarea):focus {
   border-color: var(--gilt);
   background: #18181d;
-  box-shadow: 0 0 0 4px rgba(209, 166, 76, 0.12);
+  box-shadow: 0 0 0 4px rgba(209, 111, 76, 0.12);
   outline: 0;
 }
 

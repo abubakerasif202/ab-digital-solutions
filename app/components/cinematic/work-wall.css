@@ -1,15 +1,15 @@
 /* Work-first hero: real case-study captures drifting behind the headline.
    Transform-only motion; static under reduced motion and until the pause control is ready. */
 .ruby-page .ruby-hero.work-first-hero {
-  --hero-ink: #0c0a0d;
+  --hero-ink: #0c0b0b;
   min-height: max(660px, min(960px, calc(100svh - var(--header-height))));
   background: var(--hero-ink);
 }
 
 .work-first-hero .ruby-hero-shade {
   background:
-    linear-gradient(90deg, #0c0a0df7 0%, #0c0a0deb 30%, #0c0a0d99 46%, #0c0a0d24 64%, transparent 78%),
-    linear-gradient(0deg, #0c0a0d 0%, #0c0a0d00 26%, #0c0a0d00 84%, #0c0a0dcc 100%);
+    linear-gradient(90deg, #0c0b0bf7 0%, #0c0b0beb 30%, #0c0b0b99 46%, #0c0b0b24 64%, transparent 78%),
+    linear-gradient(0deg, #0c0b0b 0%, #0c0b0b00 26%, #0c0b0b00 84%, #0c0b0bcc 100%);
 }
 
 .work-first-hero .ruby-hero-light { opacity: .45; }
@@ -27,7 +27,7 @@
 
 .work-first-hero .ruby-hero-actionline > p {
   max-width: 44ch;
-  color: #efe4e7;
+  color: #ebe9e8;
 }
 
 .work-wall {
@@ -103,14 +103,14 @@
   height: 44px;
   padding: 0;
   border: 1px solid #f7f1eb6b;
-  background: #0b0709b8;
+  background: #0a0908b8;
   color: #f7f1eb;
   cursor: pointer;
   pointer-events: auto;
 }
 
-.work-wall-control:is(:hover, [aria-pressed="true"]) { background: #74102d; border-color: #f28ca9; }
-.work-wall-control:focus-visible { outline: 2px solid var(--cinema-gold, #e8c37e); outline-offset: 3px; }
+.work-wall-control:is(:hover, [aria-pressed="true"]) { background: #742110; border-color: #f29d8c; }
+.work-wall-control:focus-visible { outline: 2px solid var(--cinema-gold, #e89a7e); outline-offset: 3px; }
 .work-wall-control:not([data-ready]) { visibility: hidden; }
 
 @keyframes work-wall-rise { to { transform: translateY(-50%); } }
@@ -151,7 +151,7 @@
   .work-first-hero .ruby-hero-topline { margin-block-end: clamp(230px, 60vw, 360px); }
 
   .work-first-hero .ruby-hero-shade {
-    background: linear-gradient(0deg, #0c0a0d 0%, #0c0a0df5 calc(100% - clamp(300px, 78vw, 520px) + 30px), #0c0a0d1f calc(100% - clamp(300px, 78vw, 520px) + 150px), #0c0a0d33 calc(100% - 120px), #0c0a0d8c 100%);
+    background: linear-gradient(0deg, #0c0b0b 0%, #0c0b0bf5 calc(100% - clamp(300px, 78vw, 520px) + 30px), #0c0b0b1f calc(100% - clamp(300px, 78vw, 520px) + 150px), #0c0b0b33 calc(100% - 120px), #0c0b0b8c 100%);
   }
 
   .work-first-hero .ruby-hero-composition { padding-block: 0 31px; }
@@ -164,6 +164,6 @@
 /* Keep the topline labels legible where they cross the screenshots. */
 .work-first-hero .ruby-hero-topline .cinema-label {
   padding: 5px 9px;
-  background: #0c0a0dcc;
+  background: #0c0b0bcc;
   backdrop-filter: blur(6px);
 }
