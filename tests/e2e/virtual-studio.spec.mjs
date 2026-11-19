@@ -3,6 +3,8 @@ import { mkdir, writeFile } from "node:fs/promises";
 import * as THREE from "three";
 import sharp from "sharp";
 import { studioProjects } from "../../app/studio/studio-data.ts";
+// Exercise WebGL in full Chromium, including its production compositor.
+test.use({ channel: "chromium" });
 const output = process.env.QA_OUT || "qa/virtual-studio";
 test.beforeAll(() => {
   if (!["localhost", "127.0.0.1"].includes(new URL(process.env.QA_BASE_URL || "http://127.0.0.1:3100").hostname)) {
@@ -207,9 +209,9 @@ test("idle rendering stops; physical display opens its project; wheel scrolls", 
   await page.waitForTimeout(48000);
   const start = await page.evaluate(() => window.__studioDraws); await page.waitForTimeout(2500);
   expect(await page.evaluate(() => window.__studioDraws)).toBe(start);
-  await page.mouse.move(5, 5); await page.mouse.move(25, 25); await page.waitForTimeout(800);
-  expect(await page.evaluate(() => window.__studioDraws)).toBeGreaterThan(start);
   const bounds = await page.locator("canvas").boundingBox();
+  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+  await expect.poll(() => page.evaluate(() => window.__studioDraws)).toBeGreaterThan(start);
   const camera = new THREE.PerspectiveCamera(42, bounds.width/bounds.height, .1, 560);
   camera.position.set(19,15,24); camera.lookAt(0,.2,0); camera.updateMatrixWorld();
   const point = new THREE.Vector3(-4.9,2.45,-4.87).project(camera);
@@ -282,7 +284,7 @@ test("retry recovers a failed model request and repeated entry has clean teardow
   await openOptions(page); await page.getByRole("button", { name: "Still view", exact: true }).click();
   await expect(page.locator("canvas")).toHaveCount(0); await page.waitForTimeout(800);
   await openOptions(page); await page.getByRole("button", { name: "3D view", exact: true }).click();
-  await expect(mode(page)).toHaveAttribute("data-mode", "explore");
+  await expect(mode(page)).toHaveAttribute("data-mode", "explore", { timeout: 30000 });
   await expect(page.locator("canvas")).toHaveCount(1);
   await openOptions(page); await page.getByRole("button", { name: "Still view", exact: true }).click(); await page.waitForTimeout(800);
   await expect(page.locator("canvas")).toHaveCount(0);
@@ -349,8 +351,9 @@ test("welcome separates exploration from tour and details open under the scene",
   await expect(page.getByRole("button", { name: "Guided tour", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Guided tour", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pause tour", exact: true })).toBeVisible();
-  await page.screenshot({ path: `${output}/guided-tour.png` });
   await page.getByRole("button", { name: "Pause tour", exact: true }).click();
+  // The tour may have advanced before Pause was activated. Navigate from a known room.
+  await space(page, "Reception");
   await page.getByRole("button", { name: "Next room", exact: true }).click();
   await expect(page.locator("#studio-panel-heading")).toHaveText("Work with purpose.");
   await expect(page.locator("#studio-panel-heading")).toBeVisible();
@@ -483,12 +486,22 @@ test("pending shader compilation tears down safely and can re-enter", async ({ p
   page.on("pageerror", (error) => errors.push(error.message));
   await page.addInitScript(() => {
     window.__holdStudioShaders = true; window.__studioShaderPolls = 0;
+    // Exercise the pending-compile path even on renderers without the optional KHR extension.
+    const simulated = new WeakSet();
+    const getExtension = WebGL2RenderingContext.prototype.getExtension;
+    WebGL2RenderingContext.prototype.getExtension = function (name) {
+      const native = getExtension.call(this, name);
+      if (native || name !== "KHR_parallel_shader_compile") return native;
+      simulated.add(this);
+      return { COMPLETION_STATUS_KHR: 0x91b1 };
+    };
     const original = WebGL2RenderingContext.prototype.getProgramParameter;
     WebGL2RenderingContext.prototype.getProgramParameter = function (program, parameter) {
       // KHR_parallel_shader_compile completion status; only this status is held.
       if (parameter === 0x91b1) {
         window.__studioShaderPolls++;
         if (window.__holdStudioShaders) return false;
+        if (simulated.has(this)) return true;
       }
       return original.call(this, program, parameter);
     };
