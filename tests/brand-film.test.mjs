@@ -17,15 +17,6 @@ test("brand film assets exist and the videos are web-optimised", async () => {
   }
 });
 
-test("film player never loads video before a user gesture", async () => {
-  const player = await read("../app/components/film/BrandFilmPlayer.tsx");
-  // The <video> element is only rendered once a source has been chosen by start().
-  assert.match(player, /started \? \(\s*<video/);
-  assert.doesNotMatch(player, /autoPlay/);
-  assert.match(player, /aria-label="Seek"/);
-  assert.match(player, /webkitEnterFullscreen/);
-});
-
 test("logo reveal respects reduced motion, plays once per session and cleans up", async () => {
   const reveal = await read("../app/components/film/LogoReveal.tsx");
   assert.match(reveal, /prefers-reduced-motion: reduce/);
@@ -34,11 +25,16 @@ test("logo reveal respects reduced motion, plays once per session and cleans up"
   assert.match(reveal, /await import\("\.\/logo-particles"\)/);
 });
 
-test("homepage mounts the brand film after the portfolio", async () => {
-  const [home, layout] = await Promise.all([read("../app/agency-home.tsx"), read("../app/layout.tsx")]);
-  assert.ok(home.indexOf("<PortfolioSection />") < home.indexOf("<BrandFilmSection />"));
-  assert.ok(home.indexOf('id="services"') < home.indexOf("<BrandFilmSection />"));
-  assert.match(home, /<BrandFilmSection \/>/);
-  assert.doesNotMatch(home, /cinema-film-drawer/);
+test("homepage leads with the work, not stock Sydney footage", async () => {
+  const [home, layout, header, footer] = await Promise.all([
+    read("../app/agency-home.tsx"),
+    read("../app/layout.tsx"),
+    read("../app/site-chrome.tsx"),
+    read("../app/site-footer.tsx"),
+  ]);
+  assert.doesNotMatch(home, /BrandFilmSection|CinematicMedia|sydney-after-dark/);
+  assert.match(home, /<HeroWorkWall \/>/);
+  assert.doesNotMatch(header, /href="#film"/);
+  assert.doesNotMatch(footer, /href="#film"/);
   assert.match(layout, /styles\/brand-film\.css/);
 });

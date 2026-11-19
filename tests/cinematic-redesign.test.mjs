@@ -4,12 +4,11 @@ import { readFile } from "node:fs/promises";
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 test("cinematic opening keeps business context and direct enquiry without a 3D loading gate", async () => {
  const home = await read("app/agency-home.tsx");
- assert.match(home, /<CinematicMedia/);
+ assert.match(home, /<HeroWorkWall \/>/);
  assert.match(home, /id="hero-heading"/);
- assert.match(home, /Digital experiences\./);
- assert.match(home, /Beyond ordinary\./);
- assert.match(home, /Premium websites, online stores/);
- assert.match(home, /purpose-built business systems/);
+ assert.match(home, /Websites built for/);
+ assert.match(home, /real businesses\./);
+ assert.match(home, /\$\{projects\.length\} websites, online stores and business systems/);
  assert.match(home, /href="#contact"/);
  assert.match(home, /href="#work"/);
  assert.match(home, /<ContactForm/);
