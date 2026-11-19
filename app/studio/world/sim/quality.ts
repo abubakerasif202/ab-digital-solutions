@@ -37,6 +37,6 @@ export function shouldDowngrade(previousWindowSlow: boolean, window: number[]) {
 export function canvasPixelRatio({ width, height, deviceDpr, tier, software }: {
   width: number; height: number; deviceDpr: number; tier: Tier; software: boolean;
 }) {
-  const maxPixels = software ? 420_000 : tier === "low" ? 1_000_000 : tier === "medium" ? 1_800_000 : 2_600_000;
+  const maxPixels = software ? 105_000 : tier === "low" ? 1_000_000 : tier === "medium" ? 1_800_000 : 2_600_000;
   return Math.min(deviceDpr, tierConfig[tier].dpr, Math.sqrt(maxPixels / Math.max(1, width * height)));
 }

@@ -1,0 +1,63 @@
+/* Sydney After Dark only. Keep the film policy and button in CinematicMedia. */
+.ruby-page .ruby-hero.sydney-after-dark {
+  --hero-ink: #110a13;
+  min-height: max(650px, min(960px, calc(100svh - var(--header-height))));
+  background:
+    radial-gradient(ellipse 36% 55% at 93% 53%, #39182f, transparent 100%),
+    radial-gradient(ellipse 42% 57% at 68% 46%, #161c37, transparent 100%),
+    var(--hero-ink);
+}
+
+.sydney-after-dark .ruby-hero-shade {
+  background:
+    linear-gradient(90deg, #100a13f0 0%, #100a13cf 26%, #100a137d 41%, transparent 62%),
+    linear-gradient(0deg, #100a13 0%, transparent 31%, transparent 81%, #100a13 100%);
+}
+
+.sydney-after-dark .ruby-hero-light {
+  opacity: .56;
+  background: radial-gradient(ellipse 32% 38% at var(--ruby-x, 73%) var(--ruby-y, 48%), #a65c961f, transparent 78%);
+}
+
+.sydney-after-dark .ruby-hero-composition {
+  margin-block: auto;
+  padding-block: 24px 58px;
+}
+
+.ruby-page .sydney-after-dark .ruby-title {
+  font-size: clamp(49px, 5.5vw, 101px);
+  letter-spacing: -.065em;
+  text-shadow: 0 3px 32px #110a1375;
+}
+
+.sydney-after-dark .ruby-hero-actionline > p {
+  color: #f2e3e8;
+}
+
+@media (max-width: 900px) {
+  .ruby-page .ruby-hero.sydney-after-dark {
+    min-height: auto;
+  }
+
+  .sydney-after-dark .ruby-hero-topline {
+    margin-block-end: clamp(246px, 54vw, 392px);
+  }
+
+  .sydney-after-dark .ruby-hero-shade {
+    background: linear-gradient(0deg, #100a13 0%, #100a13f2 29%, transparent 69%, #100a13ba 100%);
+  }
+
+  .sydney-after-dark .ruby-hero-composition {
+    padding-block: 0 31px;
+  }
+
+  .ruby-page .sydney-after-dark .ruby-title {
+    font-size: clamp(28px, 8.9vw, 72px);
+  }
+}
+
+@media (max-width: 480px) {
+  .sydney-after-dark .ruby-hero-topline {
+    margin-block-end: clamp(181px, 51vw, 236px);
+  }
+}

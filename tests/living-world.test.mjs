@@ -86,7 +86,7 @@ test("seeded random is reproducible", () => {
 
 test("renderer caps software fill rate and respects quality on high-DPR phones", () => {
   const ratio = canvasPixelRatio({ width: 1440, height: 708, deviceDpr: 1, tier: "low", software: true });
-  assert.ok(1440 * 708 * ratio ** 2 <= 420001);
+  assert.ok(1440 * 708 * ratio ** 2 <= 105001);
   assert.equal(canvasPixelRatio({ width: 390, height: 460, deviceDpr: 3, tier: "low", software: false }), 1);
   assert.equal(canvasPixelRatio({ width: 390, height: 460, deviceDpr: 3, tier: "high", software: false }), 1.5);
 });

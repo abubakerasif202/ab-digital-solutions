@@ -16,6 +16,7 @@ import { ProcessSection } from "./components/ProcessSection";
 import { EnquirySection } from "./components/studio/EnquirySection";
 import { CinematicMedia } from "./components/cinematic/CinematicMedia";
 import { RubyMotion } from "./components/cinematic/RubyMotion";
+import "./components/cinematic/sydney-harbour.css";
 import { TickerToggle } from "./components/cinematic/TickerToggle";
 import { CapabilityCount } from "./components/cinematic/CapabilityCount";
 import { ProjectArtwork } from "./project-artwork";
@@ -47,7 +48,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         <main id="main-content" className="cinematic-home cinema-page ruby-page">
           <RubyMotion />
           <div className="ruby-scroll-progress" aria-hidden="true" />
-          <section className="cinema-hero ruby-hero" aria-labelledby="hero-heading" data-ruby-depth>
+          <section className="cinema-hero ruby-hero sydney-after-dark" aria-labelledby="hero-heading" data-ruby-depth data-ruby-magnet>
             <CinematicMedia />
             <div className="ruby-hero-shade" aria-hidden="true" />
             <div className="ruby-hero-light" aria-hidden="true" />
@@ -136,7 +137,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
                 <p><CapabilityCount value={documentedStack.length} /> tools from our case studies</p>
                 <ul aria-label="Documented project technologies">{documentedStack.map(tool => <li key={tool}>{tool}</li>)}</ul>
               </div>
-              <dl className="ruby-capability-metrics" role="group" aria-label="Performance measurement">
+              <dl className="ruby-capability-metrics" aria-label="Performance measurement">
                 {/* TODO: Publish dated Lighthouse runs and field data only when measured. */}
                 <div><dt>Lighthouse</dt><dd>Not yet benchmarked</dd></div>
                 <div><dt>Core Web Vitals</dt><dd>Field data pending</dd></div>

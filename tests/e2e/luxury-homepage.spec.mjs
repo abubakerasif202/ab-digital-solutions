@@ -104,12 +104,12 @@ test("projects: filters, counts and show-all follow the registry", async ({ page
   await expect(page.locator("#projects .project")).toHaveCount(6);
   await expect(page.locator("#showAll")).toHaveText("Show all 20 projects");
   await page.locator("#showAll").click();
-  await expect(page.locator("#projects .project")).toHaveCount(19);
+  await expect(page.locator("#projects .project")).toHaveCount(20);
   const chip = page.locator('#filters .chip[data-filter="Removals"]');
   await chip.click();
-  await expect(page.locator("#projects .project")).toHaveCount(3);
+  await expect(page.locator("#projects .project")).toHaveCount(4);
   await expect(chip).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator("#resultStatus")).toContainText("Showing 3 projects in Removals");
+  await expect(page.locator("#resultStatus")).toContainText("Showing 4 projects in Removals");
   await expect(page.locator("#showAll")).toBeHidden();
 });
 
