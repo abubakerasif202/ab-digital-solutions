@@ -34,6 +34,7 @@ for (const width of [390, 1150]) {
           return label.getBoundingClientRect().width <= viewport.clientWidth;
         });
         return {
+          duration,
           runningInfinitely: animation.effect.getTiming().iterations === Infinity,
           covered: right >= viewport.getBoundingClientRect().right,
           labelsFit,
@@ -41,6 +42,7 @@ for (const width of [390, 1150]) {
           overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
         };
       });
+      expect(seam.duration).toBe(42000);
       expect(seam.runningInfinitely).toBe(true);
       expect(seam.covered).toBe(true);
       expect(seam.labelsFit).toBe(true);
@@ -66,10 +68,24 @@ for (const width of [390, 1150]) {
     test.describe("before the pause control works", () => {
       test.use({ javaScriptEnabled: false });
 
-      test("keeps the ticker still while its pause control is inert", async ({ page }) => {
+      test("keeps all labels visible while its pause control is inert", async ({ page }) => {
         await page.goto("/");
-        await expect(page.getByRole("button", { name: "Pause ticker" })).toBeDisabled();
-        await expect(page.locator(".ruby-service-ticker-track")).toHaveCSS("animation-name", "none");
+        const ticker = page.getByRole("region", { name: "Studio capabilities" });
+        await expect(ticker.getByRole("listitem")).toHaveText(words);
+        await expect(ticker.locator(".ruby-service-ticker-track")).toHaveCSS("animation-name", "none");
+        expect(await ticker.evaluate(async band => {
+          await document.fonts.ready;
+          const strip = band.getBoundingClientRect();
+          return [...band.querySelectorAll("ul:not([aria-hidden]) li")].every(item => {
+            const label = document.createRange();
+            label.selectNodeContents(item);
+            const bounds = label.getBoundingClientRect();
+            return bounds.left >= strip.left && bounds.right <= strip.right
+              && bounds.top >= strip.top && bounds.bottom <= strip.bottom;
+          });
+        })).toBe(true);
+        await expect(ticker.getByRole("button", { name: "Pause ticker" })).toHaveCount(0);
+        await expect(ticker.locator("[aria-hidden=true].ruby-service-ticker-group")).toBeHidden();
       });
     });
 

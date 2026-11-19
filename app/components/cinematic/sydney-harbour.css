@@ -1,0 +1,179 @@
+/* Sydney After Dark only. Keep the film policy and button in CinematicMedia. */
+.ruby-page .ruby-hero.sydney-after-dark {
+  --hero-ink: #110a13;
+  min-height: max(650px, min(960px, calc(100svh - var(--header-height))));
+  background:
+    radial-gradient(ellipse 36% 55% at 93% 53%, #39182f, transparent 100%),
+    radial-gradient(ellipse 42% 57% at 68% 46%, #161c37, transparent 100%),
+    var(--hero-ink);
+}
+
+.sydney-after-dark .cinema-media-poster {
+  opacity: .22;
+}
+
+.sydney-after-dark .cinema-media-poster,
+.sydney-after-dark .cinema-media-video {
+  filter: saturate(.67) brightness(.64);
+  /* Borrow movement from the real water, not a second silhouette of the bridge. */
+  mask-image: radial-gradient(ellipse 52% 19% at 77% 70%, #000 18%, transparent 100%);
+}
+
+.sydney-after-dark .cinema-media[data-playing="true"] .cinema-media-video {
+  opacity: .25;
+}
+
+.sydney-after-dark .ruby-hero-shade {
+  background:
+    linear-gradient(90deg, #100a13f0 0%, #100a13cf 26%, #100a137d 41%, transparent 62%),
+    linear-gradient(0deg, #100a13 0%, transparent 31%, transparent 81%, #100a13 100%);
+}
+
+.sydney-after-dark .ruby-hero-light {
+  opacity: .56;
+  background: radial-gradient(ellipse 32% 38% at var(--ruby-x, 73%) var(--ruby-y, 48%), #a65c961f, transparent 78%);
+}
+
+.sydney-harbour {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sydney-harbour-scene {
+  position: absolute;
+  top: 51%;
+  right: max(-22px, -1.5vw);
+  width: clamp(660px, 71vw, 1440px);
+  translate: 0 -50%;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 11%);
+}
+
+.sydney-harbour-scene svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sydney-harbour-caption {
+  position: absolute;
+  inset: auto 8% 17.6% 47%;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: .7rem;
+  border-top: 1px solid #d3afcb57;
+  color: #e3c6d5;
+  font: 500 var(--fs-label)/1.4 var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.sydney-harbour-caption b {
+  margin-inline-end: .55em;
+  color: #f9a2b7;
+  font-weight: 600;
+}
+
+.sydney-harbour-caption > span:last-child {
+  text-align: end;
+}
+
+.sydney-after-dark .ruby-hero-composition {
+  margin-block: auto;
+  padding-block: 24px 58px;
+}
+
+.ruby-page .sydney-after-dark .ruby-title {
+  font-size: clamp(49px, 5.5vw, 101px);
+  letter-spacing: -.065em;
+  text-shadow: 0 3px 32px #110a1375;
+}
+
+.sydney-after-dark .ruby-hero-actionline > p {
+  color: #f2e3e8;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sydney-harbour-ripples {
+    animation: harbour-ripple-in 3.8s cubic-bezier(.17, .65, .22, 1) both;
+  }
+
+  .sydney-harbour-bridge,
+  .sydney-harbour-opera {
+    animation: harbour-light-rise 2.8s ease-out both;
+  }
+
+  .sydney-harbour-opera {
+    animation-delay: .32s;
+  }
+
+  @keyframes harbour-light-rise {
+    from { opacity: .66; }
+    to { opacity: 1; }
+  }
+
+  @keyframes harbour-ripple-in {
+    from { opacity: .72; transform: translateY(2px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@media (max-width: 900px) {
+  .ruby-page .ruby-hero.sydney-after-dark {
+    min-height: auto;
+  }
+
+  .sydney-after-dark .ruby-hero-topline {
+    margin-block-end: clamp(246px, 54vw, 392px);
+  }
+
+  .sydney-harbour-scene {
+    top: calc(var(--header-height) + 24px);
+    right: 50%;
+    width: min(110vw, 760px);
+    translate: 50% 0;
+    mask-image: none;
+  }
+
+  .sydney-harbour-caption {
+    inset-inline: 12%;
+  }
+
+  .sydney-after-dark .ruby-hero-shade {
+    background: linear-gradient(0deg, #100a13 0%, #100a13f2 29%, transparent 69%, #100a13ba 100%);
+  }
+
+  .sydney-after-dark .cinema-media-poster,
+  .sydney-after-dark .cinema-media-video {
+    mask-image: radial-gradient(ellipse 60% 13% at 52% 42%, #000 11%, transparent 100%);
+  }
+
+  .sydney-after-dark .ruby-hero-composition {
+    padding-block: 0 31px;
+  }
+
+  .ruby-page .sydney-after-dark .ruby-title {
+    font-size: clamp(28px, 8.9vw, 72px);
+  }
+}
+
+@media (max-width: 480px) {
+  .sydney-after-dark .ruby-hero-topline {
+    margin-block-end: clamp(181px, 51vw, 236px);
+  }
+
+  .sydney-harbour-caption {
+    inset: auto 9% 17.6%;
+    gap: 9px;
+    font-size: clamp(9px, 2.57vw, 11px);
+  }
+}
+
+@media (min-width: 901px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .sydney-harbour-scene svg {
+    transform: translate(var(--ruby-dx, 0px), var(--ruby-dy, 0px));
+  }
+}

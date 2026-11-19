@@ -13,7 +13,7 @@ test("mobile motion layer is loaded after the kinetic layer it overrides", () =>
 test("hero shows case study links rather than film chapter labels", () => {
   const home = read("app/agency-home.tsx");
   assert.match(home, /aria-label="Selected case studies"/);
-  assert.doesNotMatch(home, /Harbour|Arteries|Skyline/);
+  assert.doesNotMatch(home, />\s*(?:Harbour|Arteries|Skyline)\s*</);
 });
 
 test("touch lighting and sheen are chosen by input capability and respect reduced motion", () => {

@@ -16,6 +16,7 @@ import { ProcessSection } from "./components/ProcessSection";
 import { EnquirySection } from "./components/studio/EnquirySection";
 import { CinematicMedia } from "./components/cinematic/CinematicMedia";
 import { RubyMotion } from "./components/cinematic/RubyMotion";
+import { SydneyHarbour } from "./components/cinematic/SydneyHarbour";
 import { TickerToggle } from "./components/cinematic/TickerToggle";
 import { CapabilityCount } from "./components/cinematic/CapabilityCount";
 import { ProjectArtwork } from "./project-artwork";
@@ -47,8 +48,9 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         <main id="main-content" className="cinematic-home cinema-page ruby-page">
           <RubyMotion />
           <div className="ruby-scroll-progress" aria-hidden="true" />
-          <section className="cinema-hero ruby-hero" aria-labelledby="hero-heading" data-ruby-depth>
+          <section className="cinema-hero ruby-hero sydney-after-dark" aria-labelledby="hero-heading" data-ruby-depth data-ruby-magnet>
             <CinematicMedia />
+            <SydneyHarbour />
             <div className="ruby-hero-shade" aria-hidden="true" />
             <div className="ruby-hero-light" aria-hidden="true" />
             <div className="cinema-shell ruby-hero-topline">

@@ -109,15 +109,15 @@ test("structure: one h1, ordered headings, one main landmark, unique ids, skip l
 test("work: server-rendered cards, six shown first, filters, case-study links, honest status labels", async ({ page }) => {
   await open(page);
   const visible = () => page.locator(".odp-project:visible");
-  await expect(page.locator(".odp-project")).toHaveCount(19);
+  await expect(page.locator(".odp-project")).toHaveCount(20);
   await expect(visible()).toHaveCount(6);
   await page.getByRole("button", { name: "Show all 20 projects" }).click();
-  await expect(visible()).toHaveCount(19);
+  await expect(visible()).toHaveCount(20);
   const chip = page.locator(".odp-chip", { hasText: "Removals" });
   await chip.click();
-  await expect(visible()).toHaveCount(3);
+  await expect(visible()).toHaveCount(4);
   await expect(chip).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".odp-sr[role=status]")).toContainText("Showing 3 projects in Removals");
+  await expect(page.locator(".odp-sr[role=status]")).toContainText("Showing 4 projects in Removals");
   await page.locator(".odp-chip", { hasText: /^All/ }).click();
   const hrefs = await page.locator(".odp-project-link").evaluateAll((links) => links.map((a) => a.getAttribute("href")));
   expect(hrefs.every((href) => /^\/work\/[a-z0-9-]+$/.test(href))).toBe(true);
@@ -141,7 +141,7 @@ test("without JavaScript every project is listed and the headline is visible", a
   const page = await context.newPage();
   await page.goto(PATH);
   await expect(page.locator("h1")).toBeVisible();
-  await expect(page.locator(".odp-project:visible")).toHaveCount(19);
+  await expect(page.locator(".odp-project:visible")).toHaveCount(20);
   await context.close();
 });
 
