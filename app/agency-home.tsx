@@ -11,12 +11,11 @@ import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
 import { ArrowIcon } from "./icons";
 import { PortfolioSection } from "./components/PortfolioSection";
-import { BrandFilmSection } from "./components/film/BrandFilmSection";
 import { ProcessSection } from "./components/ProcessSection";
 import { EnquirySection } from "./components/studio/EnquirySection";
-import { CinematicMedia } from "./components/cinematic/CinematicMedia";
+import { HeroWorkWall } from "./components/cinematic/HeroWorkWall";
 import { RubyMotion } from "./components/cinematic/RubyMotion";
-import "./components/cinematic/sydney-harbour.css";
+import "./components/cinematic/work-wall.css";
 import { TickerToggle } from "./components/cinematic/TickerToggle";
 import { CapabilityCount } from "./components/cinematic/CapabilityCount";
 import { ProjectArtwork } from "./project-artwork";
@@ -28,6 +27,7 @@ const phoneCapture = deviceProject?.gallery?.find(shot => shot.aspectRatio === "
 const preferredStack = ["Next.js", "React", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL", "Prisma", "Vercel"];
 const documentedStack = preferredStack.filter(tool => projects.some(project => project.techStack.some(used => used === tool)));
 const bandWords = ["Websites", "Online stores", "Business systems", "Made in Sydney"] as const;
+const heroSummary = `${projects.length} websites, online stores and business systems shipped for builders, transport and removals companies, rental fleets and online retailers. Designed and engineered in Sydney.`;
 
 function Lines({ lines }: { lines: readonly (string | { accent: string })[] }) {
   return lines.map((line, index) => {
@@ -48,21 +48,21 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         <main id="main-content" className="cinematic-home cinema-page ruby-page">
           <RubyMotion />
           <div className="ruby-scroll-progress" aria-hidden="true" />
-          <section className="cinema-hero ruby-hero sydney-after-dark" aria-labelledby="hero-heading" data-ruby-depth data-ruby-magnet>
-            <CinematicMedia />
+          <section className="cinema-hero ruby-hero work-first-hero" aria-labelledby="hero-heading" data-ruby-depth data-ruby-magnet>
+            <HeroWorkWall />
             <div className="ruby-hero-shade" aria-hidden="true" />
             <div className="ruby-hero-light" aria-hidden="true" />
             <div className="cinema-shell ruby-hero-topline">
-              <p className="cinema-label"><span className="ruby-signal" />Independent digital studio</p>
+              <p className="cinema-label"><span className="ruby-signal" />Independent web studio</p>
               <p className="cinema-label">{siteConfig.location}</p>
             </div>
             <div className="cinema-shell ruby-hero-composition">
               <h1 id="hero-heading" className="ruby-title">
-                <span className="ruby-title-row">Digital experiences.</span>{" "}
-                <span className="ruby-title-row ruby-title-row--signature"><em>Beyond ordinary.</em></span>
+                <span className="ruby-title-row">Websites built for</span>{" "}
+                <span className="ruby-title-row ruby-title-row--signature"><em>real businesses.</em></span>
               </h1>
               <div className="ruby-hero-actionline">
-                <p>Distinctive design. Precise engineering. Premium websites, online stores and purpose-built business systems.</p>
+                <p>{heroSummary}</p>
                 <div className="ruby-hero-actions">
                   <a className="ruby-project-cta" href="#contact"><span>Start your project</span><ArrowIcon /></a>
                   <a className="ruby-ghost-cta" href="#work"><span>See the work</span><ArrowIcon direction="right" /></a>
@@ -114,10 +114,10 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
               )}
               <div className="ruby-positioning-copy">
                 <Reveal as="h2" id="perspective-heading" className="ruby-statement ruby-lines">
-                  <Lines lines={["Good design", "gets noticed.", { accent: "Great thinking" }, "moves you forward."]} />
+                  <Lines lines={["Designed to look", "the part.", { accent: "Built to win" }, "the enquiry."]} />
                 </Reveal>
                 <div className="ruby-positioning-bottom">
-                  <Reveal as="p">AB Web Studio brings design, development and practical technology together. To make your business easier to understand, more compelling to choose, and ready for what comes next.</Reveal>
+                  <Reveal as="p">Every project starts with how your customers decide: what they need to see, trust and do before they call. We design that path, build it on modern web technology and hand over a site your business can grow with.</Reveal>
                   <Link href="/about" prefetch={false} className="cinema-link">The studio behind the work <ArrowIcon /></Link>
                 </div>
               </div>
@@ -129,19 +129,14 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           <section className="ruby-capabilities" aria-labelledby="capability-heading">
             <div className="cinema-shell ruby-capability-grid">
               <div className="ruby-capability-intro">
-                <p className="cinema-label">Engineering / 01</p>
-                <h2 id="capability-heading">Built to perform.</h2>
+                <p className="cinema-label">Engineering</p>
+                <h2 id="capability-heading">Built on modern foundations.</h2>
                 <p>Technology choices drawn from the work, not a wishlist.</p>
               </div>
               <div className="ruby-capability-stack">
                 <p><CapabilityCount value={documentedStack.length} /> tools from our case studies</p>
                 <ul aria-label="Documented project technologies">{documentedStack.map(tool => <li key={tool}>{tool}</li>)}</ul>
               </div>
-              <dl className="ruby-capability-metrics" aria-label="Performance measurement">
-                {/* TODO: Publish dated Lighthouse runs and field data only when measured. */}
-                <div><dt>Lighthouse</dt><dd>Not yet benchmarked</dd></div>
-                <div><dt>Core Web Vitals</dt><dd>Field data pending</dd></div>
-              </dl>
             </div>
           </section>
 
@@ -180,7 +175,6 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
             </div>
           </section>
 
-          <BrandFilmSection />
           <ProcessSection />
 
           <div className="ruby-contact">

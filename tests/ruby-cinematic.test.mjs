@@ -1,29 +1,36 @@
 import assert from "node:assert/strict";
 import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
+import { wallColumns } from "../app/components/cinematic/work-wall-layout.ts";
 const source = path => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("ruby homepage is recomposed into cinematic, identity, exhibition, services, film and enquiry chapters", async () => {
+test("ruby homepage is recomposed into work-first hero, identity, exhibition, services, process and enquiry chapters", async () => {
   const home = await source("app/agency-home.tsx");
   for (const chapter of ["ruby-hero", "ruby-positioning", "ruby-services", "ruby-contact"]) assert.ok(home.includes(chapter));
   assert.ok(home.includes("<PortfolioSection />"));
-  assert.ok(home.includes("<BrandFilmSection />"));
+  assert.ok(home.includes("<HeroWorkWall />"));
+  assert.ok(home.includes("<ProcessSection />"));
+  assert.ok(!home.includes("<BrandFilmSection />"));
   assert.ok(home.includes("<RubyMotion />"));
-  assert.ok(home.includes("Beyond ordinary."));
+  assert.ok(home.includes("real businesses."));
   assert.ok(home.indexOf("<PortfolioSection />") < home.indexOf('id="services"'));
   assert.doesNotMatch(home, /cinema-film-drawer|Original AI-generated harbour study|<LogoReveal|VirtualStudioPreview|processSteps/);
 });
 
-test("ruby film uses new local editorial footage and truthful narrative metadata", async () => {
-  const film = await source("app/components/film/BrandFilmSection.tsx");
-  assert.ok(film.includes("ab-studio-ruby-v2"));
-  assert.ok(film.includes('duration: 24'));
-  assert.ok(film.includes('duration: "PT24S"'));
-  assert.doesNotMatch(film, /LogoReveal|particles|orbit|3D gallery|ab-web-studio-film-1080/);
-  for (const name of ["ab-studio-ruby-v2-1080.mp4", "ab-studio-ruby-v2-720.mp4", "ab-studio-ruby-v2-poster.webp"]) {
-    const asset = await stat(new URL(`../public/film/${name}`, import.meta.url));
-    assert.ok(asset.size > 1000 && asset.size < 12000000);
-  }
+test("hero work wall shows every real case study, decoratively, with a working pause", async () => {
+  const [wall, styles] = await Promise.all([source("app/components/cinematic/HeroWorkWall.tsx"), source("app/components/cinematic/work-wall.css")]);
+  assert.match(wall, /wallColumns<Project>\(projects\)/);
+  assert.match(wall, /<ProjectArtwork[^>]*decorative/);
+  assert.match(wall, /aria-hidden="true"/);
+  assert.doesNotMatch(wall, /<Link|<a /, "the decorative wall must hold no focusable elements");
+  assert.match(wall, /<TickerToggle className="work-wall-control"/);
+  // Motion is gated on the ready pause control and disabled under reduced motion.
+  assert.match(styles, /\.work-first-hero:has\(> \.work-wall-control\[data-ready\]\)/);
+  assert.match(styles, /\.work-first-hero:has\(> \.work-wall-control\[aria-pressed="true"\]\)[^{]*\{ animation-play-state: paused; \}/);
+  assert.match(styles, /prefers-reduced-motion: no-preference/);
+  const columns = wallColumns(["0", "1", "2", "3", "4", "5", "6"], 3);
+  assert.deepEqual(columns, [["0", "3", "6"], ["1", "4"], ["2", "5"]]);
+  assert.equal(columns.flat().length, 7, "every case study appears exactly once per copy");
 });
 
 test("ruby palette and progressive motion have an explicit reduced-motion fallback", async () => {

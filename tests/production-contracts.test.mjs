@@ -90,8 +90,10 @@ test("all seven SEO-named services use one registry across the hub and footer", 
   for (const label of ["Work", "Services", "Process", "About", "Contact"]) {
     assert.ok(header.includes(`>${label}</Link>`), label);
   }
-  assert.match(header, /href="\/studio"[^>]*>\{pathname === "\/" \? "Studio" : "Virtual Studio"\}/);
-  assert.match(header, /href="#film"[^>]*>Film<\/a>/);
+  // The primary nav stays focused on the business; the Virtual Studio remains a footer link.
+  assert.doesNotMatch(header, /href="\/studio"/);
+  assert.doesNotMatch(header, /href="#film"/);
+  assert.match(footer, /\["\/studio", "Virtual Studio"\]/);
   for (const platform of ["WhatsApp", "LinkedIn", "GitHub", "Facebook", "Instagram"]) {
     assert.ok(footer.includes(platform), platform);
   }

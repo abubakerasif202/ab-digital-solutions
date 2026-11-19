@@ -7,7 +7,6 @@ export const homeSections = [
   { id: "about", label: "A different perspective" },
   { id: "work", label: "A living collection" },
   { id: "services", label: "The possibilities" },
-  { id: "film", label: "A studio in motion" },
   { id: "process", label: "The process" },
   { id: "contact", label: "A new beginning" },
   { id: "enquiry", label: "Start a conversation" },

@@ -11,7 +11,17 @@ const serverRendered = () => false;
  * The ticker only animates once this control is interactive (`data-ready`), so
  * moving content is never shown without a working pause (WCAG 2.2.2).
  */
-export function TickerToggle() {
+interface TickerToggleProps {
+  className?: string;
+  label?: string;
+  controls?: string;
+}
+
+export function TickerToggle({
+  className = "ruby-service-ticker-control",
+  label = "Pause ticker",
+  controls = "services-ticker-track",
+}: TickerToggleProps = {}) {
   // False in the server HTML and during hydration; true once React handles events.
   const ready = useSyncExternalStore(noSubscription, hydrated, serverRendered);
   const [paused, setPaused] = useState(false);
@@ -20,9 +30,9 @@ export function TickerToggle() {
   return (
     <button
       type="button"
-      className="ruby-service-ticker-control"
-      aria-label="Pause ticker"
-      aria-controls="services-ticker-track"
+      className={className}
+      aria-label={label}
+      aria-controls={controls}
       aria-pressed={paused}
       disabled={!ready}
       data-ready={ready || undefined}

@@ -294,7 +294,7 @@ export function SiteHeader() {
 
   useEffect(() => {
     if (pathname !== "/") return;
-    const sections = ["services", "work", "film", "process", "about", "contact"]
+    const sections = ["services", "work", "process", "about", "contact"]
       .map((id) => document.getElementById(id))
       .filter((element): element is HTMLElement => element !== null);
     if (sections.length === 0) return;
@@ -378,8 +378,6 @@ export function SiteHeader() {
           >
             <Link href="/work" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
             <Link href="/services" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
-            <Link href="/studio" prefetch={false} onClick={handleNavLinkClick} className={navLinkClass("studio")} aria-current={navLinkCurrent("studio")}>{pathname === "/" ? "Studio" : "Virtual Studio"}</Link>
-            {pathname === "/" && <a href="#film" onClick={handleNavLinkClick} className={navLinkClass("film")} aria-current={navLinkCurrent("film")}>Film</a>}
             <Link href="/#process" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
             <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
             <Link href="/contact" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("contact")} aria-current={navLinkCurrent("contact")}>Contact</Link>

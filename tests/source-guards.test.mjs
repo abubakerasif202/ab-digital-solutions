@@ -27,10 +27,9 @@ test("homepage exposes content directly instead of using an iframe", async () =>
 
   assert.doesNotMatch(page, /<iframe\b/i);
   assert.match(homepage, /className="ruby-title"/);
-  assert.match(homepage, /<span className="ruby-title-row">Digital experiences\.<\/span>/);
-  assert.match(homepage, /<em>Beyond ordinary\.<\/em>/);
-  assert.match(homepage, /purpose-built business systems/);
-  assert.match(homepage, /Premium websites, online stores/);
+  assert.match(homepage, /<span className="ruby-title-row">Websites built for<\/span>/);
+  assert.match(homepage, /<em>real businesses\.<\/em>/);
+  assert.match(homepage, /websites, online stores and business systems shipped/);
   assert.match(homepage, /id="contact"/);
   assert.match(showcase, /aria-roledescription="carousel"/);
   assert.match(heroExperience, /prefers-reduced-motion/);
@@ -130,7 +129,7 @@ test("premium motion remains present while mobile rendering is constrained", asy
     read("../app/globals.css"),
   ]);
 
-  assert.match(homepage, /<CinematicMedia/);
+  assert.match(homepage, /<HeroWorkWall \/>/);
   assert.doesNotMatch(homepage, /hero-marquee-track|<Hero3DExperience/);
   assert.match(styles, /\.hero-marquee-track\s*\{[\s\S]*?width: max-content;[\s\S]*?animation: hero-marquee-scroll 24s linear infinite;/);
   assert.match(styles, /@keyframes hero-marquee-scroll[\s\S]*?translate3d\(-50%, 0, 0\)/);
@@ -208,7 +207,7 @@ test("reviewed design issues remain remediated", async () => {
   ]);
 
   assert.doesNotMatch(homepage, /hero-brand-art/);
-  assert.match(homepage, /<CinematicMedia/);
+  assert.match(homepage, /<HeroWorkWall \/>/);
   assert.doesNotMatch(homepage, /<LiveTicker/);
   assert.match(showcase, /sliderPreferencePaused \|\| hovered \|\| focused \|\| !isVisible \|\| !isPageVisible/);
   assert.match(showcase, /onMouseEnter=\{\(\) => setHovered\(true\)\}/);

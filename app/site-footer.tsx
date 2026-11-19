@@ -50,7 +50,6 @@ export function SiteFooter({ currentYear, home = false }: { currentYear: number;
         <nav className="studio-footer-col" aria-label="Footer studio navigation">
           <h2>Studio</h2>
           <ul>
-            {home && <li><a href="#film">Film</a></li>}
             {studioLinks.filter(([href]) => !home || !["/work", "/services", "/contact"].includes(href)).map(([href, label]) => (
               <li key={href}><Link href={href} prefetch={home ? false : undefined}>{label}</Link></li>
             ))}
