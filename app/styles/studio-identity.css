@@ -1,0 +1,67 @@
+/* Studio identity layer: vermilion accent on warm black, Bricolage Grotesque headlines,
+   Instrument Serif italic reserved for short accent phrases. Loaded last. */
+:root {
+  --accent-serif: var(--font-accent), "Instrument Serif", Georgia, serif;
+  --studio-vermilion: #ff5a3c;
+  --studio-vermilion-hover: #ff7a5c;
+  --studio-on-vermilion: #160d0a; /* 6.3:1 on --studio-vermilion */
+}
+
+/* Accent phrases inside headlines: the only serif on the page. */
+:root :is(h1, h2, h3, .ruby-title, .studio-display, .cinema-contact-prelude > p) em {
+  font-family: var(--accent-serif) !important;
+  font-style: italic;
+  font-weight: 400 !important;
+  letter-spacing: -0.01em;
+}
+
+/* Primary actions: bright vermilion fill with dark text (white on vermilion fails AA). */
+:root :is(.nav-wrap--home .header-project-cta, .ruby-project-cta, .ruby-cinematic .button-primary, .ruby-cinematic .site-nav > .nav-cta) {
+  border-color: var(--studio-vermilion);
+  background: var(--studio-vermilion);
+  color: var(--studio-on-vermilion);
+}
+
+:root :is(.nav-wrap--home .header-project-cta, .ruby-project-cta, .ruby-cinematic .button-primary, .ruby-cinematic .site-nav > .nav-cta):is(:hover, :active, :focus-visible) {
+  border-color: var(--studio-vermilion-hover);
+  background: var(--studio-vermilion-hover);
+  color: var(--studio-on-vermilion);
+}
+
+/* Grotesque headlines need more air than the old Didone tracking (-0.05em to -0.065em). */
+:root :is(h1, h2) { letter-spacing: -0.035em !important; }
+:root :is(h1, h2) em { letter-spacing: -0.01em !important; }
+
+/* Closing call to action: a solid vermilion band with dark type. */
+.studio-footer-closing { background: var(--studio-vermilion); border-bottom-color: #160d0a; }
+.studio-footer-closing .cinema-label,
+.studio-footer-closing h2,
+.studio-footer-closing h2 em { color: var(--studio-on-vermilion) !important; }
+.studio-footer-closing .ruby-project-cta:focus-visible { outline: 2px solid var(--studio-on-vermilion); outline-offset: 3px; }
+
+/* About plate: three overlapping captures of real client sites instead of stock artwork. */
+.studio-plate--work { position: relative; overflow: hidden; background: #0f0c0a; }
+.studio-plate--work .studio-plate-shot {
+  position: absolute;
+  width: 84%;
+  aspect-ratio: 1348 / 926;
+  overflow: hidden;
+  border: 1px solid #f7f1eb2e;
+  border-radius: 6px;
+  background: #1a1512;
+  box-shadow: 0 24px 60px #00000099;
+}
+.studio-plate--work .studio-plate-shot img { object-fit: cover; object-position: top center; }
+.studio-plate--work [data-shot="0"] { top: 5%; left: 4%; transform: rotate(-2deg); }
+.studio-plate--work [data-shot="1"] { top: 28%; left: 13%; transform: rotate(1.5deg); }
+.studio-plate--work [data-shot="2"] { top: 51%; left: 7%; transform: rotate(-1deg); }
+@media (max-width: 720px) {
+  .studio-plate--work .studio-plate-shot { width: 72%; }
+  .studio-plate--work [data-shot="0"] { top: 4%; }
+  .studio-plate--work [data-shot="1"] { top: 22%; left: 22%; }
+  .studio-plate--work [data-shot="2"] { top: 42%; left: 10%; }
+}
+
+/* The closing band's button sits on vermilion, so it inverts to dark ink (beats the shared CTA rule). */
+:root .studio-footer-closing .studio-shell > a.ruby-project-cta.ruby-project-cta { border-color: var(--studio-on-vermilion); background: var(--studio-on-vermilion); color: #fff5ef; }
+:root .studio-footer-closing .studio-shell > a.ruby-project-cta.ruby-project-cta:is(:hover, :active, :focus-visible) { border-color: #2a1a14; background: #2a1a14; color: #fff5ef; }

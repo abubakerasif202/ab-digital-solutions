@@ -17,8 +17,8 @@ export default async function OpenGraphImage() {
         </svg>
         <div style={{ color: "#F4F1EA", fontSize: 30, letterSpacing: 5 }}>AB WEB STUDIO</div>
       </div>
-      <div style={{ width: 110, height: 4, margin: "34px 0", background: "#D21736" }} />
-      <div style={{ maxWidth: 980, fontSize: 78, fontWeight: 700, lineHeight: 1.02 }}>Digital experiences that do the selling.</div>
+      <div style={{ width: 110, height: 4, margin: "34px 0", background: "#FF5A3C" }} />
+      <div style={{ maxWidth: 980, fontSize: 78, fontWeight: 700, lineHeight: 1.02 }}>Websites built for real businesses.</div>
       <div style={{ marginTop: 38, color: "#d8d2c4", fontSize: 28 }}>Sydney studio · Australia-wide</div>
     </div>,
     size,

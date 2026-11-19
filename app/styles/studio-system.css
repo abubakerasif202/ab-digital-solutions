@@ -14,12 +14,12 @@
   --ivory-muted: #a7a29a;
   --placeholder: #8b867c;
   /* Metal + ruby */
-  --gilt: #d1a64c;
-  --gilt-bright: #efc96a;
-  --ruby: #d21736;
-  --ruby-deep: #b8142f;
-  --ruby-mark: #e5484d;
-  --ruby-text: #f07a80;   /* error copy on dark surfaces (≥6:1) */
+  --gilt: #d16f4c;
+  --gilt-bright: #ef8d6a;
+  --ruby: #e8492b;
+  --ruby-deep: #b8341a;
+  --ruby-mark: #ff5a3c;
+  --ruby-text: #f08e7a;   /* error copy on dark surfaces (≥6:1) */
   /* Lines */
   --hair: rgba(244, 241, 234, 0.13);
   --hair-strong: rgba(244, 241, 234, 0.24);
@@ -142,7 +142,7 @@ body { background: var(--obsidian); color: var(--ivory); }
   clip-path: none;
 }
 
-.button.button-ghost::before { background: rgba(209, 166, 76, 0.12); }
+.button.button-ghost::before { background: rgba(209, 111, 76, 0.12); }
 .button.button-ghost::after { background: var(--gilt-bright); }
 
 .button.button-ghost:is(:hover, :focus-visible) {
@@ -273,8 +273,8 @@ body { background: var(--obsidian); color: var(--ivory); }
   white-space: nowrap;
 }
 
-.site-header .site-nav .nav-cta::before { background: rgba(209, 166, 76, 0.12); }
-.site-header .site-nav .nav-cta::after { background: linear-gradient(105deg, transparent 30%, rgba(239, 201, 106, 0.22) 50%, transparent 70%); }
+.site-header .site-nav .nav-cta::before { background: rgba(209, 111, 76, 0.12); }
+.site-header .site-nav .nav-cta::after { background: linear-gradient(105deg, transparent 30%, rgba(239, 141, 106, 0.22) 50%, transparent 70%); }
 
 .site-header .site-nav .nav-cta:is(:hover, :focus-visible) {
   border-color: var(--gilt-bright);

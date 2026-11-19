@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Mono, Instrument_Serif, Schibsted_Grotesk } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnchorSettle } from "./components/AnchorSettle";
 
@@ -31,6 +31,7 @@ import "./styles/project-exhibition.css";
 import "./styles/ruby-kinetic.css";
 import "./styles/ruby-mobile-motion.css";
 import "./styles/homepage-refinement.css";
+import "./styles/studio-identity.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -163,14 +164,22 @@ const sansFont = Schibsted_Grotesk({
   variable: "--font-sans",
 });
 
-// Preload the display faces for editorial headlines. The optical-size axis
-// keeps their hairlines crisp from small cards to the oversized hero.
-const displayFont = Bodoni_Moda({
+// Display grotesque for headlines. The optical-size axis keeps it tight in the
+// oversized hero and open in small card titles.
+const displayFont = Bricolage_Grotesque({
   subsets: ["latin"],
-  style: ["normal", "italic"],
   axes: ["opsz"],
   display: "swap",
   variable: "--font-display",
+});
+
+// Italic serif reserved for short accent phrases (<em>) inside headlines.
+const accentFont = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["italic"],
+  display: "swap",
+  variable: "--font-accent",
 });
 
 // Labels only: two weights, never on the critical path.
@@ -184,7 +193,7 @@ const monoFont = IBM_Plex_Mono({
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-AU" data-scroll-behavior="smooth" className={`${sansFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
+    <html lang="en-AU" data-scroll-behavior="smooth" className={`${sansFont.variable} ${displayFont.variable} ${accentFont.variable} ${monoFont.variable}`}>
       <body className="after-hours ruby-cinematic">
 
 

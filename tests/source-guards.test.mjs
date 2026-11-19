@@ -346,15 +346,17 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   }
 });
 
-test("brand theme balances premium red and gold accents", async () => {
+test("brand theme uses the vermilion studio accent with AA-safe filled controls", async () => {
   const [styles, designTokens] = await Promise.all([
     read("../app/globals.css"),
     read("../opendesign/design-systems/ab-digital/colors_and_type.css"),
   ]);
 
-  assert.match(styles, /--red: #d21736/);
-  assert.match(styles, /--brand-red: #d21736/);
-  assert.match(styles, /--gold: #d1a64c/);
+  // White text sits on --red (buttons, marquee, nav CTA), so it must stay dark enough for AA (5.2:1).
+  assert.match(styles, /--red: #c7391d/);
+  assert.match(styles, /--brand-red: #c7391d/);
+  assert.match(styles, /--gold: #d16f4c/);
+  assert.doesNotMatch(styles, /#d21736|#d1a64c/);
   assert.match(styles, /box-shadow: inset 0 2px 0 var\(--brand-red\)/);
   assert.match(styles, /\.button-primary[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
   assert.match(styles, /\.hero-marquee[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
@@ -487,7 +489,8 @@ test("typography is self-hosted so every platform gets the intended pairing", as
   assert.match(layout, /variable: "--font-mono"/);
   // Every font variable must sit on <html>: the role tokens are declared on
   // :root, so a variable set lower in the tree would leave them invalid.
-  assert.match(layout, /<html[^>]*className=\{`\$\{sansFont\.variable\} \$\{displayFont\.variable\} \$\{monoFont\.variable\}`\}/);
+  assert.match(layout, /variable: "--font-accent"/);
+  assert.match(layout, /<html[^>]*className=\{`\$\{sansFont\.variable\} \$\{displayFont\.variable\} \$\{accentFont\.variable\} \$\{monoFont\.variable\}`\}/);
   assert.match(styles, /--sans: var\(--font-sans\),/);
   assert.match(styles, /--display: var\(--font-display\),/);
   assert.match(styles, /--mono: var\(--font-mono\),/);
@@ -577,16 +580,19 @@ test("anchor jumps re-align once offscreen sections have rendered", async () => 
 
 test("display and mono fonts load only the weights and styles they render", async () => {
   const layout = await read("../app/layout.tsx");
-  const serif = layout.match(/Bodoni_Moda\(\{[\s\S]*?\}\)/)?.[0];
-  assert.ok(serif, "Bodoni Moda display font");
-  // Headlines use 400–700, so one variable file (with its optical-size axis)
-  // replaces several static weights.
-  assert.doesNotMatch(serif, /weight:/);
-  assert.match(serif, /axes: \["opsz"\]/);
-  // The whole hero h1 (LCP) is set in the display face, so it is preloaded
-  // rather than swapped in late.
-  assert.match(serif, /style: \["normal", "italic"\]/);
-  assert.doesNotMatch(serif, /preload: false/);
+  const display = layout.match(/Bricolage_Grotesque\(\{[\s\S]*?\}\)/)?.[0];
+  assert.ok(display, "Bricolage Grotesque display font");
+  // Headlines use several weights, so one variable file (with its optical-size axis)
+  // replaces static weights; the hero h1 (LCP) uses it, so it stays preloaded.
+  assert.doesNotMatch(display, /weight:/);
+  assert.match(display, /axes: \["opsz"\]/);
+  assert.doesNotMatch(display, /preload: false/);
+  // The accent serif renders only italic <em> phrases: one weight, one style.
+  const accent = layout.match(/Instrument_Serif\(\{[\s\S]*?\}\)/)?.[0];
+  assert.ok(accent, "Instrument Serif accent font");
+  assert.match(accent, /weight: "400"/);
+  assert.match(accent, /style: \["italic"\]/);
+  assert.doesNotMatch(layout, /Bodoni_Moda/);
 
   const mono = layout.match(/IBM_Plex_Mono\(\{[\s\S]*?\}\)/)?.[0];
   assert.ok(mono, "IBM Plex Mono label font");
@@ -616,14 +622,15 @@ test("Tailwind only scans app source, keeping unused utilities out of critical C
   assert.match(styles, /@import "tailwindcss" source\(none\);\s*\n@source "\.\/";/);
 });
 
-test("Gilt & Ruby design system: didone headlines, grotesk body and The Cut", async () => {
+test("studio design system: grotesque headlines, italic serif accents, grotesk body and The Cut", async () => {
   const [layout, studio, layer] = await Promise.all([
     read("../app/layout.tsx"),
     read("../app/studio.css"),
     read("../app/gilt-ruby.css"),
   ]);
 
-  assert.match(layout, /Bodoni_Moda\(/);
+  assert.match(layout, /Bricolage_Grotesque\(/);
+  assert.match(layout, /Instrument_Serif\(/);
   assert.match(layout, /Schibsted_Grotesk\(/);
   assert.match(layout, /variable: "--font-display"/);
   assert.match(layout, /import "\.\/gilt-ruby\.css";/);

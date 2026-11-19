@@ -28,7 +28,7 @@
 .showcase-slide.is-active { animation: none; transform: translateZ(0) scale(1); }
 .showcase-slide::after { display: none; }
 .showcase-slide img { object-fit: contain; object-position: center; }
-.field-error { grid-column: 1 / -1; color: #9b2432; font-size: 14px; line-height: 1.5; }
+.field-error { grid-column: 1 / -1; color: #9b3824; font-size: 14px; line-height: 1.5; }
 .cinematic-home .showcase-meta { gap: 14px; padding-top: 20px; }
 .cinematic-home .showcase-meta strong { font-family: var(--display); font-size: clamp(1.45rem, 2vw, 2rem); line-height: 1.15; margin-block: 7px; }
 .showcase-caption { min-width: 0; }
@@ -50,7 +50,7 @@
 .contact-form, .contact-options, .contact-title .mask-line > span { animation: none !important; transform: none; }
 .contact-form { contain: none; }
 :where(a, button, input, textarea, select, summary):focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 5px; }
-.contact-section :focus-visible, .contact-page :focus-visible { outline-color: #9b2432; }
+.contact-section :focus-visible, .contact-page :focus-visible { outline-color: #9b3824; }
 @media (min-width: 1025px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .showcase-dimensional .showcase-browser { transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, -2deg)); }
   .gr-flagship-media, .gr-duo-media { transition: transform var(--studio-motion-reveal) var(--studio-ease); }

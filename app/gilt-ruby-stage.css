@@ -8,12 +8,12 @@
 
 :root {
   --tex-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  --gilt-metal: linear-gradient(100deg, #8a6116 0%, #d1a64c 20%, #fff1c4 36%, #efc96a 50%, #b8862d 66%, #f5d98c 82%, #8a6116 100%);
-  --ruby-metal: linear-gradient(100deg, #ff7a82 0%, #e5484d 30%, #d21736 58%, #ff8a8f 80%, #e5484d 100%);
+  --gilt-metal: linear-gradient(100deg, #8a3516 0%, #d16f4c 20%, #fff1c4 36%, #ef8d6a 50%, #b8522d 66%, #f5a88c 82%, #8a3516 100%);
+  --ruby-metal: linear-gradient(100deg, #ff907a 0%, #ff5a3c 30%, #e8492b 58%, #ff9d8a 80%, #ff5a3c 100%);
   --bg-ruby-band:
-    radial-gradient(ellipse 80% 60% at 18% 0%, rgba(255, 92, 112, 0.24), transparent 60%),
-    radial-gradient(ellipse 60% 70% at 100% 100%, rgba(239, 201, 106, 0.12), transparent 60%),
-    linear-gradient(165deg, #5e0b1c 0%, #2c050d 46%, #0f0f12 100%);
+    radial-gradient(ellipse 80% 60% at 18% 0%, rgba(255, 119, 92, 0.24), transparent 60%),
+    radial-gradient(ellipse 60% 70% at 100% 100%, rgba(239, 141, 106, 0.12), transparent 60%),
+    linear-gradient(165deg, #5e190b 0%, #1f1712 46%, #0f0f12 100%);
   --stage-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -56,9 +56,9 @@
   overflow: hidden;
   padding: calc(var(--header-height) + clamp(18px, 3vw, 44px)) 0 0;
   background:
-    radial-gradient(ellipse 44% 52% at 82% 18%, rgba(210, 23, 54, 0.22), transparent 70%),
-    radial-gradient(ellipse 46% 58% at 76% 46%, rgba(212, 163, 47, 0.14), transparent 70%),
-    radial-gradient(ellipse 38% 46% at 6% 88%, rgba(181, 18, 27, 0.14), transparent 72%),
+    radial-gradient(ellipse 44% 52% at 82% 18%, rgba(232, 73, 43, 0.22), transparent 70%),
+    radial-gradient(ellipse 46% 58% at 76% 46%, rgba(212, 91, 47, 0.14), transparent 70%),
+    radial-gradient(ellipse 38% 46% at 6% 88%, rgba(181, 45, 18, 0.14), transparent 72%),
     linear-gradient(180deg, #070707 0%, #0a0a0a 62%, #070707 100%);
 }
 /* A faint 96px grid, masked toward the sculpture. */
@@ -108,9 +108,9 @@
 .stage-hero .hero-3d-container[data-render-ready="true"] > .hero-3d-fallback { opacity: 0; }
 
 .stage-ring { position: absolute; z-index: 0; border-radius: 50%; pointer-events: none; }
-.stage-ring--outer { inset: 2% 6%; border: 1px solid rgba(209, 166, 76, 0.24); animation: stage-orbit 70s linear infinite; }
+.stage-ring--outer { inset: 2% 6%; border: 1px solid rgba(209, 111, 76, 0.24); animation: stage-orbit 70s linear infinite; }
 .stage-ring--inner { inset: 14% 16%; border: 1px dashed rgba(255, 255, 255, 0.1); animation: stage-orbit 120s linear infinite reverse; }
-.stage-ring--outer::after { content: ""; position: absolute; top: -3px; left: calc(50% - 3px); width: 6px; height: 6px; border-radius: 50%; background: var(--gold-bright); box-shadow: 0 0 14px 2px rgba(239, 201, 106, 0.6); }
+.stage-ring--outer::after { content: ""; position: absolute; top: -3px; left: calc(50% - 3px); width: 6px; height: 6px; border-radius: 50%; background: var(--gold-bright); box-shadow: 0 0 14px 2px rgba(239, 141, 106, 0.6); }
 @keyframes stage-orbit { to { transform: rotate(360deg); } }
 
 .stage-hero-top,
@@ -178,8 +178,8 @@
 @keyframes ticker-in { from { opacity: 0; transform: scale(1.06); } }
 .live-ticker-copy { display: grid; gap: 4px; min-width: 0; }
 .live-ticker-copy small { display: flex; align-items: center; gap: 8px; color: var(--gold-bright); font-family: var(--mono); font-size: var(--fs-label); letter-spacing: 0.1em; text-transform: uppercase; }
-.live-ticker-copy small i { width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 0 rgba(210, 23, 54, 0.6); animation: ticker-pulse 2.4s ease-out infinite; }
-@keyframes ticker-pulse { 70%, 100% { box-shadow: 0 0 0 7px rgba(210, 23, 54, 0); } }
+.live-ticker-copy small i { width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 0 rgba(232, 73, 43, 0.6); animation: ticker-pulse 2.4s ease-out infinite; }
+@keyframes ticker-pulse { 70%, 100% { box-shadow: 0 0 0 7px rgba(232, 73, 43, 0); } }
 .live-ticker-copy strong { overflow: hidden; font-family: var(--display); font-size: 1.15rem; font-weight: 500; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
 .live-ticker-copy > span { color: var(--paper-dim); font-size: 0.8125rem; }
 
@@ -195,9 +195,9 @@
 
 /* Ruby capability band ---------------------------------------------------------- */
 .cinematic-home .ruby-band { overflow: hidden; background: var(--bg-ruby-band); color: var(--paper); }
-.cinematic-home .ruby-band .eyebrow { color: rgba(255, 236, 236, 0.85); }
+.cinematic-home .ruby-band .eyebrow { color: rgba(255, 239, 236, 0.85); }
 .cinematic-home .ruby-band .section-index-num { color: var(--gold-bright); }
-.cinematic-home .ruby-band .section-heading > p { color: rgba(255, 236, 236, 0.82); }
+.cinematic-home .ruby-band .section-heading > p { color: rgba(255, 239, 236, 0.82); }
 .cinematic-home .ruby-band .accent-serif { color: var(--champagne); }
 .cinematic-home .ruby-band .studio-capabilities {
   gap: 1px;
@@ -207,13 +207,13 @@
 }
 .cinematic-home .ruby-band .capability-card {
   padding: clamp(24px, 2.4vw, 36px) clamp(18px, 2vw, 28px) clamp(26px, 2.6vw, 38px);
-  background: rgba(12, 4, 7, 0.78);
+  background: rgba(9, 8, 7, 0.78);
   color: var(--paper);
 }
-.cinematic-home .ruby-band .capability-card:is(:hover, :focus-visible) { background: rgba(26, 6, 12, 0.92); }
+.cinematic-home .ruby-band .capability-card:is(:hover, :focus-visible) { background: rgba(20, 15, 13, 0.92); }
 .cinematic-home .ruby-band .capability-top { color: var(--gold-bright); }
 .cinematic-home .ruby-band .capability-symbol { color: var(--gold-bright); }
-.cinematic-home .ruby-band .capability-card p { color: rgba(240, 226, 226, 0.84); }
+.cinematic-home .ruby-band .capability-card p { color: rgba(235, 233, 231, 0.84); }
 .cinematic-home .ruby-band .capability-link { color: var(--paper); }
 
 /* Work: showcase then full index ---------------------------------------------- */
@@ -256,12 +256,12 @@
 
 /* Keep the authentic mark separate from reading and enquiry surfaces. */
 :root {
-  --gilt-metal: linear-gradient(100deg, #d1a64c, #fff1c4 36%, #efc96a 60%, #f5d98c);
+  --gilt-metal: linear-gradient(100deg, #d16f4c, #fff1c4 36%, #ef8d6a 60%, #f5a88c);
 }
 .cinematic-home .metal-ruby { background: none; color: var(--paper); -webkit-text-fill-color: var(--paper); }
 .cinematic-home .stage-tagline { color: var(--champagne); }
 .cinematic-home .stage-hero {
-  background: radial-gradient(ellipse 44% 52% at 82% 32%, rgba(148, 15, 35, 0.12), transparent 70%), radial-gradient(ellipse 46% 58% at 76% 46%, rgba(212, 163, 47, 0.1), transparent 70%), #070707;
+  background: radial-gradient(ellipse 44% 52% at 82% 32%, rgba(148, 37, 15, 0.12), transparent 70%), radial-gradient(ellipse 46% 58% at 76% 46%, rgba(212, 91, 47, 0.1), transparent 70%), #070707;
 }
 .stage-hero-art { inset: 12% 4% 25% 48%; }
 .stage-hero .hero-monogram { position: static; width: 86%; height: auto; max-height: 90%; object-fit: contain; }

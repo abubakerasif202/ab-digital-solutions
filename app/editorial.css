@@ -12,7 +12,7 @@
   --text-micro: var(--fs-label);
   --track-micro: 0.18em;
   --track-display: -0.025em;
-  --ruby-glow: 0 14px 36px -14px rgba(210, 23, 54, 0.75);
+  --ruby-glow: 0 14px 36px -14px rgba(232, 73, 43, 0.75);
 }
 
 /* Mono ships 400/500 only; heavier legacy weights resolve to 500 instead of
@@ -34,7 +34,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
   width: 28px;
   height: 1px;
   flex: none;
-  background: linear-gradient(90deg, var(--red), rgba(209, 166, 76, 0.55));
+  background: linear-gradient(90deg, var(--red), rgba(209, 111, 76, 0.55));
 }
 
 .section-index { gap: 14px; }
@@ -140,7 +140,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 .button-primary::before,
 .site-nav .nav-cta::before,
 .footer-contact > a.footer-contact-cta::before {
-  background: linear-gradient(100deg, var(--red-dark) 0%, #9e1029 60%, var(--red) 100%);
+  background: linear-gradient(100deg, var(--red-dark) 0%, #9e2810 60%, var(--red) 100%);
 }
 
 .button-primary { border-color: var(--red); }
@@ -205,7 +205,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(105deg, transparent 30%, rgba(239, 201, 106, 0.3) 50%, transparent 70%);
+  background: linear-gradient(105deg, transparent 30%, rgba(239, 141, 106, 0.3) 50%, transparent 70%);
   content: "";
   pointer-events: none;
   translate: -120% 0;
@@ -358,9 +358,9 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 .slider-controls .icon-control svg { transition: transform var(--dur-ui) var(--ease-studio); }
 
 .slider-controls .icon-control:is(:hover, :focus-visible) {
-  background: rgba(210, 23, 54, 0.14);
+  background: rgba(232, 73, 43, 0.14);
   border-color: var(--red);
-  box-shadow: 0 0 0 4px rgba(210, 23, 54, 0.08);
+  box-shadow: 0 0 0 4px rgba(232, 73, 43, 0.08);
   color: var(--white);
   transform: scale(1.04);
 }
@@ -425,7 +425,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 }
 
 .capability-symbol svg { transition: transform 560ms var(--ease-studio); }
-.capability-card:is(:hover, :focus-visible) .capability-symbol { border-color: var(--red); background: rgba(210, 23, 54, 0.1); }
+.capability-card:is(:hover, :focus-visible) .capability-symbol { border-color: var(--red); background: rgba(232, 73, 43, 0.1); }
 .capability-card:is(:hover, :focus-visible) .capability-symbol svg { transform: rotate(-10deg) scale(1.08); }
 .capability-card h3 { transition: transform var(--dur-ui) var(--ease-studio); }
 .capability-card:is(:hover, :focus-visible) h3 { transform: translateX(4px); }
@@ -439,7 +439,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 
 .cinematic-home .service-card:is(:hover, :focus-visible) .service-card-arrow {
   border-color: var(--red);
-  background: rgba(210, 23, 54, 0.14);
+  background: rgba(232, 73, 43, 0.14);
   transform: none;
 }
 
@@ -530,11 +530,11 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 .footer-top-link { gap: 10px; }
 
 /* Cursor ----------------------------------------------------------------- */
-.cursor-ring { border-color: rgba(239, 201, 106, 0.45); }
+.cursor-ring { border-color: rgba(239, 141, 106, 0.45); }
 
 .cursor-ring.is-active {
   border-color: var(--red);
-  background: rgba(210, 23, 54, 0.1);
+  background: rgba(232, 73, 43, 0.1);
 }
 
 .cursor-ring.has-label { border-color: var(--red); background: rgba(7, 7, 8, 0.86); }
