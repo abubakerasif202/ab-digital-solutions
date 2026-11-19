@@ -28,6 +28,8 @@ test("hero work wall shows every real case study, decoratively, with a working p
   assert.match(styles, /\.work-first-hero:has\(> \.work-wall-control\[data-ready\]\)/);
   assert.match(styles, /\.work-first-hero:has\(> \.work-wall-control\[aria-pressed="true"\]\)[^{]*\{ animation-play-state: paused; \}/);
   assert.match(styles, /prefers-reduced-motion: no-preference/);
+  // Two identical copies need a trailing gap so translating by -50% loops without a jump.
+  assert.match(styles, /\.work-wall-column \{[^}]*gap: var\(--wall-gap\);[^}]*padding: 0 0 var\(--wall-gap\);/);
   const columns = wallColumns(["0", "1", "2", "3", "4", "5", "6"], 3);
   assert.deepEqual(columns, [["0", "3", "6"], ["1", "4"], ["2", "5"]]);
   assert.equal(columns.flat().length, 7, "every case study appears exactly once per copy");

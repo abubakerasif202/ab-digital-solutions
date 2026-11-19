@@ -50,11 +50,14 @@
 }
 
 .work-wall-column {
+  --wall-gap: clamp(14px, 1.6vw, 26px);
   display: flex;
   flex-direction: column;
-  gap: clamp(14px, 1.6vw, 26px);
+  align-self: start; /* size to its own tiles, not the tallest column, so -50% is one copy */
+  gap: var(--wall-gap);
   margin: 0;
-  padding: 0;
+  /* A trailing gap makes both copies exactly equal, so the -50% loop is seamless. */
+  padding: 0 0 var(--wall-gap);
   list-style: none;
   translate: 0 calc(var(--column) * -9%);
 }
