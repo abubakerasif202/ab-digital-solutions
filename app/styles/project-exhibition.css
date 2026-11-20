@@ -50,7 +50,7 @@
 @media (max-width: 1279.98px) { .exhibition-feature-caption strong { min-block-size: calc(2em * 1.13); } }
 .exhibition-destination { justify-self: start; padding: 4px 7px; border: 1px solid #8c817a; background: #272220; color: #ffdcd5; font: var(--fs-label)/1.45 var(--mono); text-transform: uppercase; }
 .exhibition-view { display: flex; gap: 9px; align-items: center; color: #fff8f4; font: 600 var(--fs-label)/1.5 var(--mono); }
-.exhibition-view svg { width: 16px; color: #f8bbaf; }
+.exhibition-view svg { width: 16px; color: var(--gold-text-dark); }
 .exhibition-feature-link:is(:hover, :focus-visible) .exhibition-view { text-decoration: underline; text-underline-offset: 4px; }
 
 .exhibition-rail { grid-area: rail; z-index: 1; min-width: 0; display: grid; gap: clamp(14px, 1.5vw, 24px); }

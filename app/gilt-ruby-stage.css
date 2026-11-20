@@ -8,11 +8,13 @@
 
 :root {
   --tex-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  --gilt-metal: linear-gradient(100deg, #8a3516 0%, #d16f4c 20%, #fff1c4 36%, #ef8d6a 50%, #b8522d 66%, #f5a88c 82%, #8a3516 100%);
+  --gilt-metal-bronze: color-mix(in srgb, var(--gold) 58%, black);
+  --gilt-metal-champagne: color-mix(in srgb, var(--gold) 28%, white);
+  --gilt-metal: linear-gradient(100deg, var(--gilt-metal-bronze) 0%, var(--gold) 20%, var(--gilt-metal-champagne) 36%, var(--gold) 50%, color-mix(in srgb, var(--gold) 85%, black) 66%, color-mix(in srgb, var(--gold) 72%, black) 82%, var(--gilt-metal-bronze) 100%);
   --ruby-metal: linear-gradient(100deg, var(--ruby-text-dark) 0%, var(--ruby) 30%, var(--ruby-hover) 58%, var(--ruby-text-dark) 80%, var(--ruby) 100%);
   --bg-ruby-band:
     radial-gradient(ellipse 80% 60% at 18% 0%, rgba(255, 119, 92, 0.24), transparent 60%),
-    radial-gradient(ellipse 60% 70% at 100% 100%, rgba(239, 141, 106, 0.12), transparent 60%),
+    radial-gradient(ellipse 60% 70% at 100% 100%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 60%),
     linear-gradient(165deg, #5e190b 0%, #1f1712 46%, #0f0f12 100%);
   --stage-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -108,9 +110,9 @@
 .stage-hero .hero-3d-container[data-render-ready="true"] > .hero-3d-fallback { opacity: 0; }
 
 .stage-ring { position: absolute; z-index: 0; border-radius: 50%; pointer-events: none; }
-.stage-ring--outer { inset: 2% 6%; border: 1px solid rgba(209, 111, 76, 0.24); animation: stage-orbit 70s linear infinite; }
+.stage-ring--outer { inset: 2% 6%; border: 1px solid color-mix(in srgb, var(--gold) 24%, transparent); animation: stage-orbit 70s linear infinite; }
 .stage-ring--inner { inset: 14% 16%; border: 1px dashed rgba(255, 255, 255, 0.1); animation: stage-orbit 120s linear infinite reverse; }
-.stage-ring--outer::after { content: ""; position: absolute; top: -3px; left: calc(50% - 3px); width: 6px; height: 6px; border-radius: 50%; background: var(--gold-bright); box-shadow: 0 0 14px 2px rgba(239, 141, 106, 0.6); }
+.stage-ring--outer::after { content: ""; position: absolute; top: -3px; left: calc(50% - 3px); width: 6px; height: 6px; border-radius: 50%; background: var(--gold-bright); box-shadow: 0 0 14px 2px color-mix(in srgb, var(--gold) 60%, transparent); }
 @keyframes stage-orbit { to { transform: rotate(360deg); } }
 
 .stage-hero-top,
@@ -256,7 +258,7 @@
 
 /* Keep the authentic mark separate from reading and enquiry surfaces. */
 :root {
-  --gilt-metal: linear-gradient(100deg, #d16f4c, #fff1c4 36%, #ef8d6a 60%, #f5a88c);
+  --gilt-metal: linear-gradient(100deg, var(--gilt-metal-bronze), var(--gilt-metal-champagne) 36%, var(--gold) 60%, var(--gilt-metal-bronze));
 }
 .cinematic-home .metal-ruby { background: none; color: var(--paper); -webkit-text-fill-color: var(--paper); }
 .cinematic-home .stage-tagline { color: var(--champagne); }

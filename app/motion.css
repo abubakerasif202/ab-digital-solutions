@@ -84,7 +84,7 @@
 .button-primary, .site-nav .nav-cta { position: relative; overflow: hidden; isolation: isolate; }
 .button-primary::before, .site-nav .nav-cta::before {
   position: absolute; z-index: -1; inset: 0; content: ""; pointer-events: none;
-  background: linear-gradient(105deg, transparent 30%, rgba(239, 141, 106, 0.38) 50%, transparent 70%);
+  background: linear-gradient(105deg, transparent 30%, color-mix(in srgb, var(--gold) 38%, transparent) 50%, transparent 70%);
   translate: -120% 0;
 }
 .button-primary:hover::before, .site-nav .nav-cta:hover::before { translate: 120% 0; transition: translate 900ms var(--ease-lux); }
@@ -104,7 +104,7 @@
   :is(.glow-surface, [data-glow]) { position: relative; }
   :is(.glow-surface, [data-glow])::before {
     position: absolute; z-index: 2; inset: 0; content: ""; pointer-events: none; opacity: 0;
-    background: radial-gradient(380px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(239, 141, 106, 0.1), color-mix(in srgb, var(--ruby) 6%, transparent) 45%, transparent 72%);
+    background: radial-gradient(380px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), color-mix(in srgb, var(--gold) 10%, transparent), color-mix(in srgb, var(--ruby) 6%, transparent) 45%, transparent 72%);
     transition: opacity 500ms var(--ease-lux);
   }
   :is(.glow-surface, [data-glow]):hover::before { opacity: 1; }

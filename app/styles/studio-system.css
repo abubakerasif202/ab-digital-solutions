@@ -14,8 +14,7 @@
   --ivory-muted: #a7a29a;
   --placeholder: #8b867c;
   /* Metal + ruby */
-  --gilt: #d16f4c;
-  --gilt-bright: #ef8d6a;
+  --gilt-bright: var(--gold-bright);
   /* Lines */
   --hair: rgba(244, 241, 234, 0.13);
   --hair-strong: rgba(244, 241, 234, 0.24);
@@ -138,7 +137,7 @@ body { background: var(--obsidian); color: var(--ivory); }
   clip-path: none;
 }
 
-.button.button-ghost::before { background: rgba(209, 111, 76, 0.12); }
+.button.button-ghost::before { background: color-mix(in srgb, var(--gold) 12%, transparent); }
 .button.button-ghost::after { background: var(--gilt-bright); }
 
 .button.button-ghost:is(:hover, :focus-visible) {
@@ -269,8 +268,8 @@ body { background: var(--obsidian); color: var(--ivory); }
   white-space: nowrap;
 }
 
-.site-header .site-nav .nav-cta::before { background: rgba(209, 111, 76, 0.12); }
-.site-header .site-nav .nav-cta::after { background: linear-gradient(105deg, transparent 30%, rgba(239, 141, 106, 0.22) 50%, transparent 70%); }
+.site-header .site-nav .nav-cta::before { background: color-mix(in srgb, var(--gold) 12%, transparent); }
+.site-header .site-nav .nav-cta::after { background: linear-gradient(105deg, transparent 30%, color-mix(in srgb, var(--gold) 22%, transparent) 50%, transparent 70%); }
 
 .site-header .site-nav .nav-cta:is(:hover, :focus-visible) {
   border-color: var(--gilt-bright);

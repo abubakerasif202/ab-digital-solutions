@@ -189,7 +189,7 @@
   line-height: 0.8;
   pointer-events: none;
   transform: translateY(-50%);
-  -webkit-text-stroke: 1px rgba(209, 111, 76, 0.32);
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--gold) 32%, transparent);
 }
 .not-found-content { position: relative; z-index: 1; }
 @media (max-width: 720px) {

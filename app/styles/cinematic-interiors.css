@@ -45,8 +45,8 @@
   background:
     linear-gradient(90deg, var(--cinema-ink), transparent) 0 0 / 56px 100% no-repeat local,
     linear-gradient(270deg, var(--cinema-ink), transparent) 100% 0 / 56px 100% no-repeat local,
-    linear-gradient(90deg, #d16f4c55, transparent) 0 0 / 22px 100% no-repeat scroll,
-    linear-gradient(270deg, #d16f4c55, transparent) 100% 0 / 22px 100% no-repeat scroll;
+    linear-gradient(90deg, color-mix(in srgb, var(--gold) 33.3333%, transparent), transparent) 0 0 / 22px 100% no-repeat scroll,
+    linear-gradient(270deg, color-mix(in srgb, var(--gold) 33.3333%, transparent), transparent) 100% 0 / 22px 100% no-repeat scroll;
   scroll-padding-inline: 56px;
 }
 .cinema-work .work-index-filter { min-height: 44px; padding: 8px 0; border: 0; border-radius: 0; background: none; color: var(--cinema-muted); }
