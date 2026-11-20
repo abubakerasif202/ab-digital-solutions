@@ -1,0 +1,33 @@
+/* Homepage entry to the Virtual Studio: a still image and links, no 3D, canvas or studio code. */
+.home-studio { padding-block: clamp(80px, 10vw, 150px); background: #0d0b0a; border-top: 1px solid #f7f1eb1f; }
+.home-studio-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); column-gap: clamp(32px, 5vw, 80px); align-items: center; }
+.home-studio-copy { display: grid; justify-items: start; gap: 0; }
+.home-studio-copy > .cinema-label { color: var(--cinema-gold); margin-bottom: 26px; }
+.home-studio h2 { font-size: clamp(44px, 5.2vw, 84px); line-height: 1.04; font-weight: 400; letter-spacing: -.06em; margin: 0 0 26px; }
+.home-studio-lede { max-width: 36ch; margin: 0 0 30px; color: #c3b4c1; font-size: clamp(15px, 1.3vw, 17px); line-height: 1.7; }
+.home-studio-rooms { list-style: none; width: 100%; max-width: 420px; margin: 0 0 24px; padding: 0; border-top: 1px solid #f7f1eb33; counter-reset: none; }
+.home-studio-rooms li { display: flex; align-items: baseline; gap: 18px; padding: 13px 0; border-bottom: 1px solid #f7f1eb26; color: #f7f1eb; font-size: 15px; }
+.home-studio-rooms .cinema-label { color: var(--cinema-gold); min-width: 2ch; }
+.home-studio-locals { margin: 0 0 34px; color: #bcb2bb; font-size: 14px; line-height: 1.7; }
+.home-studio-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; }
+.home-studio-actions .ruby-project-cta svg { width: 18px; }
+.home-studio-actions .cinema-link { min-height: 44px; display: inline-flex; align-items: center; gap: 14px; font-size: var(--fs-label); }
+.home-studio-actions .cinema-link svg { width: 14px; }
+.home-studio-actions a:focus-visible { outline: 2px solid var(--cinema-paper, #f7f1eb); outline-offset: 4px; }
+.home-studio-art { margin: 0; position: relative; border: 1px solid color-mix(in srgb, var(--ruby) 33%, transparent); background: #101112; box-shadow: 0 40px 80px -40px #000; overflow: hidden; }
+.home-studio-art a { display: block; }
+.home-studio-art img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+.home-studio-art::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(0deg, #0d0b0a66, transparent 28%); }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .home-studio-art a { transition: transform .5s cubic-bezier(.2, .7, .2, 1); transform: perspective(1200px) rotateY(var(--tilt-y, 0deg)) rotateX(var(--tilt-x, 0deg)) scale(1.01); }
+}
+@media (max-width: 960px) {
+  .home-studio-grid { grid-template-columns: 1fr; row-gap: 44px; }
+  .home-studio-art { order: -1; }
+}
+@media (max-width: 600px) {
+  .home-studio { padding-block: 70px 80px; }
+  .home-studio h2 { font-size: clamp(39px, 10.5vw, 60px); }
+  .home-studio-actions { align-items: stretch; flex-direction: column; width: 100%; }
+  .home-studio-actions .ruby-project-cta { justify-content: space-between; }
+}

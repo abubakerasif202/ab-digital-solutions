@@ -11,6 +11,7 @@ import { SiteFooter } from "./site-footer";
 import { siteConfig } from "./site-config";
 import { ArrowIcon } from "./icons";
 import { PortfolioSection } from "./components/PortfolioSection";
+import { HomeStudioFeature } from "./components/HomeStudioFeature";
 import { ProcessSection } from "./components/ProcessSection";
 import { EnquirySection } from "./components/studio/EnquirySection";
 import { HeroWorkWall } from "./components/cinematic/HeroWorkWall";
@@ -125,6 +126,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           </section>
 
           <PortfolioSection />
+
+          <HomeStudioFeature />
 
           <section className="ruby-capabilities" aria-labelledby="capability-heading">
             <div className="cinema-shell ruby-capability-grid">
