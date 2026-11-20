@@ -1,0 +1,53 @@
+/* Shared ruby identity, chrome and interior surfaces. Home chapters live with the home route. */
+.ruby-cinematic {
+  --cinema-ink: #0a0908;
+  --cinema-paper: #f7f1eb;
+  --cinema-gold: #e5ae9a;
+  --cinema-muted: #bcb2bb;
+  --gilt: #e5ae9a;
+  --gilt-bright: #f6caba;
+  --accent-ink: var(--cinema-gold);
+  background: #0a0908;
+}
+.ruby-cinematic ::selection { background: var(--ruby-deep); color: var(--ruby-on); }
+/* Fully opaque at every scroll position and width: section headings must never read through the header. */
+.ruby-cinematic .site-header, .ruby-cinematic .site-header.is-scrolled { background: #0a0908; backdrop-filter: none; border-bottom-color: color-mix(in srgb, var(--ruby) 22%, transparent); }
+.ruby-cinematic .site-header .brand-lockup { gap: 10px; }
+.ruby-cinematic .brand-monogram-image { width: 42px; height: 42px; }
+.ruby-cinematic .brand-wordmark { font-family: var(--sans), sans-serif; font-size: 15px; letter-spacing: -.025em; font-weight: 600; text-transform: none; }
+.ruby-cinematic .brand-wordmark i { color: var(--cinema-gold); font-size: 22px; margin-inline: 7px; font-weight: 400; }
+.ruby-cinematic .site-nav > a:is(:hover,[aria-current]) { color: var(--ruby-text-dark); }
+.ruby-cinematic .site-nav > .nav-cta, .ruby-cinematic .button-primary { background: var(--ruby); border-color: var(--ruby); color: var(--ruby-on); }
+.ruby-cinematic .site-nav > .nav-cta:hover, .ruby-cinematic .button-primary:hover { background: var(--ruby-hover); border-color: var(--ruby-text-dark); }
+.ruby-cinematic .mobile-project-cta { background: var(--ruby); color: var(--ruby-on); border-color: var(--ruby); }
+.ruby-cinematic .studio-contact-rows a:hover strong { color: var(--ruby-text-dark); }
+.ruby-cinematic .studio-enquiry .studio-form-panel { background: #141211; border-color: color-mix(in srgb, var(--ruby) 20%, transparent); }
+/* Interior language follows the identity without altering its factual content. */
+.ruby-cinematic .cinema-interior { --cinema-ink: #0a0908; --cinema-gold: #e5ae9a; --accent-ink: var(--cinema-gold); }
+.ruby-cinematic .studio-page--contact { --accent-ink: var(--cinema-gold); }
+.ruby-cinematic .cinema-interior :is(.cinema-chapter-label,.case-kicker,.eyebrow) { color: var(--ruby-text-dark); }
+.ruby-cinematic .cinema-interior .cinema-paper .eyebrow { color: var(--bone-gilt); }
+.ruby-cinematic .cinema-interior :is(.cinema-interior-hero,.case-hero,.studio-service-hero) { position: relative; background: radial-gradient(ellipse at 90% 10%,color-mix(in srgb, var(--ruby-deep) 33.3%, transparent),transparent 60%),#0a0908; }
+.ruby-cinematic .cinema-work .work-index-filter.is-active { color: var(--ruby-text-dark); box-shadow: inset 0 -1px var(--ruby); }
+.ruby-cinematic .cinema-interior .cinema-chapter-label { border-top-color: color-mix(in srgb, var(--ruby) 33.3%, transparent); }
+@media (max-width: 960px) {
+  .ruby-cinematic .site-header, .ruby-cinematic .site-header.is-scrolled { backdrop-filter: none; }
+  .ruby-cinematic .site-nav.is-open { background: #100e0d; }
+}
+@media (max-width: 600px) {
+  .ruby-cinematic .brand-wordmark { font-size: 13px; }
+  .ruby-cinematic .brand-monogram-image { width: 35px; height: 35px; }
+}
+
+/* Navigation: a ruby rule draws under the current and hovered destination. */
+.ruby-cinematic .site-nav > a:not(.nav-cta) { background: linear-gradient(var(--ruby-hover),var(--ruby-hover)) 0 100% / 0 1px no-repeat; transition: background-size .5s cubic-bezier(.16,1,.3,1),color .3s; }
+.ruby-cinematic .site-nav > a:not(.nav-cta):is(:hover,[aria-current]) { background-size: 100% 1px; }
+.ruby-cinematic .site-nav > .nav-cta { position: relative; overflow: hidden; }
+
+@media (max-width: 640px) {
+  .studio-contact-rows svg { flex: none; }
+}
+/* Phone type: supporting labels get calmer tracking. */
+@media (max-width: 640px) {
+  .eyebrow, .cinema-label, .work-index-count { letter-spacing: 0.09em; line-height: 1.55; }
+}

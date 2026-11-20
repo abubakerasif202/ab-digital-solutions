@@ -43,7 +43,7 @@
   overflow: hidden;
   background:
     radial-gradient(60% 60% at var(--pointer-x, 50%) var(--pointer-y, 45%), rgba(209, 111, 76, 0.14), transparent 70%),
-    radial-gradient(90% 70% at 85% 110%, rgba(232, 73, 43, 0.1), transparent 60%),
+    radial-gradient(90% 70% at 85% 110%, color-mix(in srgb, var(--ruby) 10%, transparent), transparent 60%),
     var(--surface);
   perspective: 900px;
 }
@@ -169,7 +169,7 @@
   position: relative;
   padding-block: var(--section-y);
   border-top: 1px solid var(--hair);
-  background: radial-gradient(900px 480px at 12% 0%, rgba(232, 73, 43, 0.08), transparent 70%), var(--obsidian);
+  background: radial-gradient(900px 480px at 12% 0%, color-mix(in srgb, var(--ruby) 8%, transparent), transparent 70%), var(--obsidian);
   scroll-margin-top: calc(var(--header-height) + 24px);
 }
 
@@ -280,7 +280,7 @@
 
 .enquiry-form-required { margin: 0; color: var(--ivory-muted); font-size: 0.875rem; }
 .enquiry-form-required span,
-.contact-form .form-req { color: var(--ruby-mark); }
+.contact-form .form-req { color: var(--ruby-text-dark); }
 .contact-form .form-optional { color: var(--ivory-muted); font-weight: 400; }
 
 .contact-form.enquiry-form .form-grid {
@@ -324,16 +324,16 @@
 .contact-form.enquiry-form :is(input:not([type="checkbox"], [type="radio"]), textarea):hover { border-color: rgba(244, 241, 234, 0.36); }
 
 .contact-form.enquiry-form :is(input:not([type="checkbox"], [type="radio"]), textarea):focus {
-  border-color: var(--gilt);
+  border-color: var(--ruby-text-dark);
   background: #18181d;
-  box-shadow: 0 0 0 4px rgba(209, 111, 76, 0.12);
+  box-shadow: 0 0 0 4px var(--ruby-glow);
   outline: 0;
 }
 
-.contact-form.enquiry-form :is(input, textarea):focus-visible { outline: 2px solid var(--gilt); outline-offset: 3px; }
-.contact-form.enquiry-form [aria-invalid="true"] { border-color: var(--ruby-mark); }
+.contact-form.enquiry-form :is(input:not([type="checkbox"], [type="radio"]), textarea):focus-visible { outline: 2px solid var(--ruby-text-dark); outline-offset: 3px; }
+.contact-form.enquiry-form [aria-invalid="true"] { border-color: var(--ruby-text-dark); }
 
-.contact-form.enquiry-form .field-error { color: var(--ruby-text); font-size: 0.875rem; line-height: 1.45; }
+.contact-form.enquiry-form .field-error { color: var(--ruby-text-dark); font-size: 0.875rem; line-height: 1.45; }
 .contact-form.enquiry-form .form-help { margin: 0; color: var(--ivory-muted); font-size: 0.875rem; }
 
 /* Chips: native checkboxes and radios, so FormData, reset() and keyboard
@@ -402,9 +402,9 @@
 .contact-form.enquiry-form .form-status { margin: 0; color: var(--ivory); font-size: 0.9375rem; font-weight: 400; line-height: 1.55; }
 .contact-form.enquiry-form .form-status:empty { display: none; }
 .contact-form.enquiry-form .form-status:is(.success, .error) { padding: 16px 18px; border-left: 2px solid var(--gilt); background: var(--surface-2); }
-.contact-form.enquiry-form .form-status.error { border-left-color: var(--ruby-mark); }
+.contact-form.enquiry-form .form-status.error { border-left-color: var(--ruby-text-dark); }
 .contact-form.enquiry-form .form-status-label { display: block; margin-bottom: 4px; color: var(--gilt-bright); font-weight: 600; }
-.contact-form.enquiry-form .form-status.error .form-status-label { color: var(--ruby-text); }
+.contact-form.enquiry-form .form-status.error .form-status-label { color: var(--ruby-text-dark); }
 
 @media (max-width: 540px) {
   .contact-form.enquiry-form .form-actions .button { width: 100%; justify-content: space-between; }
@@ -422,12 +422,10 @@
 .studio-page > .studio-enquiry:first-child { padding-top: clamp(40px, 6vw, 80px); border-top: 0; }
 .studio-crumbs--inline { margin-bottom: -8px; }
 
-/* Offscreen rendering for the two homepage sections below the fold. */
-.cinematic-home .studio-about,
-.cinematic-home .studio-enquiry {
+/* Keep the interactive enquiry in the layout during fast scrolling. */
+.cinematic-home .studio-about {
   content-visibility: auto;
   contain-intrinsic-block-size: auto var(--cv-size, 1200px);
 }
 
 .cinematic-home .studio-about { --cv-size: 1100px; }
-.cinematic-home .studio-enquiry { --cv-size: 1250px; }

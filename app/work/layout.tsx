@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import "../styles/cinematic-interiors.css";
 import "./compositions.css";
 import "../work-premium.css";
 

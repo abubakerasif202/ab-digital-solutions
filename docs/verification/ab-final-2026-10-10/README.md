@@ -1,7 +1,7 @@
 # Authentic AB hero verification
 
 The hero uses a transparent crop of the approved repository artwork,
-`public/brand/ab-logo-luxury-source.png`. Its staggered A/B geometry and diagonal
+`docs/brand/ab-logo-luxury-source.png`. Its staggered A/B geometry and diagonal
 slash are preserved. The requested external logo file was unavailable.
 
 The same artwork supplies the static fallback and the optional Three.js plane.

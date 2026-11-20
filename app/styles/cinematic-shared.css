@@ -1,0 +1,27 @@
+/* Shared After Hours tokens, chrome and enquiry controls. */
+:root {
+  --cinema-ink: #0b0a0a;
+  --cinema-paper: #eeeae1;
+  --cinema-gold: #b1a69b;
+  --cinema-muted: #aaa9a4;
+}
+.after-hours { background: var(--cinema-ink); --gilt: var(--cinema-gold); --gilt-bright: #d3cac1; --accent-ink: var(--cinema-gold); --ivory: #f3efe7; }
+.after-hours .site-header { background: #0b0a0af2; border-bottom: 1px solid #ffffff14; box-shadow: none; }
+.after-hours .site-header .nav-wrap { width: calc(100% - clamp(40px, 8vw, 140px)); max-width: 1700px; }
+.after-hours .site-nav { gap: clamp(14px, 1.65vw, 28px); }
+.after-hours .site-nav > a { font-size: var(--fs-label); font-weight: 400; letter-spacing: .015em; }
+.after-hours .site-nav > .nav-cta { background: var(--cinema-paper); color: var(--cinema-ink); border-color: var(--cinema-paper); border-radius: 0; clip-path: none; }
+.after-hours .button-primary { background: var(--cinema-paper); color: var(--cinema-ink); border-color: var(--cinema-paper); clip-path: none; border-radius: 0; }
+.after-hours .button-primary:hover { background: var(--cinema-gold); border-color: var(--cinema-gold); }
+.cinema-label { font-family: var(--mono), monospace; font-size: var(--fs-label); letter-spacing: .14em; text-transform: uppercase; line-height: 1.7; font-weight: 400; }
+.cinema-page :is(h1, h2, h3, p) { margin-top: 0; }
+.cinema-page :is(h1,h2) em { font-family: var(--display), serif; font-style: italic; font-weight: 400; color: var(--cinema-gold) !important; }
+.after-hours .studio-enquiry { background: #141312; border-top: 1px solid #ffffff20; }
+.after-hours .studio-enquiry .studio-display { font-size: clamp(38px,4.4vw,64px); }
+.after-hours .studio-enquiry .studio-form-panel { background: transparent; box-shadow: none; }
+@media (max-width: 960px) {
+  .after-hours .site-header, .after-hours .site-header.is-scrolled { backdrop-filter: none; }
+  .after-hours .site-nav > a { font-size: 20px; }
+  .after-hours .site-nav > .nav-cta { font-size: 15px; }
+}
+.after-hours .mobile-project-cta { background: var(--cinema-paper); color: var(--cinema-ink); border: 1px solid #0b0a0a44; box-shadow: 0 8px 30px #0004; }

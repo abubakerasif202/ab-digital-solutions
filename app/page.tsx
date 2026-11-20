@@ -1,3 +1,9 @@
+import "./styles/cinematic.css";
+import "./styles/ruby-cinematic.css";
+import "./styles/project-exhibition.css";
+import "./styles/ruby-kinetic.css";
+import "./styles/ruby-mobile-motion.css";
+import "./styles/homepage-refinement.css";
 import type { Metadata } from "next";
 import AgencyHome from "./agency-home";
 

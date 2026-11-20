@@ -4,7 +4,7 @@ Production target: `https://www.abwebstudio.com.au`.
 
 ## Approved brand and focused polish
 
-The user supplied the luxury gold/ruby PNG. The original is retained unchanged at `public/brand/ab-logo-luxury-source.png`, SHA-256 `557D7657222034FF27AE353A03E5B0366E1F26CFDE909CBE6CAF16C6776CE2E6`. Optimized Next.js image assets provide the header/footer monogram and wordmark, full About artwork, Open Graph artwork and PNG application icons. Previous vector assets remain available; the static hero fallback retains the AB vector treatment.
+The user supplied the luxury gold/ruby PNG. The original is retained unchanged at `docs/brand/ab-logo-luxury-source.png`, SHA-256 `557D7657222034FF27AE353A03E5B0366E1F26CFDE909CBE6CAF16C6776CE2E6`. Optimized Next.js image assets provide the header/footer monogram and wordmark, full About artwork, Open Graph artwork and PNG application icons. Previous vector assets remain available; the static hero fallback retains the AB vector treatment.
 
 The hero entrance now uses a bounded 12px rise, with tablet typography at 4.9vw; the existing 28px introduction margin is retained. Phone portfolio cards use `content-visibility: auto` with a 700px intrinsic estimate; measured rendered heights were 620–762px. The root's paired CDP samples showed initial LayoutDuration changes of approximately 104→80ms and 120→104ms. These are local profiling samples, not Core Web Vitals or final Lighthouse results.
 

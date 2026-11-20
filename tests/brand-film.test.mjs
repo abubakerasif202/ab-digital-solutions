@@ -4,14 +4,8 @@ import test from "node:test";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
 
-test("brand film assets exist and the videos are web-optimised", async () => {
-  const sizes = {};
-  for (const name of ["ab-web-studio-film-1080.mp4", "ab-web-studio-film-720.mp4", "ab-film-poster.webp"]) {
-    sizes[name] = (await stat(new URL(`../public/film/${name}`, import.meta.url))).size;
-    assert.ok(sizes[name] > 1000, `${name} is empty`);
-  }
-  assert.ok(sizes["ab-web-studio-film-1080.mp4"] < 12 * 1024 * 1024, "1080p film should stay under 12MB");
-  assert.ok(sizes["ab-web-studio-film-720.mp4"] < sizes["ab-web-studio-film-1080.mp4"]);
+test("logo reveal assets exist and retired film encodes are not published", async () => {
+  await assert.rejects(stat(new URL("../public/film/", import.meta.url)), { code: "ENOENT" });
   for (const name of ["ab-reveal-mark", "ab-reveal-mark-bright", "ab-reveal-wordmark"]) {
     assert.ok((await stat(new URL(`../public/brand/${name}.webp`, import.meta.url))).size > 1000);
   }

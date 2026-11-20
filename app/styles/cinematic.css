@@ -1,24 +1,7 @@
 /* After Hours — the cinematic art direction. New compositions own their rules;
    existing forms, navigation, route metadata and rendering behavior stay intact. */
-:root {
-  --cinema-ink: #0b0a0a;
-  --cinema-paper: #eeeae1;
-  --cinema-gold: #b1a69b;
-  --cinema-muted: #aaa9a4;
-}
-.after-hours { background: var(--cinema-ink); --gilt: var(--cinema-gold); --gilt-bright: #d3cac1; --accent-ink: var(--cinema-gold); --ivory: #f3efe7; }
-.after-hours .site-header { background: #0b0a0af2; border-bottom: 1px solid #ffffff14; box-shadow: none; }
-.after-hours .site-header .nav-wrap { width: calc(100% - clamp(40px, 8vw, 140px)); max-width: 1700px; }
-.after-hours .site-nav { gap: clamp(14px, 1.65vw, 28px); }
-.after-hours .site-nav > a { font-size: var(--fs-label); font-weight: 400; letter-spacing: .015em; }
-.after-hours .site-nav > .nav-cta { background: var(--cinema-paper); color: var(--cinema-ink); border-color: var(--cinema-paper); border-radius: 0; clip-path: none; }
-.after-hours .button-primary { background: var(--cinema-paper); color: var(--cinema-ink); border-color: var(--cinema-paper); clip-path: none; border-radius: 0; }
-.after-hours .button-primary:hover { background: var(--cinema-gold); border-color: var(--cinema-gold); }
 .cinema-page { background: var(--cinema-ink); color: #f3efe7; overflow: clip; }
 .cinema-shell { width: calc(100% - clamp(40px, 8vw, 140px)); max-width: 1520px; margin-inline: auto; }
-.cinema-page :is(h1, h2, h3, p) { margin-top: 0; }
-.cinema-label { font-family: var(--mono), monospace; font-size: var(--fs-label); letter-spacing: .14em; text-transform: uppercase; line-height: 1.7; font-weight: 400; }
-.cinema-page :is(h1,h2) em { font-family: var(--display), serif; font-style: italic; font-weight: 400; color: var(--cinema-gold) !important; }
 .cinema-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 36px; width: fit-content; min-height: 44px; border-bottom: 1px solid currentColor; font-size: 13px; color: inherit; text-decoration: none; transition: color .25s; }
 .cinema-link svg { width: 17px; height: 17px; transition: transform .3s; }
 .cinema-link:hover svg { transform: translate(3px,-3px); }
@@ -141,9 +124,6 @@
 .cinema-contact-prelude > p { font-size: clamp(40px, 5.5vw, 86px); font-weight: 400; line-height: 1.06; letter-spacing: -.05em; margin-block: 30px; }
 .cinema-contact-prelude > p em { font-family: var(--display),serif; color: var(--cinema-gold); font-weight: 400; }
 .cinema-contact-prelude > span:last-child { color: var(--cinema-muted); font-size: var(--fs-label); }
-.after-hours .studio-enquiry { background: #141312; border-top: 1px solid #ffffff20; }
-.after-hours .studio-enquiry .studio-display { font-size: clamp(38px,4.4vw,64px); }
-.after-hours .studio-enquiry .studio-form-panel { background: transparent; box-shadow: none; }
 .cinema-colophon { padding-block: 35px; display: flex; justify-content: space-between; gap: 20px; color: var(--cinema-muted); font-size: var(--fs-label); }
 .cinema-colophon a { display: flex; gap: 20px; color: #f3efe7; align-items: center; }
 .cinema-colophon svg { width: 16px; }
@@ -157,9 +137,6 @@
   .cinema-process-list { gap: 25px; }
 }
 @media (max-width: 960px) {
-  .after-hours .site-header, .after-hours .site-header.is-scrolled { backdrop-filter: none; }
-  .after-hours .site-nav > a { font-size: 20px; }
-  .after-hours .site-nav > .nav-cta { font-size: 15px; }
   .cinema-hero { min-height: 800px; }
   .cinema-title { font-size: clamp(68px,10.5vw,105px); }
   .cinema-hero-meta p:last-child { max-width: 210px; text-align: right; display: block; line-height: 1.7; }
@@ -255,4 +232,3 @@
 
 /* Contrast and control hierarchy verified against the real paper chapter. */
 .cinema-page .cinema-work :is(h2,h3) { color: var(--cinema-ink); }
-.after-hours .mobile-project-cta { background: var(--cinema-paper); color: var(--cinema-ink); border: 1px solid #0b0a0a44; box-shadow: 0 8px 30px #0004; }

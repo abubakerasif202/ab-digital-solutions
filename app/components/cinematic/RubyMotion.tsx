@@ -102,16 +102,19 @@ function attachScrollDepth(root: Element) {
   const plates = Array.from(root.querySelectorAll<HTMLElement>(".ruby-plate-frame img"));
   const visible = new Set<HTMLElement>();
   let frame = 0;
+  let range = 1;
   const paint = () => {
     frame = 0;
     const viewport = window.innerHeight;
     const scrolled = window.scrollY;
-    const range = Math.max(1, document.documentElement.scrollHeight - viewport);
-    if (progress) progress.style.transform = `scaleX(${Math.min(1, scrolled / range)})`;
-    visible.forEach(img => {
+    const drift = Array.from(visible, img => {
       const rect = (img.parentElement ?? img).getBoundingClientRect();
       const t = Math.max(0, Math.min(1, (viewport - rect.top) / (viewport + rect.height)));
-      img.style.transform = `translate3d(0, ${(-7 + 7 * t).toFixed(2)}%, 0)`;
+      return { img, y: (-7 + 7 * t).toFixed(2) };
+    });
+    if (progress) progress.style.transform = `scaleX(${Math.min(1, scrolled / range)})`;
+    drift.forEach(({ img, y }) => {
+      img.style.transform = `translate3d(0, ${y}%, 0)`;
     });
   };
   const schedule = () => { if (!frame) frame = window.requestAnimationFrame(paint); };
@@ -126,14 +129,21 @@ function attachScrollDepth(root: Element) {
     schedule();
   }, { rootMargin: "20% 0px" });
   wrapperToImage.forEach((_, wrapper) => mapped?.observe(wrapper));
+  const measure = () => {
+    range = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    schedule();
+  };
+  const resize = new ResizeObserver(measure);
+  resize.observe(document.body);
   window.addEventListener("scroll", schedule, { passive: true });
-  window.addEventListener("resize", schedule, { passive: true });
-  schedule();
+  window.addEventListener("resize", measure, { passive: true });
+  measure();
   return () => {
     if (frame) window.cancelAnimationFrame(frame);
     mapped?.disconnect();
+    resize.disconnect();
     window.removeEventListener("scroll", schedule);
-    window.removeEventListener("resize", schedule);
+    window.removeEventListener("resize", measure);
     progress?.style.removeProperty("transform");
     plates.forEach(img => img.style.removeProperty("transform"));
   };

@@ -12,7 +12,7 @@
   --text-micro: var(--fs-label);
   --track-micro: 0.18em;
   --track-display: -0.025em;
-  --ruby-glow: 0 14px 36px -14px rgba(232, 73, 43, 0.75);
+  --ruby-shadow: 0 14px 36px -14px color-mix(in srgb, var(--ruby) 75%, transparent);
 }
 
 /* Mono ships 400/500 only; heavier legacy weights resolve to 500 instead of
@@ -150,7 +150,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 .footer-contact > a.footer-contact-cta:is(:hover, :focus-visible) {
   background: var(--red);
   border-color: rgba(255, 255, 255, 0.28);
-  box-shadow: var(--ruby-glow);
+  box-shadow: var(--ruby-shadow);
   color: var(--white);
   transform: translateY(-2px);
 }
@@ -358,9 +358,9 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 .slider-controls .icon-control svg { transition: transform var(--dur-ui) var(--ease-studio); }
 
 .slider-controls .icon-control:is(:hover, :focus-visible) {
-  background: rgba(232, 73, 43, 0.14);
+  background: var(--ruby-glow);
   border-color: var(--red);
-  box-shadow: 0 0 0 4px rgba(232, 73, 43, 0.08);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ruby) 8%, transparent);
   color: var(--white);
   transform: scale(1.04);
 }
@@ -425,7 +425,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 }
 
 .capability-symbol svg { transition: transform 560ms var(--ease-studio); }
-.capability-card:is(:hover, :focus-visible) .capability-symbol { border-color: var(--red); background: rgba(232, 73, 43, 0.1); }
+.capability-card:is(:hover, :focus-visible) .capability-symbol { border-color: var(--red); background: color-mix(in srgb, var(--ruby) 10%, transparent); }
 .capability-card:is(:hover, :focus-visible) .capability-symbol svg { transform: rotate(-10deg) scale(1.08); }
 .capability-card h3 { transition: transform var(--dur-ui) var(--ease-studio); }
 .capability-card:is(:hover, :focus-visible) h3 { transform: translateX(4px); }
@@ -439,7 +439,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 
 .cinematic-home .service-card:is(:hover, :focus-visible) .service-card-arrow {
   border-color: var(--red);
-  background: rgba(232, 73, 43, 0.14);
+  background: var(--ruby-glow);
   transform: none;
 }
 
@@ -534,7 +534,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 
 .cursor-ring.is-active {
   border-color: var(--red);
-  background: rgba(232, 73, 43, 0.1);
+  background: color-mix(in srgb, var(--ruby) 10%, transparent);
 }
 
 .cursor-ring.has-label { border-color: var(--red); background: rgba(7, 7, 8, 0.86); }

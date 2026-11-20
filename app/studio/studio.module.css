@@ -16,6 +16,10 @@
 .entry > p:not(.kicker) { color: #c1bdb4; font-size: 14px; line-height: 1.8; margin-bottom: 25px; max-width: 310px; }
 .primary { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; background: #d8bb83; color: #141312 !important; border: 1px solid #d8bb83; min-height: 48px; padding: 13px 22px; font: 600 13px/1.4 var(--font-sans), sans-serif; cursor: pointer; text-decoration: none; transition: background .2s; }
 .primary:hover { background: #efdab0; }
+.directoryIntro .primary { background: var(--ruby); border-color: var(--ruby); color: var(--ruby-on) !important; }
+.directoryIntro .primary:is(:hover, :focus-visible) { background: var(--ruby-hover); border-color: var(--ruby-hover); }
+.directoryIntro .primary:active { background: var(--ruby-deep); border-color: var(--ruby-deep); }
+.directoryIntro .primary:focus-visible { outline: 2px solid var(--ruby-text-dark); outline-offset: 3px; }
 .textLink { display: flex; align-items: center; min-height: 44px; width: fit-content; margin-top: 18px; font-size: var(--fs-label); color: #ddd6c8; text-decoration: underline; text-underline-offset: 5px; }
 .loading { position: absolute; left: 24px; top: 82px; padding: 12px 16px; background: #101214e8; border: 1px solid #c5aa7844; display: flex; gap: 20px; align-items: center; z-index: 4; }
 .loading p { margin: 0; font-size: var(--fs-label); }

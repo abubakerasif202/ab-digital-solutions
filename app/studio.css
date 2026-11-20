@@ -44,7 +44,7 @@
 .hero-3d-fallback svg { position: absolute; width: 90%; height: 90%; top: 5%; right: -10%; color: var(--paper); opacity: .14; transform: rotate(-12deg); }
 .cinematic-home .project-showcase { perspective: 1200px; }
 .cinematic-home .showcase-topline { border-color: var(--line); color: var(--muted); }
-.cinematic-home .showcase-stage { border: 1px solid var(--line-strong); border-radius: 6px; box-shadow: 14px 20px 0 -10px var(--ink-soft), 14px 20px 0 -9px rgba(232, 73, 43,.35), 0 25px 60px rgba(0,0,0,.45); transform: perspective(1200px) rotateY(-5deg) rotateX(2deg); transition: transform var(--motion-reveal) var(--motion-ease); }
+.cinematic-home .showcase-stage { border: 1px solid var(--line-strong); border-radius: 6px; box-shadow: 14px 20px 0 -10px var(--ink-soft), 14px 20px 0 -9px color-mix(in srgb, var(--ruby) 35%, transparent), 0 25px 60px rgba(0,0,0,.45); transform: perspective(1200px) rotateY(-5deg) rotateX(2deg); transition: transform var(--motion-reveal) var(--motion-ease); }
 .cinematic-home .showcase-meta { padding-top: 28px; }
 .cinematic-home .showcase-meta strong { font-family: var(--sans); font-weight: 500; }
 .cinematic-home .showcase-meta span { color: var(--muted); }

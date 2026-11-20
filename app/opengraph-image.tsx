@@ -1,13 +1,17 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { readOpenGraphPalette } from "./og-palette";
 
 export const alt = "AB Web Studio — websites, systems and digital products";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OpenGraphImage() {
-  const artwork = await readFile(join(process.cwd(), "public/brand/ab-logo-luxury-social.png"));
+  const [artwork, { primary }] = await Promise.all([
+    readFile(join(process.cwd(), "public/brand/ab-logo-luxury-social.png")),
+    readOpenGraphPalette(),
+  ]);
   const artworkUrl = `data:image/png;base64,${artwork.toString("base64")}`;
   return new ImageResponse(
     <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", padding: "74px 86px", color: "#f8f4ea", background: "#070708", fontFamily: "Arial, sans-serif" }}>
@@ -17,7 +21,7 @@ export default async function OpenGraphImage() {
         </svg>
         <div style={{ color: "#F4F1EA", fontSize: 30, letterSpacing: 5 }}>AB WEB STUDIO</div>
       </div>
-      <div style={{ width: 110, height: 4, margin: "34px 0", background: "#FF5A3C" }} />
+      <div style={{ width: 110, height: 4, margin: "34px 0", background: primary }} />
       <div style={{ maxWidth: 980, fontSize: 78, fontWeight: 700, lineHeight: 1.02 }}>Websites built for real businesses.</div>
       <div style={{ marginTop: 38, color: "#d8d2c4", fontSize: 28 }}>Sydney studio · Australia-wide</div>
     </div>,
