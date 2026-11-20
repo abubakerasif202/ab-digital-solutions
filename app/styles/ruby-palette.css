@@ -6,4 +6,9 @@
   --ruby-text-dark: #FF8A9B;
   --ruby-text-paper: #9B111E;
   --ruby-glow: rgba(179, 18, 46, 0.14);
+
+  /* Muted metallic gold drawn from the AB logo's warm highlights. */
+  --gold: #C9A45C;
+  --gold-text-dark: var(--gold);
+  --gold-text-paper: #73501C;
 }

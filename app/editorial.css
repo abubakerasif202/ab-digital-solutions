@@ -34,7 +34,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
   width: 28px;
   height: 1px;
   flex: none;
-  background: linear-gradient(90deg, var(--red), rgba(209, 111, 76, 0.55));
+  background: linear-gradient(90deg, var(--red), color-mix(in srgb, var(--gold) 55%, transparent));
 }
 
 .section-index { gap: 14px; }
@@ -205,7 +205,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(105deg, transparent 30%, rgba(239, 141, 106, 0.3) 50%, transparent 70%);
+  background: linear-gradient(105deg, transparent 30%, color-mix(in srgb, var(--gold) 30%, transparent) 50%, transparent 70%);
   content: "";
   pointer-events: none;
   translate: -120% 0;
@@ -530,7 +530,7 @@ h1, h2, h3 { font-kerning: normal; text-rendering: optimizeLegibility; }
 .footer-top-link { gap: 10px; }
 
 /* Cursor ----------------------------------------------------------------- */
-.cursor-ring { border-color: rgba(239, 141, 106, 0.45); }
+.cursor-ring { border-color: color-mix(in srgb, var(--gold) 45%, transparent); }
 
 .cursor-ring.is-active {
   border-color: var(--red);

@@ -33,7 +33,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 52% at 50% 44%, rgba(209, 111, 76, 0.22), rgba(209, 111, 76, 0.05) 60%, transparent 100%),
+    radial-gradient(ellipse 60% 52% at 50% 44%, color-mix(in srgb, var(--gold) 22%, transparent), color-mix(in srgb, var(--gold) 5%, transparent) 60%, transparent 100%),
     radial-gradient(ellipse 40% 34% at 14% 96%, var(--ruby-glow), transparent 70%);
   pointer-events: none;
 }

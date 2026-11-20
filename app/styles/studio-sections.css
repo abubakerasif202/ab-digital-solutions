@@ -42,7 +42,7 @@
   place-items: center;
   overflow: hidden;
   background:
-    radial-gradient(60% 60% at var(--pointer-x, 50%) var(--pointer-y, 45%), rgba(209, 111, 76, 0.14), transparent 70%),
+    radial-gradient(60% 60% at var(--pointer-x, 50%) var(--pointer-y, 45%), color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%),
     radial-gradient(90% 70% at 85% 110%, color-mix(in srgb, var(--ruby) 10%, transparent), transparent 60%),
     var(--surface);
   perspective: 900px;
@@ -54,7 +54,7 @@
   pointer-events: none;
 }
 
-.studio-plate-ring--outer { inset: 12%; border: 1px solid rgba(209, 111, 76, 0.28); }
+.studio-plate-ring--outer { inset: 12%; border: 1px solid color-mix(in srgb, var(--gold) 28%, transparent); }
 .studio-plate-ring--inner { inset: 22%; border: 1px solid var(--hair); }
 
 /* A single gilt glint travels the outer ring: light, not ornament. */
@@ -62,7 +62,7 @@
   position: absolute;
   inset: 12%;
   border-radius: 50%;
-  background: conic-gradient(from var(--glint-angle, 0deg), transparent 0deg, rgba(239, 141, 106, 0.55) 18deg, transparent 40deg);
+  background: conic-gradient(from var(--glint-angle, 0deg), transparent 0deg, color-mix(in srgb, var(--gold) 55%, transparent) 18deg, transparent 40deg);
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
   mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
   pointer-events: none;
@@ -377,10 +377,10 @@
 
 .form-chip--mono span { font-family: var(--mono); font-size: 0.875rem; }
 .form-chip:hover span { border-color: var(--gilt); color: var(--ivory); }
-.form-chip input:checked + span { border-color: var(--gilt); background: var(--gilt); color: var(--obsidian); font-weight: 600; }
+.form-chip input:checked + span { border-color: var(--ruby); background: var(--ruby); color: var(--ruby-on); font-weight: 600; }
 .form-chip input:focus-visible + span { outline: 2px solid var(--gilt); outline-offset: 3px; }
 .form-chip:active span { transform: scale(0.97); }
-.form-chips.is-preselected .form-chip input:checked + span { box-shadow: 0 0 0 4px color-mix(in srgb, var(--gilt) 35%, transparent); transition: box-shadow 0.4s ease; }
+.form-chips.is-preselected .form-chip input:checked + span { box-shadow: 0 0 0 4px color-mix(in srgb, var(--ruby) 35%, transparent); transition: box-shadow 0.4s ease; }
 @media (prefers-reduced-motion: reduce) { .form-chips.is-preselected .form-chip input:checked + span { transition: none; } }
 
 .contact-form.enquiry-form .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }

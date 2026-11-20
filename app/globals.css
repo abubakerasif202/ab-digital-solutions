@@ -20,11 +20,10 @@
   --red-dark: var(--ruby-deep);
   --red-text: var(--ruby-text-paper);
   --red-ink: var(--ruby-text-dark);
-  --gold: #d16f4c;
-  --gold-bright: #ef8d6a;
+  --gold-bright: color-mix(in srgb, var(--gold) 70%, white);
   /* Gold reserved for text on light surfaces. Dark enough to clear WCAG AA
      at 12px against --paper and --paper-warm. */
-  --gold-dark: #74290e;
+  --gold-dark: var(--gold-text-paper);
   --brand-red: var(--ruby);
   --brand-red-bright: var(--ruby-hover);
   --brand-red-dark: var(--ruby-deep);
@@ -45,7 +44,7 @@
      every reveal, hover and parallax on the site. */
   --ease-out: cubic-bezier(0.16, 0.84, 0.34, 1);
   --ease-smooth: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --gold-glow: rgba(212, 91, 47, 0.18);
+  --gold-glow: color-mix(in srgb, var(--gold) 18%, transparent);
   --red-glow: var(--ruby-glow);
 }
 
@@ -399,7 +398,7 @@ select {
   position: absolute;
   inset: -6px;
   border-radius: inherit;
-  background: rgba(193, 47, 18, 0.18);
+  background: color-mix(in srgb, var(--ruby) 18%, transparent);
   content: "";
   animation: status-pulse 2.4s ease-out infinite;
 }
@@ -1694,7 +1693,7 @@ h1 em {
   height: 6px;
   border-radius: 50%;
   background: var(--brand-red-bright);
-  box-shadow: 0 0 0 4px rgba(193, 47, 18, 0.15);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ruby) 15%, transparent);
 }
 
 .project-cta {
@@ -3072,7 +3071,7 @@ h1 em {
   height: 34px;
   margin: -17px 0 0 -17px;
   place-items: center;
-  border: 1px solid rgba(239, 141, 106, 0.55);
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   border-radius: 50%;
   transition: width 220ms var(--ease-out), height 220ms var(--ease-out),
     margin 220ms var(--ease-out), background 220ms ease, border-color 220ms ease;
@@ -3082,7 +3081,7 @@ h1 em {
   width: 52px;
   height: 52px;
   margin: -26px 0 0 -26px;
-  background: rgba(239, 141, 106, 0.1);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
   border-color: var(--gold-bright);
 }
 

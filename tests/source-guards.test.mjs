@@ -2,7 +2,7 @@
 // previously reviewed fixes from being silently reverted. Behavioral coverage
 // of the contact endpoint lives in contact-route.test.mjs.
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 const read = async (path) => {
@@ -347,15 +347,17 @@ test("premium interaction layer is wired without heavy dependencies", async () =
 });
 
 test("brand theme uses the ruby studio accent with AA-safe filled controls", async () => {
-  const [styles, designTokens] = await Promise.all([
+  const [styles, designTokens, palette] = await Promise.all([
     read("../app/globals.css"),
     read("../opendesign/design-systems/ab-digital/colors_and_type.css"),
+    read("../app/styles/ruby-palette.css"),
   ]);
 
   // Legacy aliases and filled controls must point to the central AA-tested ruby.
   assert.match(styles, /--red: var\(--ruby\)/);
   assert.match(styles, /--brand-red: var\(--ruby\)/);
-  assert.match(styles, /--gold: #d16f4c/);
+  assert.match(palette, /--gold: #c9a45c;/i);
+  assert.doesNotMatch(styles, /--gold:/);
   assert.doesNotMatch(styles, /#d21736|#d1a64c/);
   assert.match(styles, /box-shadow: inset 0 2px 0 var\(--brand-red\)/);
   assert.match(styles, /\.button-primary[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);
@@ -708,4 +710,24 @@ test("hero headline stays on the display scale, showcase images fit their slot a
   // Motion plays by default: there are no pause or play toggles on the ticker.
   assert.doesNotMatch(ticker, /live-ticker-toggle|Pause featured projects/);
   assert.doesNotMatch(stage, /live-ticker-toggle/);
+});
+
+test("production app sources do not reintroduce terracotta as gold", async () => {
+  const app = new URL("../app/", import.meta.url);
+  const retired = /ef8d6a|239\s*,\s*141\s*,\s*106|d16f4c|209\s*,\s*111\s*,\s*76|f5a88c|b8522d|8a3516|f8bbaf|f6caba|193\s*,\s*47\s*,\s*18/i;
+  const hits = [];
+  async function scan(directory, path = "app/") {
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const relative = path + entry.name;
+      if (relative === "app/preview") continue;
+      if (entry.isDirectory()) await scan(new URL(entry.name + "/", directory), relative + "/");
+      if (entry.isFile()) {
+        const source = await readFile(new URL(entry.name, directory), "utf8");
+        const match = retired.exec(source);
+        if (match) hits.push(relative + ":" + (source.slice(0, match.index).split("\n").length) + " " + match[0]);
+      }
+    }
+  }
+  await scan(app);
+  assert.deepEqual(hits, []);
 });
