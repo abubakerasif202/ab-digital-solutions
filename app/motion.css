@@ -78,6 +78,7 @@
   .site-nav.is-open a:nth-child(3) { transition-delay: 0ms, 190ms, 190ms; }
   .site-nav.is-open a:nth-child(4) { transition-delay: 0ms, 240ms, 240ms; }
   .site-nav.is-open a:nth-child(5) { transition-delay: 0ms, 300ms, 300ms; }
+  .site-nav.is-open a:nth-child(6) { transition-delay: 0ms, 340ms, 340ms; }
 }
 
 /* CTA buttons: a controlled gold sheen crosses the button on hover. */
