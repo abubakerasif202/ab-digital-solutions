@@ -154,7 +154,7 @@
 .ruby-positioning-grid { grid-template-columns: minmax(240px, 1fr) 1.7fr; align-items: center; gap: clamp(32px, 6vw, 96px); }
 
 /* 4. Services: the one light chapter, cut on a diagonal so the page never stacks as plain rectangles. */
-.ruby-services { --services-gilt: #74290e; --cut: clamp(26px,4vw,72px); position: relative; padding-block: calc(clamp(90px,11vw,165px) + var(--cut)); background: #f4ece4; color: #13110f; clip-path: polygon(0 var(--cut),100% 0,100% calc(100% - var(--cut)),0 100%); }
+.ruby-services { --services-gilt: var(--gold-text-paper); --cut: clamp(26px,4vw,72px); position: relative; padding-block: calc(clamp(90px,11vw,165px) + var(--cut)); background: #f4ece4; color: #13110f; clip-path: polygon(0 var(--cut),100% 0,100% calc(100% - var(--cut)),0 100%); }
 .ruby-services .ruby-eyebrow { color: var(--ruby-text-paper); }
 .ruby-cinematic .ruby-page .ruby-services :is(h2,h3) { color: #13110f; }
 .ruby-cinematic .ruby-page .ruby-services h2 em { color: var(--services-gilt) !important; }

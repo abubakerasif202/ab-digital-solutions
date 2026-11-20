@@ -20,7 +20,6 @@
   --red-dark: var(--ruby-deep);
   --red-text: var(--ruby-text-paper);
   --red-ink: var(--ruby-text-dark);
-  --gold: #d16f4c;
   --gold-bright: #ef8d6a;
   /* Gold reserved for text on light surfaces. Dark enough to clear WCAG AA
      at 12px against --paper and --paper-warm. */

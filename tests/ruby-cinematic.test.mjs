@@ -53,7 +53,7 @@ test("hero work wall shows every real case study, decoratively, with a working p
 test("ruby palette and progressive motion have an explicit reduced-motion fallback", async () => {
   const [styles, motion, layout, kinetic, shared, home] = await Promise.all([source("app/styles/ruby-cinematic.css"), source("app/components/cinematic/RubyMotion.tsx"), source("app/layout.tsx"), source("app/styles/ruby-kinetic.css"), source("app/styles/ruby-shared.css"), source("app/page.tsx")]);
   // Preserve the near-black and gilt surfaces while using the shared ruby tokens.
-  for (const color of ["#0a0908", "var(--ruby)", "var(--ruby-deep)", "#e5ae9a"]) assert.ok((styles + shared).toLowerCase().includes(color), color);
+  for (const color of ["#0a0908", "var(--ruby)", "var(--ruby-deep)", "var(--gold-text-dark)"]) assert.ok((styles + shared).toLowerCase().includes(color), color);
   for (const retired of ["#e32655", "#9b1535", "#e5c59a"]) assert.ok(!styles.toLowerCase().includes(retired), retired);
   assert.ok(styles.includes("prefers-reduced-motion: reduce"));
   assert.ok(kinetic.includes("@supports (animation-timeline: view())"));

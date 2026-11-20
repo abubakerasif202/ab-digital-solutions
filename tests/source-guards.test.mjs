@@ -347,15 +347,17 @@ test("premium interaction layer is wired without heavy dependencies", async () =
 });
 
 test("brand theme uses the ruby studio accent with AA-safe filled controls", async () => {
-  const [styles, designTokens] = await Promise.all([
+  const [styles, designTokens, palette] = await Promise.all([
     read("../app/globals.css"),
     read("../opendesign/design-systems/ab-digital/colors_and_type.css"),
+    read("../app/styles/ruby-palette.css"),
   ]);
 
   // Legacy aliases and filled controls must point to the central AA-tested ruby.
   assert.match(styles, /--red: var\(--ruby\)/);
   assert.match(styles, /--brand-red: var\(--ruby\)/);
-  assert.match(styles, /--gold: #d16f4c/);
+  assert.match(palette, /--gold: #c9a45c;/i);
+  assert.doesNotMatch(styles, /--gold:/);
   assert.doesNotMatch(styles, /#d21736|#d1a64c/);
   assert.match(styles, /box-shadow: inset 0 2px 0 var\(--brand-red\)/);
   assert.match(styles, /\.button-primary[\s\S]*background: var\(--red\)[\s\S]*color: var\(--white\)/);

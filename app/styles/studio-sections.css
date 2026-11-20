@@ -377,10 +377,10 @@
 
 .form-chip--mono span { font-family: var(--mono); font-size: 0.875rem; }
 .form-chip:hover span { border-color: var(--gilt); color: var(--ivory); }
-.form-chip input:checked + span { border-color: var(--gilt); background: var(--gilt); color: var(--obsidian); font-weight: 600; }
+.form-chip input:checked + span { border-color: var(--ruby); background: var(--ruby); color: var(--ruby-on); font-weight: 600; }
 .form-chip input:focus-visible + span { outline: 2px solid var(--gilt); outline-offset: 3px; }
 .form-chip:active span { transform: scale(0.97); }
-.form-chips.is-preselected .form-chip input:checked + span { box-shadow: 0 0 0 4px color-mix(in srgb, var(--gilt) 35%, transparent); transition: box-shadow 0.4s ease; }
+.form-chips.is-preselected .form-chip input:checked + span { box-shadow: 0 0 0 4px color-mix(in srgb, var(--ruby) 35%, transparent); transition: box-shadow 0.4s ease; }
 @media (prefers-reduced-motion: reduce) { .form-chips.is-preselected .form-chip input:checked + span { transition: none; } }
 
 .contact-form.enquiry-form .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }

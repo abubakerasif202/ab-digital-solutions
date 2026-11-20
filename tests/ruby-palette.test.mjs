@@ -4,10 +4,11 @@ import { test } from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-function token(stylesheet, name) {
-  const result = stylesheet.match(new RegExp(`--${name}:\\s*(#[\\da-f]{6});`, "i"));
-  assert.ok(result, `Missing six-digit color token --${name}`);
-  return result[1];
+function token(stylesheet, name, seen = new Set()) {
+  assert.ok(!seen.has(name), "Color token aliases must not cycle");
+  const result = stylesheet.match(new RegExp(`--${name}:\\s*(?:(#[\\da-f]{6})|var\\(--([a-z-]+)\\));`, "i"));
+  assert.ok(result, `Missing color token --${name}`);
+  return result[1] ?? token(stylesheet, result[2], seen.add(name));
 }
 
 function luminance(hex) {
@@ -22,7 +23,7 @@ function contrast(a, b) {
   return (bright + 0.05) / (dark + 0.05);
 }
 
-test("ruby text and focus colors meet WCAG contrast on their actual surfaces", async (context) => {
+test("ruby and gold text and focus colors meet WCAG contrast on their actual surfaces", async (context) => {
   const [palette, cinematic, kinetic] = await Promise.all([
     read("app/styles/ruby-palette.css"),
     read("app/styles/ruby-shared.css"),
@@ -39,6 +40,9 @@ test("ruby text and focus colors meet WCAG contrast on their actual surfaces", a
     ["white on pressed", color("ruby-on"), color("ruby-deep"), 4.5],
     ["ruby text on dark", color("ruby-text-dark"), page, 4.5],
     ["ruby text on paper", color("ruby-text-paper"), cream, 4.5],
+    ["gold text on dark", color("gold-text-dark"), page, 4.5],
+    ["gold text on paper", color("gold-text-paper"), cream, 4.5],
+    ["white on selected chip", color("ruby-on"), color("ruby"), 4.5],
     ["focus on dark", color("ruby-text-dark"), page, 3],
     ["focus on dark form input", color("ruby-text-dark"), "#2b2420", 3],
     ["focus on paper", color("ruby-text-paper"), cream, 3],
@@ -49,4 +53,9 @@ test("ruby text and focus colors meet WCAG contrast on their actual surfaces", a
     context.diagnostic(`${label}: ${ratio.toFixed(2)}:1`);
     assert.ok(ratio >= minimum, `${label} is below ${minimum}:1`);
   }
+});
+
+test("service and budget chips share the ruby selection style", async () => {
+  const css = await read("app/styles/studio-sections.css");
+  assert.match(css, /\.form-chip input:checked \+ span \{[^}]*border-color: var\(--ruby\);[^}]*background: var\(--ruby\);[^}]*color: var\(--ruby-on\);/);
 });
