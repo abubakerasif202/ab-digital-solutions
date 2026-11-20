@@ -31,6 +31,8 @@ test("gate enables the intro on the homepage's first visit and sets the session 
   assert.equal(result.enabled, true);
   assert.equal(result.store.get(KEY), "1");
   assert.equal(result.timers[0].ms, timing.watchdogMs);
+  assert.equal(timing.watchdogMs, 2500, "a slow-hydrating phone is released from the shade after 2.5 s");
+  assert.match(openingIntroGateScript, /,2500\);\n\}catch/, "the inline gate carries the same value");
 });
 
 test("gate never enables the intro on other routes or hash links", () => {

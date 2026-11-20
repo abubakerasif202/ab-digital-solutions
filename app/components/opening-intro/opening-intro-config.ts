@@ -15,8 +15,11 @@ export const openingIntroTiming = {
   fadeMs: 500,
   /** Playback that stalls (waiting for data) this long ends the intro. */
   stallMs: 1500,
-  /** The gate gives up if the controller has not taken over by now (slow hydration, script failure). */
-  watchdogMs: 4000,
+  /**
+   * The gate gives up if the controller has not taken over by now (slow hydration, script failure), so a slow
+   * phone never sits on the black shade for long. Keep it above the controller's own start-up on typical devices.
+   */
+  watchdogMs: 2500,
 } as const;
 
 export const openingIntroAssets = {
