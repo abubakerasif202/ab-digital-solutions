@@ -9,7 +9,7 @@
 :root {
   --tex-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --gilt-metal: linear-gradient(100deg, #8a3516 0%, #d16f4c 20%, #fff1c4 36%, #ef8d6a 50%, #b8522d 66%, #f5a88c 82%, #8a3516 100%);
-  --ruby-metal: linear-gradient(100deg, #ff907a 0%, #ff5a3c 30%, #e8492b 58%, #ff9d8a 80%, #ff5a3c 100%);
+  --ruby-metal: linear-gradient(100deg, var(--ruby-text-dark) 0%, var(--ruby) 30%, var(--ruby-hover) 58%, var(--ruby-text-dark) 80%, var(--ruby) 100%);
   --bg-ruby-band:
     radial-gradient(ellipse 80% 60% at 18% 0%, rgba(255, 119, 92, 0.24), transparent 60%),
     radial-gradient(ellipse 60% 70% at 100% 100%, rgba(239, 141, 106, 0.12), transparent 60%),
@@ -56,9 +56,9 @@
   overflow: hidden;
   padding: calc(var(--header-height) + clamp(18px, 3vw, 44px)) 0 0;
   background:
-    radial-gradient(ellipse 44% 52% at 82% 18%, rgba(232, 73, 43, 0.22), transparent 70%),
+    radial-gradient(ellipse 44% 52% at 82% 18%, color-mix(in srgb, var(--ruby) 22%, transparent), transparent 70%),
     radial-gradient(ellipse 46% 58% at 76% 46%, rgba(212, 91, 47, 0.14), transparent 70%),
-    radial-gradient(ellipse 38% 46% at 6% 88%, rgba(181, 45, 18, 0.14), transparent 72%),
+    radial-gradient(ellipse 38% 46% at 6% 88%, color-mix(in srgb, var(--ruby-deep) 14%, transparent), transparent 72%),
     linear-gradient(180deg, #070707 0%, #0a0a0a 62%, #070707 100%);
 }
 /* A faint 96px grid, masked toward the sculpture. */
@@ -178,8 +178,8 @@
 @keyframes ticker-in { from { opacity: 0; transform: scale(1.06); } }
 .live-ticker-copy { display: grid; gap: 4px; min-width: 0; }
 .live-ticker-copy small { display: flex; align-items: center; gap: 8px; color: var(--gold-bright); font-family: var(--mono); font-size: var(--fs-label); letter-spacing: 0.1em; text-transform: uppercase; }
-.live-ticker-copy small i { width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 0 rgba(232, 73, 43, 0.6); animation: ticker-pulse 2.4s ease-out infinite; }
-@keyframes ticker-pulse { 70%, 100% { box-shadow: 0 0 0 7px rgba(232, 73, 43, 0); } }
+.live-ticker-copy small i { width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 0 color-mix(in srgb, var(--ruby) 60%, transparent); animation: ticker-pulse 2.4s ease-out infinite; }
+@keyframes ticker-pulse { 70%, 100% { box-shadow: 0 0 0 7px transparent; } }
 .live-ticker-copy strong { overflow: hidden; font-family: var(--display); font-size: 1.15rem; font-weight: 500; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
 .live-ticker-copy > span { color: var(--paper-dim); font-size: 0.8125rem; }
 

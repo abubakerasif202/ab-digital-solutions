@@ -65,7 +65,7 @@
 
 .gr-wi-filter-bar .work-index-filter { flex: none; white-space: nowrap; }
 .gr-wi-filter-bar .work-index-filter small { margin-left: 8px; opacity: 0.7; font-size: var(--fs-label); }
-/* Full opacity on the red active chip: 70% white on #e8492b is only 3.2:1. */
+/* Keep the active chip text fully opaque for contrast. */
 .gr-wi-filter-bar .work-index-filter.is-active small { opacity: 1; color: #fff; }
 
 /* The page has no top padding of its own (the header is fixed), so the breadcrumb clears it itself. */
@@ -263,7 +263,7 @@
   padding-block: clamp(40px, 6vw, 88px);
   border-block: 1px solid var(--line);
   background:
-    radial-gradient(circle at 18% 0%, rgba(232, 73, 43, 0.22), transparent 42%),
+    radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--ruby) 22%, transparent), transparent 42%),
     var(--ink-soft);
 }
 

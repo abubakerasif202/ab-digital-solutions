@@ -109,7 +109,7 @@
   pointer-events: auto;
 }
 
-.work-wall-control:is(:hover, [aria-pressed="true"]) { background: #742110; border-color: #f29d8c; }
+.work-wall-control:is(:hover, [aria-pressed="true"]) { background: var(--ruby-deep); border-color: var(--ruby-text-dark); }
 .work-wall-control:focus-visible { outline: 2px solid var(--cinema-gold, #e89a7e); outline-offset: 3px; }
 .work-wall-control:not([data-ready]) { visibility: hidden; }
 

@@ -95,7 +95,7 @@
 .cinematic-home .hero::after {
   position: absolute; inset: 0; content: ""; pointer-events: none;
   background:
-    radial-gradient(ellipse 44% 52% at 82% 18%, rgba(232, 73, 43, 0.14), transparent 70%),
+    radial-gradient(ellipse 44% 52% at 82% 18%, var(--ruby-glow), transparent 70%),
     radial-gradient(ellipse 30% 36% at 8% 78%, rgba(212, 91, 47, 0.07), transparent 72%);
 }
 
@@ -104,7 +104,7 @@
   :is(.glow-surface, [data-glow]) { position: relative; }
   :is(.glow-surface, [data-glow])::before {
     position: absolute; z-index: 2; inset: 0; content: ""; pointer-events: none; opacity: 0;
-    background: radial-gradient(380px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(239, 141, 106, 0.1), rgba(232, 73, 43, 0.06) 45%, transparent 72%);
+    background: radial-gradient(380px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(239, 141, 106, 0.1), color-mix(in srgb, var(--ruby) 6%, transparent) 45%, transparent 72%);
     transition: opacity 500ms var(--ease-lux);
   }
   :is(.glow-surface, [data-glow]):hover::before { opacity: 1; }
@@ -139,7 +139,7 @@
 /* Final CTA: ambient ruby glow and a single gold sweep across the headline. */
 .contact-section::before {
   position: absolute; inset: auto -10% -35% -10%; height: 90%; content: ""; pointer-events: none;
-  background: radial-gradient(ellipse 50% 60% at 30% 100%, rgba(232, 73, 43, 0.2), transparent 70%), radial-gradient(ellipse 30% 40% at 70% 100%, rgba(212, 91, 47, 0.14), transparent 70%);
+  background: radial-gradient(ellipse 50% 60% at 30% 100%, color-mix(in srgb, var(--ruby) 20%, transparent), transparent 70%), radial-gradient(ellipse 30% 40% at 70% 100%, rgba(212, 91, 47, 0.14), transparent 70%);
 }
 .contact-section > .container { position: relative; z-index: 1; }
 .contact-title .mask-line > span { -webkit-text-fill-color: transparent; background: linear-gradient(100deg, currentColor 42%, #b5471f 50%, currentColor 58%) 120% 0 / 250% 100% repeat-x; -webkit-background-clip: text; background-clip: text; }

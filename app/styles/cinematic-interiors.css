@@ -207,3 +207,9 @@
 @media (prefers-reduced-motion: reduce) {
   .cinema-interior :is(.gr-wi-image img, .gr-svc-panel-image, .gr-svc-panel-copy, .gr-about-tile-media img) { transition: none; animation: none; transform: none; }
 }
+
+/* These phone adjustments refine the base composition before route-specific styles. */
+@media (max-width: 640px) {
+  .cinema-services .cinema-service-index .gr-svc-title { line-height: 1.14; }
+  .cinema-work .gr-wi-hero h1 { line-height: 1.07; padding-bottom: 0.08em; }
+}

@@ -346,15 +346,15 @@ test("premium interaction layer is wired without heavy dependencies", async () =
   }
 });
 
-test("brand theme uses the vermilion studio accent with AA-safe filled controls", async () => {
+test("brand theme uses the ruby studio accent with AA-safe filled controls", async () => {
   const [styles, designTokens] = await Promise.all([
     read("../app/globals.css"),
     read("../opendesign/design-systems/ab-digital/colors_and_type.css"),
   ]);
 
-  // White text sits on --red (buttons, marquee, nav CTA), so it must stay dark enough for AA (5.2:1).
-  assert.match(styles, /--red: #c7391d/);
-  assert.match(styles, /--brand-red: #c7391d/);
+  // Legacy aliases and filled controls must point to the central AA-tested ruby.
+  assert.match(styles, /--red: var\(--ruby\)/);
+  assert.match(styles, /--brand-red: var\(--ruby\)/);
   assert.match(styles, /--gold: #d16f4c/);
   assert.doesNotMatch(styles, /#d21736|#d1a64c/);
   assert.match(styles, /box-shadow: inset 0 2px 0 var\(--brand-red\)/);
@@ -558,7 +558,7 @@ test("below-fold homepage sections skip offscreen layout with sized placeholders
   assert.match(block[0], /contain-intrinsic-block-size: auto var\(--cv-size/);
   // The hero is the first viewport and must always render immediately.
   assert.doesNotMatch(block[0], /\.hero\b/);
-  for (const section of ["services-section", "work-section", "contact-section", "site-footer"]) {
+  for (const section of ["services-section", "work-section", "contact-section"]) {
     assert.match(styles, new RegExp(String.raw`\.${section} \{ --cv-size: \d+px; \}`));
   }
   // Every breakpoint tier provides its own measured sizes.

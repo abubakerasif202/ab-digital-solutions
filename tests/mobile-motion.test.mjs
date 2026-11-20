@@ -7,7 +7,9 @@ const css = read("app/styles/ruby-mobile-motion.css");
 
 test("mobile motion layer is loaded after the kinetic layer it overrides", () => {
   const layout = read("app/layout.tsx");
-  assert.ok(layout.indexOf("ruby-kinetic.css") < layout.indexOf("ruby-mobile-motion.css"));
+  const home = read("app/page.tsx");
+  assert.doesNotMatch(layout, /ruby-(?:kinetic|mobile-motion)\.css/);
+  assert.match(home, /ruby-kinetic\.css";\s*import "[^"]*ruby-mobile-motion\.css"/);
 });
 
 test("hero shows case study links rather than film chapter labels", () => {

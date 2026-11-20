@@ -16,10 +16,6 @@
   /* Metal + ruby */
   --gilt: #d16f4c;
   --gilt-bright: #ef8d6a;
-  --ruby: #e8492b;
-  --ruby-deep: #b8341a;
-  --ruby-mark: #ff5a3c;
-  --ruby-text: #f08e7a;   /* error copy on dark surfaces (≥6:1) */
   /* Lines */
   --hair: rgba(244, 241, 234, 0.13);
   --hair-strong: rgba(244, 241, 234, 0.24);
@@ -232,7 +228,7 @@ body { background: var(--obsidian); color: var(--ivory); }
 /* Current page / section: gilt with the reference's leading slash. */
 .site-header .site-nav a:not(.nav-cta)::before { content: none; }
 .site-header .site-nav a.is-active,
-.site-header .site-nav a[aria-current] { color: var(--gilt); }
+.site-header .site-nav a[aria-current] { color: var(--ruby-text-dark); }
 .site-header .site-nav a[aria-current]::before {
   position: static;
   width: auto;
@@ -306,7 +302,7 @@ body { background: var(--obsidian); color: var(--ivory); }
     letter-spacing: -0.015em;
   }
 
-  .site-header .site-nav a[aria-current] { color: var(--gilt); }
+  .site-header .site-nav a[aria-current] { color: var(--ruby-text-dark); }
 
   .site-header .site-nav .nav-phone {
     margin-top: 12px;

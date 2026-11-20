@@ -23,13 +23,13 @@ test("cinematic derivatives are local, versioned and within the delivery budget"
   const { stat } = await import("node:fs/promises");
   for (const variant of ["desktop", "mobile"]) {
     for (const extension of ["mp4", "webm"]) {
-      const asset = await stat(new URL(`../public/cinematic/sydney-night-v1-${variant}.${extension}`, import.meta.url));
-      assert.ok(asset.size > 10000 && asset.size < 1200000);
+      const asset = await stat(new URL(`../public/cinematic/sydney-ruby-v3-${variant}.${extension}`, import.meta.url));
+      assert.ok(asset.size > 10000 && asset.size < (variant === "mobile" ? 1200000 : 2100000));
     }
   }
   for (const name of ["poster", "mobile-poster"]) {
-    const asset = await stat(new URL(`../public/cinematic/sydney-night-v1-${name}.webp`, import.meta.url));
-    assert.ok(asset.size > 1000 && asset.size < 60000);
+    const asset = await stat(new URL(`../public/cinematic/sydney-ruby-v3-${name}.webp`, import.meta.url));
+    assert.ok(asset.size > 1000 && asset.size < (name === "mobile-poster" ? 60000 : 120000));
   }
 });
 

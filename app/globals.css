@@ -15,21 +15,19 @@
   --white: #fff;
   --muted: #a7a29a;
   --muted-dark: #86868a;
-  --red: #c7391d;
-  --red-bright: #e8492b;
-  --red-dark: #761f0d;
-  --red-text: #b8341a;    /* ruby for small text on paper grounds (AA 5.4:1) */
-  /* Same ruby hue, lifted far enough to clear WCAG AA as small text on the
-     near-black surfaces. --red-bright stays for fills and large display type. */
-  --red-ink: #ff5a3c;
+  --red: var(--ruby);
+  --red-bright: var(--ruby-hover);
+  --red-dark: var(--ruby-deep);
+  --red-text: var(--ruby-text-paper);
+  --red-ink: var(--ruby-text-dark);
   --gold: #d16f4c;
   --gold-bright: #ef8d6a;
   /* Gold reserved for text on light surfaces. Dark enough to clear WCAG AA
      at 12px against --paper and --paper-warm. */
   --gold-dark: #74290e;
-  --brand-red: #c7391d;
-  --brand-red-bright: #e8492b;
-  --brand-red-dark: #761f0d;
+  --brand-red: var(--ruby);
+  --brand-red-bright: var(--ruby-hover);
+  --brand-red-dark: var(--ruby-deep);
   --line: rgba(255, 255, 255, 0.13);
   --line-strong: rgba(255, 255, 255, 0.24);
   --container: min(100% - 64px, 1440px);
@@ -48,7 +46,7 @@
   --ease-out: cubic-bezier(0.16, 0.84, 0.34, 1);
   --ease-smooth: cubic-bezier(0.2, 0.7, 0.2, 1);
   --gold-glow: rgba(212, 91, 47, 0.18);
-  --red-glow: rgba(181, 45, 18, 0.12);
+  --red-glow: var(--ruby-glow);
 }
 
 @media (max-width: 767.98px) {
@@ -311,7 +309,7 @@ select {
   padding: calc(var(--header-height) + clamp(46px, 5vw, 76px)) 0 0;
   background:
     radial-gradient(ellipse 46% 58% at 76% 42%, rgba(212, 91, 47, 0.11), transparent 70%),
-    radial-gradient(ellipse 38% 46% at 6% 88%, rgba(181, 45, 18, 0.13), transparent 72%),
+    radial-gradient(ellipse 38% 46% at 6% 88%, color-mix(in srgb, var(--ruby-deep) 13%, transparent), transparent 72%),
     linear-gradient(180deg, #070707 0%, #0a0a0a 62%, #070707 100%);
 }
 
@@ -332,7 +330,7 @@ select {
   overflow: hidden;
   background:
     radial-gradient(circle at 76% 30%, rgba(212, 91, 47, 0.2), transparent 26%),
-    radial-gradient(circle at 58% 64%, rgba(181, 45, 18, 0.13), transparent 38%);
+    radial-gradient(circle at 58% 64%, color-mix(in srgb, var(--ruby-deep) 13%, transparent), transparent 38%);
 }
 
 /* Orbital rings give the static visual depth without any WebGL cost. */
@@ -2979,8 +2977,8 @@ h1 em {
   display: inline-block;
   padding: 4px 10px;
   border-radius: 3px;
-  background: rgba(181, 45, 18, 0.14);
-  border: 1px solid rgba(181, 45, 18, 0.35);
+  background: color-mix(in srgb, var(--ruby-deep) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ruby-deep) 35%, transparent);
   color: var(--paper);
   font-family: var(--mono);
   font-size: var(--type-micro);
@@ -3137,8 +3135,7 @@ h1 em {
 .process-section,
 .standard-section,
 .about-section,
-.contact-section,
-.site-footer {
+.contact-section {
   content-visibility: auto;
   contain-intrinsic-block-size: auto var(--cv-size, 1000px);
 }
@@ -3150,7 +3147,6 @@ h1 em {
 .standard-section { --cv-size: 595px; }
 .about-section { --cv-size: 1070px; }
 .contact-section { --cv-size: 860px; }
-.site-footer { --cv-size: 1020px; }
 
 @media (max-width: 1100px) {
   .services-section { --cv-size: 2235px; }
@@ -3160,7 +3156,6 @@ h1 em {
   .standard-section { --cv-size: 595px; }
   .about-section { --cv-size: 1045px; }
   .contact-section { --cv-size: 885px; }
-  .site-footer { --cv-size: 1240px; }
 }
 
 @media (max-width: 960px) {
@@ -3171,7 +3166,6 @@ h1 em {
   .standard-section { --cv-size: 750px; }
   .about-section { --cv-size: 1505px; }
   .contact-section { --cv-size: 1410px; }
-  .site-footer { --cv-size: 1385px; }
 }
 
 @media (max-width: 720px) {
@@ -3182,10 +3176,10 @@ h1 em {
   .standard-section { --cv-size: 820px; }
   .about-section { --cv-size: 1815px; }
   .contact-section { --cv-size: 1990px; }
-  .site-footer { --cv-size: 1690px; }
 }
 
-/* The three remaining below-the-fold bands (services, film, stack) join the same
+/* The shared footer always lays out so fast scrolling cannot skip its links.
+   The three remaining below-the-fold bands (services, film, stack) join the same
    deferral. Heights are medians measured per tier, content-box only. */
 .ruby-band,
 .brand-film-section,

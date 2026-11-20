@@ -1,10 +1,7 @@
-/* Studio identity layer: vermilion accent on warm black, Bricolage Grotesque headlines,
+/* Studio identity layer: ruby accent on warm black, Bricolage Grotesque headlines,
    Instrument Serif italic reserved for short accent phrases. Loaded last. */
 :root {
   --accent-serif: var(--font-accent), "Instrument Serif", Georgia, serif;
-  --studio-vermilion: #ff5a3c;
-  --studio-vermilion-hover: #ff7a5c;
-  --studio-on-vermilion: #160d0a; /* 6.3:1 on --studio-vermilion */
 }
 
 /* Accent phrases inside headlines: the only serif on the page. */
@@ -15,29 +12,35 @@
   letter-spacing: -0.01em;
 }
 
-/* Primary actions: bright vermilion fill with dark text (white on vermilion fails AA). */
+/* Primary actions: Ruby fills use white text to meet WCAG AA. */
 :root :is(.nav-wrap--home .header-project-cta, .ruby-project-cta, .ruby-cinematic .button-primary, .ruby-cinematic .site-nav > .nav-cta) {
-  border-color: var(--studio-vermilion);
-  background: var(--studio-vermilion);
-  color: var(--studio-on-vermilion);
+  border-color: var(--ruby);
+  background: var(--ruby);
+  color: var(--ruby-on);
 }
 
-:root :is(.nav-wrap--home .header-project-cta, .ruby-project-cta, .ruby-cinematic .button-primary, .ruby-cinematic .site-nav > .nav-cta):is(:hover, :active, :focus-visible) {
-  border-color: var(--studio-vermilion-hover);
-  background: var(--studio-vermilion-hover);
-  color: var(--studio-on-vermilion);
+:root :is(.nav-wrap--home .header-project-cta, .ruby-project-cta, .ruby-cinematic .button-primary, .ruby-cinematic .site-nav > .nav-cta):is(:hover, :focus-visible) {
+  border-color: var(--ruby-hover);
+  background: var(--ruby-hover);
+  color: var(--ruby-on);
+}
+
+:root :is(.nav-wrap--home .header-project-cta, .ruby-project-cta, .ruby-cinematic .button-primary, .ruby-cinematic .site-nav > .nav-cta):active {
+  border-color: var(--ruby-deep);
+  background: var(--ruby-deep);
+  color: var(--ruby-on);
 }
 
 /* Grotesque headlines need more air than the old Didone tracking (-0.05em to -0.065em). */
 :root :is(h1, h2) { letter-spacing: -0.035em !important; }
 :root :is(h1, h2) em { letter-spacing: -0.01em !important; }
 
-/* Closing call to action: a solid vermilion band with dark type. */
-.studio-footer-closing { background: var(--studio-vermilion); border-bottom-color: #160d0a; }
+/* Closing call to action: a solid ruby band with white type. */
+.studio-footer-closing { background: var(--ruby); border-bottom-color: var(--ruby-deep); }
 .studio-footer-closing .cinema-label,
 .studio-footer-closing h2,
-.studio-footer-closing h2 em { color: var(--studio-on-vermilion) !important; }
-.studio-footer-closing .ruby-project-cta:focus-visible { outline: 2px solid var(--studio-on-vermilion); outline-offset: 3px; }
+.studio-footer-closing h2 em { color: var(--ruby-on) !important; }
+.studio-footer-closing .ruby-project-cta:focus-visible { outline: 2px solid var(--ruby-on); outline-offset: 3px; }
 
 /* About plate: three overlapping captures of real client sites instead of stock artwork. */
 .studio-plate--work { position: relative; overflow: hidden; background: #0f0c0a; }
@@ -62,6 +65,6 @@
   .studio-plate--work [data-shot="2"] { top: 42%; left: 10%; }
 }
 
-/* The closing band's button sits on vermilion, so it inverts to dark ink (beats the shared CTA rule). */
-:root .studio-footer-closing .studio-shell > a.ruby-project-cta.ruby-project-cta { border-color: var(--studio-on-vermilion); background: var(--studio-on-vermilion); color: #fff5ef; }
-:root .studio-footer-closing .studio-shell > a.ruby-project-cta.ruby-project-cta:is(:hover, :active, :focus-visible) { border-color: #2a1a14; background: #2a1a14; color: #fff5ef; }
+/* The button on the ruby band uses a white fill and ruby text (beats the shared CTA rule). */
+:root .studio-footer-closing .studio-shell > a.ruby-project-cta.ruby-project-cta { border-color: var(--ruby-on); background: var(--ruby-on); color: var(--ruby-text-paper); }
+:root .studio-footer-closing .studio-shell > a.ruby-project-cta.ruby-project-cta:is(:hover, :active, :focus-visible) { border-color: var(--ruby-on); background: var(--ruby-deep); color: var(--ruby-on); }

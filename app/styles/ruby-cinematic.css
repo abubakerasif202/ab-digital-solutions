@@ -1,49 +1,24 @@
 /* Ruby Cinematic / V2 — a complete six-chapter composition, not a recoloured V1. */
-.ruby-cinematic {
-  --cinema-ink: #0a0908;
-  --cinema-paper: #f7f1eb;
-  --cinema-gold: #e5ae9a;
-  --cinema-muted: #bcb2bb;
-  --ruby-electric: #ff5a3c;
-  --ruby-deep: #b8341a;
-  --ruby-wine: #47170d;
-  --ruby-bright: #ff6a4a;
-  --gilt: #e5ae9a;
-  --gilt-bright: #f6caba;
-  --accent-ink: #ef816b;
-  background: #0a0908;
-}
-.ruby-cinematic ::selection { background: #b8341a; color: #fff; }
-/* Fully opaque at every scroll position and width: section headings must never read through the header. */
-.ruby-cinematic .site-header, .ruby-cinematic .site-header.is-scrolled { background: #0a0908; backdrop-filter: none; border-bottom-color: #ff5a3c38; }
-.ruby-cinematic .site-header .brand-lockup { gap: 10px; }
-.ruby-cinematic .brand-monogram-image { width: 42px; height: 42px; }
-.ruby-cinematic .brand-wordmark { font-family: var(--sans), sans-serif; font-size: 15px; letter-spacing: -.025em; font-weight: 600; text-transform: none; }
-.ruby-cinematic .brand-wordmark i { color: #ff5a3c; font-size: 22px; margin-inline: 7px; font-weight: 400; }
-.ruby-cinematic .site-nav > a:is(:hover,[aria-current]) { color: #f8b5a8; }
-.ruby-cinematic .site-nav > .nav-cta, .ruby-cinematic .button-primary { background: #a72c13; border-color: #ff5a3c; color: #fcfaf9; }
-.ruby-cinematic .site-nav > .nav-cta:hover, .ruby-cinematic .button-primary:hover { background: #b9351b; border-color: #ff6d50; }
-.ruby-cinematic .mobile-project-cta { background: #a72c13; color: #fcfaf9; border-color: #ff5a3c; }
 .ruby-cinematic .ruby-page { background: #0a0908; color: #f7f1eb; }
-.ruby-cinematic .ruby-page :is(h1,h2) em { color: #ef816b !important; }
+.ruby-cinematic .ruby-page :is(h1,h2) em { color: var(--cinema-gold) !important; }
 .ruby-cinematic .ruby-page .ruby-hero .ruby-title em { color: var(--hero-accent) !important; font-weight: 500; }
-.ruby-page .ruby-eyebrow { color: #ef9482; }
-.ruby-page .cinema-link { border-color: #ff5a3c77; transition: border-color .3s,color .3s; }
-.ruby-page .cinema-link:hover { border-color: #ff836a; color: #f8b5a8; }
+.ruby-page .ruby-eyebrow { color: var(--ruby-text-dark); }
+.ruby-page .cinema-link { border-color: color-mix(in srgb, var(--ruby) 46.7%, transparent); transition: border-color .3s,color .3s; }
+.ruby-page .cinema-link:hover { border-color: var(--ruby-text-dark); color: var(--ruby-text-dark); }
 /* Real footage remains the leading image; the shade is local, not a black veil. */
 .ruby-page .ruby-hero { min-height: max(800px,calc(100svh - var(--header-height))); background: #171514; }
 .ruby-hero-shade { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .ruby-hero-light { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .ruby-hero-topline { position: relative; display: flex; justify-content: space-between; gap: 24px; padding-block: 32px; }
 .ruby-hero-topline p { display: flex; gap: 14px; align-items: center; margin-bottom: 0; font-size: var(--fs-label); color: #fbf9f8; text-shadow: 0 1px 8px #000; }
-.ruby-signal { height: 6px; width: 6px; flex-shrink: 0; background: #ff6a4a; border-radius: 50%; box-shadow: 0 0 18px #ff6a4a99; }
+.ruby-signal { height: 6px; width: 6px; flex-shrink: 0; background: var(--ruby-hover); border-radius: 50%; box-shadow: 0 0 18px color-mix(in srgb, var(--ruby-hover) 60%, transparent); }
 .ruby-hero-composition { position: relative; padding-block: clamp(80px,13vh,155px) 80px; }
 .ruby-page .ruby-title { margin: 0; font-family: var(--sans), sans-serif; font-weight: 500; text-wrap: initial; }
 .ruby-hero-bottomline { position: relative; display: flex; gap: 30px; align-items: center; justify-content: space-between; padding-block: 23px; border-top: 1px solid #f7f1eb44; }
 .ruby-hero-bottomline > .cinema-label { font-size: var(--fs-label); color: #d3d0ce; }
 .ruby-filmstrip { display: flex; gap: 5px; align-items: center; }
 .ruby-filmstrip i { width: 29px; height: 3px; background: #ffffff25; }
-.ruby-filmstrip i:nth-child(-n+3) { background: #ff5a3c; }
+.ruby-filmstrip i:nth-child(-n+3) { background: var(--ruby); }
 /* The identity chapter is an oversized typographic composition, not a paragraph block. */
 .ruby-positioning { position: relative; padding-block: clamp(100px,13vw,200px); background: #0a0908; overflow: hidden; }
 .ruby-positioning-grid { position: relative; display: grid; grid-template-columns: .7fr 2fr; column-gap: clamp(60px,9vw,150px); }
@@ -61,47 +36,37 @@
 .ruby-disciplines { list-style: none; padding: 0; margin: 0; border-top: 1px solid #f7f1eb33; }
 .ruby-disciplines > li { border-bottom: 1px solid #f7f1eb26; }
 .ruby-discipline { position: relative; isolation: isolate; overflow: hidden; padding: 38px 0; display: grid; grid-template-columns: 40px 1.15fr 1fr 52px; gap: 28px; align-items: center; text-decoration: none; color: #f7f1eb; }
-.ruby-discipline::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse at var(--ruby-x,50%) var(--ruby-y,50%),#b8341a59,transparent 75%); opacity: 0; transition: opacity .5s; }
+.ruby-discipline::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse at var(--ruby-x,50%) var(--ruby-y,50%),color-mix(in srgb, var(--ruby-text-paper) 34.9%, transparent),transparent 75%); opacity: 0; transition: opacity .5s; }
 .ruby-discipline:hover::before, .ruby-discipline:focus-visible::before { opacity: 1; }
-.ruby-discipline-number { color: #e59c8d; align-self: start; padding-top: 12px; }
+.ruby-discipline-number { color: var(--cinema-gold); align-self: start; padding-top: 12px; }
 .ruby-discipline-copy { max-width: 330px; color: #c2b4c0; font-size: var(--fs-label); line-height: 1.9; }
 .ruby-discipline-copy > .cinema-label { display: block; font-size: var(--fs-label); color: #9d9894; margin-top: 20px; }
 .ruby-discipline-arrow { width: 48px; height: 48px; border: 1px solid #f7f1eb44; border-radius: 50%; display: grid; place-items: center; transition: background .4s,border-color .4s,transform .4s; }
 .ruby-discipline-arrow svg { width: 22px; }
-.ruby-discipline:is(:hover, :focus-visible) .ruby-discipline-arrow { background: #b8341a; border-color: #ff5a3c; transform: rotate(45deg); }
+.ruby-discipline:is(:hover, :focus-visible) .ruby-discipline-arrow { background: var(--ruby-text-paper); border-color: var(--ruby); transform: rotate(45deg); }
 /* A new, click-to-load editorial film replaces the old 3D showreel. */
 .ruby-page .ruby-film { padding-block: clamp(95px,12vw,180px); background: #0a0908; }
 .ruby-film .ruby-section-header { margin-bottom: 60px; }
 .ruby-film .ruby-section-header > p:last-child { max-width: 290px; }
 .ruby-film-stage { position: relative; }
-.ruby-film-stage::before { content: ""; position: absolute; inset: -1px; border: 1px solid #ff5a3c55; pointer-events: none; }
+.ruby-film-stage::before { content: ""; position: absolute; inset: -1px; border: 1px solid color-mix(in srgb, var(--ruby) 33.3%, transparent); pointer-events: none; }
 .ruby-film .brand-film-grid { display: block; }
 .ruby-film .brand-film-video { min-width: 0; }
 .ruby-film .film-player { border: 0; background: #0e0d0c; }
 .ruby-film .film-player > :first-child { border-radius: 0; }
-.ruby-film .film-play-big { border-color: #ff5a3c; background: #b8341abb; color: #fff; }
-.ruby-film .film-chapter[aria-current] { color: #ffa795; }
-.ruby-film .film-chapters { border-color: #ff5a3c44; }
+.ruby-film .film-play-big { border-color: var(--ruby); background: color-mix(in srgb, var(--ruby-text-paper) 73.3%, transparent); color: #fff; }
+.ruby-film .film-chapter[aria-current] { color: var(--ruby-text-dark); }
+.ruby-film .film-chapters { border-color: color-mix(in srgb, var(--ruby) 26.7%, transparent); }
 .ruby-film .film-controls { background: #110f0e; }
-.ruby-film .film-scrub { accent-color: #ff5a3c; }
+.ruby-film .film-scrub { accent-color: var(--ruby); }
 .ruby-film-credit { display: flex; gap: 25px; align-items: baseline; justify-content: space-between; margin-top: 22px; color: #aa98a6; font-size: var(--fs-label); line-height: 1.7; }
 .ruby-film-credit a { display: inline-flex; align-items: center; min-height: 44px; color: #d0cbc7; text-underline-offset: 4px; }
 /* Enquiry is the final scene, with its original validated form intact. */
 .ruby-contact { background: #0f0d0c; }
 .ruby-cinematic .ruby-contact .studio-enquiry .studio-display { font-size: clamp(32px,3.8vw,55px); }
-.ruby-cinematic .studio-contact-rows a:hover strong { color: #f3b1a4; }
-.ruby-cinematic .studio-enquiry .studio-form-panel { background: #141211; border-color: #ff5a3c33; }
 .ruby-colophon { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; padding-block: 35px; border-top: 1px solid #ffffff1f; font-size: var(--fs-label); color: #beafa5; }
 .ruby-colophon a { display: flex; gap: 14px; align-items: center; min-height: 44px; color: #d2cdca; }
 .ruby-colophon svg { width: 14px; }
-/* Interior language follows the identity without altering its factual content. */
-.ruby-cinematic .cinema-interior { --cinema-ink: #0a0908; --cinema-gold: #e5ae9a; --accent-ink: var(--cinema-gold); }
-.ruby-cinematic .studio-page--contact { --accent-ink: var(--cinema-gold); }
-.ruby-cinematic .cinema-interior :is(.cinema-chapter-label,.case-kicker,.eyebrow) { color: #ef9886; }
-.ruby-cinematic .cinema-interior .cinema-paper .eyebrow { color: var(--bone-gilt); }
-.ruby-cinematic .cinema-interior :is(.cinema-interior-hero,.case-hero,.studio-service-hero) { position: relative; background: radial-gradient(ellipse at 90% 10%,#47170d55,transparent 60%),#0a0908; }
-.ruby-cinematic .cinema-work .work-index-filter.is-active { color: #ffae9e; box-shadow: inset 0 -1px #ff5a3c; }
-.ruby-cinematic .cinema-interior .cinema-chapter-label { border-top-color: #ff5a3c55; }
 @media (max-width: 1100px) {
   .ruby-positioning-grid { grid-template-columns: .5fr 2fr; gap: 45px; }
   .ruby-positioning-bottom { align-items: flex-start; flex-direction: column; gap: 20px; }
@@ -110,15 +75,11 @@
   .ruby-discipline-arrow { width: 40px; height: 40px; }
 }
 @media (max-width: 960px) {
-  .ruby-cinematic .site-header, .ruby-cinematic .site-header.is-scrolled { backdrop-filter: none; }
-  .ruby-cinematic .site-nav.is-open { background: #100e0d; }
   .ruby-page .ruby-hero { min-height: max(800px,calc(100svh - var(--header-height))); }
   .ruby-positioning-grid { grid-template-columns: 1fr 3fr; gap: 28px; }
   .ruby-section-header h2 { font-size: clamp(45px,6.6vw,65px); }
 }
 @media (max-width: 600px) {
-  .ruby-cinematic .brand-wordmark { font-size: 13px; }
-  .ruby-cinematic .brand-monogram-image { width: 35px; height: 35px; }
   .ruby-page .ruby-hero { min-height: max(790px,calc(100svh - var(--header-height))); }
   .ruby-filmstrip { display: none; }
   .ruby-positioning { padding-block: 75px 90px; }

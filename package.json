@@ -45,6 +45,7 @@
     "sharp": "0.35.5",
     "nanoid": "3.3.18"
   },
+  "browserslist": ["chrome >= 111", "edge >= 111", "firefox >= 111", "safari >= 16.4"],
   "type": "module",
   "displayName": "AB Web Studio"
 }

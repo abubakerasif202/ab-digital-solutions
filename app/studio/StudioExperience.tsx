@@ -144,20 +144,28 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   };
 
   // Opening or closing room details resizes the 3D view on small screens. Keep the room tabs where the visitor's eyes are.
-  const navTop = useRef<number | null>(null);
+  const navDocumentTop = useRef<number | null>(null);
   useEffect(() => {
-    const track = () => { navTop.current = roomNav.current?.getBoundingClientRect().top ?? null; };
-    track();
-    addEventListener("scroll", track, { passive: true });
-    addEventListener("resize", track);
-    return () => { removeEventListener("scroll", track); removeEventListener("resize", track); };
+    const nav = roomNav.current;
+    const scene = stage.current;
+    if (!nav || !scene) return;
+    const measure = () => { navDocumentTop.current = nav.getBoundingClientRect().top + scrollY; };
+    const resize = new ResizeObserver(measure);
+    resize.observe(scene);
+    resize.observe(nav);
+    measure();
+    addEventListener("resize", measure);
+    return () => { resize.disconnect(); removeEventListener("resize", measure); };
   }, []);
   useLayoutEffect(() => {
-    const node = roomNav.current;
-    if (!node || navTop.current === null) return;
-    const delta = node.getBoundingClientRect().top - navTop.current;
-    if (Math.abs(delta) > 1) scrollBy({ top: delta, behavior: "instant" });
-    navTop.current = node.getBoundingClientRect().top;
+    const nav = roomNav.current;
+    const prior = navDocumentTop.current;
+    if (!nav || prior === null) return;
+    const next = nav.getBoundingClientRect().top + scrollY;
+    navDocumentTop.current = next;
+    if (Math.abs(next - prior) > 1) {
+      scrollBy({ top: next - prior, behavior: "instant" });
+    }
   }, [state.panel]);
 
   useEffect(() => { audio.attach(); return () => audio.dispose(); }, [audio]);
@@ -193,9 +201,13 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting && !document.hidden), { threshold: 0.05 });
+    let intersects = false;
+    const visibility = () => setVisible(intersects && !document.hidden);
+    const observer = new IntersectionObserver(([entry]) => {
+      intersects = entry.isIntersecting;
+      visibility();
+    }, { threshold: 0.05 });
     if (stage.current) observer.observe(stage.current);
-    const visibility = () => setVisible(!document.hidden && !!stage.current && stage.current.getBoundingClientRect().bottom > 0 && stage.current.getBoundingClientRect().top < innerHeight);
     document.addEventListener("visibilitychange", visibility);
     return () => { observer.disconnect(); document.removeEventListener("visibilitychange", visibility); };
   }, []);

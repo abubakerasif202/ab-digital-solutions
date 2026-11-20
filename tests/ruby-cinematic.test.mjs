@@ -17,14 +17,11 @@ test("ruby homepage is recomposed into work-first hero, identity, exhibition, se
   assert.doesNotMatch(home, /cinema-film-drawer|Original AI-generated harbour study|<LogoReveal|VirtualStudioPreview|processSteps/);
 });
 
-test("studio identity layer loads last with AA-safe vermilion actions and serif-only accents", async () => {
+test("studio identity layer loads last with AA-safe ruby actions and serif-only accents", async () => {
   const [identity, layout] = await Promise.all([source("app/styles/studio-identity.css"), source("app/layout.tsx")]);
   const imports = [...layout.matchAll(/^import "\.\/(?:styles\/)?[^"]+\.css";$/gm)].map((match) => match[0]);
   assert.equal(imports.at(-1), 'import "./styles/studio-identity.css";');
-  assert.match(identity, /--studio-vermilion: #ff5a3c;/);
-  // Dark text on vermilion (6.3:1); white on #ff5a3c would fail WCAG AA.
-  assert.match(identity, /--studio-on-vermilion: #160d0a;/);
-  assert.match(identity, /background: var\(--studio-vermilion\);\s*color: var\(--studio-on-vermilion\);/);
+  assert.match(identity, /background: var\(--ruby\);\s*color: var\(--ruby-on\);/);
   assert.match(identity, /\) em \{\s*font-family: var\(--accent-serif\) !important;\s*font-style: italic;/);
 });
 
@@ -54,16 +51,17 @@ test("hero work wall shows every real case study, decoratively, with a working p
 });
 
 test("ruby palette and progressive motion have an explicit reduced-motion fallback", async () => {
-  const [styles, motion, layout, kinetic] = await Promise.all([source("app/styles/ruby-cinematic.css"), source("app/components/cinematic/RubyMotion.tsx"), source("app/layout.tsx"), source("app/styles/ruby-kinetic.css")]);
-  // Vermilion on warm black: the studio identity, not the retired wine/gold palette.
-  for (const color of ["#0a0908", "#ff5a3c", "#b8341a", "#e5ae9a"]) assert.ok(styles.toLowerCase().includes(color), color);
+  const [styles, motion, layout, kinetic, shared, home] = await Promise.all([source("app/styles/ruby-cinematic.css"), source("app/components/cinematic/RubyMotion.tsx"), source("app/layout.tsx"), source("app/styles/ruby-kinetic.css"), source("app/styles/ruby-shared.css"), source("app/page.tsx")]);
+  // Preserve the near-black and gilt surfaces while using the shared ruby tokens.
+  for (const color of ["#0a0908", "var(--ruby)", "var(--ruby-deep)", "#e5ae9a"]) assert.ok((styles + shared).toLowerCase().includes(color), color);
   for (const retired of ["#e32655", "#9b1535", "#e5c59a"]) assert.ok(!styles.toLowerCase().includes(retired), retired);
   assert.ok(styles.includes("prefers-reduced-motion: reduce"));
   assert.ok(kinetic.includes("@supports (animation-timeline: view())"));
   assert.ok(motion.includes("cancelAnimationFrame"));
   assert.ok(motion.includes("removeEventListener"));
   assert.ok(motion.includes("prefers-reduced-motion: reduce"));
-  assert.ok(layout.indexOf('"./styles/ruby-cinematic.css"') > layout.indexOf('"./styles/cinematic-interiors.css"'));
+  assert.ok(layout.indexOf('"./styles/ruby-shared.css"') > layout.indexOf('"./styles/cinematic-shared.css"'));
+  assert.ok(home.indexOf('"./styles/ruby-cinematic.css"') > home.indexOf('"./styles/cinematic.css"'));
 });
 
 test("V3 mounts documented real-footage derivatives instead of the archived AI study", async () => {

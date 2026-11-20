@@ -8,6 +8,7 @@ import { PointerFX } from "./components/PointerFX";
 import { siteConfig } from "./site-config";
 import { servicePages } from "./services/service-data";
 import { WebVitals } from "./web-vitals";
+import "./styles/ruby-palette.css";
 import "./globals.css";
 import "./studio.css";
 import "./motion.css";
@@ -24,13 +25,8 @@ import "./styles/studio-system.css";
 import "./styles/studio-sections.css";
 import "./styles/studio-harmony.css";
 import "./styles/brand-film.css";
-import "./styles/cinematic.css";
-import "./styles/cinematic-interiors.css";
-import "./styles/ruby-cinematic.css";
-import "./styles/project-exhibition.css";
-import "./styles/ruby-kinetic.css";
-import "./styles/ruby-mobile-motion.css";
-import "./styles/homepage-refinement.css";
+import "./styles/cinematic-shared.css";
+import "./styles/ruby-shared.css";
 import "./styles/studio-identity.css";
 
 export const metadata: Metadata = {

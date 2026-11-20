@@ -143,3 +143,7 @@ This is a complete usable stock-footage-based web sequence and original studio e
 ## Archived V1 study
 
 `public/cinematic/sydney-night-v1*` remains available but unmounted. It originated from Creative Claw job `65073f86-f290-4c64-a663-ebbdd192ad7f`, actual provider model `video/minimax-h3-max-turbo`, an eight-second free AI preview. It is not real recorded cinematography. `public/film/ab-web-studio-film-*` also remains unmounted; its previous 3D-led branding direction is not the V2 film. Retaining these bytes avoids unrelated deletion and preserves rollback options.
+
+## Archive status
+
+The V1 and V2 encodes and public film directory were removed from the deployed public tree after the work-first homepage replaced the film. References above document historical releases; the V3 footage and posters are retained, including variants resolved by the cinematic media component.
