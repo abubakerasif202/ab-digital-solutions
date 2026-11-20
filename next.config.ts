@@ -110,7 +110,7 @@ const nextConfig: NextConfig = {
       // Film and brand files keep stable filenames, so they cannot be immutable:
       // a day of browser caching plus a week of stale-while-revalidate lets the
       // CDN and repeat visitors skip revalidating multi-megabyte media.
-      ...["/film/:path*", "/brand/:path*"].map((source) => ({
+      ...["/film/:path*", "/brand/:path*", "/intro/:path*"].map((source) => ({
         source,
         headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
       })),

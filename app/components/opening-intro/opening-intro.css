@@ -1,0 +1,86 @@
+/*
+ * Opening intro (homepage, first visit per session). The shade is hidden unless the inline gate enables it,
+ * so no-script visitors, crawlers and repeat visits never see it. Only opacity animates.
+ */
+.opening-intro-shade { display: none; }
+
+html[data-opening-intro] { overflow: hidden; } /* scroll lock, released when the attribute is removed */
+
+html[data-opening-intro] .opening-intro-shade {
+  --opening-intro-fade: 500ms;
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: block;
+  background: #070708 url("/intro/ab-intro-poster.webp") center / contain no-repeat;
+  opacity: 1;
+  transition: opacity var(--opening-intro-fade) ease;
+}
+
+html[data-opening-intro="leaving"] .opening-intro-shade { opacity: 0; }
+
+.opening-intro {
+  --opening-intro-fade: 500ms;
+  position: fixed;
+  z-index: 10001;
+  inset: 0;
+  overscroll-behavior: none;
+  touch-action: none;
+  opacity: 1;
+  transition: opacity var(--opening-intro-fade) ease;
+}
+
+.opening-intro[data-leaving] { opacity: 0; pointer-events: none; }
+
+/*
+ * The video box takes the film's own aspect ratio (1280x720 desktop, 640x444 phones: keep in step with the
+ * controller's max-width: 767px query), so object-fit: contain never crops the logo or the AB WEB STUDIO line.
+ * A static mask feathers the box edges into the shade, hiding the seam where the film's slightly lighter
+ * backdrop meets the near-black page. Nothing here animates.
+ */
+.opening-intro-video {
+  --opening-intro-aspect: 1.7778;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100%, calc(100vh * var(--opening-intro-aspect)));
+  width: min(100%, calc(100dvh * var(--opening-intro-aspect)));
+  aspect-ratio: var(--opening-intro-aspect);
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  background: transparent;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+  mask-composite: intersect;
+}
+
+@media (max-width: 767px) {
+  .opening-intro-video { --opening-intro-aspect: 1.4414; }
+}
+
+.opening-intro-skip {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid #f7f1eb59;
+  background: #0a0908b8;
+  color: #f7f1eb;
+  font: 500 12px/1 var(--font-mono, ui-monospace, monospace);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.opening-intro-skip:hover { border-color: #f7f1ebb3; }
+.opening-intro-skip:focus-visible { outline: 2px solid #e89a7e; outline-offset: 3px; }
+
+/* Reduced motion never plays the film and never covers the page, even if something enables the attribute. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-opening-intro] { overflow: visible; }
+  html[data-opening-intro] .opening-intro-shade,
+  .opening-intro { display: none; }
+}
