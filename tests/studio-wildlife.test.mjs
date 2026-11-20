@@ -253,6 +253,30 @@ test("zero volume plays nothing and volume is clamped and stored", async () => {
   assert.equal(JSON.parse(storage.data.get(STORAGE_KEY)).volume, 0);
   audio.dispose();
 });
+test("loadPrefs publishes the saved choice without creating an audio context; attach still starts the engine", async () => {
+  const storage = memory();
+  storage.data.set(STORAGE_KEY, JSON.stringify({ enabled: true, volume: 0.3 }));
+  const { Ctor, log } = fakeAudio();
+  let created = 0;
+  class Counting extends Ctor { constructor() { super(); created++; } }
+  const audio = new StudioAudio({ storage, AudioContextCtor: Counting, now: () => 0 });
+  let notified = 0;
+  audio.subscribe(() => { notified++; });
+  audio.loadPrefs();
+  audio.loadPrefs();
+  assert.equal(created, 0, "no AudioContext before a gesture");
+  assert.equal(audio.getSnapshot().enabled, true);
+  assert.equal(audio.getSnapshot().volume, 0.3);
+  assert.equal(notified, 1, "prefs load once");
+  assert.equal(audio.play("select"), false, "silent until the engine starts");
+  audio.attach();
+  await audio.resume();
+  assert.equal(created, 1);
+  assert.equal(audio.getSnapshot().status, "ready");
+  assert.equal(audio.play("select"), true);
+  assert.ok(log.oscillators > 0);
+  audio.dispose();
+});
 test("unsupported browsers report it and every call is a safe no-op", () => {
   const audio = new StudioAudio({ storage: memory(), AudioContextCtor: null });
   audio.attach();

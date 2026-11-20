@@ -13,6 +13,7 @@ import { StudioAudio, type Cue } from "./audio/studio-audio";
 import { LocalBubble, LocalsPanel, SoundControls, type Caption } from "./StudioWildlife";
 import { animals, cooldownReady, createLinePicker, REACTION_COOLDOWN_MS, type AnimalId } from "./world/sim/wildlife";
 import { onAnimalPicked, requestReaction } from "./world/wildlife-bus";
+import { whenIdle } from "../lib/when-idle";
 import styles from "./studio.module.css";
 
 const KANGAROO_BEATS = ["wave", "tilt", "hop"] as const;
@@ -168,7 +169,17 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     }
   }, [state.panel]);
 
-  useEffect(() => { audio.attach(); return () => audio.dispose(); }, [audio]);
+  // Creating the AudioContext is synchronous main-thread work (about 80 ms on a mid-range phone), and browsers keep
+  // audio locked until a gesture anyway. The saved sound choice loads when idle; the engine starts on the first
+  // gesture, which in capture phase runs before the click that enters the studio.
+  useEffect(() => {
+    const gestures = ["pointerdown", "keydown", "touchend"] as const;
+    const stopListening = () => gestures.forEach((name) => removeEventListener(name, start, true));
+    const start = () => { stopListening(); audio.attach(); };
+    const cancelIdle = whenIdle(() => audio.loadPrefs());
+    gestures.forEach((name) => addEventListener(name, start, { capture: true, passive: true }));
+    return () => { cancelIdle(); stopListening(); audio.dispose(); };
+  }, [audio]);
   useEffect(() => onAnimalPicked(interact), [interact]);
   // Soft welcome chime once the studio opens; a returning 3D view does not repeat it.
   useEffect(() => {

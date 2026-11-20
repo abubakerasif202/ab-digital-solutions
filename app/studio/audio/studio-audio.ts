@@ -74,6 +74,7 @@ export class StudioAudio {
   private master: GainNode | null = null;
   private gate = createCueGate();
   private attached = false;
+  private prefsLoaded = false;
   private cleanup: Array<() => void> = [];
   private readonly env: Env;
 
@@ -101,11 +102,22 @@ export class StudioAudio {
     return this.ctx?.state === "running" ? "ready" : "locked";
   }
 
+  /**
+   * Reads the saved mute/volume choice and publishes it, without creating the AudioContext.
+   * Cheap, so the controls can show the right state long before the engine starts.
+   */
+  loadPrefs() {
+    if (this.prefsLoaded) return;
+    this.prefsLoaded = true;
+    try { this.prefs = parsePrefs(this.storage?.getItem(STORAGE_KEY)); } catch { this.prefs = { ...DEFAULT_PREFS }; }
+    this.publish();
+  }
+
   /** Starts the engine in the browser: loads the saved choice, attempts playback now, and unlocks on the first gesture if blocked. */
   attach() {
     if (this.attached) return;
     this.attached = true;
-    try { this.prefs = parsePrefs(this.storage?.getItem(STORAGE_KEY)); } catch { this.prefs = { ...DEFAULT_PREFS }; }
+    this.loadPrefs();
     const Ctor = this.ctor;
     if (Ctor) {
       try {
@@ -201,6 +213,7 @@ export class StudioAudio {
     for (const fn of this.cleanup) fn();
     this.cleanup = [];
     this.attached = false;
+    this.prefsLoaded = false;
     this.gate.reset();
     try { this.master?.disconnect(); } catch { /* already gone */ }
     const ctx = this.ctx;
