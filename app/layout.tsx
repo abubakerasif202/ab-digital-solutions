@@ -1,9 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, IBM_Plex_Mono, Instrument_Serif, Schibsted_Grotesk } from "next/font/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnchorSettle } from "./components/AnchorSettle";
-
-
+import { DeferredSpeedInsights } from "./components/DeferredSpeedInsights";
 import { PointerFX } from "./components/PointerFX";
 import { siteConfig } from "./site-config";
 import { servicePages } from "./services/service-data";
@@ -197,7 +195,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <AnchorSettle />
         <PointerFX />
         {children}
-        <SpeedInsights />
+        <DeferredSpeedInsights />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
