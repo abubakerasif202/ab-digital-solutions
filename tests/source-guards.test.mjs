@@ -301,7 +301,7 @@ test("premium interaction layer is wired without heavy dependencies", async () =
     read("../app/agency-home.tsx"),
     read("../app/globals.css"),
     read("../app/components/intro/intro-gate.ts"),
-    read("../app/components/PointerFX.tsx"),
+    read("../app/components/pointer-fx.ts"),
     read("../app/site-chrome.tsx"),
     read("../app/work/[slug]/page.tsx"),
     read("../package.json"),
