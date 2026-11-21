@@ -344,6 +344,15 @@ body { background: var(--obsidian); color: var(--ivory); }
 .studio-footer-col--services { flex: 3 1 220px; }
 .studio-footer-col:last-child { flex: 3 1 220px; }
 
+@media (max-width: 480px) {
+  .studio-footer-main { gap: 36px 24px; }
+  .studio-footer-col,
+  .studio-footer-col--services,
+  .studio-footer-col:last-child {
+    flex: 1 1 100%;
+  }
+}
+
 .studio-footer-col h2 {
   margin: 0 0 16px;
   color: var(--gilt);
@@ -355,12 +364,12 @@ body { background: var(--obsidian); color: var(--ivory); }
 }
 
 .studio-footer-col ul { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 1.0625rem; }
-.studio-footer-col li > :is(a, span) { display: inline-flex; align-items: center; min-height: 44px; padding: 0; color: var(--ivory-muted); text-decoration: none; }
-.studio-footer-col a { transition: color var(--dur-ui) var(--ease-lux); }
+.studio-footer-col li > :is(a, span) { display: inline-flex; align-items: center; min-height: 44px; padding: 0; color: var(--ivory-muted); text-decoration: none; max-width: 100%; }
+.studio-footer-col a { transition: color var(--dur-ui) var(--ease-lux); overflow-wrap: anywhere; word-break: break-word; }
 .studio-footer-col a:is(:hover, :focus-visible) { color: var(--ivory); }
 .studio-footer-col a.studio-footer-strong { color: var(--ivory); }
 .studio-footer-col a.studio-footer-strong:is(:hover, :focus-visible) { color: var(--gilt-bright); }
-.studio-footer-email { overflow-wrap: anywhere; }
+.studio-footer-email { overflow-wrap: anywhere; word-break: break-all; }
 
 .studio-footer-legal {
   display: flex;
