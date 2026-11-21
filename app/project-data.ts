@@ -19,6 +19,7 @@ export type Project = {
   techStack: readonly string[];
   kind?: "software";
   ctaLabel?: string;
+  ctaHeadline?: { lead: string; accent: string };
   /** Shorter name for the page title when the full name would push it past 60 characters. */
   titleName?: string;
   seoDescription?: string;
@@ -470,6 +471,7 @@ export const projects = [
     ],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "SEO Structure"],
     ctaLabel: "Visit Live Website",
+    ctaHeadline: { lead: "Let's build something", accent: "exceptional." },
     seoDescription: "Explore the Wild Pest Solutions website project by AB Web Studio, showcasing a professional digital presence for NSW feral animal management.",
     gallery: [
       { src: `${assetBase}/ab-portfolio-wild-pest-solutions-mobile.webp`, alt: "Wild Pest Solutions homepage at a 390 pixel mobile viewport", caption: "The homepage, designed for smaller screens.", aspectRatio: "390 / 844" },

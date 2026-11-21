@@ -299,7 +299,13 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
         <aside className="gr-final-cta" aria-label="Start your project">
           <Reveal className="container gr-final-cta-inner">
             <p className="eyebrow">Have a project in mind?</p>
-            <h2>{project.slug === "wild-pest-solutions" ? <>Let&apos;s build something <span className="accent-serif">exceptional.</span></> : <>Let&apos;s create a digital experience with a clear <span className="accent-serif">commercial purpose.</span></>}</h2>
+            <h2>
+              {project.ctaHeadline ? (
+                <>{project.ctaHeadline.lead.trimEnd()} <span className="accent-serif">{project.ctaHeadline.accent.trimStart()}</span></>
+              ) : (
+                <>Let&apos;s create a digital experience with a clear <span className="accent-serif">commercial purpose.</span></>
+              )}
+            </h2>
             <div className="content-actions">
               <Link className="button button-primary" href="/contact" data-magnetic>
                 Get a Website Quote <ArrowIcon />
