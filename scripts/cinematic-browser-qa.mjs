@@ -47,7 +47,7 @@ const interceptRequests = async (target) => {
       mockedRequests++;
       try {
         contactPayloads.push(JSON.parse(request.postData() || "{}"));
-        await request.respond({ status: mockedStatus, contentType: "application/json", body: JSON.stringify(mockedStatus === 200 ? { success: true } : { error: mockedMessage(mockedStatus) }) });
+        await request.respond({ status: mockedStatus, contentType: "application/json", body: JSON.stringify(mockedStatus === 200 ? { ok: true } : { error: mockedMessage(mockedStatus) }) });
       } catch (error) {
         contactInterceptionFailures.push({ method: request.method(), contentType: request.headers()["content-type"], error: error.message });
         // Never continue an unexpected/native submission to a real endpoint.
