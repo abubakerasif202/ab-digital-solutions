@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { siteConfig } from "../../site-config";
 import { RATE_LIMIT_RETRY_SECONDS, withinRateLimit } from "./rate-limit";
-import { BUDGET_OPTIONS, contactServices } from "../../contact-options";
+import { BUDGET_OPTIONS, contactServices, UNSURE_SERVICE } from "../../contact-options";
 
 export const runtime = "nodejs";
 
@@ -28,7 +28,7 @@ function deliveryKey(submissionId: string, fields: unknown[]) {
 function logDeliveryFailure(reason: string) {
   console.error(JSON.stringify({ event: "contact_delivery_failed", reason }));
 }
-const allowedServices = new Set<string>(contactServices);
+const allowedServices = new Set<string>([...contactServices, UNSURE_SERVICE]);
 const allowedBudgets = new Set<string>(["", ...BUDGET_OPTIONS]);
 const allowedTimelines = new Set(["", "As soon as possible", "Within 1 month", "Within 2–3 months", "Just exploring"]);
 
@@ -54,7 +54,8 @@ function selectedServices(payload: ContactPayload): string[] | null {
   if (!Array.isArray(choices) || choices.length === 0 || choices.length > allowedServices.size) return null;
   const services = choices.map((choice) => (typeof choice === "string" ? choice.trim() : ""));
   const valid = services.every((service) => allowedServices.has(service));
-  return valid && new Set(services).size === services.length ? services : null;
+  const mixedUnsure = services.length > 1 && services.includes(UNSURE_SERVICE);
+  return valid && !mixedUnsure && new Set(services).size === services.length ? services : null;
 }
 
 function allowedOrigin(request: NextRequest) {

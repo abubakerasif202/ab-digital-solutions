@@ -85,8 +85,8 @@ test("production gate: the route is a 404 when VERCEL_ENV=production", async ({ 
 
 test("the live homepage stays separate from the isolated preview", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator("h1.ruby-title")).toContainText("Digital experiences.");
-  await expect(page.locator(".ruby-hero")).toBeVisible();
+  await expect(page.locator("#hero-heading")).toHaveText("Websites built for real businesses.");
+  await expect(page.locator(".home-hero")).toBeVisible();
   await expect(page.locator(".odp")).toHaveCount(0);
 });
 

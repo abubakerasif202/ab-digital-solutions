@@ -21,11 +21,26 @@ for (const width of [320, 375, 390, 768, 1440, 1920]) {
       // A lazy image can expose its fallback src before the browser selects a
       // request. Decode selected sources; viewport-visible images must load too.
       await expect.poll(() => page.locator("img").evaluateAll(async (images) => {
+        // The transformed wall's tiles are clipped by their container. A viewport
+        // rectangle alone can mistake a clipped lazy tile for a visible image.
+        const visibleImages = await new Promise(resolve => {
+          if (images.length === 0) return resolve(new Set());
+          const visible = new Set();
+          const pending = new Set(images);
+          const observer = new IntersectionObserver(entries => {
+            for (const entry of entries) {
+              if (entry.isIntersecting && entry.intersectionRatio > 0) visible.add(entry.target);
+              pending.delete(entry.target);
+            }
+            if (pending.size === 0) {
+              observer.disconnect();
+              resolve(visible);
+            }
+          });
+          images.forEach(image => observer.observe(image));
+        });
         const results = await Promise.all(images.map(async (image) => {
-          const rect = image.getBoundingClientRect();
-          const visible = image.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })
-            && rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight
-            && rect.right > 0 && rect.left < innerWidth;
+          const visible = visibleImages.has(image) && image.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
           if (!image.currentSrc && !visible) return null;
           try {
             if (!visible) {
@@ -46,7 +61,7 @@ for (const width of [320, 375, 390, 768, 1440, 1920]) {
       }), { message: `${route}: selected images decode and visible images load` }).toEqual([]);
       if (route === "/") {
         await page.locator("#work-heading").scrollIntoViewIfNeeded();
-        await expect(page.locator(".ruby-title")).toHaveText(/Digital experiences\.\s*Beyond ordinary\./);
+        await expect(page.locator("#hero-heading")).toHaveText("Websites built for real businesses.");
         const contrast = await page.locator("#work-heading").evaluate((element) => {
           const rgb = value => value.match(/[\d.]+/g).slice(0, 3).map(Number);
           const luminance = channels => channels.map(channel => {
@@ -61,7 +76,7 @@ for (const width of [320, 375, 390, 768, 1440, 1920]) {
             return (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
           }));
         });
-        expect(contrast, "large exhibition heading and ruby accent contrast").toBeGreaterThanOrEqual(3);
+        expect(contrast, "Selected work heading contrast").toBeGreaterThanOrEqual(3);
         await mkdir(evidence, { recursive: true });
         await page.screenshot({ path: `${evidence}/${width}-selected-work.png` });
         await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
@@ -72,51 +87,24 @@ for (const width of [320, 375, 390, 768, 1440, 1920]) {
   });
 }
 
-test("cinematic motion plays by default, can be paused by the visitor and respects live reduced motion", async ({ page }) => {
-  await page.goto("/", { waitUntil: "networkidle" });
-  const video = page.locator(".cinema-media-video");
-  await expect.poll(() => video.evaluate((element) => element.currentTime)).toBeGreaterThan(0);
-  await expect(page.locator(".cinema-media")).toHaveAttribute("data-playing", "true");
-  // WCAG 2.2.2: moving background media needs a visitor-controlled pause.
-  const pause = page.getByRole("button", { name: "Pause background film", exact: true });
-  await pause.click();
+test("the project wall moves, supports keyboard pause and respects live reduced motion", async ({ page }) => {
+  await page.goto("/");
+  const column = page.locator(".work-wall-column").first();
+  const pause = page.getByRole("button", { name: "Pause project wall" });
+  await expect(column).toHaveCSS("animation-play-state", "running");
+  await expect(column).toHaveCSS("animation-name", "work-wall-rise");
+  await pause.focus();
+  await pause.press("Space");
+  await expect(pause).toBeFocused();
   await expect(pause).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".cinema-media")).toHaveAttribute("data-playing", "false");
-  await expect(video).toHaveJSProperty("paused", true);
-  await pause.click();
-  await expect(pause).toHaveAttribute("aria-pressed", "false");
-  await expect(page.locator(".cinema-media")).toHaveAttribute("data-playing", "true");
+  await expect(column).toHaveCSS("animation-play-state", "paused");
+  await pause.press("Space");
+  await expect(column).toHaveCSS("animation-play-state", "running");
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(video).not.toHaveAttribute("src");
-  await expect(page.locator(".cinema-media")).toHaveAttribute("data-playing", "false");
-  await page.getByRole("link", { name: "See the work", exact: true }).click();
+  await expect(column).toHaveCSS("animation-name", "none");
+  await expect(pause).toBeHidden();
+  await page.getByRole("link", { name: "See our work", exact: true }).click();
   await expect(page).toHaveURL(/#work$/);
-});
-
-test("reduced-motion and Save-Data start poster-only; failed media retains a usable fallback", async ({ browser }) => {
-  for (const mode of ["reduced", "save-data", "error"]) {
-    const context = await browser.newContext({ reducedMotion: mode === "reduced" ? "reduce" : "no-preference" });
-    const page = await context.newPage();
-    if (mode === "save-data") await page.addInitScript(() => {
-      Object.defineProperty(navigator, "connection", { configurable: true, value: Object.assign(new EventTarget(), { saveData: true, effectiveType: "4g" }) });
-    });
-    const downloads = [];
-    page.on("request", (request) => { if (/sydney-ruby-v3.*\.(mp4|webm)/.test(request.url())) downloads.push(request.url()); });
-    if (mode === "error") await page.route(/sydney-ruby-v3.*\.(mp4|webm)/, (route) => route.abort());
-    await page.goto("/", { waitUntil: "networkidle" });
-    await expect(page.locator(".cinema-media-poster img")).toBeVisible();
-    if (mode === "error") {
-      await expect(page.locator(".cinema-media")).toHaveAttribute("data-failed", "true");
-      await expect(page.locator(".cinema-media-video")).not.toHaveAttribute("src");
-      await expect(page.locator(".cinema-media")).toHaveAttribute("data-playing", "false");
-    } else {
-      expect(downloads).toEqual([]);
-      await expect(page.locator(".cinema-media-video")).not.toHaveAttribute("src");
-    }
-    await page.getByRole("link", { name: "See the work", exact: true }).click();
-    await expect(page).toHaveURL(/#work$/);
-    await context.close();
-  }
 });
 
 test("mobile menu preserves keyboard focus and homepage enquiries retain submission behavior", async ({ page }) => {
@@ -135,7 +123,10 @@ test("mobile menu preserves keyboard focus and homepage enquiries retain submiss
     expect(route.request().postDataJSON().services).toContain("Website design & development");
     await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true }) });
   });
-  await page.locator("#contact").scrollIntoViewIfNeeded();
+  await page.locator(".home-hero").getByRole("link", { name: "Start a project" }).click();
+  await expect(page).toHaveURL(/#contact$/);
+  await expect(page.locator('input[name="service"]:checked')).toHaveCount(0);
+  await page.getByRole("radio", { name: "Website", exact: true }).check();
   await page.getByLabel("Name").fill("Cinematic QA");
   await page.getByLabel("Email").fill("qa@example.invalid");
   await page.getByLabel(/Tell us about your project/).fill("Automated browser validation. No real email is sent.");

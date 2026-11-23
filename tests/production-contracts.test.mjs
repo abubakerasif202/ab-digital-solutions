@@ -50,7 +50,7 @@ test("portfolio index, studio and about derive projects from the registry", asyn
     read("../app/components/WorkIndexBody.tsx"),
     read("../app/studio/studio-data.ts"),
     read("../app/about/page.tsx"),
-    read("../app/agency-home.tsx"),
+    read("../app/components/PortfolioSection.tsx"),
   ]);
   assert.match(work, /const visibleProjects = filter === ALL_SECTORS\s*\? projects/);
   assert.match(work, /projects\.length/);
@@ -115,7 +115,7 @@ test("both enquiry routes and API use exactly the same allowed budget values", a
     read("../app/contact/page.tsx"),
     read("../app/api/contact/route.ts"),
   ]);
-  assert.match(home, /<ContactForm\s*\/>/);
+  assert.match(home, /<ContactForm simplified\s*\/>/);
   assert.match(contact, /<ContactForm titleAs="h2"\s*\/>/);
   assert.match(form, /BUDGET_OPTIONS\.map/);
   assert.match(route, /\.\.\.BUDGET_OPTIONS/);

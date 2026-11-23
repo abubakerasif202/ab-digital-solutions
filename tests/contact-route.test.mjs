@@ -247,6 +247,13 @@ test("current budget tiers and custom software enquiries remain deliverable", as
   assert.match(sent.text, /Custom software & business systems/);
 });
 
+test("an undecided enquiry is delivered without a budget", async () => {
+  const payload = validPayload({ service: undefined, services: ["Not sure yet"], budget: "" });
+  const response = await POST(contactRequest(payload, { "x-real-ip": nextIp() }));
+  assert.equal(response.status, 200);
+  assert.match(JSON.parse(fetchCalls[0].init.body).text, /Services: Not sure yet/);
+});
+
 test("retired budget tiers are rejected", async () => {
   const response = await POST(contactRequest(validPayload({ budget: "Under $1,500" }), { "x-real-ip": nextIp() }));
   assert.equal(response.status, 400);
@@ -277,6 +284,7 @@ test("service selections must come from the offered options", async () => {
   const cases = [
     { services: [] },
     { services: ["Website design & development", "Crypto mining"] },
+    { services: ["Website design & development", "Not sure yet"] },
     { services: ["Website design & development", "Website design & development"] },
     { services: [42] },
     { services: "Website design & development" },

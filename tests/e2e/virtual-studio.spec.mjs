@@ -155,7 +155,7 @@ test("server HTML works without JavaScript; homepage preview loads no model", as
   await staticPage.screenshot({ path: `${output}/390-no-javascript.png`, fullPage: true });
   expect(await staticPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await context.close();
   const models = []; page.on("request", (request) => { if (/\.glb/.test(request.url())) models.push(request.url()); });
-  await page.goto("/"); await expect(page.getByRole("heading", { name: /Digital experiences.*Beyond ordinary/ })).toBeAttached();
+  await page.goto("/"); await expect(page.getByRole("heading", { name: "Websites built for real businesses." })).toBeAttached();
   await expect(page.getByRole("link", { name: "Virtual Studio", exact: true }).first()).toHaveAttribute("href", "/studio"); expect(models).toEqual([]);
 });
 
@@ -247,6 +247,7 @@ test("quote journey preserves form validation, successful submission and recover
   await page.locator("#full-name").fill("Studio local QA");
   await page.locator("#email").fill("studio-qa@example.com");
   await page.locator("#message").fill("Local browser QA enquiry. This submission is intercepted and must not send email.");
+  await page.getByRole("checkbox", { name: "Website design & development" }).check();
   await page.getByRole("button", { name: "Send project enquiry" }).click();
   await expect(page.locator(".form-status")).toContainText("temporarily unavailable");
   await expect(page.locator("#full-name")).toHaveValue("Studio local QA");
@@ -603,4 +604,59 @@ test("production audit: wildlife speech replaces the on-canvas caption until dis
   await expect(stageCaption).toBeHidden();
   await dismiss.click();
   await expect(stageCaption).toBeVisible();
+});
+
+test("studio map reframes the 3D cutaway and navigates directly to a room", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/studio");
+  await enter(page);
+  await space(page, "Services atelier");
+
+  const toggle = page.getByRole("button", { name: "Studio map", exact: true });
+  await toggle.click();
+  const map = page.getByRole("group", { name: "Studio floor plan" });
+  await expect(map).toBeVisible();
+  await expect(map.getByRole("button", { name: "Portfolio gallery" })).toBeFocused();
+  await expect(mode(page).locator("[class*='sceneCaption']")).toContainText("Studio overview");
+  await expect(mode(page).locator("canvas")).toBeVisible();
+  await expect(page.locator("#studio-panel-heading")).toHaveCount(0);
+  // Capture the settled cutaway rather than the first frame of the camera move.
+  await page.waitForTimeout(2200);
+  await page.screenshot({ path: `${output}/studio-map-1440.png` });
+
+  await page.keyboard.press("Escape");
+  await expect(toggle).toBeFocused();
+  await expect(map).toBeHidden();
+  await toggle.press("Enter");
+  await map.getByRole("button", { name: "Portfolio gallery" }).press("Enter");
+  await expect(page.locator("#studio-panel-heading")).toBeFocused();
+  await expect(page.locator("#studio-panel-heading")).toHaveText("Work with purpose.");
+  await expect(map).toBeHidden();
+});
+
+test("studio map is usable on a phone in still view without loading 3D", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/studio");
+  await page.getByRole("button", { name: "Studio map", exact: true }).click();
+  const map = page.getByRole("group", { name: "Studio floor plan" });
+  await expect(map).toBeVisible();
+  await map.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: `${output}/studio-map-still-390.png` });
+  await map.getByRole("button", { name: "Consultation lounge" }).click();
+  await expect(page.locator("#studio-panel-heading")).toBeFocused();
+  await expect(mode(page)).toHaveAttribute("data-mode", "static");
+  await expect(mode(page).locator("canvas")).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth === document.documentElement.clientWidth)).toBe(true);
+
+  const toggle = page.getByRole("button", { name: "Studio map", exact: true });
+  await toggle.click();
+  await expect(map.getByRole("button", { name: "Portfolio gallery" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(toggle).toBeFocused();
+  await expect(page.locator("#studio-panel-heading")).toBeVisible();
+
+  await toggle.click();
+  await map.getByRole("button", { name: "Consultation lounge" }).click();
+  await expect(page.locator("#studio-panel-heading")).toBeFocused();
 });

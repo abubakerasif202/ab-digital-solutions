@@ -310,3 +310,60 @@
   }
   .loading[data-stage="intro"] { gap: 6px; padding-block: 8px; }
 }
+
+.floorPlan {
+  width: min(100%, 510px);
+  padding: 16px;
+  margin-block: 8px 16px;
+  border: 1px solid #8e7954;
+  background: #181817;
+}
+.floorPlan[hidden] { display: none; }
+.floorPlanHead { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+.floorPlanHead p { margin: 0; color: #f1e2c2; font-size: .95rem; }
+.floorPlanHead button {
+  min-height: 44px;
+  padding-inline: 8px;
+  border: 0;
+  background: transparent;
+  color: #dec18b;
+  font: var(--fs-label) var(--font-sans), sans-serif;
+  cursor: pointer;
+}
+.floorRooms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+.floorRooms button {
+  display: grid;
+  gap: 4px;
+  align-content: center;
+  min-height: 56px;
+  padding: 8px 10px;
+  border: 1px solid #8e7954;
+  color: #f4f1ea;
+  background: #27221a;
+  text-align: left;
+  font: 500 .875rem/1.3 var(--font-sans), sans-serif;
+  cursor: pointer;
+}
+.floorRooms button:is(:hover, :focus-visible) { color: #171411; background: #d8bb83; }
+.floorRooms button span { font: var(--fs-label)/1.2 var(--font-mono), monospace; }
+.floorEntry {
+  display: block;
+  margin-top: 8px;
+  padding: 7px 10px;
+  border-inline-start: 2px solid #d8bb83;
+  color: #dec18b;
+  font: var(--fs-label)/1.3 var(--font-mono), monospace;
+}
+
+
+@media (min-width: 1000px) and (min-height: 600px) {
+  .experience[data-view="3d"] .floorPlan {
+    position: absolute;
+    z-index: 3;
+    top: 74px;
+    left: 28px;
+    width: min(31%, 305px);
+    margin: 0;
+    box-shadow: 0 18px 45px #0007;
+  }
+}

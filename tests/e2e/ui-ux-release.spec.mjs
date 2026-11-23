@@ -7,21 +7,20 @@ test("hero identity copy clears the fixed header at every layout breakpoint", as
     await page.goto("/", { waitUntil: "networkidle" });
     const geometry = await page.evaluate(() => ({
       headerBottom: document.querySelector(".site-header").getBoundingClientRect().bottom,
-      copyTop: Math.min(...[...document.querySelectorAll(".ruby-hero-topline p")].map((element) => element.getBoundingClientRect().top)),
+      copyTop: document.querySelector("#hero-heading").getBoundingClientRect().top,
     }));
     expect(geometry.copyTop, `identity copy at ${width}px`).toBeGreaterThanOrEqual(geometry.headerBottom);
   }
 });
 
-test("exhibition controls expose their complete visible labels as accessible names", async ({ page }) => {
+test("featured links expose their visible label and project name", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/", { waitUntil: "networkidle" });
-  await page.locator(".exhibition").scrollIntoViewIfNeeded();
-  const controls = page.locator(".exhibition-feature-link, .exhibition-preview");
+  const controls = page.locator(".home-work-card .cinema-link");
   await expect(controls).toHaveCount(3);
   for (const control of await controls.all()) {
-    const visibleLabel = (await control.innerText()).replace(/\s+/g, " ").trim();
-    await expect(control).toHaveAccessibleName(visibleLabel, { ignoreCase: true });
+    const title = await control.locator("xpath=ancestor::article").locator("h3").innerText();
+    await expect(control).toHaveAccessibleName(`View case study for ${title}`);
   }
 });
 
@@ -49,18 +48,17 @@ test("direct contact values remain readable inside their rows at every layout wi
   }
 });
 
-test("interior editorial accents use warm gilt while the homepage keeps its ruby identity", async ({ page }) => {
+test("editorial accents use warm gilt and primary actions use ruby", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const route of ["/work", "/services", "/about", "/contact"]) {
     await page.goto(route, { waitUntil: "networkidle" });
     const accent = page.locator("h1 em, h1 .accent-serif").first();
-    await expect(accent).toHaveCSS("color", "rgb(229, 197, 154)");
-    await expect(page.locator(".button-primary").first()).toHaveCSS("background-color", "rgb(167, 19, 59)");
+    await expect(accent).toHaveCSS("color", "rgb(201, 164, 92)");
+    await expect(page.locator(".button-primary").first()).toHaveCSS("background-color", "rgb(179, 18, 46)");
   }
   await page.goto("/", { waitUntil: "networkidle" });
-  const signature = page.locator(".ruby-hero h1 em");
-  await expect(signature).toHaveCSS("-webkit-text-fill-color", "rgb(255, 192, 202)");
-  await expect(signature).toHaveCSS("font-weight", "500");
+  const signature = page.locator("#hero-heading em");
+  await expect(signature).toHaveCSS("color", "rgb(201, 164, 92)");
   await expect(signature).toHaveCSS("filter", "none");
 });
 
@@ -69,15 +67,15 @@ test("service pillars expose a keyboard focus indicator and expand with or witho
     await page.emulateMedia({ reducedMotion });
     await page.goto("/", { waitUntil: "networkidle" });
     const pillars = page.locator(".ruby-disciplines details");
-    const summary = pillars.nth(1).locator("summary");
+    const summary = pillars.nth(2).locator("summary");
     await expect(pillars.first()).toHaveAttribute("open", "");
     await summary.focus();
     await expect(summary).toBeFocused();
     await expect(summary).toHaveCSS("outline-style", "solid");
     await page.keyboard.press("Space");
-    await expect(pillars.nth(1)).toHaveAttribute("open", "");
+    await expect(pillars.nth(2)).toHaveAttribute("open", "");
     await expect(pillars.first()).not.toHaveAttribute("open");
-    await expect(pillars.nth(1).getByRole("link", { name: "Enquire about Custom Software & Business Systems" })).toBeVisible();
+    await expect(pillars.nth(2).getByRole("link", { name: "Enquire about Custom Software & Business Systems" })).toBeVisible();
     if (reducedMotion === "reduce") {
       await expect(summary.locator(".ruby-discipline-arrow")).toHaveCSS("transition-duration", "0s");
     }

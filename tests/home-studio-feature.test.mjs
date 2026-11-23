@@ -9,14 +9,14 @@ import { areaLabels } from "../app/studio/studio-state.ts";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (path) => readFile(join(root, path), "utf8");
 
-test("homepage shows the studio feature after the work section and before the foundations section", async () => {
+test("homepage shows the studio feature between Process and Enquiry", async () => {
   const home = await read("app/agency-home.tsx");
   const work = home.indexOf("<PortfolioSection />");
   const studio = home.indexOf("<HomeStudioFeature />");
   assert.ok(work !== -1 && studio !== -1, "both sections render");
   assert.ok(work < studio, "studio feature follows the work section");
-  assert.ok(studio < home.indexOf('id="capability-heading"'), "studio feature precedes Built on modern foundations");
-  assert.ok(studio < home.indexOf('id="services"'));
+  assert.ok(home.indexOf("<ProcessSection />") < studio);
+  assert.ok(studio < home.indexOf("<EnquirySection"));
   assert.doesNotMatch(home, /VirtualStudioPreview/, "the pre-redesign preview stays banned from the homepage");
 });
 

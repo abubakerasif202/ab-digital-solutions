@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ArrowIcon } from "../icons";
 import { siteConfig } from "../site-config";
-import { BUDGET_OPTIONS, contactScopedServices, contactScopeNote, contactServiceKeys, contactServices } from "../contact-options";
+import { BUDGET_OPTIONS, contactScopedServices, contactScopeNote, contactServiceKeys, contactServices, UNSURE_SERVICE } from "../contact-options";
 import { trackEnquirySuccess } from "../lib/contact-analytics";
 
 type FormState = "idle" | "sending" | "success" | "error";
@@ -12,12 +12,24 @@ type FormState = "idle" | "sending" | "success" | "error";
 interface ContactFormProps {
   /** Heading level for the form title, so it nests under its section heading. */
   titleAs?: "h2" | "h3";
+  simplified?: boolean;
 }
 
 const SERVICES_ERROR_ID = "services-error";
 const SERVICES_HELP_ID = "services-help";
 
-export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
+const homepageServices = [
+  [contactServiceKeys["web-design"], "Website"],
+  [contactServiceKeys.ecommerce, "Online store"],
+  [contactServiceKeys["custom-software"], "Business system"],
+  [UNSURE_SERVICE, UNSURE_SERVICE],
+] as const;
+
+const detailedServices = contactServices.map((service) => [service, service] as const);
+const additionalServices = detailedServices.filter(([service]) => !homepageServices.some(([value]) => value === service));
+const simplifiedServices = [...homepageServices, ...additionalServices];
+
+export function ContactForm({ titleAs: Title = "h3", simplified = false }: ContactFormProps) {
   const titleId = useId();
   const sendingRef = useRef(false);
   // One identifier per submission attempt, reused when the visitor retries after a
@@ -46,7 +58,11 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
       : undefined;
     const match = keyed ?? contactServices.find((service) => service === requested);
     if (!match) return;
-    formRef.current?.querySelectorAll<HTMLInputElement>('input[name="service"]').forEach((input) => { input.checked = input.value === match; });
+    formRef.current?.querySelectorAll<HTMLInputElement>('input[name="service"]').forEach((input) => {
+      input.checked = input.value === match;
+      const label = input.closest("label");
+      if (input.checked && label?.hidden) label.hidden = false;
+    });
     syncScopeNote();
     // Draw the eye to the preselected choice; motion is skipped for visitors who prefer reduced motion.
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -57,6 +73,9 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
     return () => window.clearTimeout(timer);
   }, []);
 
+  const serviceError = simplified ? "Choose a project type." : "Choose at least one service.";
+  const serviceChoices = simplified ? simplifiedServices : detailedServices;
+
   const clearError = (key: string) => setFieldErrors((current) => (current[key] ? { ...current, [key]: "" } : current));
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -66,7 +85,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
     const formData = new FormData(form);
     const services = formData.getAll("service").map(String);
     if (services.length === 0) {
-      setFieldErrors((current) => ({ ...current, services: "Choose at least one service." }));
+      setFieldErrors((current) => ({ ...current, services: serviceError }));
     }
     if (!form.reportValidity()) return;
     if (services.length === 0) {
@@ -77,7 +96,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
     sendingRef.current = true;
     setFormState("sending");
     setFormStatus("Sending your enquiry…");
-    // Checkbox choices travel as one `services` array, not repeated `service` keys.
+    // Both form variants submit the same services array.
     const fields = Object.fromEntries([...formData.entries()].filter(([key]) => key !== "service"));
     submissionIdRef.current ??= crypto.randomUUID();
     const payload = { ...fields, services, submissionId: submissionIdRef.current };
@@ -119,7 +138,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
     [help, fieldErrors[id] ? `${id}-error` : undefined].filter(Boolean).join(" ") || undefined;
 
   return (
-    <form ref={formRef} className="contact-form enquiry-form" data-state={formState} method="post" action="/api/contact" onSubmit={handleSubmit}
+    <form ref={formRef} className={`contact-form enquiry-form${simplified ? " enquiry-form--simple" : ""}`} data-state={formState} method="post" action="/api/contact" onSubmit={handleSubmit}
       aria-labelledby={titleId}
       onInvalidCapture={(event) => {
         const field = event.target;
@@ -134,7 +153,7 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
           // Deselecting the last service raises the error straight away so it is announced in context.
           const anyChecked = formRef.current?.querySelector('input[name="service"]:checked');
           if (anyChecked) clearError("services");
-          else setFieldErrors((current) => ({ ...current, services: "Choose at least one service." }));
+          else setFieldErrors((current) => ({ ...current, services: serviceError }));
         }
         else if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) clearError(field.id);
       }} aria-busy={formState === "sending"}>
@@ -181,30 +200,40 @@ export function ContactForm({ titleAs: Title = "h3" }: ContactFormProps) {
 
       <fieldset className="form-chips form-services" aria-describedby={fieldErrors.services ? `${SERVICES_HELP_ID} ${SERVICES_ERROR_ID}` : SERVICES_HELP_ID}>
         <legend>What do you need? <span className="form-req" aria-hidden="true">*</span><span className="sr-only"> (required)</span></legend>
-        <span className="sr-only" id={SERVICES_HELP_ID}>Choose at least one service. You can select more than one.</span>
+        <span className="sr-only" id={SERVICES_HELP_ID}>{simplified ? "Choose one project type." : "Choose at least one service. You can select more than one."}</span>
         <div className="form-chip-row">
-          {contactServices.map((service, index) => (
-            <label className="form-chip" key={service}>
-              <input type="checkbox" name="service" value={service} defaultChecked={index === 0} />
-              <span>{service}</span>
+          {serviceChoices.map(([service, label], index) => (
+            <label className="form-chip" key={service} hidden={simplified && index >= homepageServices.length}>
+              <input type={simplified ? "radio" : "checkbox"} name="service" value={service} />
+              <span>{label}</span>
             </label>
           ))}
         </div>
         {fieldErrors.services && <span className="field-error" id={SERVICES_ERROR_ID} role="alert">{fieldErrors.services}</span>}
       </fieldset>
 
-      <fieldset className="form-chips form-budget">
-        <legend>Budget <span className="form-optional">(optional)</span></legend>
-        <div className="form-chip-row">
-          {BUDGET_OPTIONS.map((budget) => (
-            <label className="form-chip form-chip--mono" key={budget}>
-              <input type="radio" name="budget" value={budget} />
-              <span>{budget}</span>
-            </label>
-          ))}
+      {simplified ? (
+        <div className="form-field">
+          <label htmlFor="project-budget">Budget <span className="form-optional">(optional)</span></label>
+          <select id="project-budget" name="budget" defaultValue="">
+            <option value="">No budget selected</option>
+            {BUDGET_OPTIONS.map((budget) => <option key={budget} value={budget}>{budget}</option>)}
+          </select>
         </div>
-        {showScopeNote && <p className="form-help form-scope-note" role="note">{contactScopeNote}</p>}
-      </fieldset>
+      ) : (
+        <fieldset className="form-chips form-budget">
+          <legend>Budget <span className="form-optional">(optional)</span></legend>
+          <div className="form-chip-row">
+            {BUDGET_OPTIONS.map((budget) => (
+              <label className="form-chip form-chip--mono" key={budget}>
+                <input type="radio" name="budget" value={budget} />
+                <span>{budget}</span>
+              </label>
+            ))}
+          </div>
+          {showScopeNote && <p className="form-help form-scope-note" role="note">{contactScopeNote}</p>}
+        </fieldset>
+      )}
 
       <div className="form-field">
         <label htmlFor="message">Tell us about your project <span className="form-req" aria-hidden="true">*</span></label>

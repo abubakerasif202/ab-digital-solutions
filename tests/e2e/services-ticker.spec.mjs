@@ -8,7 +8,7 @@ for (const width of [390, 1150]) {
 
     test("preserves placement and wording and loops seamlessly without overflow", async ({ page }) => {
       await page.goto("/");
-      const ticker = page.locator(".ruby-hero + .ruby-service-ticker:has(+ #about)");
+      const ticker = page.locator("#work + .ruby-service-ticker:has(+ #services)");
       await expect(ticker).toBeVisible();
       // Motion begins only once the pause control has hydrated.
       await expect(ticker.locator(".ruby-service-ticker-control[data-ready]")).toBeEnabled();

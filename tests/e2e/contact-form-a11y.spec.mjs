@@ -50,10 +50,11 @@ test.describe("contact form service group", () => {
   test("service choices are operable from the keyboard", async ({ page }) => {
     await page.goto("/contact", { waitUntil: "networkidle" });
     const first = page.getByRole("checkbox", { name: "Website design & development" });
+    await expect(first).not.toBeChecked();
     await first.focus();
     await page.keyboard.press("Space");
-    await expect(first).not.toBeChecked();
-    await page.keyboard.press("Space");
     await expect(first).toBeChecked();
+    await page.keyboard.press("Space");
+    await expect(first).not.toBeChecked();
   });
 });

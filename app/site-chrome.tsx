@@ -353,7 +353,7 @@ export function SiteHeader() {
       <header className={`site-header${scrolled ? " is-scrolled" : ""}`} id="top">
         <div className={`container nav-wrap${pathname === "/" ? " nav-wrap--home" : ""}`}>
           <Link prefetch={prefetchNavigation} className="brand" href="/" aria-label="AB Web Studio home">
-            <ABBrandImage decorative eager />
+            <ABBrandImage decorative eager navigation={pathname !== "/"} />
           </Link>
 
           <button

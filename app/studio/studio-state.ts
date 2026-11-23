@@ -17,13 +17,13 @@ export type StudioState = {
   still: boolean;
   /** Loading the scene to return to the selected room, so the arrival film is skipped. */
   resume: boolean;
-  /** Frame the whole studio; only true until the visitor picks a room. */
+  /** Frame the whole studio, including when the visitor opens the room map. */
   overview: boolean;
   /** The visitor asked to see this local animal; the camera frames it until they pick a room or reset elsewhere. */
   animal: AnimalId | null;
 };
 export type StudioEvent =
-  | { type: "ready" | "arrive" | "skip" | "fail" | "close" | "manual" | "tour" | "tourStop" | "reset" | "entrance" }
+  | { type: "ready" | "arrive" | "skip" | "fail" | "close" | "manual" | "tour" | "tourStop" | "reset" | "entrance" | "overview" }
   | { type: "enter"; keep?: boolean }
   | { type: "static" }
   | { type: "select"; area: Area }
@@ -59,6 +59,9 @@ export function studioReducer(state: StudioState, event: StudioEvent): StudioSta
     case "manual": return { ...state, mode: pending(state.mode) ? "explore" : state.mode, manual: true, tour: false };
     // Reset re-frames the current room. It never changes room, panel or the entrance view.
     case "reset": return { ...state, tour: false, manual: false, outside: false, overview: false, shot: state.shot + 1 };
+    case "overview":
+      if (state.mode !== "explore") return state;
+      return { ...state, animal: null, panel: false, tour: false, tourActive: false, manual: false, outside: false, overview: true, shot: state.shot + 1 };
     // Back to entrance is the street view in front of the studio; it ends any tour and closes details.
     case "entrance": return { ...state, animal: null, mode: pending(state.mode) ? "explore" : state.mode, panel: false, tour: false, tourActive: false, manual: false, outside: true, shot: state.shot + 1 };
     case "tour":

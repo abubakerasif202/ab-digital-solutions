@@ -26,6 +26,8 @@ export const contactServiceKeys = {
   "custom-software-business-systems": "Custom software & business systems",
 } as const satisfies Record<string, (typeof contactServices)[number]>;
 
+export const UNSURE_SERVICE = "Not sure yet";
+
 export type ContactServiceKey = keyof typeof contactServiceKeys;
 
 export const BUDGET_OPTIONS = [

@@ -51,3 +51,10 @@
 @media (max-width: 640px) {
   .eyebrow, .cinema-label, .work-index-count { letter-spacing: 0.09em; line-height: 1.55; }
 }
+
+.site-header .nav-monogram {
+  position: relative;
+  display: grid;
+  flex: none;
+  color: var(--gold-text-dark);
+}
