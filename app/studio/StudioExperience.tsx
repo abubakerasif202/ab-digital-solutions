@@ -4,7 +4,7 @@ import { StudioArrow } from "./StudioArrow";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { Component, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState, useSyncExternalStore, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
+import { Component, useCallback, useEffect, useEffectEvent, useLayoutEffect, useReducer, useRef, useState, useSyncExternalStore, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
 import { areaLabels, areaOrder, initialStudioState, studioReducer, type Area } from "./studio-state";
 import { ARRIVAL_SECONDS } from "./world/sim/arrival";
 import { featuredServiceIndexes, type StudioProject, type StudioService } from "./studio-data";
@@ -19,6 +19,8 @@ import styles from "./studio.module.css";
 const KANGAROO_BEATS = ["wave", "tilt", "hop"] as const;
 /** The 3D view counts as on screen while at least this many pixels of it are visible. */
 const MIN_STAGE_VISIBLE = 120;
+// North is the back wall of the cutaway. The entry faces the reception side.
+const mapRooms = ["gallery", "services", "reception", "consultation"] satisfies Area[];
 
 const StudioScene = dynamic(() => import("./scene/StudioScene"), { ssr: false });
 
@@ -44,6 +46,9 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const [visible, setVisible] = useState(true);
   const [sceneReady, setSceneReady] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
+  const [mapOpen, setMapOpen] = useState(false);
+  const mapButton = useRef<HTMLButtonElement>(null);
+  const firstMapRoom = useRef<HTMLButtonElement>(null);
   const [touch, setTouch] = useState(false);
   const stage = useRef<HTMLDivElement>(null);
   const roomNav = useRef<HTMLElement>(null);
@@ -71,7 +76,7 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const pendingIntro = state.mode === "loading" || state.mode === "arrival" || state.mode === "intro";
   const onFailure = useCallback(() => dispatch({ type: "fail" }), []);
   const onReady = useCallback(() => { setSceneReady(true); dispatch({ type: "ready" }); }, []);
-  const onSelect = useCallback((area: Area) => { setHintOn(false); dispatch({ type: "select", area }); }, []);
+  const onSelect = useCallback((area: Area) => { setHintOn(false); setMapOpen(false); dispatch({ type: "select", area }); }, []);
   const onRoomKey = (event: ReactKeyboardEvent<HTMLElement>) => {
     const key = event.key;
     const horizontal = key === "ArrowLeft" || key === "ArrowRight";
@@ -116,7 +121,24 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     }
     scrollTo({ top: Math.max(0, top), behavior: "instant" });
   }, []);
-  const onView = (type: "tour" | "tourStop" | "entrance" | "reset") => { showStage(true); if (type === "tour") audio.play("select"); dispatch({ type }); };
+  const onView = (type: "tour" | "tourStop" | "entrance" | "reset") => { setMapOpen(false); showStage(true); if (type === "tour") audio.play("select"); dispatch({ type }); };
+  const closeMap = useCallback(() => {
+    setMapOpen(false);
+    if (state.mode === "explore" && state.overview) dispatch({ type: "reset" });
+    mapButton.current?.focus();
+  }, [state.mode, state.overview]);
+
+  const toggleMap = () => {
+    if (mapOpen) return closeMap();
+    setMapOpen(true);
+    setOptionsOpen(false);
+    setLocalsOpen(false);
+    if (state.mode === "explore") {
+      setHintOn(false);
+      showStage(true);
+      dispatch({ type: "overview" });
+    }
+  };
   const dismissCaption = useCallback(() => setCaption(null), []);
 
   // One path for every way of greeting an animal: its button, the 3D model, and the room it lives in.
@@ -134,6 +156,7 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   }, [audio, pickers]);
   const pickAnimal = (id: AnimalId) => {
     setSelectedAnimal(id);
+    setMapOpen(false);
     audio.play("select");
     if (active) { showStage(); dispatch({ type: "animal", id }); }
   };
@@ -235,11 +258,16 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     return () => clearTimeout(timer);
   }, [state.tour, state.area, state.shot, visible]);
 
-  // Escape works wherever focus is, in order: view options, room details, an unfinished introduction, a running tour.
+  useEffect(() => {
+    if (mapOpen) firstMapRoom.current?.focus();
+  }, [mapOpen]);
+
+  // Escape closes the active controls before dismissing a room, intro or tour.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || event.defaultPrevented || document.body.classList.contains("nav-open")) return;
       if (optionsOpen) { setOptionsOpen(false); optionsButton.current?.focus({ preventScroll: true }); }
+      else if (mapOpen) closeMap();
       else if (localsOpen) { setLocalsOpen(false); localsButton.current?.focus({ preventScroll: true }); }
       else if (state.panel) dispatch({ type: "close" });
       else if (pendingIntro) dispatch({ type: "skip" });
@@ -249,8 +277,9 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [optionsOpen, localsOpen, state.panel, state.tour, pendingIntro]);
+  }, [optionsOpen, mapOpen, closeMap, localsOpen, state.panel, state.tour, pendingIntro]);
 
+  const isMapOpen = useEffectEvent(() => mapOpen);
   useEffect(() => {
     if (state.panel) {
       showStage();
@@ -259,7 +288,7 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
         areaButtons.current[state.area]?.focus({ preventScroll: true });
       } else heading.current?.focus({ preventScroll: true });
     }
-    else if (panelWasOpen.current) areaButtons.current[state.area]?.focus({ preventScroll: true });
+    else if (panelWasOpen.current && !isMapOpen()) areaButtons.current[state.area]?.focus({ preventScroll: true });
     panelWasOpen.current = state.panel;
   }, [state.panel, state.area, showStage]);
 
@@ -287,11 +316,12 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
         resetStudioResources(projects);
       } catch { onFailure(); return; }
     }
+    setMapOpen(false);
     setSceneReady(false);
     setOptionsOpen(false);
     dispatch({ type: "enter", keep });
   };
-  const showStill = () => { setOptionsOpen(false); dispatch({ type: "static" }); };
+  const showStill = () => { setMapOpen(false); setOptionsOpen(false); dispatch({ type: "static" }); };
   const showThreeD = () => enter(state.still);
   const selectProject = (index: number) => setProjectIndex(index);
 
@@ -304,11 +334,11 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     : active ? "No scroll lock. Escape closes room details or pauses the tour. Sound can be switched off above."
     : "Still view: choose a room to see its details. Switch to 3D view whenever you like.";
 
-  return <section className={styles.experience} aria-label="Interactive virtual studio" data-conversion-area data-panel={state.panel} data-view={active ? "3d" : "still"}>
+  return <section className={styles.experience} aria-label="Interactive virtual studio" data-conversion-area data-panel={state.panel} data-view={active ? "3d" : "still"} data-map={mapOpen}>
     <noscript><p className={styles.accessNote}>JavaScript is off. <a href="#studio-content">Explore the projects, services and contact links below.</a></p></noscript>
     <div className={styles.stage} ref={stage} data-mode={state.mode}>
       <Image src="/studio/studio-poster.png" alt="An original cutaway studio with brass architecture, a reception monogram, project gallery and ruby meeting lounge" width={1440} height={900} sizes="(max-width: 768px) 100vw, 1440px" className={styles.poster} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} preload />
-      {active && <SceneBoundary onFailure={onFailure}><StudioScene state={state} projects={projects} selectedProject={projectIndex} visible={visible} onReady={onReady} onFailure={onFailure} onSelect={onSelect} onProject={(index) => { selectProject(index); onSelect("gallery"); }} onService={(index) => { setServiceIndex(featuredServiceIndexes[index] ?? 0); onSelect("services"); }} onManual={onManual} onArrive={onArrive} /></SceneBoundary>}
+      {active && <SceneBoundary onFailure={onFailure}><StudioScene state={state} mapOpen={mapOpen} projects={projects} selectedProject={projectIndex} visible={visible} onReady={onReady} onFailure={onFailure} onSelect={onSelect} onProject={(index) => { selectProject(index); onSelect("gallery"); }} onService={(index) => { setServiceIndex(featuredServiceIndexes[index] ?? 0); onSelect("services"); }} onManual={onManual} onArrive={onArrive} /></SceneBoundary>}
       <div className={styles.stageTop}><span className={styles.edition}>AB / THE VIRTUAL STUDIO</span><Link prefetch={false} href="/" className={styles.smallButton}>Back to website <StudioArrow /></Link></div>
       {!active && (!state.panel || state.mode === "failed") ? <div className={styles.entry}>
         <p className={styles.kicker}>{state.still ? "Still view" : "An independent perspective"}</p><h2>{state.still ? <>Choose a<br /><em>room.</em></> : <>Make yourself<br /><em>at home.</em></>}</h2>
@@ -324,13 +354,13 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
           <button ref={skipButton} type="button" className={styles.smallButton} onClick={() => dispatch({ type: "skip" })}>Skip intro</button>
         </div>}
       </div>}
-      {active && !showBubble && <div className={styles.sceneCaption}><span>{state.outside ? "Sydney / Studio entrance" : state.mode === "arrival" ? "Sydney / Arrival" : `${String(roomNumber).padStart(2, "0")} / ${areaLabels[state.area]}`}</span>{hintOn && <span className={styles.hint}>{hint}</span>}</div>}
+      {active && !showBubble && <div className={styles.sceneCaption}><span>{state.outside ? "Sydney / Studio entrance" : state.mode === "arrival" ? "Sydney / Arrival" : mapOpen && state.overview ? "Studio overview" : `${String(roomNumber).padStart(2, "0")} / ${areaLabels[state.area]}`}</span>{hintOn && <span className={styles.hint}>{hint}</span>}</div>}
       {showBubble && <LocalBubble caption={caption} onDismiss={dismissCaption} />}
       {!active && (state.panel || state.still) && <div className={styles.sceneCaption}><span>{String(roomNumber).padStart(2, "0")} / {areaLabels[state.area]}</span><span>Still view</span></div>}
     </div>
     <div className={styles.controls}>
       <nav ref={roomNav} className={styles.areaNav} aria-label="Studio rooms" onKeyDown={onRoomKey}>{areaOrder.map((area, index) => {
-        const pressed = !state.outside && state.area === area && (active || state.panel);
+        const pressed = !mapOpen && !state.outside && state.area === area && (active || state.panel);
         return <button ref={(node) => { areaButtons.current[area] = node; }} key={area} type="button" aria-pressed={pressed} aria-current={pressed ? "true" : undefined} onClick={() => onSelect(area)}><span>{String(index + 1).padStart(2, "0")}</span>{areaLabels[area]}</button>;
       })}</nav>
       <p className={styles.live} aria-live="polite">{state.mode === "explore" && !state.outside ? `Now in ${areaLabels[state.area]}.` : ""}</p>
@@ -349,8 +379,27 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
           : <button type="button" onClick={() => onView("tour")}>Guided tour <span aria-hidden="true">▷</span></button>)}
         <button type="button" onClick={() => onSelect(areaOrder[(areaOrder.indexOf(state.area) + 3) % 4])}>Previous room</button>
         <button type="button" onClick={() => onSelect(areaOrder[(areaOrder.indexOf(state.area) + 1) % 4])}>Next room</button>
+        <button ref={mapButton} type="button" className={styles.optionsToggle} disabled={pendingIntro} aria-expanded={mapOpen} aria-controls="studio-floor-plan" onClick={toggleMap}>Studio map <span aria-hidden="true">{mapOpen ? "−" : "+"}</span></button>
         <button ref={optionsButton} type="button" className={styles.optionsToggle} aria-expanded={optionsOpen} aria-controls="studio-view-options" onClick={() => setOptionsOpen((open) => !open)}>View options <span aria-hidden="true">{optionsOpen ? "−" : "+"}</span></button>
         <Link prefetch={false} href="/contact" className={styles.quote}>Start a project <StudioArrow /></Link>
+      </div>
+      <div id="studio-floor-plan" className={styles.floorPlan} role="group" aria-label="Studio floor plan" hidden={!mapOpen}>
+        <div className={styles.floorPlanHead}>
+          <p>Choose a room</p>
+          <button type="button" onClick={closeMap} aria-label="Close studio map">Close <span aria-hidden="true">×</span></button>
+        </div>
+        <div className={styles.floorRooms}>
+          {mapRooms.map((area, index) => (
+            <button key={area} ref={index === 0 ? firstMapRoom : undefined} type="button" onClick={() => {
+              if (state.panel && state.area === area) heading.current?.focus({ preventScroll: true });
+              onSelect(area);
+            }}>
+              <span aria-hidden="true">{String(areaOrder.indexOf(area) + 1).padStart(2, "0")}</span>
+              {areaLabels[area]}
+            </button>
+          ))}
+        </div>
+        <span className={styles.floorEntry}>Sydney street entrance</span>
       </div>
       <div id="studio-view-options" className={styles.options} role="group" aria-label="View options" hidden={!optionsOpen}>
         <div className={styles.modeSwitch} role="group" aria-label="Display mode">

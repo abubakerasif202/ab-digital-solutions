@@ -162,3 +162,20 @@ test("reset view recovers from manual navigation, pauses the tour and keeps the 
   assert.equal(reset.shot, 6);
   assert.equal(reset.mode, "explore");
 });
+
+test("opening the studio overview clears a room panel, tour and wildlife framing", () => {
+  const prior = {
+    ...initialStudioState, mode: "explore", area: "gallery", panel: true,
+    animal: "koala", outside: true, tour: true, tourActive: true, manual: true, overview: false, shot: 8,
+  };
+  const overview = studioReducer(prior, { type: "overview" });
+  assert.deepEqual(overview, {
+    ...prior, panel: false, animal: null, outside: false, tour: false,
+    tourActive: false, manual: false, overview: true, shot: 9,
+  });
+  const room = studioReducer(overview, { type: "select", area: "services" });
+  assert.equal(room.overview, false);
+  assert.equal(room.panel, true);
+  assert.equal(room.area, "services");
+  assert.equal(studioReducer(initialStudioState, { type: "overview" }), initialStudioState);
+});

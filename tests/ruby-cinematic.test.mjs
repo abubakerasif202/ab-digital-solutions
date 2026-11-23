@@ -4,14 +4,14 @@ import test from "node:test";
 import { wallColumns } from "../app/components/cinematic/work-wall-layout.ts";
 const source = path => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("ruby homepage is recomposed into work-first hero, identity, exhibition, services, process and enquiry chapters", async () => {
+test("ruby homepage follows the hero, work, services, process, studio and enquiry sequence", async () => {
   const home = await source("app/agency-home.tsx");
-  for (const chapter of ["ruby-hero", "ruby-positioning", "ruby-services", "ruby-contact"]) assert.ok(home.includes(chapter));
+  for (const chapter of ["home-hero", "ruby-services", "ruby-contact"]) assert.ok(home.includes(chapter));
   assert.ok(home.includes("<PortfolioSection />"));
   assert.ok(home.includes("<HeroWorkWall />"));
   assert.ok(home.includes("<ProcessSection />"));
   assert.ok(!home.includes("<BrandFilmSection />"));
-  assert.ok(home.includes("<RubyMotion />"));
+  assert.doesNotMatch(home, /<RubyMotion|<CinematicMedia/);
   assert.ok(home.includes("real businesses."));
   assert.ok(home.indexOf("<PortfolioSection />") < home.indexOf('id="services"'));
   assert.doesNotMatch(home, /cinema-film-drawer|Original AI-generated harbour study|<LogoReveal|VirtualStudioPreview|processSteps/);

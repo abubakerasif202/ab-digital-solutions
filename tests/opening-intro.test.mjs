@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readdir, readFile, stat } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
 import { openingIntroGateScript } from "../app/components/opening-intro/opening-intro-gate.ts";
 import { startOpeningIntro, SKIP_LABEL } from "../app/components/opening-intro/opening-intro.ts";
@@ -232,25 +232,12 @@ test("stop() tears everything down immediately", () => {
 });
 
 // ---------- wiring and performance guards ----------
-test("only the homepage mounts the intro and nothing preloads the video", async () => {
-  const importers = [];
-  const walk = async (dir) => {
-    for (const entry of await readdir(new URL(dir, import.meta.url), { withFileTypes: true })) {
-      const path = `${dir}${entry.name}`;
-      if (entry.isDirectory()) { if (!["opening-intro", "node_modules"].includes(entry.name)) await walk(`${path}/`); continue; }
-      if (/\.(tsx?|css)$/.test(entry.name) && /opening-intro/.test(await read(path))) importers.push(path);
-    }
-  };
-  await walk("../app/");
-  assert.deepEqual(importers, ["../app/page.tsx"], "layout and every other route stay free of the intro");
-  const [layout, page, loader, config] = await Promise.all([read("../app/layout.tsx"), read("../app/page.tsx"), read("../app/components/opening-intro/OpeningIntro.tsx"), read("../next.config.ts")]);
-  assert.doesNotMatch(layout, /ab-intro|opening-intro|rel="preload"/);
-  assert.match(page, /<OpeningIntroGate \/>[\s\S]*<AgencyHome[\s\S]*<OpeningIntro \/>/);
-  assert.match(loader, /import\("\.\/opening-intro"\)/, "controller is a lazily loaded chunk");
-  assert.doesNotMatch(loader, /from "\.\/opening-intro"/);
-  assert.doesNotMatch(await read("../app/components/opening-intro/OpeningIntroGate.tsx"), /<video|<link/);
-  assert.match(config, /"\/intro\/:path\*"/, "intro files are cacheable");
-  assert.match(config, /script-src 'self' 'unsafe-inline'/, "CSP is unchanged: the inline gate relies on the existing allowance");
+test("the homepage renders its content without mounting the opening overlay", async () => {
+  const [page, styles] = await Promise.all([read("../app/page.tsx"), read("../app/styles/cinematic-home.css")]);
+  assert.match(page, /return <AgencyHome/);
+  assert.doesNotMatch(page, /OpeningIntro/);
+  assert.match(styles, /prefers-reduced-motion: no-preference[\s\S]*?brand-lockup::after/);
+  assert.match(styles, /home-monogram-reveal 650ms/);
 });
 
 test("intro CSS animates opacity only, never crops the video and respects reduced motion", async () => {

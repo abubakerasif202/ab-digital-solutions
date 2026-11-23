@@ -322,9 +322,9 @@ export type ServiceDiscipline = {
 
 /** Homepage pillars. Slugs are type-checked, and a test asserts every service appears exactly once. */
 export const serviceDisciplines: readonly ServiceDiscipline[] = [
-  { name: "Websites & digital experiences", description: "Distinctive design, a clear story and a considered journey from first impression to enquiry.", services: ["web-design-sydney", "branding-content"] },
-  { name: "Software & connected systems", description: "Practical technology shaped around how your business already works.", services: ["custom-software-business-systems", "website-maintenance"] },
-  { name: "Commerce & digital growth", description: "Thoughtful online stores and search-ready foundations for what comes next.", services: ["ecommerce-website-development", "seo-local-visibility", "digital-marketing"] },
+  { name: "Websites", description: "Responsive sites, brand identity and content that help customers find and enquire.", services: ["web-design-sydney", "branding-content"] },
+  { name: "Online stores", description: "Product catalogues, checkout and search foundations built around how customers buy.", services: ["ecommerce-website-development", "seo-local-visibility", "digital-marketing"] },
+  { name: "Business systems", description: "Custom software for day-to-day operations, with support for your existing site.", services: ["custom-software-business-systems", "website-maintenance"] },
 ];
 
 // Delivery details stay beside the canonical service definitions.

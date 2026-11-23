@@ -19,14 +19,14 @@ test("logo reveal respects reduced motion, plays once per session and cleans up"
   assert.match(reveal, /await import\("\.\/logo-particles"\)/);
 });
 
-test("homepage leads with the work, not stock Sydney footage", async () => {
+test("homepage restores the project wall without a redundant film section", async () => {
   const [home, layout, header, footer] = await Promise.all([
     read("../app/agency-home.tsx"),
     read("../app/layout.tsx"),
     read("../app/site-chrome.tsx"),
     read("../app/site-footer.tsx"),
   ]);
-  assert.doesNotMatch(home, /BrandFilmSection|CinematicMedia|sydney-after-dark/);
+  assert.doesNotMatch(home, /BrandFilmSection|CinematicMedia/);
   assert.match(home, /<HeroWorkWall \/>/);
   assert.doesNotMatch(header, /href="#film"/);
   assert.doesNotMatch(footer, /href="#film"/);

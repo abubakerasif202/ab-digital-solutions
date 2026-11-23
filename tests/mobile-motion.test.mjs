@@ -12,9 +12,9 @@ test("mobile motion layer is loaded after the kinetic layer it overrides", () =>
   assert.match(home, /ruby-kinetic\.css";\s*import "[^"]*ruby-mobile-motion\.css"/);
 });
 
-test("hero shows case study links rather than film chapter labels", () => {
+test("hero links to Selected work and contains no film chapter labels", () => {
   const home = read("app/agency-home.tsx");
-  assert.match(home, /aria-label="Selected case studies"/);
+  assert.match(home, /href="#work"/);
   assert.doesNotMatch(home, />\s*(?:Harbour|Arteries|Skyline)\s*</);
 });
 

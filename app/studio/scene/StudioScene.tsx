@@ -53,6 +53,8 @@ const mobileShots: typeof shots = {
 const entranceShot = { position: [-.5, 2.3, 16.8] as [number,number,number], target: [-.5, 2.4, 9] as [number,number,number] };
 const mobileEntranceShot = { position: [-.5, 2.1, 18] as [number,number,number], target: [-.5, 2.2, 9] as [number,number,number] };
 const welcomeShot = { position: [-1.4, 1.62, 6.6] as [number,number,number], target: [-5.8, 1.85, 2.9] as [number,number,number] };
+const mapShot = { position: [8, 18, 23] as [number,number,number], target: [0, 1.1, 0] as [number,number,number] };
+const portraitMapShot = { position: [3, 34, 18] as [number,number,number], target: [0, 1.1, 0] as [number,number,number] };
 const overviewShot = { position: [10.5, 8.2, 14.5] as [number,number,number], target: [0, 1.4, 1] as [number,number,number] };
 
 // Three's scene is an imperative GPU resource, not React state.
@@ -100,7 +102,7 @@ function applyCameraLens(camera: THREE.PerspectiveCamera, fov: number, width: nu
   else if (lensChanged) camera.updateProjectionMatrix();
 }
 
-function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: StudioState; visible: boolean; onManual: () => void; onArrive: () => void; onGreet: () => void }) {
+function CameraRig({ state, mapOpen, visible, onManual, onArrive, onGreet }: { state: StudioState; mapOpen: boolean; visible: boolean; onManual: () => void; onArrive: () => void; onGreet: () => void }) {
   const controls = useRef<OrbitControlsImpl>(null);
   const { invalidate, camera, size, gl } = useThree();
   const mobile = size.width < 700 || matchMedia("(max-width: 999px) and (max-height: 500px) and (orientation: landscape)").matches;
@@ -136,17 +138,20 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
       invalidate();
       return;
     }
-    // The whole-studio overview only frames the first exploration. After a room is chosen, closing details,
-    // Reset view and the tour all keep that room in frame; Back to entrance is the only street view.
+    // Show the whole cutaway for orientation. Room and street shots take over on selection.
     const overview = (state.mode === "loading" && !state.resume) || (state.overview && !state.panel && !state.tour && !state.outside && state.mode !== "intro");
+    const mapping = mapOpen && overview;
+    const narrowMap = size.width < size.height;
     let shot = mobile ? mobileShots[state.area] : overview ? overviewShot : shots[state.area];
+    if (mapping) shot = narrowMap ? portraitMapShot : mapShot;
     if (state.mode === "loading" && !state.resume) { const first = arrivalPose(0, mobile && portrait, baseFov); shot = { position: first.position, target: first.target }; }
     else if (state.mode === "intro") shot = mobile ? mobileShots.reception : welcomeShot;
     else if (state.outside) shot = mobile ? mobileEntranceShot : entranceShot;
     if (state.animal && state.mode !== "loading" && state.mode !== "intro") shot = (mobile ? mobileWildlifeShots : wildlifeShots)[state.animal];
     if (camera instanceof THREE.PerspectiveCamera) {
       startFov.current = camera.fov;
-      targetFov.current = cameraFieldOfView(mobile, portrait, state.mode === "explore" && state.area === "services" && state.panel && !state.outside && !state.animal);
+      targetFov.current = mapping ? (narrowMap ? 82 : 48)
+        : cameraFieldOfView(mobile, portrait, state.mode === "explore" && state.area === "services" && state.panel && !state.outside && !state.animal);
       const view = camera.view;
       startLens.current.set(view?.enabled ? view.offsetX / view.fullWidth : 0, view?.enabled ? view.offsetY / view.fullHeight : 0);
       // Frame the room beside the desktop panel. On mobile the details sit below the scene, so no offset is needed.
@@ -161,7 +166,7 @@ function CameraRig({ state, visible, onManual, onArrive, onGreet }: { state: Stu
     started.current = performance.now();
     moving.current = true;
     invalidate();
-  }, [state.area, state.animal, state.shot, state.mode, state.panel, state.tour, state.outside, state.overview, state.resume, size.width, size.height, mobile, portrait, baseFov, visible, camera, invalidate]);
+  }, [state.area, state.animal, state.shot, state.mode, state.panel, state.tour, state.outside, state.overview, state.resume, mapOpen, size.width, size.height, mobile, portrait, baseFov, visible, camera, invalidate]);
   useFrame(() => {
     const visitor = worldState.visitor;
     visitor.x = camera.position.x; visitor.y = camera.position.y; visitor.z = camera.position.z;
@@ -300,8 +305,8 @@ function readCapabilities(): Tier {
   return pickTier({ cores: nav.hardwareConcurrency, memoryGb: nav.deviceMemory, coarsePointer: matchMedia("(pointer: coarse)").matches, saveData: nav.connection?.saveData });
 }
 
-export default function StudioScene({ state, projects, selectedProject, visible, onReady, onFailure, onSelect, onProject, onService, onManual, onArrive }: {
-  state: StudioState; projects: StudioProject[]; selectedProject: number; visible: boolean;
+export default function StudioScene({ state, mapOpen, projects, selectedProject, visible, onReady, onFailure, onSelect, onProject, onService, onManual, onArrive }: {
+  state: StudioState; mapOpen: boolean; projects: StudioProject[]; selectedProject: number; visible: boolean;
   onReady: () => void; onFailure: () => void; onSelect: (area: Area) => void; onProject: (index: number) => void; onService: (index: number) => void; onManual: () => void; onArrive: () => void;
 }) {
   const mobile = window.innerWidth < 700 || matchMedia("(max-width: 999px) and (max-height: 500px) and (orientation: landscape)").matches;
@@ -356,7 +361,7 @@ export default function StudioScene({ state, projects, selectedProject, visible,
     }}>
       <ContextGuard onFailure={onFailure} />
       <Suspense fallback={null}><Lighting onReady={onEnvironmentReady} /></Suspense>
-      <CameraRig state={state} visible={visible} onManual={onManual} onArrive={onArrive} onGreet={() => setGreetedShot(state.shot)} />
+      <CameraRig state={state} mapOpen={mapOpen} visible={visible} onManual={onManual} onArrive={onArrive} onGreet={() => setGreetedShot(state.shot)} />
       <HotspotPortalContext.Provider value={portal}>
       <HotspotsHiddenContext.Provider value={!!state.animal}>
       {phase === "done" && <PerformanceMonitor onDecline={onDecline} />}

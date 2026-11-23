@@ -1,0 +1,174 @@
+.nav-wrap--home .brand-lockup { position: relative; }
+
+.home-work {
+  padding-block: clamp(30px, 4vw, 60px) clamp(36px, 5vw, 76px);
+  border-block-start: 1px solid #523526;
+  background: #12100e;
+}
+
+.cinematic-home .home-work { scroll-margin-top: 0; }
+
+.home-work-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 24px;
+  margin-bottom: 20px;
+}
+
+.home-work-head h2 { margin: 0; font-size: clamp(34px, 4.4vw, 66px); line-height: 1.1; letter-spacing: -.045em; }
+.home-work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 30px);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.home-work-card { min-width: 0; border: 1px solid #604a39; background: #1a1512; }
+.home-work-card article { display: flex; flex-direction: column; height: 100%; }
+.home-work-image { position: relative; aspect-ratio: 16 / 11; background: #100e0d; border-bottom: 1px solid #604a39; }
+.home-work-image img { object-fit: contain; }
+.home-work-copy { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: clamp(14px, 1.8vw, 26px); }
+.home-work-copy .cinema-label { margin: 0 0 7px; color: var(--cinema-gold); }
+.home-work-copy h3 { margin: 0 0 8px; font-size: clamp(21px, 2vw, 30px); line-height: 1.16; }
+.home-work-copy > p:not(.cinema-label) { margin-bottom: 12px; color: #e4d9ce; line-height: 1.55; }
+.home-work .cinema-link { min-height: 44px; display: inline-flex; align-items: center; gap: 10px; color: var(--cinema-gold); }
+.home-work-copy .cinema-link { margin-top: auto; }
+.cinematic-home :is(a, button, select, summary):focus-visible { outline: 2px solid #ffdd9f; outline-offset: 3px; }
+
+.cinematic-home .ruby-services .ruby-discipline { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+.cinematic-home .ruby-services .ruby-service-options { padding-inline-start: 0; }
+.cinematic-home .ruby-services :is(a, summary):focus-visible { outline-color: var(--ruby-text-paper); }
+
+.site-footer.studio-footer--home { padding-top: clamp(26px, 4vw, 60px); }
+
+.enquiry-form--simple .form-chip[hidden] { display: none; }
+.enquiry-form--simple select {
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 12px;
+  border: 1px solid #8d7568;
+  color: #f8f0e5;
+  background: #181211;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-hero .ruby-hero-composition { animation: home-hero-settle 280ms ease-out both; }
+  .nav-wrap--home .brand-lockup::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 36px;
+    background: url("/brand/ab-reveal-mark-bright.webp") center / contain no-repeat;
+    animation: home-monogram-reveal 650ms ease-out both;
+    pointer-events: none;
+  }
+}
+
+@keyframes home-hero-settle { from { transform: translateY(5px); } }
+@keyframes home-monogram-reveal { from { opacity: .7; } to { opacity: 0; } }
+
+@media (max-width: 720px) {
+  .home-work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cinematic-home .ruby-services .ruby-discipline { grid-template-columns: minmax(0, 1fr) auto; }
+  .cinematic-home .ruby-services .ruby-discipline-copy { grid-column: 1; }
+  .cinematic-home .ruby-services .ruby-discipline-arrow { grid-column: 2; }
+}
+
+@media (max-width: 599px) {
+  .home-work-grid { grid-template-columns: minmax(0, 1fr); }
+  .home-hero .ruby-hero-actions { gap: 8px; }
+  .home-hero .ruby-hero-actions a { padding-inline: 10px; gap: 7px; font-size: .875rem; min-height: 48px; }
+}
+
+@media (max-width: 350px) {
+  .after-hours .site-header .nav-wrap--home { width: calc(100% - 16px); gap: 4px; }
+  .nav-wrap--home .header-project-cta { padding-inline: 7px; letter-spacing: 0; }
+  .nav-wrap--home .brand-wordmark i { margin-inline: 2px; }
+  .home-hero .ruby-hero-actions a { gap: 5px; padding-inline: 8px; }
+}
+
+
+@media (min-width: 901px) and (max-height: 730px) {
+  .ruby-page .ruby-hero.work-first-hero { min-height: 100svh; }
+  .work-first-hero .ruby-hero-composition { padding-block: 15px 24px; }
+  .ruby-page .work-first-hero .ruby-title { font-size: clamp(44px, 5.2vw, 74px); }
+}
+
+@media (max-width: 900px) {
+  .home-hero.work-first-hero .ruby-hero-topline { margin-block-end: clamp(150px, 42vw, 280px); }
+}
+
+@media (max-width: 350px) {
+  .nav-wrap--home .brand-lockup::after { width: 30px; }
+}
+
+/* The proof thumbnails act as previews while they retain their native links. */
+.hero-project-inspector {
+  position: absolute;
+  z-index: 1;
+  inset: 25% max(38px, 6vw) auto auto;
+  width: min(32vw, 510px);
+  pointer-events: none;
+}
+
+.hero-project-inspector-view {
+  display: none;
+  background: #12100f;
+  border: 1px solid var(--cinema-gold);
+  box-shadow: 0 20px 54px #000a;
+}
+
+.hero-project-inspector-art {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: #0c0b0b;
+}
+
+.hero-project-inspector-art img { object-fit: contain; }
+
+.hero-project-inspector-details {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-top: 1px solid #554331;
+  color: var(--cinema-paper);
+}
+
+.hero-project-inspector-details span {
+  font: var(--fs-label)/1.4 var(--mono);
+  color: var(--cinema-gold);
+}
+
+/* Pointer takes precedence when a different thumbnail retains keyboard focus. */
+.home-hero:has([data-project-inspect="0"]:hover) [data-inspect-index="0"],
+.home-hero:has([data-project-inspect="1"]:hover) [data-inspect-index="1"],
+.home-hero:has([data-project-inspect="2"]:hover) [data-inspect-index="2"],
+.home-hero:not(:has([data-project-inspect]:hover)):has([data-project-inspect="0"]:focus-visible) [data-inspect-index="0"],
+.home-hero:not(:has([data-project-inspect]:hover)):has([data-project-inspect="1"]:focus-visible) [data-inspect-index="1"],
+.home-hero:not(:has([data-project-inspect]:hover)):has([data-project-inspect="2"]:focus-visible) [data-inspect-index="2"] {
+  display: block;
+}
+
+.home-hero:has([data-project-inspect]:is(:hover, :focus-visible)) .work-wall-column {
+  animation-play-state: paused;
+}
+
+@media (max-width: 900px) {
+  .hero-project-inspector {
+    inset: calc(var(--header-height) + 55px) 0 auto;
+    width: min(48vw, 340px);
+    margin-inline: auto;
+  }
+
+  .hero-project-inspector-details { padding: 5px 8px; }
+  .hero-project-inspector-details strong { font-size: .875rem; }
+}
+
+@media (max-width: 560px) {
+  .hero-project-inspector { width: min(43vw, 175px); }
+  .hero-project-inspector-details span { display: none; }
+}

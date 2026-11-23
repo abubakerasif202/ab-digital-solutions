@@ -41,24 +41,19 @@ test.describe("static homepage header", () => {
   });
 });
 
-test("project exhibition frames the real capture without masking attribution or controls", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 850 });
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
-  const exhibition = page.getByRole("region", { name: "Project exhibition" });
-  const feature = exhibition.locator(".exhibition-feature");
-  await feature.scrollIntoViewIfNeeded();
-  await expect(exhibition).toHaveAttribute("data-image-state", "ready");
-  const project = await exhibition.getAttribute("data-project");
-  await expect(feature.locator(".exhibition-feature-link")).toHaveAttribute("href", `/work/${project}`);
-  await expect(feature.locator(".exhibition-destination")).toBeVisible();
-  await expect(exhibition.getByRole("button", { name: "Next project" })).toBeEnabled();
-  expect(await feature.evaluate(element => {
-    const stack = element.querySelector(".exhibition-image-stack").getBoundingClientRect();
-    const image = element.querySelector("img");
-    const capture = image.getBoundingClientRect();
-    const style = getComputedStyle(image);
-    return capture.left > stack.left && capture.right < stack.right
-      && image.naturalWidth > 0 && style.objectFit === "contain" && image.getAnimations().length === 0;
-  })).toBe(true);
-});
+for (const width of [390, 720]) {
+  test(`three case-study cards show sharp unfiltered captures at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 850 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const cards = page.getByRole("region", { name: "Selected work" }).getByRole("article");
+    await expect(cards).toHaveCount(3);
+    for (const card of await cards.all()) {
+      await card.scrollIntoViewIfNeeded();
+      const image = card.getByRole("img");
+      await expect.poll(() => image.evaluate((element) => element.naturalWidth >= element.clientWidth)).toBe(true);
+      await expect(image).toHaveCSS("object-fit", "contain");
+      await expect(image).toHaveCSS("filter", "none");
+    }
+  });
+}

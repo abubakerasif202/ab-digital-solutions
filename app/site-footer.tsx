@@ -27,15 +27,6 @@ const profileLinks = [
 export function SiteFooter({ currentYear, home = false }: { currentYear: number; home?: boolean }) {
   return (
     <footer className={`site-footer studio-footer${home ? " studio-footer--home" : ""}`}>
-      {home && (
-        <div className="studio-footer-closing">
-          <div className="studio-shell">
-            <p className="cinema-label">The next move</p>
-            <h2>Let’s build something <em>worth noticing.</em></h2>
-            <a className="ruby-project-cta" href="#contact">Start a project <ArrowIcon /></a>
-          </div>
-        </div>
-      )}
       <div className="studio-shell studio-footer-main">
         <div className="studio-footer-brand">
           <Link className="brand" href="/" aria-label="AB Web Studio home">
@@ -69,7 +60,6 @@ export function SiteFooter({ currentYear, home = false }: { currentYear: number;
           <nav className="studio-footer-col" aria-label="Footer work">
             <h2>Work</h2>
             <ul>
-              <li><Link href="/work" prefetch={false}>All case studies</Link></li>
               {projects.slice(0, 3).map(project => (
                 <li key={project.slug}><Link href={`/work/${project.slug}`} prefetch={false}>{"titleName" in project ? project.titleName : project.name}</Link></li>
               ))}

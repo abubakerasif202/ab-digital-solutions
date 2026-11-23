@@ -26,10 +26,10 @@ test("homepage exposes content directly instead of using an iframe", async () =>
   ]);
 
   assert.doesNotMatch(page, /<iframe\b/i);
-  assert.match(homepage, /className="ruby-title"/);
-  assert.match(homepage, /<span className="ruby-title-row">Websites built for<\/span>/);
+  assert.match(homepage, /id="hero-heading"/);
+  assert.match(homepage, /ruby-title-row">Websites built for/);
   assert.match(homepage, /<em>real businesses\.<\/em>/);
-  assert.match(homepage, /websites, online stores and business systems shipped/);
+  assert.match(homepage, /Websites, online stores and custom business systems/);
   assert.match(homepage, /id="contact"/);
   assert.match(showcase, /aria-roledescription="carousel"/);
   assert.match(heroExperience, /prefers-reduced-motion/);
@@ -88,7 +88,7 @@ test("every project ships a real preview image and routes visitors through a cas
   const [portfolio, showcaseSource] = await Promise.all([read("../app/components/PortfolioSection.tsx"), read("../app/components/ProjectShowcase.tsx")]);
   assert.match(showcaseSource, /View Case Study/);
   const exhibition = await read("../app/components/cinematic/ProjectExhibition.tsx");
-  assert.match(portfolio, /<ProjectExhibition \/>/);
+  assert.match(portfolio, /<ProjectArtwork/);
   assert.match(exhibition, /href=\{`\/work\/\$\{active\.slug\}`\}/);
   assert.doesNotMatch(exhibition, /href=\{(?:active|project)\.url\}/);
   assert.doesNotMatch(portfolio, /href=\{project\.url\}/);
@@ -185,8 +185,6 @@ test("project count copy is derived from the canonical registry", async () => {
     read("../app/components/studio/StudioAbout.tsx"),
   ]);
   assert.match(homepage, /\{projects\.length\} projects/);
-  // The shared About section (homepage and /about) states the case-study count.
-  assert.match(homepage, /id="perspective-heading"/);
   assert.match(studioAbout, /<dt>Project case studies<\/dt>\s*<dd[^>]*>\{projects\.length\}<\/dd>/);
   assert.doesNotMatch(studioAbout, /<dd[^>]*>\d+<\/dd>/);
   assert.match(workIndexBody, /\{projects\.length\} projects/);
@@ -217,7 +215,7 @@ test("reviewed design issues remain remediated", async () => {
   assert.match(showcase, /setSliderPauseOverride\(true\)/);
   assert.match(homepage, /href=\{`\/services\/\$\{service\.slug\}`\}/);
   assert.match(homepage, /serviceContactHref\(service\)/);
-  assert.match(chrome, /<ABBrandImage decorative eager/);
+  assert.match(chrome, /<ABBrandImage decorative eager navigation/);
   assert.match(chrome, /AB Web Studio/);
   assert.match(servicePage, /<SiteHeader/);
   assert.match(servicePage, /<SiteFooter/);
@@ -307,13 +305,12 @@ test("premium interaction layer is wired without heavy dependencies", async () =
     read("../package.json"),
   ]);
 
-  assert.match(homepage, /className="ruby-title"/);
+  assert.match(homepage, /id="hero-heading"/);
   assert.match(homepage, /className="ruby-ghost-cta" href="#work"/);
-  assert.match(homepage, /<RubyMotion \/>/);
-  assert.match(homepage, /data-ruby-depth/);
+  assert.match(homepage, /<HeroWorkWall \/>/);
+  assert.doesNotMatch(homepage, /<RubyMotion|data-ruby-depth/);
   assert.doesNotMatch(homepage, /className="ruby-project-cta"[^>]*data-ruby-magnet/);
   assert.doesNotMatch(homepage, /project-ghost-index/);
-  assert.match(homepage, /href="\/about"/);
 
 
   assert.match(intro, /sessionStorage/);
@@ -437,7 +434,7 @@ test("contact form posts to the protected server endpoint", async () => {
   assert.equal([...contactForm.matchAll(/name="company"/g)].length, 1);
   assert.match(contactForm, /<div className="form-trap" aria-hidden="true" style=\{\{ display: "none" \}\}>/);
   // Service chips are native inputs whose choices travel as one validated array.
-  assert.match(contactForm, /type="checkbox" name="service"/);
+  assert.match(contactForm, /type=\{simplified \? "radio" : "checkbox"\} name="service"/);
   assert.match(contactForm, /formData\.getAll\("service"\)/);
   assert.match(route, /function selectedServices/);
   assert.match(route, /tooLong\(payload, "business", 160\)/);

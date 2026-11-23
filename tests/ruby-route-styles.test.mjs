@@ -9,7 +9,7 @@ test("cinematic route styles are not part of the root CSS entry", async () => {
   assert.match(layout, /import "\.\/styles\/cinematic-shared\.css"/);
   assert.doesNotMatch(layout, /import "\.\/styles\/(?:cinematic|cinematic-interiors|project-exhibition|ruby-cinematic|ruby-kinetic|homepage-refinement)\.css"/);
   const home = await read("app/page.tsx");
-  assert.match(home, /cinematic\.css";\s*import "[^"]*ruby-cinematic\.css";\s*import "[^"]*project-exhibition\.css";\s*import "[^"]*ruby-kinetic\.css";\s*import "[^"]*ruby-mobile-motion\.css";\s*import "[^"]*homepage-refinement\.css";/);
+  assert.match(home, /cinematic\.css";\s*import "[^"]*ruby-cinematic\.css";\s*import "[^"]*ruby-kinetic\.css";\s*import "[^"]*ruby-mobile-motion\.css";\s*import "[^"]*homepage-refinement\.css";/);
   for (const route of ["about", "services", "work"]) {
     assert.match(await read(`app/${route}/layout.tsx`), /import "[^"]*styles\/cinematic-interiors\.css"/);
   }
