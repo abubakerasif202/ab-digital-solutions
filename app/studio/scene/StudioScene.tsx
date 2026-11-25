@@ -5,7 +5,7 @@ import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { OrbitControls, useTexture } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
-import { createStudioEnvironment } from "./environment";
+import { createStudioEnvironment, StudioEnvironmentLoader } from "./environment";
 import { MaterialLibrary } from "./Materials";
 import { cameraFov, cameraProgress, cameraFieldOfView, facadeWaypoint, panelFrameOffset } from "./camera-motion";
 import { Architecture } from "./Architecture";
@@ -37,11 +37,9 @@ const Exterior = lazy(() => loadExterior().then((module) => ({ default: module.E
 const Traffic = lazy(() => loadTraffic().then((module) => ({ default: module.Traffic })));
 const Pedestrians = lazy(() => loadPedestrians().then((module) => ({ default: module.Pedestrians })));
 
-const loadEnvironmentBuffer = (loader: THREE.FileLoader) => loader.setResponseType("arraybuffer");
-
 // Start both core assets on entry, before the WebGL context and canvas commit.
 useStudioModel.preload(monogramUrl);
-useLoader.preload(THREE.FileLoader, environmentUrl, loadEnvironmentBuffer);
+useLoader.preload(StudioEnvironmentLoader, environmentUrl);
 
 const shots: Record<Area, { position: [number,number,number]; target: [number,number,number] }> = {
   reception: { position: [-1.4,1.85,6.8], target: [-5.8,1.35,2.9] },
@@ -76,7 +74,7 @@ function attachEnvironment(scene: THREE.Scene, texture: THREE.Texture) {
 
 function Lighting({ onReady }: { onReady: () => void }) {
   const { gl, scene, invalidate } = useThree();
-  const buffer = useLoader(THREE.FileLoader, environmentUrl, loadEnvironmentBuffer);
+  const buffer = useLoader(StudioEnvironmentLoader, environmentUrl);
   const texture = useMemo(() => {
     if (!(buffer instanceof ArrayBuffer)) throw new Error("Invalid Studio environment response");
     return createStudioEnvironment(buffer);
@@ -435,7 +433,7 @@ function ContextGuard({ onFailure }: { onFailure: () => void }) {
 }
 
 export function resetStudioResources(projects: StudioProject[]) {
-  useLoader.clear(THREE.FileLoader, environmentUrl);
+  useLoader.clear(StudioEnvironmentLoader, environmentUrl);
   useStudioModel.clear(monogramUrl);
   for (const project of projects) {
     useTexture.clear(screenTextureUrl(project.slug, false));

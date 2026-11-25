@@ -3,7 +3,9 @@ import test from "node:test";
 import { readFile } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
 import { CubeUVReflectionMapping, HalfFloatType, LinearFilter, LinearSRGBColorSpace } from "three";
-import { createStudioEnvironment } from "../app/studio/scene/environment.ts";
+import { createStudioEnvironment, StudioEnvironmentLoader } from "../app/studio/scene/environment.ts";
+
+import { environmentUrl } from "../app/studio/studio-assets.ts";
 
 const bytes = await readFile(new URL("../public/studio/room-environment.bin", import.meta.url));
 const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
@@ -30,4 +32,24 @@ test("the precompressed environment serves the identical HDR pixels at a smaller
   const compressed = await readFile(new URL("../public/studio/room-environment.bin.gz", import.meta.url));
   assert.deepEqual(gunzipSync(compressed), bytes);
   assert.ok(compressed.length < bytes.length / 3);
+});
+
+test("the environment loader decompresses gzip and uses the raw asset on older engines", async (t) => {
+  const compressed = await readFile(new URL("../public/studio/room-environment.bin.gz", import.meta.url));
+  const base = environmentUrl;
+  const request = t.mock.method(globalThis, "fetch", async (url) => {
+    assert.ok(url === base || url === `${base}.gz`);
+    return new Response(url === base ? bytes : compressed);
+  });
+  const loader = new StudioEnvironmentLoader();
+  assert.deepEqual(await loader.loadAsync(base), buffer);
+  assert.equal(request.mock.calls[0].arguments[0], `${base}.gz`);
+  const original = Object.getOwnPropertyDescriptor(globalThis, "DecompressionStream");
+  try {
+    Object.defineProperty(globalThis, "DecompressionStream", { configurable: true, value: undefined });
+    assert.deepEqual(await loader.loadAsync(base), buffer);
+    assert.equal(request.mock.calls[1].arguments[0], base);
+  } finally {
+    Object.defineProperty(globalThis, "DecompressionStream", original);
+  }
 });

@@ -65,7 +65,8 @@ const nextConfig: NextConfig = {
     // Versioned URLs are the cache key. The files stay at their stable public paths.
     return [
       { source: `/studio/${STUDIO_ASSET_REV}/ab-monogram.glb`, destination: "/studio/ab-monogram.glb" },
-      { source: `/studio/${STUDIO_ASSET_REV}/room-environment.bin`, destination: "/studio/room-environment.bin.gz" },
+      { source: `/studio/${STUDIO_ASSET_REV}/room-environment.bin`, destination: "/studio/room-environment.bin" },
+      { source: `/studio/${STUDIO_ASSET_REV}/room-environment.bin.gz`, destination: "/studio/room-environment.bin.gz" },
       { source: `/studio/${STUDIO_ASSET_REV}/screens/:file`, destination: "/studio/screens/:file" },
     ];
   },
@@ -88,13 +89,6 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/(.*)", headers: securityHeaders },
-      {
-        source: `/studio/${STUDIO_ASSET_REV}/room-environment.bin`,
-        headers: [
-          { key: "Content-Type", value: "application/octet-stream" },
-          { key: "Content-Encoding", value: "gzip" },
-        ],
-      },
       // Design-review routes are never indexable, whatever the page metadata says.
       { source: "/preview/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }] },
       // Social share images are crawled from page metadata; keep them out of the web index.

@@ -364,8 +364,8 @@ test("welcome separates exploration from tour and details open under the scene",
   await expect(page.locator("#studio-panel-heading")).toHaveText("Ideas start here.");
 });
 
-test("initial phone landscape caps DPR and all requested layouts stay within viewport", async ({ browser }) => {
-  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+test("initial phone landscape caps DPR and all requested layouts stay within viewport", async ({ browser, browserName }) => {
+  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, deviceScaleFactor: 3, isMobile: browserName !== "firefox", hasTouch: true });
   const page = await context.newPage(); await intercept(page);
   await page.goto("/studio"); await enter(page);
   await expect.poll(() => page.locator("canvas").evaluate(canvas => canvas.width / canvas.clientWidth)).toBeLessThanOrEqual(1.76);
@@ -485,12 +485,12 @@ test("warmup overlaps compressed reflections and gallery textures with the model
   try {
     await page.goto("/studio", { waitUntil: "networkidle" });
     expect(galleryRequests).toBe(0);
-    const reflections = page.waitForResponse((response) => response.url().endsWith("/room-environment.bin"));
+    const reflections = page.waitForResponse((response) => response.url().endsWith("/room-environment.bin.gz"));
     await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
     await expect.poll(() => modelRequests).toBeGreaterThan(0);
     const environment = await reflections;
     expect(environment.ok()).toBe(true);
-    expect(await environment.headerValue("content-encoding")).toBe("gzip");
+    expect((await environment.body()).byteLength).toBeLessThan(500_000);
     await expect.poll(() => galleryRequests).toBe(3);
     await expect(page.locator("[data-warmup]")).toHaveAttribute("data-warmup", "core");
   } finally {
@@ -569,7 +569,7 @@ test("pending shader compilation tears down safely and can re-enter", async ({ p
 
 test("failed baked environment recovers through the existing model retry", async ({ page }) => {
   let blocked = true, requests = 0;
-  await page.route("**/room-environment.bin", (route) => { requests++; return blocked ? route.abort() : route.continue(); });
+  await page.route(/\/room-environment\.bin(?:\.gz)?$/, (route) => { requests++; return blocked ? route.abort() : route.continue(); });
   await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
   await expect(mode(page)).toHaveAttribute("data-mode", "failed", { timeout: 25000 });
