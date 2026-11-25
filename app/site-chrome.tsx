@@ -102,6 +102,7 @@ export function SiteHeader() {
       // The background is interactive again. Let link navigation handle scrolling.
       if (!section.hasAttribute("tabindex")) section.tabIndex = -1;
       section.focus({ preventScroll: true });
+      if (document.activeElement !== section) menuButtonRef.current?.focus();
     }
     return () => {
       if (focusFrame !== null) window.cancelAnimationFrame(focusFrame);

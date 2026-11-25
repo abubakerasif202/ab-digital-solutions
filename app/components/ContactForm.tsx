@@ -53,7 +53,7 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
     if (retryUntil === null) return;
     const timer = window.setTimeout(() => {
       setRetryUntil(null);
-      setFormStatus((status) => `${status} You can try again now.`);
+      setFormStatus("You can try again now.");
     }, Math.max(0, retryUntil - Date.now()));
     return () => window.clearTimeout(timer);
   }, [retryUntil]);
