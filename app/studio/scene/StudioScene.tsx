@@ -2,7 +2,7 @@
 
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { OrbitControls, PerformanceMonitor, useTexture } from "@react-three/drei";
+import { OrbitControls, useTexture } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
 import { createStudioEnvironment } from "./environment";
@@ -23,7 +23,7 @@ import { Receptionist } from "../world/characters/Receptionist";
 import { StudioStaff } from "../world/characters/StudioStaff";
 import { worldState } from "../world/worldState";
 import { ARRIVAL_SECONDS, GREET_AT, SUMMON_KANGAROO_AT, arrivalPose } from "../world/sim/arrival";
-import { canvasPixelRatio, pickTier, type Tier } from "../world/sim/quality";
+import { canvasPixelRatio, pickTier, readRuntimeCapabilities, stepDownTier } from "../world/sim/quality";
 import type { Area, StudioState } from "../studio-state";
 import type { StudioProject } from "../studio-data";
 
@@ -303,11 +303,6 @@ function GalleryWarmup({ projects, selected }: { projects: StudioProject[]; sele
   return projects.slice(start, start + 3).map((project) => <GalleryTextureWarmup key={project.slug} image={screenTextureUrl(project.slug, false)} />);
 }
 
-function readCapabilities(): Tier {
-  const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
-  return pickTier({ cores: nav.hardwareConcurrency, memoryGb: nav.deviceMemory, coarsePointer: matchMedia("(pointer: coarse)").matches, saveData: nav.connection?.saveData });
-}
-
 export default function StudioScene({ state, mapOpen, projects, selectedProject, visible, onReady, onFailure, onSelect, onProject, onService, onManual, onArrive }: {
   state: StudioState; mapOpen: boolean; projects: StudioProject[]; selectedProject: number; visible: boolean;
   onReady: () => void; onFailure: () => void; onSelect: (area: Area) => void; onProject: (index: number) => void; onService: (index: number) => void; onManual: () => void; onArrive: () => void;
@@ -316,7 +311,7 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
   const animate = !matchMedia("(prefers-reduced-motion: reduce)").matches;
   const portal = useRef<HTMLDivElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
-  const [tier, setTier] = useState<Tier>(readCapabilities);
+  const [tier, setTier] = useState(() => pickTier(readRuntimeCapabilities()));
   const [greetedShot, setGreetedShot] = useState(-1);
   const [phase, setPhase] = useState<StudioPhase>("core");
   const [environmentReady, setEnvironmentReady] = useState(false);
@@ -343,21 +338,25 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
   const portrait = matchMedia("(orientation: portrait)").matches;
   const initialPose = arrivalPose(0, mobile && portrait, cameraFieldOfView(mobile, portrait));
   const greeting = state.mode === "intro" || (state.mode === "explore" && state.area === "reception" && !state.outside) || (state.mode === "arrival" && greetedShot === state.shot);
-  const downgrade = useCallback(() => setTier((current) => (current === "high" ? "medium" : "low")), [setTier]);
-  const onDecline = useCallback(() => {
-    if (phase !== "done") return;
-    downgrade();
-  }, [downgrade, phase]);
+  const downgrade = useCallback(() => setTier(stepDownTier), [setTier]);
   return <div ref={viewport} className="ab-spatial-canvas" data-warmup={phase} style={{ position: "absolute", inset: 0, zIndex: 0 }}>
     <style>{`.ab-spatial-hotspot{display:flex;align-items:center;gap:8px;white-space:nowrap;min-height:44px;padding:6px 13px 6px 7px;border:1px solid #c4a56f88;background:#101619e8;color:#f1e2c2;font:11px var(--font-sans),sans-serif;cursor:pointer;box-shadow:0 4px 16px #0005}.ab-spatial-hotspot span{display:grid;place-items:center;width:25px;height:25px;border:1px solid #d4b67888;border-radius:50%;color:#e9cc96;font-size:17px}.ab-spatial-hotspot:hover{background:#3a3020;border-color:#efd49c}.ab-spatial-canvas canvas{touch-action:pan-y!important}`}</style>
     <div ref={portal} style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }} />
-    <Canvas frameloop={visible ? "demand" : "never"} dpr={pixelRatio} camera={{ position: initialPose.position, fov: initialPose.fov, near: .1, far: 560 }} gl={{ antialias: false, powerPreference: "low-power", alpha: false }} fallback={<p>3D unavailable. Explore the studio using the space buttons below.</p>} onCreated={({ gl, scene }) => {
+    <Canvas frameloop={visible ? "demand" : "never"} dpr={pixelRatio} camera={{ position: initialPose.position, fov: initialPose.fov, near: .1, far: 560 }} gl={{ antialias: false, powerPreference: "low-power", alpha: false }} fallback={<p>3D unavailable. Explore the studio using the space buttons below.</p>} onCreated={({ gl, scene, size, setDpr }) => {
       // Software rasterizers can expose many CPU cores and large texture limits. Start them at
       // the bounded tier immediately instead of waiting for a prolonged frame-time probe.
       const context = gl.getContext();
       const debug = context.getExtension("WEBGL_debug_renderer_info");
       const renderer = debug ? String(context.getParameter(debug.UNMASKED_RENDERER_WEBGL)) : "";
-      if (/swiftshader|llvmpipe|software|microsoft basic render/i.test(renderer)) { setSoftware(true); setTier("low"); }
+      const softwareRenderer = software || /swiftshader|llvmpipe|software|microsoft basic render/i.test(renderer);
+      const capabilities = { ...readRuntimeCapabilities(), softwareRenderer, maxTexture: gl.capabilities.maxTextureSize };
+      const initialTier = pickTier(capabilities, tier);
+      const initialDpr = canvasPixelRatio({ width: size.width, height: size.height, tier: initialTier, software: softwareRenderer, deviceDpr: window.devicePixelRatio });
+      // Apply the backing-buffer budget immediately, including during warmup.
+      setDpr(initialDpr);
+      setPixelRatio(initialDpr);
+      setSoftware(softwareRenderer);
+      setTier((current) => pickTier(capabilities, current));
       gl.domElement.setAttribute("aria-hidden", "true");
       gl.domElement.tabIndex = -1;
       gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.1;
@@ -369,14 +368,13 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
       <CameraRig state={state} mapOpen={mapOpen} visible={visible} onManual={onManual} onArrive={onArrive} onGreet={() => setGreetedShot(state.shot)} />
       <HotspotPortalContext.Provider value={portal}>
       <HotspotsHiddenContext.Provider value={!!state.animal}>
-      {phase === "done" && <PerformanceMonitor onDecline={onDecline} />}
-      <SceneClock tier={tier} active={visible && phase === "done"} onDowngrade={downgrade}>
+      <SceneClock tier={tier} active={visible && animate && phase === "done"} onDowngrade={tier === "low" ? undefined : downgrade}>
       <MaterialLibrary>
         <WarmupStage name="core" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}>
           <Architecture />
           <Facade />
           <Ground />
-          <GoldDust animate={animate} />
+          <GoldDust animate={animate && tier !== "low"} />
           <Landmarks />
         </WarmupStage>
         <WarmupStage name="interior" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}>

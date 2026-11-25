@@ -12,7 +12,7 @@ const viewports = [
   { name: "desktop", width: 1440, height: 900 },
   { name: "wide", width: 1920, height: 1080 },
 ];
-const VALID = { name: "Jordan Example", email: "jordan@example.com", message: "I need a new website for my business." };
+const VALID = { name: "Jordan Example", email: "jordan@example.invalid", message: "I need a new website for my business." };
 
 async function open(page, size = { width: 1440, height: 900 }, query = "") {
   const problems = [];
@@ -44,6 +44,7 @@ async function fillForm(page) {
   await page.fill("#full-name", VALID.name);
   await page.fill("#email", VALID.email);
   await page.fill("#message", VALID.message);
+  await page.getByRole("checkbox", { name: "Website design & development" }).check();
 }
 
 for (const size of viewports) {
@@ -169,7 +170,7 @@ test("form: the shared ContactForm posts the live /api/contact contract and the 
   await page.getByRole("button", { name: /Send project enquiry/ }).click();
   await expect(page.locator(".form-status")).toContainText("Enquiry received");
   expect(payload).toMatchObject({ fullName: VALID.name, email: VALID.email, message: VALID.message, company: "" });
-  expect(Array.isArray(payload.services) && payload.services.length >= 1).toBe(true);
+  expect(payload.services).toEqual(["Website design & development"]);
   expect(payload.submissionId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
   // Direct valid submissions require an explicitly isolated no-delivery server. A developer's
   // ordinary local server may load real credentials, so never infer safety from localhost.

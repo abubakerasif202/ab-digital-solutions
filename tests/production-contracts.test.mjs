@@ -6,8 +6,23 @@ import { projects } from "../app/project-data.ts";
 import { studioProjects } from "../app/studio/studio-data.ts";
 import { BUDGET_OPTIONS, contactServiceKeys, contactServices } from "../app/contact-options.ts";
 import { serviceContactHref, servicePages } from "../app/services/service-data.ts";
+import sitemap from "../app/sitemap.ts";
+import { siteConfig } from "../app/site-config.ts";
 
 const read = (relativePath) => readFile(new URL(relativePath, import.meta.url), "utf8");
+
+test("sitemap lists exactly the canonical public routes and both detail registries", () => {
+  const origin = "https://www.abwebstudio.com.au";
+  assert.equal(siteConfig.url, origin);
+  const expectedPaths = [
+    "", "/studio", "/work", "/services", "/about", "/contact", "/privacy",
+    ...projects.map(({ slug }) => `/work/${slug}`),
+    ...servicePages.map(({ slug }) => `/services/${slug}`),
+  ];
+  const urls = sitemap().map(({ url }) => url);
+  assert.equal(new Set(urls).size, urls.length, "duplicate sitemap URLs");
+  assert.deepEqual(urls.sort(), expectedPaths.map((path) => origin + path).sort());
+});
 
 test("all 20 project records are complete and indexed in canonical order", () => {
   assert.equal(projects.length, 20);

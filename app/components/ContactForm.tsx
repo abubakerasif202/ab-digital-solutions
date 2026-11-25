@@ -17,6 +17,14 @@ interface ContactFormProps {
 
 const SERVICES_ERROR_ID = "services-error";
 const SERVICES_HELP_ID = "services-help";
+const MAX_RETRY_AFTER_SECONDS = 10 * 60;
+
+function retryAfterMs(header: string | null) {
+  const value = header?.trim();
+  if (!value || !/^\d+$/.test(value)) return 0;
+  const seconds = Number(value);
+  return Number.isSafeInteger(seconds) ? Math.min(seconds, MAX_RETRY_AFTER_SECONDS) * 1_000 : 0;
+}
 
 const homepageServices = [
   [contactServiceKeys["web-design"], "Website"],
@@ -38,6 +46,17 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formStatus, setFormStatus] = useState("");
   const [formState, setFormState] = useState<FormState>("idle");
+  const [rateLimited, setRateLimited] = useState(false);
+  const [retryUntil, setRetryUntil] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (retryUntil === null) return;
+    const timer = window.setTimeout(() => {
+      setRetryUntil(null);
+      setFormStatus((status) => `${status} You can try again now.`);
+    }, Math.max(0, retryUntil - Date.now()));
+    return () => window.clearTimeout(timer);
+  }, [retryUntil]);
 
   const formRef = useRef<HTMLFormElement>(null);
   const [showScopeNote, setShowScopeNote] = useState(false);
@@ -81,7 +100,7 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
-    if (sendingRef.current) return;
+    if (sendingRef.current || retryUntil !== null) return;
     const formData = new FormData(form);
     const services = formData.getAll("service").map(String);
     if (services.length === 0) {
@@ -94,6 +113,7 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
     }
 
     sendingRef.current = true;
+    setRateLimited(false);
     setFormState("sending");
     setFormStatus("Sending your enquiry…");
     // Both form variants submit the same services array.
@@ -111,6 +131,11 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
         signal: controller.signal,
       });
       const result: unknown = await response.json().catch(() => null);
+      if (response.status === 429) {
+        setRateLimited(true);
+        const delay = retryAfterMs(response.headers.get("Retry-After"));
+        if (delay > 0) setRetryUntil(Date.now() + delay);
+      }
       if (!response.ok || !result || typeof result !== "object" || !("ok" in result) || result.ok !== true) {
         const error = result && typeof result === "object" && "error" in result && typeof result.error === "string"
           ? result.error : `We could not confirm delivery. Please email ${siteConfig.email} before resending.`;
@@ -245,7 +270,7 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
       </div>
 
       <div className="form-actions">
-        <button className="button button-primary" type="submit" disabled={formState === "sending"}>
+        <button className="button button-primary" type="submit" disabled={formState === "sending" || retryUntil !== null}>
           {formState === "sending" ? <>Sending… <span className="form-spinner" aria-hidden="true" /></> : <>Send project enquiry <ArrowIcon direction="right" /></>}
         </button>
         <a className="form-call" href={`tel:${siteConfig.phoneInternational}`}>Or call {siteConfig.phoneDisplay}</a>
@@ -258,6 +283,8 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
           </strong>
         )}
         {formStatus}
+        {retryUntil !== null && " The send button will be available when you can retry."}
+        {rateLimited && <> You can also <a href={`mailto:${siteConfig.email}`}>email us</a>.</>}
       </p>
     </form>
   );

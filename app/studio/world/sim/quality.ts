@@ -1,5 +1,4 @@
-// Quality tiers come from measured capability (cores, memory, input type, texture limit, a short
-// frame-time probe) and never from screen width alone.
+// Quality tiers use browser capability hints, renderer limits, and sustained frame timing.
 export type Tier = "low" | "medium" | "high";
 export type Capabilities = {
   cores?: number;
@@ -15,8 +14,9 @@ export type Capabilities = {
 };
 export type TierConfig = { tier: Tier; cars: number; pedestrians: number; walkingStaff: boolean; simHz: number; landmarkDetail: 0 | 1 | 2; trees: number; dpr: number };
 
-export function pickTier(c: Capabilities): Tier {
+export function pickTier(c: Capabilities, ceiling: Tier = "high"): Tier {
   if (
+    ceiling === "low" ||
     c.saveData ||
     c.reducedMotion ||
     c.lowBattery ||
@@ -29,10 +29,14 @@ export function pickTier(c: Capabilities): Tier {
   let score = 0;
   score += c.cores === undefined ? 1 : c.cores >= 8 ? 2 : c.cores >= 6 ? 1.5 : c.cores >= 4 ? 1 : 0;
   score += c.memoryGb === undefined ? 1 : c.memoryGb >= 8 ? 2 : c.memoryGb >= 4 ? 1 : 0;
-  score += c.maxTexture !== undefined && c.maxTexture >= 8192 ? 1 : 0;
   if (c.coarsePointer) score -= 1;
   if (c.medianFrameMs !== undefined) score += c.medianFrameMs <= 12 ? 1 : c.medianFrameMs <= 20 ? 0 : -2;
-  return score >= 4 ? "high" : score >= 2 ? "medium" : "low";
+  if (score < 2) return "low";
+  // Texture capacity is a ceiling only. A large limit says little about render throughput.
+  const limitedTextureSize = c.maxTexture !== undefined && c.maxTexture < 8192;
+  return score >= 4 && ceiling === "high" && !limitedTextureSize && !c.coarsePointer && c.effectiveType !== "3g"
+    ? "high"
+    : "medium";
 }
 
 export function stepDownTier(tier: Tier): Tier {
