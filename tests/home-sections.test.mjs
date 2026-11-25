@@ -7,7 +7,7 @@ test("homepage chapter numbers are sequential with no duplicates", () => {
   const numbers = homeSections.map((section) => sectionNumber(section.id));
   assert.deepEqual(numbers, numbers.map((_, index) => String(index + 1).padStart(2, "0")));
   assert.equal(new Set(numbers).size, numbers.length);
-  assert.equal(sectionEyebrow("process"), "04 / The process");
+  assert.deepEqual(homeSections.map(({ id }) => sectionEyebrow(id)), ["01 / Work", "02 / Services", "03 / The process", "04 / The Virtual Studio", "05 / Contact"]);
   assert.ok(!homeSections.some((section) => section.id === "film"), "the stock Sydney film chapter is retired");
 });
 

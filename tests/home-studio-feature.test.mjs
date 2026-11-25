@@ -49,7 +49,7 @@ test("header and mobile menu share one primary navigation with Studio between Wo
   const order = ["/work", "/studio", "/services", "/#process", "/about", "/contact"].map((href) => nav.indexOf(`href="${href}"`));
   assert.ok(order.every((index) => index !== -1));
   assert.deepEqual(order, [...order].sort((a, b) => a - b), "links keep this order, so numbering and focus follow it");
-  assert.match(nav, /<Link href="\/studio" prefetch=\{false\}[^>]*aria-current=\{navLinkCurrent\("studio"\)\}[^>]*>Studio<\/Link>/);
+  assert.match(nav, /<Link href="\/studio" prefetch=\{false\}[^>]*aria-current=\{navLinkCurrent\("studio"\)\}[^>]*>Virtual Studio<\/Link>/);
   assert.match(chrome, /pathname\.startsWith\("\/studio"\) \? "studio"/);
 });
 

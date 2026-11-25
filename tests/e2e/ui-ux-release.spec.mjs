@@ -16,11 +16,12 @@ test("hero identity copy clears the fixed header at every layout breakpoint", as
 test("featured links expose their visible label and project name", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/", { waitUntil: "networkidle" });
-  const controls = page.locator(".home-work-card .cinema-link");
+  const controls = page.locator(".home-work-card").getByRole("link");
   await expect(controls).toHaveCount(3);
   for (const control of await controls.all()) {
     const title = await control.locator("xpath=ancestor::article").locator("h3").innerText();
-    await expect(control).toHaveAccessibleName(`View case study for ${title}`);
+    await expect(control).toHaveAccessibleName(new RegExp(title));
+    await expect(control).toHaveAccessibleName(/View case study/);
   }
 });
 
@@ -30,16 +31,18 @@ test("direct contact values remain readable inside their rows at every layout wi
     await page.setViewportSize({ width, height: 900 });
     for (const route of ["/", "/contact"]) {
       await page.goto(route, { waitUntil: "networkidle" });
-      const contacts = page.locator(".studio-contact-rows strong");
+      const compact = route === "/" && width < 768;
+      const contacts = page.locator(compact ? ".studio-contact-rows .studio-contact-label" : ".studio-contact-rows strong");
       await expect(contacts).toHaveCount(3);
       for (const contact of await contacts.all()) {
         await contact.scrollIntoViewIfNeeded();
         const geometry = await contact.evaluate((element) => {
           const value = element.getBoundingClientRect();
           const row = element.closest("a").getBoundingClientRect();
-          return { width: value.width, left: value.left, right: value.right, rowLeft: row.left, rowRight: row.right, scroll: element.scrollWidth, client: element.clientWidth };
+          return { width: value.width, left: value.left, right: value.right, rowLeft: row.left, rowRight: row.right, rowHeight: row.height, scroll: element.scrollWidth, client: element.clientWidth };
         });
-        expect(geometry.width, `${route} contact width at ${width}px`).toBeGreaterThan(100);
+        expect(geometry.width, `${route} contact width at ${width}px`).toBeGreaterThan(compact ? 0 : 100);
+        expect(geometry.rowHeight).toBeGreaterThanOrEqual(44);
         expect(geometry.left).toBeGreaterThanOrEqual(geometry.rowLeft);
         expect(geometry.right).toBeLessThanOrEqual(geometry.rowRight);
         expect(geometry.scroll).toBeLessThanOrEqual(geometry.client + 1);
@@ -62,22 +65,20 @@ test("editorial accents use warm gilt and primary actions use ruby", async ({ pa
   await expect(signature).toHaveCSS("filter", "none");
 });
 
-test("service pillars expose a keyboard focus indicator and expand with or without motion", async ({ page }) => {
+test("mobile service pillars expose keyboard focus and disclosure state", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   for (const reducedMotion of ["no-preference", "reduce"]) {
     await page.emulateMedia({ reducedMotion });
     await page.goto("/", { waitUntil: "networkidle" });
-    const pillars = page.locator(".ruby-disciplines details");
-    const summary = pillars.nth(2).locator("summary");
-    await expect(pillars.first()).toHaveAttribute("open", "");
-    await summary.focus();
-    await expect(summary).toBeFocused();
-    await expect(summary).toHaveCSS("outline-style", "solid");
+    const toggle = page.locator("#services").getByRole("button", { name: "Business systems" });
+    const detail = page.locator("#services").getByRole("link", { name: /Custom Software & Business Systems/ });
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(detail).toBeHidden();
+    await toggle.focus();
+    await expect(toggle).toBeFocused();
+    await expect(toggle).toHaveCSS("outline-style", "solid");
     await page.keyboard.press("Space");
-    await expect(pillars.nth(2)).toHaveAttribute("open", "");
-    await expect(pillars.first()).not.toHaveAttribute("open");
-    await expect(pillars.nth(2).getByRole("link", { name: "Enquire about Custom Software & Business Systems" })).toBeVisible();
-    if (reducedMotion === "reduce") {
-      await expect(summary.locator(".ruby-discipline-arrow")).toHaveCSS("transition-duration", "0s");
-    }
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(detail).toBeVisible();
   }
 });

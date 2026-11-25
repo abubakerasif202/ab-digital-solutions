@@ -48,16 +48,6 @@ export function EnquirySection({
           <Reveal as="p" className="studio-body studio-body--lead" variant="blur" delay={80}>
             Tell us what you are building and where you want the business to go. We will come back with a practical next step.
           </Reveal>
-          {showNextSteps && (
-            <div className="ruby-next-steps">
-              <h3>What happens next</h3>
-              <ol>
-                <li>We read your brief and ask any questions that help clarify the goal.</li>
-                <li>We discuss scope and priorities in a first conversation.</li>
-                <li>We recommend a practical next step.</li>
-              </ol>
-            </div>
-          )}
           <Reveal as="ul" className="studio-contact-rows" variant="fade-up" delay={140} aria-label="Contact directly">
             <li>
               <a href={`tel:${siteConfig.phoneInternational}`}>
@@ -88,6 +78,16 @@ export function EnquirySection({
         <Reveal as="div" className="studio-enquiry-form" variant="fade-up" delay={120}>
           {children}
         </Reveal>
+        {showNextSteps && (
+          <div className="ruby-next-steps">
+            <h3>What happens next</h3>
+            <ol role="list">
+              <li><span className="cinema-label" aria-hidden="true">01</span><span>We read your brief and ask any questions that help clarify the goal.</span></li>
+              <li><span className="cinema-label" aria-hidden="true">02</span><span>We discuss scope and priorities in a first conversation.</span></li>
+              <li><span className="cinema-label" aria-hidden="true">03</span><span>We recommend a practical next step.</span></li>
+            </ol>
+          </div>
+        )}
       </div>
     </section>
   );

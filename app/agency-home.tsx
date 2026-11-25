@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ContactForm } from "./components/ContactForm";
-import { findService, serviceContactHref, serviceDisciplines } from "./services/service-data";
+import { findService, serviceDisciplines } from "./services/service-data";
 import { SiteHeader } from "./site-chrome";
 import { SiteFooter } from "./site-footer";
 import { ArrowIcon } from "./icons";
@@ -13,6 +13,8 @@ import "./components/cinematic/work-wall.css";
 import { projects, type Project } from "./project-data";
 import { ProjectArtwork } from "./project-artwork";
 import { siteConfig } from "./site-config";
+import { SectionEyebrow } from "./components/SectionEyebrow";
+import { HomeServiceGroup } from "./components/HomeServiceGroup";
 import { TickerToggle } from "./components/cinematic/TickerToggle";
 
 const proofSlugs = ["jufaja-homes", "on-call-trailers", "247-inventory-system"];
@@ -61,7 +63,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
           </div>
           <div className="cinema-shell ruby-hero-bottomline">
             <div className="ruby-proof">
-              <div className="ruby-proof-index"><strong>{projects.length}</strong><span>Case studies</span></div>
+              <Link href="/work" prefetch={false} className="ruby-proof-index"><strong>{projects.length}</strong><span>Case studies</span></Link>
               <ul role="list" aria-label="Selected case studies">
                 {proofProjects.map((project, index) => (
                   <li key={project.slug}>
@@ -94,30 +96,25 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         <section id="services" className="ruby-services" aria-labelledby="services-heading">
           <div className="cinema-shell">
             <header className="ruby-section-header">
+              <SectionEyebrow section="services" />
               <h2 id="services-heading">Services</h2>
             </header>
             <ol className="ruby-disciplines" aria-label="Service pillars">
               {serviceDisciplines.map((discipline, index) => (
                 <li key={discipline.name}>
-                  <details name="studio-services" open={index === 0}>
-                    <summary className="ruby-discipline">
-                      <h3 className="ruby-discipline-title">{discipline.name}</h3>
-                      <span className="ruby-discipline-copy">{discipline.description}</span>
-                      <span className="ruby-discipline-arrow" aria-hidden="true" />
-                    </summary>
-                    <ul className="ruby-service-options">
+                  <HomeServiceGroup title={discipline.name} description={discipline.description} initiallyOpen={index === 0}>
                       {discipline.services.map(slug => {
                         const service = findService(slug);
                         if (!service) throw new Error(`Unknown homepage service slug: ${slug}`);
                         return (
                           <li key={service.slug}>
-                            <Link href={`/services/${service.slug}`} prefetch={false}>{service.title}</Link>
-                            <Link className="ruby-service-enquire" href={serviceContactHref(service)} prefetch={false} aria-label={`Enquire about ${service.title}`}>Enquire <ArrowIcon direction="right" /></Link>
+                            <Link className="ruby-service-row" href={`/services/${service.slug}`} prefetch={false}>
+                              <span>{service.title}</span><span className="ruby-service-enquire">Details <ArrowIcon direction="right" /></span>
+                            </Link>
                           </li>
                         );
                       })}
-                    </ul>
-                  </details>
+                  </HomeServiceGroup>
                 </li>
               ))}
             </ol>
@@ -128,7 +125,7 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
         <HomeStudioFeature />
 
         <div className="ruby-contact">
-          <EnquirySection id="contact" showIndex={false} showNextSteps><ContactForm simplified /></EnquirySection>
+          <EnquirySection id="contact" showIndex={false} showNextSteps before={<SectionEyebrow section="contact" />}><ContactForm simplified /></EnquirySection>
         </div>
       </main>
       <SiteFooter currentYear={currentYear} home />

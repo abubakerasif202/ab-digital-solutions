@@ -236,7 +236,7 @@ body { background: var(--obsidian); color: var(--ivory); }
   border-radius: 0;
   background: none;
   color: var(--gilt);
-  content: "/";
+  content: "/" / "";
   transform: none;
 }
 .site-header .site-nav a[aria-current]::after { display: none; }

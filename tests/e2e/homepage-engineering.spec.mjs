@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { join } from "node:path";
 
-for (const [width, height] of [[320, 844], [360, 844], [390, 844], [768, 960], [1024, 900], [1150, 631], [1440, 900]]) {
+for (const [width, height] of [[320, 844], [360, 844], [390, 844], [768, 960], [1024, 900], [1150, 631], [1280, 900], [1440, 900]]) {
   test(`hero and Selected work geometry at ${width} × ${height}`, async ({ page }) => {
     const errors = [];
     await page.route("**/_vercel/speed-insights/script.js", route => route.fulfill({ contentType: "application/javascript", body: "" }));
@@ -58,16 +58,18 @@ test("homepage enquiry keeps inputs after failure and accepts an undecided proje
   await form.getByRole("textbox", { name: "Name", exact: true }).fill("Homepage QA");
   await form.getByRole("textbox", { name: "Email", exact: true }).fill("qa@example.invalid");
   await form.getByLabel("Tell us about your project").fill("A local QA enquiry with no live delivery.");
-  await submit.click();
-  await expect(form.locator("#services-error")).toBeVisible();
-  await form.getByRole("radio", { name: "Not sure yet", exact: true }).check();
   let submissions = 0;
   await page.route("**/api/contact", async route => {
     submissions++;
     expect(route.request().postDataJSON()).toMatchObject({ services: ["Not sure yet"], budget: "" });
     await expect(form.getByRole("button", { name: "Sending…" })).toBeDisabled();
+    await expect(form.locator(".form-spinner")).toBeVisible();
     await route.fulfill(submissions === 1 ? { status: 503, json: { error: "Try again shortly." } } : { json: { ok: true } });
   });
+  await submit.click();
+  await expect(form.locator("#services-error")).toBeVisible();
+  expect(submissions).toBe(0);
+  await form.getByRole("radio", { name: "Not sure yet", exact: true }).check();
   await submit.click();
   await expect(form.getByRole("status")).toContainText("Try again shortly.");
   await expect(form.getByRole("textbox", { name: "Name", exact: true })).toHaveValue("Homepage QA");
@@ -77,13 +79,11 @@ test("homepage enquiry keeps inputs after failure and accepts an undecided proje
   expect(submissions).toBe(2);
 });
 
-test("service links preserve their detailed selection on the standalone contact route", async ({ page }) => {
+test("homepage links to the service detail and preserves enquiry preselection", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/");
-  await page.locator("summary").filter({ hasText: "Business systems" }).click();
-  await page.getByRole("link", { name: "Enquire about Custom Software & Business Systems", exact: true }).click();
-  await expect(page).toHaveURL(/\/contact\?service=custom-software-business-systems$/);
-  await expect(page.getByRole("checkbox", { name: "Custom software & business systems" })).toBeChecked();
-  await expect(page.getByRole("checkbox", { name: "Website design & development" })).not.toBeChecked();
+  await page.locator("#services").getByRole("link", { name: /Custom Software & Business Systems/ }).click();
+  await expect(page).toHaveURL(/\/services\/custom-software-business-systems$/);
 
   await page.goto("/?service=seo-local-visibility#contact");
   await expect(page.getByRole("radio", { name: "SEO & local visibility" })).toBeChecked();

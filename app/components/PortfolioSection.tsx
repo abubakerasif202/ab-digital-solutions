@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SectionEyebrow } from "./SectionEyebrow";
 import { ArrowIcon } from "../icons";
 import { projects, type Project } from "../project-data";
 import { ProjectArtwork } from "../project-artwork";
@@ -26,33 +27,35 @@ export function PortfolioSection() {
     <section className="home-work" id="work" aria-labelledby="work-heading" tabIndex={-1}>
       <div className="cinema-shell">
         <header className="home-work-head">
-          <h2 id="work-heading">Selected work</h2>
+          <div><SectionEyebrow section="work" /><h2 id="work-heading">Selected work</h2></div>
           <Link className="cinema-link" href="/work" prefetch={false}>Explore all {projects.length} projects <ArrowIcon /></Link>
         </header>
-        <ul className="home-work-grid" role="list">
-          {featured.map(({ slug, category, description }) => {
-            const project: Project | undefined = projects.find((item) => item.slug === slug);
-            if (!project) throw new Error(`Unknown featured project: ${slug}`);
-            const title = project.titleName ?? project.name;
-            return (
-              <li key={slug} className="home-work-card">
-                <article>
-                  <div className="home-work-image">
-                    <ProjectArtwork project={project} sizes="(max-width: 599px) calc(100vw - 40px), (max-width: 720px) 45vw, (max-width: 1660px) 31vw, 495px" />
-                  </div>
-                  <div className="home-work-copy">
-                    <p className="cinema-label">{category}</p>
-                    <h3>{title}</h3>
-                    <p>{description}</p>
-                    <Link className="cinema-link" href={`/work/${project.slug}`} prefetch={false}>
-                      View case study<span className="sr-only"> for {title}</span> <ArrowIcon />
+        <div className="home-work-scroll" role="group" aria-labelledby="work-heading">
+          <ul className="home-work-grid" role="list">
+            {featured.map(({ slug, category, description }) => {
+              const project: Project | undefined = projects.find((item) => item.slug === slug);
+              if (!project) throw new Error(`Unknown featured project: ${slug}`);
+              const title = project.titleName ?? project.name;
+              return (
+                <li key={slug} className="home-work-card">
+                  <article>
+                    <Link className="home-work-card-link" href={`/work/${project.slug}`} prefetch={false}>
+                      <div className="home-work-image">
+                        <ProjectArtwork project={project} sizes="(max-width: 767px) 77vw, (max-width: 1660px) 31vw, 495px" />
+                      </div>
+                      <div className="home-work-copy">
+                        <p className="cinema-label">{category}</p>
+                        <h3>{title}</h3>
+                        <p>{description}</p>
+                        <span className="cinema-link">View case study <ArrowIcon /></span>
+                      </div>
                     </Link>
-                  </div>
-                </article>
-              </li>
-            );
-          })}
-        </ul>
+                  </article>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </section>
   );

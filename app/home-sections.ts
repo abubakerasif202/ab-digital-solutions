@@ -1,15 +1,14 @@
 /**
  * The homepage chapters, in page order. Eyebrow numbers are derived from this
  * list so they stay sequential whenever a chapter is added, moved or removed.
- * `enquiry` is the contact form's own eyebrow, which closes the final chapter.
+ * Only the five main homepage sections are numbered.
  */
 export const homeSections = [
-  { id: "about", label: "A different perspective" },
-  { id: "work", label: "A living collection" },
-  { id: "services", label: "The possibilities" },
+  { id: "work", label: "Work" },
+  { id: "services", label: "Services" },
   { id: "process", label: "The process" },
-  { id: "contact", label: "A new beginning" },
-  { id: "enquiry", label: "Start a conversation" },
+  { id: "virtual-studio", label: "The Virtual Studio" },
+  { id: "contact", label: "Contact" },
 ] as const;
 
 export type HomeSectionId = (typeof homeSections)[number]["id"];
