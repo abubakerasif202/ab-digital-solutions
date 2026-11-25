@@ -44,7 +44,7 @@ test("mobile homepage protects hero legibility, menu focus, work scrolling and c
   await expect(page.locator("#main-content")).toHaveJSProperty("inert", false);
   await expect(page.locator("#process")).toBeFocused();
 
-  const work = page.getByRole("group", { name: "Selected work" });
+  const work = page.getByRole("group", { name: "Selected work", exact: true });
   await expect(work).toHaveCSS("scroll-snap-type", "x mandatory");
   expect(await work.evaluate(region => region.scrollWidth > region.clientWidth)).toBe(true);
   for (const card of await work.getByRole("article").all()) {
