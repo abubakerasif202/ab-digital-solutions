@@ -7,10 +7,10 @@ function createMaps() {
   const marble = document.createElement("canvas");
   marble.width = marble.height = 256;
   const ctx = marble.getContext("2d")!;
-  ctx.fillStyle = "#c9c1b2"; ctx.fillRect(0, 0, 256, 256);
+  ctx.fillStyle = "#2b2624"; ctx.fillRect(0, 0, 256, 256);
   for (let vein = 0; vein < 34; vein++) {
-    ctx.beginPath(); ctx.lineWidth = vein % 4 === 0 ? 1.4 : .45;
-    ctx.strokeStyle = vein % 4 === 0 ? "#625b5048" : "#fff7e766";
+    ctx.beginPath(); ctx.lineWidth = vein % 4 === 0 ? 1.3 : .45;
+    ctx.strokeStyle = vein % 4 === 0 ? "#c9a45c62" : "#f1dfc232";
     for (let x = 0; x <= 256; x += 2) {
       const y = vein * 14 - 110 + x * .65 + Math.sin(x * .021 + vein) * 20 + Math.sin(x * .12 + vein * 3) * 2;
       if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
@@ -21,7 +21,7 @@ function createMaps() {
   const brush = document.createElement("canvas"); brush.width = brush.height = 256;
   const brushCtx = brush.getContext("2d")!;
   for (let y = 0; y < 256; y++) {
-    const shade = Math.round(110 + Math.sin(y * 91.7) * 19);
+    const shade = Math.round(98 + Math.sin(y * 91.7) * 22);
     brushCtx.fillStyle = `rgb(${shade},${shade},${shade})`;
     brushCtx.fillRect(0, y, 256, 1);
   }
@@ -47,9 +47,9 @@ export function MaterialLibrary({ children }: { children: ReactNode }) {
 }
 export function MarbleMaterial() {
   const maps = useContext(Maps);
-  return <meshStandardMaterial map={maps?.map} color="#e2d8c6" roughness={.32} metalness={.08} />;
+  return <meshStandardMaterial map={maps?.map} color="#d8cec0" roughness={.26} metalness={.14} />;
 }
 export function BrassMaterial() {
   const maps = useContext(Maps);
-  return <meshStandardMaterial color="#c7a36a" metalness={.82} roughness={.7} roughnessMap={maps?.roughness} />;
+  return <meshStandardMaterial color="#c9a45c" metalness={.88} roughness={.52} roughnessMap={maps?.roughness} />;
 }

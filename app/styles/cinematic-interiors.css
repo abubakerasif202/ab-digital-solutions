@@ -1,9 +1,9 @@
 /* After Hours interiors. All rules are scoped to the redesigned routes. */
 .cinema-interior {
-  --cinema-ink: #0a0909;
-  --cinema-paper: #f2eee6;
-  --cinema-muted: #b0ada6;
-  --cinema-gold: #aca297;
+  --cinema-ink: var(--obsidian-base, #0A0908);
+  --cinema-paper: var(--paper-warm, #F7F1EB);
+  --cinema-muted: var(--ink-muted-dark, #B6B0A8);
+  --cinema-gold: var(--gold, #C9A45C);
   --accent-ink: var(--cinema-gold);
   background: var(--cinema-ink);
   color: var(--cinema-paper);
@@ -11,12 +11,15 @@
 .cinema-interior :is(.content-breadcrumb, .studio-crumbs) { padding-top: 36px; border: 0; }
 .cinema-interior .cinema-chapter-label {
   display: flex; justify-content: space-between; align-items: center; gap: 20px;
-  margin: 0 0 44px; padding-top: 22px; border-top: 1px solid #ffffff30;
+  margin: 0 0 44px; padding-top: 22px; border-top: 1px solid var(--gold-hairline, rgba(201, 164, 92, 0.26));
   color: var(--cinema-gold); font-size: var(--fs-label); line-height: 1.7;
 }
 .cinema-interior .cinema-chapter-label > span:last-child { color: var(--cinema-muted); }
 .cinema-interior :is(.content-lead, .case-study-body-text) { color: var(--cinema-muted); }
-.cinema-interior :is(.gr-final-cta, .service-cta) { background: #0e1112; border-top: 1px solid #ffffff24; }
+.cinema-interior :is(.gr-final-cta, .service-cta) {
+  background: var(--sydney-harbour-ambient), var(--obsidian-elevated, #100F0E);
+  border-top: 1px solid var(--gold-hairline, rgba(201, 164, 92, 0.26));
+}
 .cinema-interior :is(.gr-final-cta h2, .service-cta h2) {
   max-width: 17ch; font-family: var(--sans); font-size: clamp(2.5rem, 6.4vw, 6rem);
   font-weight: 400; letter-spacing: -0.055em; line-height: 1.02;
@@ -87,7 +90,7 @@
 .cinema-interior .cinema-service-cover .service-hero-visual-frame::after { content: none; }
 .cinema-interior .cinema-service-cover figcaption { position: static; display: flex; justify-content: space-between; gap: 20px; padding: 18px 0; color: var(--cinema-paper); font-family: var(--mono); font-size: var(--fs-label); line-height: 1.5; }
 .cinema-interior .cinema-service-cover figcaption > span { color: var(--cinema-gold); }
-.cinema-services .gr-svc-section { background: #101314; padding-block: 100px; }
+.cinema-services .gr-svc-section { background: var(--obsidian-elevated, #100F0E); padding-block: 100px; }
 .cinema-services .cinema-service-index { gap: 70px; grid-template-columns: 1.1fr 0.9fr; }
 .cinema-services .cinema-service-index .gr-svc-row { padding-block: 30px; }
 .cinema-services .cinema-service-index .gr-svc-title { font-family: var(--sans); font-size: clamp(1.3rem, 2.3vw, 2rem); letter-spacing: -0.035em; }
@@ -119,7 +122,7 @@
 .cinema-case-study .gr-cs-story { padding-block: 90px; gap: 60px; }
 .cinema-case-study .gr-cs-statement { font-family: var(--sans); font-size: clamp(1.6rem, 2.8vw, 2.8rem); letter-spacing: -0.04em; line-height: 1.35; }
 .cinema-case-study .gr-cs-detail { padding-block: 90px; }
-.cinema-case-study .gr-cs-next { border-top: 1px solid #ffffff24; background: #101314; }
+.cinema-case-study .gr-cs-next { border-top: 1px solid var(--gold-hairline, rgba(201, 164, 92, 0.26)); background: var(--obsidian-elevated, #100F0E); }
 .cinema-case-study .gr-cs-next-title { font-family: var(--sans); font-size: clamp(2.4rem, 5vw, 5rem); font-weight: 400; letter-spacing: -0.05em; }
 
 /* The studio lets the work enter before the approach narrative. */
@@ -127,23 +130,23 @@
 .cinema-about .cinema-studio-chapter .studio-split { grid-template-columns: minmax(0, .65fr) minmax(0, 1.35fr); }
 .cinema-about .cinema-studio-chapter .studio-display { font-family: var(--sans); font-size: clamp(3rem, 5.6vw, 5.5rem); letter-spacing: -0.055em; line-height: 1.02; }
 .cinema-about .studio-about-plate { box-shadow: none; }
-.cinema-about .studio-plate--mark { background: #101314; border: 1px solid #ffffff24; }
+.cinema-about .studio-plate--mark { background: var(--obsidian-elevated, #100F0E); border: 1px solid var(--gold-hairline, rgba(201, 164, 92, 0.26)); }
 .cinema-about .studio-plate-ring, .cinema-about .studio-plate-glint { display: none; }
-.cinema-about .studio-plate--photo { aspect-ratio: 4 / 5; overflow: hidden; background: #0a0908; border: 1px solid #ffffff24; }
+.cinema-about .studio-plate--photo { aspect-ratio: 4 / 5; overflow: hidden; background: var(--obsidian-base, #0A0908); border: 1px solid var(--gold-hairline, rgba(201, 164, 92, 0.26)); }
 .cinema-about .studio-plate-photo { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 @media (max-width: 720px) {
   .cinema-about .studio-plate--photo { aspect-ratio: 1 / 1; }
   .cinema-about .studio-plate-photo { object-position: 50% 58%; }
 }
-.cinema-about .gr-about-collage { background: #101314; border-color: #ffffff24; }
+.cinema-about .gr-about-collage { background: var(--obsidian-elevated, #100F0E); border-color: var(--gold-hairline, rgba(201, 164, 92, 0.26)); }
 .cinema-about .gr-about-collage-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; }
 .cinema-about .gr-about-tile--1 { grid-column: 1 / 9; }
 .cinema-about .gr-about-tile--2 { grid-column: 6 / -1; margin-top: 70px; }
 .cinema-about .gr-about-tile--3 { grid-column: 1 / 8; margin-top: 20px; }
 .cinema-about .gr-about-tile-caption { font-family: var(--sans); font-size: clamp(1.35rem, 2.5vw, 2.2rem); letter-spacing: -0.035em; }
 .cinema-about .gr-about-approach { padding-block: 100px; }
-.cinema-about .gr-about-approach-list li { border-color: #ffffff24; }
-.cinema-about .gr-about-principles { background: #101314; }
+.cinema-about .gr-about-approach-list li { border-color: var(--hair, rgba(244, 241, 234, 0.13)); }
+.cinema-about .gr-about-principles { background: var(--obsidian-elevated, #100F0E); }
 
 /* A deliberately contrasting chapter, with its own accessible text tokens. */
 :root .cinema-interior .cinema-paper {

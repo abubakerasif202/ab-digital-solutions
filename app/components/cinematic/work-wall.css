@@ -1,18 +1,23 @@
 /* Work-first hero: real case-study captures drifting behind the headline.
    Transform-only motion; static under reduced motion and until the pause control is ready. */
 .ruby-page .ruby-hero.work-first-hero {
-  --hero-ink: #0c0b0b;
+  --hero-ink: var(--obsidian-void, #070708);
   min-height: max(660px, min(960px, calc(100svh - var(--header-height))));
   background: var(--hero-ink);
 }
 
 .work-first-hero .ruby-hero-shade {
   background:
-    linear-gradient(90deg, #0c0b0bf7 0%, #0c0b0beb 30%, #0c0b0b99 46%, #0c0b0b24 64%, transparent 78%),
-    linear-gradient(0deg, #0c0b0b 0%, #0c0b0b00 26%, #0c0b0b00 84%, #0c0b0bcc 100%);
+    linear-gradient(90deg, rgba(7, 7, 8, 0.97) 0%, rgba(7, 7, 8, 0.93) 30%, rgba(10, 9, 8, 0.62) 48%, rgba(7, 7, 8, 0.16) 66%, transparent 80%),
+    linear-gradient(0deg, #070708 0%, rgba(7, 7, 8, 0) 28%, rgba(7, 7, 8, 0) 84%, rgba(7, 7, 8, 0.82) 100%);
 }
 
-.work-first-hero .ruby-hero-light { opacity: .45; }
+.work-first-hero .ruby-hero-light {
+  opacity: .72;
+  background:
+    radial-gradient(ellipse 46% 48% at 84% 18%, rgba(201, 164, 92, 0.12), transparent 68%),
+    radial-gradient(ellipse 44% 52% at var(--ruby-x, 18%) var(--ruby-y, 82%), color-mix(in srgb, var(--ruby) 20%, transparent), transparent 70%);
+}
 
 .work-first-hero .ruby-hero-composition {
   margin-block: auto;
@@ -68,10 +73,10 @@
   position: relative;
   aspect-ratio: 1348 / 926;
   overflow: hidden;
-  border: 1px solid #f7f1eb26;
+  border: 1px solid rgba(201, 164, 92, 0.24);
   border-radius: 6px;
-  background: #1a1519;
-  box-shadow: 0 24px 60px #00000080;
+  background: var(--obsidian-elevated, #100f0e);
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.72);
 }
 
 .work-wall-frame img {
@@ -83,7 +88,7 @@
   display: block;
   margin-top: 8px;
   overflow: hidden;
-  color: #f7f1eb8c;
+  color: rgba(244, 241, 234, 0.62);
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 12px;
   letter-spacing: .08em;
@@ -102,15 +107,15 @@
   width: 44px;
   height: 44px;
   padding: 0;
-  border: 1px solid #f7f1eb6b;
-  background: #0a0908b8;
-  color: #f7f1eb;
+  border: 1px solid rgba(201, 164, 92, 0.42);
+  background: rgba(7, 7, 8, 0.84);
+  color: var(--paper-warm, #f7f1eb);
   cursor: pointer;
   pointer-events: auto;
 }
 
 .work-wall-control:is(:hover, [aria-pressed="true"]) { background: var(--ruby-deep); border-color: var(--ruby-text-dark); }
-.work-wall-control:focus-visible { outline: 2px solid var(--cinema-gold, #e89a7e); outline-offset: 3px; }
+.work-wall-control:focus-visible { outline: 2px solid var(--cinema-gold, #c9a45c); outline-offset: 3px; }
 .work-wall-control:not([data-ready]) { visibility: hidden; }
 
 @keyframes work-wall-rise { to { transform: translateY(-50%); } }

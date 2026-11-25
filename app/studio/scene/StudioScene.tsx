@@ -13,6 +13,7 @@ import { environmentUrl, monogramUrl, screenTextureUrl } from "../studio-assets"
 import { Consultation, Gallery, galleryWindowStart, HotspotPortalContext, HotspotsHiddenContext, Reception, Services } from "./Spaces";
 import { useStudioModel } from "./load-model";
 import { Facade, Ground } from "./Facade";
+import { useSceneClock } from "../world/SceneClock";
 import { SceneClock } from "../world/SceneClock";
 import { nextWarmupPhase, warmupPhases, prepareWarmupStage, yieldToBrowser, type StudioPhase } from "./warmup";
 import { compileStageShaders } from "./shader-warmup";
@@ -79,12 +80,13 @@ function Lighting({ onReady }: { onReady: () => void }) {
     return () => { detach(); texture.dispose(); };
   }, [gl, scene, texture, invalidate, onReady]);
   return <>
-    <ambientLight intensity={.3} color="#e4d9cd" />
-    <directionalLight position={[3,12,8]} intensity={1.8} color="#ffe2ae" />
-    <directionalLight position={[-8,8,-6]} intensity={.65} color="#c4c7d6" />
-    <pointLight position={[-5,4,3]} intensity={24} distance={9} color="#ffd28a" />
-    <pointLight position={[5,4,-4]} intensity={22} distance={10} color="#ffc67b" />
-    <pointLight position={[5.6,3.5,4.3]} intensity={20} distance={8} color="#ffdca5" />
+    <ambientLight intensity={.34} color="#7e8cb0" />
+    <directionalLight position={[3,12,8]} intensity={1.7} color="#ffe0a6" />
+    <directionalLight position={[-8,8,-12]} intensity={.85} color="#7695c4" />
+    <pointLight position={[-5,4,3]} intensity={24} distance={10} color="#ffd08a" />
+    <pointLight position={[5,4,-4]} intensity={20} distance={10} color="#ffc67b" />
+    <pointLight position={[5.4,3.4,-6.8]} intensity={12} distance={9.5} color="#c8173a" />
+    <pointLight position={[5.6,3.5,4.3]} intensity={20} distance={9} color="#ffdca5" />
   </>;
 }
 
@@ -225,19 +227,20 @@ function CameraRig({ state, mapOpen, visible, onManual, onArrive, onGreet }: { s
     moving.current = progress < 1;
     if (moving.current) invalidate(); else limit(false);
   });
-  return <OrbitControls ref={controls} domElement={gl.domElement} makeDefault enableDamping={false} enablePan={false} enableZoom rotateSpeed={.55} zoomSpeed={.7} enabled={visible && !arriving} onStart={onManual} />;
+  return <OrbitControls ref={controls} domElement={gl.domElement} makeDefault enableDamping={!arriving && state.manual} dampingFactor={0.085} enablePan={false} enableZoom rotateSpeed={.55} zoomSpeed={.7} enabled={visible && !arriving} onStart={onManual} />;
 }
 
 function GoldDust({ animate }: { animate: boolean }) {
   const ref = useRef<THREE.Points>(null);
-  const { invalidate } = useThree();
+  const { scheduler } = useSceneClock();
   const positions = useMemo(() => Float32Array.from({ length: 192 }, (_, i) => Math.sin(i * 127.1 + 19) * (i % 3 === 1 ? 2 : 10) + (i % 3 === 1 ? 3 : 0)), []);
-  useFrame((_, delta) => {
-    if (!animate || !ref.current) return;
-    ref.current.rotation.y += Math.min(delta,.05) * .025;
-    invalidate();
-  });
-  return <points ref={ref}><bufferGeometry><bufferAttribute attach="attributes-position" args={[positions,3]} /></bufferGeometry><pointsMaterial color="#e8c47d" size={.035} transparent opacity={.55} depthWrite={false} /></points>;
+  useEffect(() => {
+    if (!animate) return;
+    return scheduler.add("gold-dust", (dt) => {
+      if (ref.current) ref.current.rotation.y += Math.min(dt, 0.05) * 0.03;
+    });
+  }, [animate, scheduler]);
+  return <points ref={ref}><bufferGeometry><bufferAttribute attach="attributes-position" args={[positions,3]} /></bufferGeometry><pointsMaterial color="#e5c67e" size={.036} transparent opacity={.52} depthWrite={false} /></points>;
 }
 
 // Each committed stage renders before yielding construction of the next system.
@@ -310,7 +313,7 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
   onReady: () => void; onFailure: () => void; onSelect: (area: Area) => void; onProject: (index: number) => void; onService: (index: number) => void; onManual: () => void; onArrive: () => void;
 }) {
   const mobile = window.innerWidth < 700 || matchMedia("(max-width: 999px) and (max-height: 500px) and (orientation: landscape)").matches;
-  const animate = false;
+  const animate = !matchMedia("(prefers-reduced-motion: reduce)").matches;
   const portal = useRef<HTMLDivElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const [tier, setTier] = useState<Tier>(readCapabilities);
@@ -355,9 +358,11 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
       const debug = context.getExtension("WEBGL_debug_renderer_info");
       const renderer = debug ? String(context.getParameter(debug.UNMASKED_RENDERER_WEBGL)) : "";
       if (/swiftshader|llvmpipe|software|microsoft basic render/i.test(renderer)) { setSoftware(true); setTier("low"); }
-      gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.05;
+      gl.domElement.setAttribute("aria-hidden", "true");
+      gl.domElement.tabIndex = -1;
+      gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.1;
       scene.background = new THREE.Color(skyFog);
-      scene.fog = new THREE.Fog(skyFog, 42, 150);
+      scene.fog = new THREE.Fog(skyFog, 52, 175);
     }}>
       <ContextGuard onFailure={onFailure} />
       <Suspense fallback={null}><Lighting onReady={onEnvironmentReady} /></Suspense>

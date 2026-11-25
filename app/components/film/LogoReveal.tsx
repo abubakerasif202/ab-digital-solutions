@@ -6,7 +6,7 @@ import { buildParticles, clamp01, glide } from "./logo-reveal-math";
 const SEEN_KEY = "ab-logo-reveal-seen";
 const DURATION_S = 5.5;
 const PERSPECTIVE = 1200;
-const COLOURS = ["#a87a2c", "#d1a64c", "#efc96a", "#fff1cf", "#d21736"] as const;
+const COLOURS = ["#9e7f43", "#c9a45c", "#e2c58a", "#fff1cf", "#c8173a"] as const;
 
 /**
  * Gold particles assemble into the AB monogram, then settle into the static

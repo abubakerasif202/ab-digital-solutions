@@ -58,6 +58,8 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920],
     imageSizes: [32, 64, 96, 128, 256, 384],
+    qualities: [75, 85, 90],
+    minimumCacheTTL: 2592000,
   },
   async rewrites() {
     // Versioned URLs are the cache key. The files stay at their stable public paths.
@@ -107,12 +109,16 @@ const nextConfig: NextConfig = {
         source: "/cinematic/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
-      // Film and brand files keep stable filenames, so they cannot be immutable:
-      // a day of browser caching plus a week of stale-while-revalidate lets the
-      // CDN and repeat visitors skip revalidating multi-megabyte media.
-      ...["/film/:path*", "/brand/:path*", "/intro/:path*"].map((source) => ({
+      // Film, brand, and static unversioned studio stills keep stable filenames, so
+      // they cannot be immutable: a day of browser caching plus a week of
+      // stale-while-revalidate lets repeat visitors skip revalidation.
+      ...["/film/:path*", "/brand/:path*", "/intro/:path*", "/favicon.svg", "/apple-touch-icon.png"].map((source) => ({
         source,
         headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
+      })),
+      ...["/studio/studio-poster.png", "/studio/studio-home-still.jpg"].map((source) => ({
+        source,
+        headers: [{ key: "Cache-Control", value: "public, max-age=3600, stale-while-revalidate=86400" }],
       })),
     ];
   },

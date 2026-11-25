@@ -1,12 +1,22 @@
 /* Shared After Hours tokens, chrome and enquiry controls. */
 :root {
-  --cinema-ink: #0b0a0a;
-  --cinema-paper: #eeeae1;
-  --cinema-gold: #b1a69b;
-  --cinema-muted: #aaa9a4;
+  --cinema-ink: var(--obsidian-void, #070708);
+  --cinema-paper: var(--paper-ivory, #f4f1ea);
+  --cinema-gold: var(--gold, #c9a45c);
+  --cinema-muted: var(--ink-muted-dark, #b6b0a8);
 }
-.after-hours { background: var(--cinema-ink); --gilt: var(--cinema-gold); --gilt-bright: #d3cac1; --accent-ink: var(--cinema-gold); --ivory: #f3efe7; }
-.after-hours .site-header { background: #0b0a0af2; border-bottom: 1px solid #ffffff14; box-shadow: none; }
+.after-hours {
+  background: var(--cinema-ink);
+  --gilt: var(--cinema-gold);
+  --gilt-bright: var(--gold-bright, #e2c58a);
+  --accent-ink: var(--cinema-gold);
+  --ivory: var(--paper-ivory, #f4f1ea);
+}
+.after-hours .site-header {
+  background: rgba(7, 7, 8, 0.94);
+  border-bottom: 1px solid var(--hairline-ivory, rgba(244, 241, 234, 0.13));
+  box-shadow: none;
+}
 .after-hours .site-header .nav-wrap { width: calc(100% - clamp(40px, 8vw, 140px)); max-width: 1700px; }
 .after-hours .site-nav { gap: clamp(14px, 1.65vw, 28px); }
 .after-hours .site-nav > a { font-size: var(--fs-label); font-weight: 400; letter-spacing: .015em; }
@@ -16,7 +26,10 @@
 .cinema-label { font-family: var(--mono), monospace; font-size: var(--fs-label); letter-spacing: .14em; text-transform: uppercase; line-height: 1.7; font-weight: 400; }
 .cinema-page :is(h1, h2, h3, p) { margin-top: 0; }
 .cinema-page :is(h1,h2) em { font-family: var(--display), serif; font-style: italic; font-weight: 400; color: var(--cinema-gold) !important; }
-.after-hours .studio-enquiry { background: #141312; border-top: 1px solid #ffffff20; }
+.after-hours .studio-enquiry {
+  background: var(--obsidian-elevated, #100f0e);
+  border-top: 1px solid var(--gold-hairline, rgba(201, 164, 92, 0.26));
+}
 .after-hours .studio-enquiry .studio-display { font-size: clamp(38px,4.4vw,64px); }
 .after-hours .studio-enquiry .studio-form-panel { background: transparent; box-shadow: none; }
 @media (max-width: 960px) {
@@ -24,4 +37,4 @@
   .after-hours .site-nav > a { font-size: 20px; }
   .after-hours .site-nav > .nav-cta { font-size: 15px; }
 }
-.after-hours .mobile-project-cta { background: var(--cinema-paper); color: var(--cinema-ink); border: 1px solid #0b0a0a44; box-shadow: 0 8px 30px #0004; }
+.after-hours .mobile-project-cta { background: var(--cinema-paper); color: var(--cinema-ink); border: 1px solid rgba(7, 7, 8, 0.28); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45); }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowIcon } from "../icons";
+import { SydneyNightStage } from "./cinematic/SydneyNightStage";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { Reveal } from "./motion/Reveal";
 import "./HomeStudioFeature.css";
@@ -9,7 +10,7 @@ import "./HomeStudioFeature.css";
 // tests/home-studio-feature.test.mjs fails if the two lists drift apart.
 const rooms = ["Reception", "Portfolio gallery", "Services atelier", "Consultation lounge"] as const;
 
-/** Server-rendered homepage entry to /studio: a still, never the 3D scene. */
+/** Server-rendered homepage entry to /studio: renders the still immediately and selectively upgrades to 3D on idle. */
 export function HomeStudioFeature() {
   return (
     <section className="home-studio" id="virtual-studio" aria-labelledby="home-studio-heading">
@@ -30,17 +31,24 @@ export function HomeStudioFeature() {
           </div>
         </div>
         <figure className="home-studio-art" data-tilt>
-          {/* The visible CTA carries the action; this wrapper only widens the click target for pointer users. */}
-          <Link href="/studio" prefetch={false} tabIndex={-1} aria-hidden="true">
-            <Image
-              src="/studio/studio-home-still.jpg"
-              width={1440}
-              height={900}
-              sizes="(max-width: 960px) calc(100vw - 40px), 640px"
-              loading="lazy"
-              alt="A view into the AB Web Studio virtual studio: the reception monogram, project gallery screens and ruby consultation lounge behind a glass and brass facade"
-            />
-          </Link>
+          <SydneyNightStage
+            showViewControls
+            fallback={
+              /* The visible CTA carries the action; this wrapper only widens the click target for pointer users. */
+              <Link href="/studio" prefetch={false} tabIndex={-1} aria-hidden="true">
+                <Image
+                  src="/studio/studio-home-still.jpg"
+                  width={1440}
+                  height={900}
+                  sizes="(max-width: 960px) calc(100vw - 40px), 640px"
+                  loading="lazy"
+                  decoding="async"
+                  quality={85}
+                  alt="A view into the AB Web Studio virtual studio: the reception monogram, project gallery screens and ruby consultation lounge behind a glass and brass facade"
+                />
+              </Link>
+            }
+          />
         </figure>
       </div>
     </section>

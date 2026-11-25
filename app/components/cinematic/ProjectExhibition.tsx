@@ -180,8 +180,8 @@ export function ProjectExhibition() {
       </div>
       <div className="exhibition-footer">
         <div className="exhibition-controls" role="group" aria-label="Project exhibition controls">
-          <button type="button" onClick={selectPrevious} disabled={timeline.cursor === 0} aria-label="Previous project"><ArrowLeft size={18} /></button>
-          <button type="button" onClick={selectNext} aria-label="Next project"><ArrowRight size={18} /></button>
+          <button type="button" onClick={selectPrevious} disabled={timeline.cursor === 0} aria-label="Previous project"><ArrowLeft size={18} aria-hidden="true" /></button>
+          <button type="button" onClick={selectNext} aria-label="Next project"><ArrowRight size={18} aria-hidden="true" /></button>
           {!reduced && !saveData && (
             <button type="button" onClick={() => setUserPaused((current) => !current)} aria-label="Pause project autoplay" aria-pressed={userPaused}>
               {userPaused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}

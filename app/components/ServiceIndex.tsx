@@ -46,7 +46,7 @@ export function ServiceIndex({ items }: { items: readonly ServiceIndexItem[] }) 
         <div className="gr-svc-panel-media gr-cut-lg" aria-hidden="true">
           {items.map((item, index) => (
             <div className={`gr-svc-panel-image${index === active ? " is-active" : ""}`} key={item.slug}>
-              <ProjectArtwork project={item.project} sizes="(max-width: 960px) 0px, 40vw" />
+              <ProjectArtwork project={item.project} sizes="(max-width: 960px) 1px, 40vw" />
             </div>
           ))}
         </div>

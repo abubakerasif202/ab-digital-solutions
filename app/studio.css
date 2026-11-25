@@ -119,12 +119,32 @@
   .cinematic-home .hero-title { font-size: clamp(2.8rem, 4.9vw, 3.4rem); }
   .studio-capabilities { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+@media (max-width: 1024px) {
+  .cinematic-home .hero-3d-bg-wrap {
+    inset: 64px 0 auto auto;
+    width: 72%;
+    height: min(520px, 68vh);
+  }
+  .cinematic-home .showcase-stage {
+    transform: perspective(1200px) rotateY(-2deg) rotateX(1deg);
+  }
+  .showcase-browser-bar {
+    min-width: 0;
+    gap: 10px;
+  }
+  .showcase-browser-bar > span:not(.showcase-browser-status) {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 @media (max-width: 960px) {
   /* Blur creates a containing block for the fixed mobile navigation panel. */
-  .site-header { backdrop-filter: none; }
-  .site-nav { height: calc(100dvh - var(--header-height)); }
+  .site-header { backdrop-filter: none; padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px); }
+  .site-nav { height: calc(100dvh - var(--header-height)); padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
   .site-nav.is-open { transition: opacity var(--motion-fast), transform var(--motion-fast); }
-  .cinematic-home .hero { padding-top: calc(var(--header-height) + 40px); }
+  .cinematic-home .hero { padding-top: calc(var(--header-height) + 40px); overflow-x: clip; }
   .cinematic-home .hero-layout { grid-template-columns: 1fr; gap: 24px; }
   .cinematic-home .hero-copy { max-width: 760px; }
   .cinematic-home .hero-title { font-size: clamp(3.5rem, 7.5vw, 5rem); }
@@ -145,8 +165,20 @@
   .brand .brand-monogram-image { width: 40px; height: 40px; }
   .brand .brand-wordmark-image { width: 146px; }
   .cinematic-home .about-logo .brand-artwork { width: min(100%, 260px); }
+  .cinematic-home .hero-3d-bg-wrap {
+    inset: 48px 0 auto;
+    width: 100%;
+    height: min(380px, 56vh);
+    opacity: .16;
+  }
+  .hero-3d-fallback svg {
+    width: 78%;
+    height: 78%;
+    top: 10%;
+    right: -4%;
+  }
   .cinematic-home .hero-layout { padding-bottom: 28px; }
-  .cinematic-home .hero-title { font-size: clamp(2.45rem, 9.9vw, 4rem); letter-spacing: -.025em; }
+  .cinematic-home .hero-title { font-size: clamp(2.45rem, 9.9vw, 4rem); letter-spacing: -.025em; overflow-wrap: break-word; }
   .cinematic-home .hero-intro { font-size: 16px; margin-top: 24px; }
   .cinematic-home .hero-title .mask-line > span { animation: none; transform: none; }
   .cinematic-home .client-proof { display: flex; flex-wrap: wrap; margin-top: 28px; }
@@ -154,23 +186,35 @@
   .cinematic-home .hero-showcase-stack { padding-block: 12px; }
   .cinematic-home .showcase-meta { align-items: start; }
   .cinematic-home .showcase-meta strong { font-size: 22px; }
-  .cinematic-home .slider-tabs { display: flex; flex-wrap: wrap; }
-  .cinematic-home .slider-tabs button { flex: 1 0 44px; text-align: center; }
+  .cinematic-home .slider-controls button { min-width: 44px; min-height: 44px; }
+  .cinematic-home .slider-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cinematic-home .slider-tabs button { flex: 1 0 44px; min-height: 44px; text-align: center; }
   .cinematic-home .hero-foot { display: none; }
   .cinematic-home .hero-marquee-group { padding: 20px 16px; gap: 12px 22px; }
   .cinematic-home .hero-marquee-group span { font-size: var(--fs-label); }
   .cinematic-home .section-heading { margin-bottom: 32px; }
-  .cinematic-home .section-heading h2 { font-size: 42px; }
+  .cinematic-home .section-heading h2 { font-size: clamp(2.1rem, 8.8vw, 2.65rem); overflow-wrap: break-word; }
 
   /* Keep distant portfolio cards out of the phone's initial layout work. */
 
   .studio-capabilities { grid-template-columns: 1fr; }
   .capability-card { padding: 28px 24px; }
   .capability-top { margin-bottom: 24px; }
-  .capability-card h3 { font-size: 28px; }
+  .capability-card h3 { font-size: clamp(1.5rem, 6.4vw, 1.75rem); }
+  .capability-link { min-height: 44px; font-size: var(--fs-label); }
 
   .cinematic-home .standard-section { padding-block: 72px; }
-  .cinematic-home .contact-title { font-size: clamp(2.3rem, 9.4vw, 3.2rem); }
+  .cinematic-home .contact-title { font-size: clamp(2.15rem, 8.8vw, 3.2rem); overflow-wrap: break-word; }
+}
+@media (max-width: 430px) {
+  .showcase-browser-bar { padding: 8px 10px; gap: 8px; }
+  .showcase-browser-status { font-size: var(--fs-label); }
+  .capability-card { padding: 22px 18px; }
+  .capability-card p { font-size: 15px; line-height: 1.6; margin: 14px 0 20px; }
+}
+@media (max-width: 375px) {
+  .cinematic-home .hero-title { font-size: clamp(2.05rem, 9.2vw, 2.5rem); }
+  .brand .brand-wordmark-image { width: 130px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .content-page .content-shell { animation: none; }

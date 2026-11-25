@@ -13,9 +13,9 @@
   --gilt-metal: linear-gradient(100deg, var(--gilt-metal-bronze) 0%, var(--gold) 20%, var(--gilt-metal-champagne) 36%, var(--gold) 50%, color-mix(in srgb, var(--gold) 85%, black) 66%, color-mix(in srgb, var(--gold) 72%, black) 82%, var(--gilt-metal-bronze) 100%);
   --ruby-metal: linear-gradient(100deg, var(--ruby-text-dark) 0%, var(--ruby) 30%, var(--ruby-hover) 58%, var(--ruby-text-dark) 80%, var(--ruby) 100%);
   --bg-ruby-band:
-    radial-gradient(ellipse 80% 60% at 18% 0%, rgba(255, 119, 92, 0.24), transparent 60%),
-    radial-gradient(ellipse 60% 70% at 100% 100%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 60%),
-    linear-gradient(165deg, #5e190b 0%, #1f1712 46%, #0f0f12 100%);
+    radial-gradient(ellipse 80% 60% at 18% 0%, color-mix(in srgb, var(--ruby-hover) 26%, transparent), transparent 60%),
+    radial-gradient(ellipse 60% 70% at 100% 100%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 60%),
+    linear-gradient(165deg, var(--ruby-deep) 0%, #160c0e 46%, var(--obsidian-elevated, #100f0e) 100%);
   --stage-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -59,9 +59,9 @@
   padding: calc(var(--header-height) + clamp(18px, 3vw, 44px)) 0 0;
   background:
     radial-gradient(ellipse 44% 52% at 82% 18%, color-mix(in srgb, var(--ruby) 22%, transparent), transparent 70%),
-    radial-gradient(ellipse 46% 58% at 76% 46%, rgba(212, 91, 47, 0.14), transparent 70%),
-    radial-gradient(ellipse 38% 46% at 6% 88%, color-mix(in srgb, var(--ruby-deep) 14%, transparent), transparent 72%),
-    linear-gradient(180deg, #070707 0%, #0a0a0a 62%, #070707 100%);
+    radial-gradient(ellipse 46% 58% at 76% 46%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%),
+    radial-gradient(ellipse 38% 46% at 6% 88%, color-mix(in srgb, var(--ruby-deep) 16%, transparent), transparent 72%),
+    linear-gradient(180deg, #070708 0%, #0a0908 62%, #070708 100%);
 }
 /* A faint 96px grid, masked toward the sculpture. */
 .cinematic-home .stage-hero::before {
@@ -263,7 +263,10 @@
 .cinematic-home .metal-ruby { background: none; color: var(--paper); -webkit-text-fill-color: var(--paper); }
 .cinematic-home .stage-tagline { color: var(--champagne); }
 .cinematic-home .stage-hero {
-  background: radial-gradient(ellipse 44% 52% at 82% 32%, rgba(148, 37, 15, 0.12), transparent 70%), radial-gradient(ellipse 46% 58% at 76% 46%, rgba(212, 91, 47, 0.1), transparent 70%), #070707;
+  background:
+    radial-gradient(ellipse 44% 52% at 82% 32%, color-mix(in srgb, var(--ruby) 14%, transparent), transparent 70%),
+    radial-gradient(ellipse 46% 58% at 76% 46%, color-mix(in srgb, var(--gold) 11%, transparent), transparent 70%),
+    var(--obsidian-void, #070708);
 }
 .stage-hero-art { inset: 12% 4% 25% 48%; }
 .stage-hero .hero-monogram { position: static; width: 86%; height: auto; max-height: 90%; object-fit: contain; }

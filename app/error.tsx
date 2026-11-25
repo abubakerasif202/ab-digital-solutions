@@ -16,6 +16,7 @@ export default function RouteError({ error, reset }: { error: Error & { digest?:
         <p>Please try again. If it keeps happening, get in touch and we will sort it out.</p>
         <div className="not-found-actions">
           <button className="button button-primary" type="button" onClick={reset}>Try again</button>
+          <Link className="button button-ghost" href="/">Return home</Link>
           <Link className="button button-ghost" href="/contact">Contact the studio</Link>
         </div>
       </div>

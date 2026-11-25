@@ -58,12 +58,12 @@ export function GalleryPanel({ projects, index, onIndex }: { projects: StudioPro
     <ul className={styles.thumbs} ref={strip} aria-label="Projects" onKeyDown={onThumbKey}>
       {projects.map((entry, position) => <li key={entry.slug}>
         <button ref={(node) => { thumbs.current[position] = node; }} type="button" aria-label={entry.name} aria-pressed={position === index} tabIndex={position === index ? 0 : -1} onClick={() => onIndex(position)}>
-          <Image src={entry.image} alt="" width={72} height={50} sizes="72px" />
+          <Image src={entry.image} alt="" width={72} height={50} sizes="72px" decoding="async" quality={85} />
         </button>
       </li>)}
     </ul>
     <div className={styles.previewFrame}>
-      <Image key={project.slug} src={project.image} alt={project.alt} width={560} height={384} sizes="(max-width: 600px) 90vw, 360px" loading="eager" className={styles.projectImage} />
+      <Image key={project.slug} src={project.image} alt={project.alt} width={560} height={384} sizes="(max-width: 600px) 90vw, 360px" loading="eager" decoding="async" quality={85} className={styles.projectImage} />
     </div>
     <p className={styles.kicker}>{project.sector} · {project.destinationLabel}</p>
     <h3>{project.name}</h3>

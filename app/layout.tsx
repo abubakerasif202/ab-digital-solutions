@@ -106,7 +106,11 @@ const structuredData = {
       description: siteConfig.description,
       telephone: siteConfig.phoneInternational,
       email: siteConfig.email,
-      areaServed: { "@type": "Country", name: "Australia" },
+      areaServed: [
+        { "@type": "City", name: "Sydney" },
+        { "@type": "AdministrativeArea", name: "New South Wales" },
+        { "@type": "Country", name: "Australia" },
+      ],
       sameAs: [siteConfig.social.linkedin, siteConfig.social.github, siteConfig.social.facebook, siteConfig.social.instagram].filter((url): url is string => Boolean(url)),
       address: {
         "@type": "PostalAddress",

@@ -75,8 +75,8 @@ function createMesher() {
 type Mesher = ReturnType<typeof createMesher>;
 
 function buildGround(m: Mesher) {
-  const footpath = "#bbb09b", joint = "#a09580", asphalt = "#47494c", kerb = "#cfc8b8", tactile = "#c8a43a";
-  m.box("solid", [2 * HALF * 2, 0.2, 149], [0, -0.13, 34.5], "#7a7566"); // quay and verge, from the harbour wall to the far buildings
+  const footpath = "#423e39", joint = "#2f2c28", asphalt = "#1e2025", kerb = "#58534b", tactile = "#c9a45c";
+  m.box("solid", [2 * HALF * 2, 0.2, 149], [0, -0.13, 34.5], "#1c1c20"); // quay and verge, from the harbour wall to the far buildings
   m.box("solid", [2 * HALF, FP_Y, NEAR_KERB - layout.footpath.z0], [0, FP_Y / 2, (layout.footpath.z0 + NEAR_KERB) / 2], footpath);
   m.box("solid", [2 * HALF, 0.02, layout.road.z1 - layout.road.z0], [0, 0, layout.road.centerZ], asphalt);
   // Far footpath and kerb stop at the side street, which carries asphalt through the gap.
@@ -129,14 +129,14 @@ function buildMarkings(m: Mesher) {
 
 type Building = { x0: number; x1: number; h: number; wall: string; accent: string; trim: string };
 const BUILDINGS: Building[] = [
-  { x0: -HALF, x1: -48, h: 14, wall: "#8d5b46", accent: "#792c40", trim: "#6e4636" },
-  { x0: -40, x1: -28, h: 19, wall: "#cdbb98", accent: "#2e5c6e", trim: "#a8966f" },
-  { x0: -28, x1: -18, h: 11, wall: "#8e9a86", accent: "#bca06b", trim: "#6f7a68" },
-  { x0: -18, x1: -6, h: 16, wall: "#bda889", accent: "#792c40", trim: "#8f7d62" },
-  { x0: -6, x1: 8, h: 22, wall: "#51463f", accent: "#bca06b", trim: "#2f2925" },
-  { x0: 8, x1: 22, h: 13, wall: "#a8654b", accent: "#22272a", trim: "#7d4836" },
-  { x0: 22, x1: 38, h: 18, wall: "#9aa5a8", accent: "#792c40", trim: "#6f7b7e" },
-  { x0: 38, x1: HALF, h: 12, wall: "#d6c7a4", accent: "#2e5c6e", trim: "#a99a78" },
+  { x0: -HALF, x1: -48, h: 14, wall: "#2b2123", accent: "#7b192c", trim: "#1c1618" },
+  { x0: -40, x1: -28, h: 19, wall: "#302b28", accent: "#1d3845", trim: "#221e1c" },
+  { x0: -28, x1: -18, h: 11, wall: "#232826", accent: "#c9a45c", trim: "#171a19" },
+  { x0: -18, x1: -6, h: 16, wall: "#2d2824", accent: "#7b192c", trim: "#1d1a18" },
+  { x0: -6, x1: 8, h: 22, wall: "#1e1b1d", accent: "#c9a45c", trim: "#141214" },
+  { x0: 8, x1: 22, h: 13, wall: "#2a201f", accent: "#22272a", trim: "#1b1414" },
+  { x0: 22, x1: 38, h: 18, wall: "#22262c", accent: "#7b192c", trim: "#16191e" },
+  { x0: 38, x1: HALF, h: 12, wall: "#2c2824", accent: "#1d3845", trim: "#1e1b18" },
 ];
 
 function buildFacades(m: Mesher) {

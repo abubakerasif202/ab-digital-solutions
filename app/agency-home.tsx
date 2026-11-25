@@ -95,9 +95,14 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
         <section id="services" className="ruby-services" aria-labelledby="services-heading">
           <div className="cinema-shell">
-            <header className="ruby-section-header">
-              <SectionEyebrow section="services" />
-              <h2 id="services-heading">Services</h2>
+            <header className="ruby-section-header ruby-services-header">
+              <div>
+                <SectionEyebrow section="services" />
+                <h2 id="services-heading">Services</h2>
+              </div>
+              <Link className="cinema-link ruby-services-all" href="/services" prefetch={false}>
+                Explore all services <ArrowIcon direction="right" />
+              </Link>
             </header>
             <ol className="ruby-disciplines" aria-label="Service pillars">
               {serviceDisciplines.map((discipline, index) => (

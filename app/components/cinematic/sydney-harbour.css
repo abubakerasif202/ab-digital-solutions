@@ -1,22 +1,25 @@
 /* Sydney After Dark only. Keep the film policy and button in CinematicMedia. */
 .ruby-page .ruby-hero.sydney-after-dark {
-  --hero-ink: #100e0d;
+  --hero-ink: var(--obsidian-void, #070708);
   min-height: max(650px, min(960px, calc(100svh - var(--header-height))));
   background:
-    radial-gradient(ellipse 36% 55% at 93% 53%, #2d2824, transparent 100%),
-    radial-gradient(ellipse 42% 57% at 68% 46%, #2b2622, transparent 100%),
+    radial-gradient(ellipse 38% 54% at 92% 48%, rgba(201, 164, 92, 0.12), transparent 100%),
+    radial-gradient(ellipse 44% 56% at 68% 46%, rgba(179, 18, 46, 0.14), transparent 100%),
+    radial-gradient(ellipse 62% 70% at 50% 50%, var(--obsidian-elevated, #100f0e), transparent 100%),
     var(--hero-ink);
 }
 
 .sydney-after-dark .ruby-hero-shade {
   background:
-    linear-gradient(90deg, #100e0df0 0%, #100e0dcf 26%, #100e0d7d 41%, transparent 62%),
-    linear-gradient(0deg, #100e0d 0%, transparent 31%, transparent 81%, #100e0d 100%);
+    linear-gradient(90deg, rgba(7, 7, 8, 0.95) 0%, rgba(10, 9, 8, 0.82) 26%, rgba(10, 9, 8, 0.48) 42%, transparent 64%),
+    linear-gradient(0deg, var(--obsidian-void, #070708) 0%, transparent 32%, transparent 82%, var(--obsidian-void, #070708) 100%);
 }
 
 .sydney-after-dark .ruby-hero-light {
-  opacity: .56;
-  background: radial-gradient(ellipse 32% 38% at var(--ruby-x, 73%) var(--ruby-y, 48%), #8c7f761f, transparent 78%);
+  opacity: .68;
+  background:
+    radial-gradient(ellipse 34% 40% at var(--ruby-x, 73%) var(--ruby-y, 48%), rgba(201, 164, 92, 0.14), transparent 76%),
+    radial-gradient(ellipse 28% 34% at var(--ruby-x, 22%) var(--ruby-y, 76%), rgba(179, 18, 46, 0.16), transparent 74%);
 }
 
 .sydney-after-dark .ruby-hero-composition {
@@ -27,11 +30,11 @@
 .ruby-page .sydney-after-dark .ruby-title {
   font-size: clamp(49px, 5.5vw, 101px);
   letter-spacing: -.065em;
-  text-shadow: 0 3px 32px #100e0d75;
+  text-shadow: 0 3px 32px rgba(7, 7, 8, 0.78);
 }
 
 .sydney-after-dark .ruby-hero-actionline > p {
-  color: #edeae8;
+  color: var(--paper-warm, #f7f1eb);
 }
 
 @media (max-width: 900px) {
@@ -44,7 +47,7 @@
   }
 
   .sydney-after-dark .ruby-hero-shade {
-    background: linear-gradient(0deg, #100e0d 0%, #100e0df2 29%, transparent 69%, #100e0dba 100%);
+    background: linear-gradient(0deg, #070708 0%, rgba(10, 9, 8, 0.95) 29%, transparent 69%, rgba(7, 7, 8, 0.74) 100%);
   }
 
   .sydney-after-dark .ruby-hero-composition {

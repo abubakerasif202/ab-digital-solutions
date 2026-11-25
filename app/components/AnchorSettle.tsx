@@ -41,7 +41,12 @@ export function AnchorSettle() {
     const arm = (hash: string) => {
       if (hash.length < 2) return;
       disarm();
-      targetId = decodeURIComponent(hash.slice(1));
+      try {
+        targetId = decodeURIComponent(hash.slice(1));
+      } catch {
+        targetId = hash.slice(1);
+      }
+      if (!targetId) return;
       armed = true;
       passes = 0;
       window.addEventListener("scroll", onScroll, { passive: true });
@@ -55,12 +60,15 @@ export function AnchorSettle() {
       // the URL asynchronously, so the target comes from the link itself.
       window.setTimeout(() => arm(link.hash), 0);
     };
+    const onHashChange = () => arm(window.location.hash);
 
     arm(window.location.hash);
     document.addEventListener("click", onHashLinkClick);
+    window.addEventListener("hashchange", onHashChange);
     return () => {
       disarm();
       document.removeEventListener("click", onHashLinkClick);
+      window.removeEventListener("hashchange", onHashChange);
     };
   }, [pathname]);
 

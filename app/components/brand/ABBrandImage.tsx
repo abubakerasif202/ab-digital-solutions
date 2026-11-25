@@ -11,7 +11,19 @@ interface ABBrandImageProps {
 /** Optimized derivatives of the owner's supplied gold/ruby artwork. */
 export function ABBrandImage({ full = false, eager = false, decorative = false, navigation = false }: ABBrandImageProps) {
   if (full) {
-    return <Image className="brand-artwork" src="/brand/ab-logo-luxury.webp" width={800} height={633} sizes="(max-width: 720px) 260px, 360px" alt={decorative ? "" : "AB Web Studio"} />;
+    return (
+      <Image
+        className="brand-artwork"
+        src="/brand/ab-logo-luxury.webp"
+        width={800}
+        height={633}
+        sizes="(max-width: 720px) 260px, 360px"
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+        quality={90}
+        alt={decorative ? "" : "AB Web Studio"}
+      />
+    );
   }
 
   // Compact lockup: the authentic monogram beside a set-in-type wordmark, so
@@ -23,7 +35,18 @@ export function ABBrandImage({ full = false, eager = false, decorative = false, 
           <ABLogo className="brand-monogram-image" decorative />
         </span>
       ) : (
-        <Image className="brand-monogram-image" src="/brand/ab-luxury-monogram.webp" width={48} height={48} sizes="48px" alt="" loading={eager ? "eager" : "lazy"} />
+        <Image
+          className="brand-monogram-image"
+          src="/brand/ab-luxury-monogram.webp"
+          width={48}
+          height={48}
+          sizes="48px"
+          loading={eager ? "eager" : "lazy"}
+          decoding="async"
+          quality={90}
+          fetchPriority={eager ? "high" : undefined}
+          alt=""
+        />
       )}
       <span className="brand-wordmark">AB <i>/</i> Web Studio</span>
     </span>

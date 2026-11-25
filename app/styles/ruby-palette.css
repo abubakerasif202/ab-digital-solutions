@@ -1,14 +1,44 @@
 :root {
+  /* Vivid ruby conversion & focus spectrum (WCAG AA verified). */
   --ruby: #B3122E;
   --ruby-hover: #C8173A;
   --ruby-deep: #7A0C1F;
   --ruby-on: #FFFFFF;
   --ruby-text-dark: #FF8A9B;
   --ruby-text-paper: #9B111E;
-  --ruby-glow: rgba(179, 18, 46, 0.14);
+  --ruby-glow: rgba(179, 18, 46, 0.16);
+  --ruby-glow-strong: rgba(200, 23, 58, 0.28);
+  --ruby-hairline: rgba(179, 18, 46, 0.34);
 
-  /* Muted metallic gold drawn from the AB logo's warm highlights. */
+  /* Metallic gold drawn from the AB logo's warm highlights. */
   --gold: #C9A45C;
+  --gold-bright: #E2C58A;
+  --gold-muted: #9E7F43;
   --gold-text-dark: var(--gold);
   --gold-text-paper: #73501C;
+  --gold-hairline: rgba(201, 164, 92, 0.26);
+  --gold-hairline-strong: rgba(201, 164, 92, 0.48);
+  --gold-glow: rgba(201, 164, 92, 0.16);
+
+  /* Carbon black & Sydney-night obsidian elevation layers. */
+  --obsidian-void: #070708;
+  --obsidian-base: #0A0908;
+  --obsidian-elevated: #100F0E;
+  --obsidian-recessed: #141211;
+  --obsidian-glass: rgba(10, 9, 8, 0.86);
+
+  /* Warm architectural paper & nocturnal neutral type tokens. */
+  --paper-ivory: #F4F1EA;
+  --paper-warm: #F7F1EB;
+  --paper-cream: #F4ECE4;
+  --ink-muted-dark: #B6B0A8;
+  --hairline-ivory: rgba(244, 241, 234, 0.13);
+  --hairline-ivory-strong: rgba(244, 241, 234, 0.24);
+
+  /* Sydney night atmospheric lighting & vignette layers. */
+  --sydney-night-vignette: radial-gradient(ellipse 88% 76% at 50% 44%, transparent 44%, rgba(7, 7, 8, 0.78) 100%);
+  --sydney-harbour-ambient:
+    radial-gradient(ellipse 52% 46% at 84% 14%, rgba(201, 164, 92, 0.11), transparent 68%),
+    radial-gradient(ellipse 46% 52% at 14% 88%, rgba(179, 18, 46, 0.14), transparent 72%);
+  --sydney-architectural-falloff: linear-gradient(180deg, rgba(201, 164, 92, 0.04) 0%, transparent 28%, rgba(7, 7, 8, 0.48) 100%);
 }

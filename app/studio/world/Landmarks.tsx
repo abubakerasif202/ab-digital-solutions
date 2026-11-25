@@ -8,8 +8,8 @@ import { useSceneClock } from "./SceneClock";
 import { layout } from "./world-layout";
 import { mulberry32 } from "./sim/rng";
 
-/** Warm haze colour for `scene.fog` and the horizon. Landmarks bake their own haze and ignore fog. */
-export const skyFog = "#cdbd9f";
+/** Nocturnal Sydney harbour haze colour for `scene.fog` and the horizon. Landmarks bake their own haze and ignore fog. */
+export const skyFog = "#0b0e16";
 /** Camera `far` must be at least this for the dome and the farthest backdrop to render. */
 export const landmarkFarClip = 420;
 
@@ -56,11 +56,17 @@ function createBag() {
 function buildSky() {
   const geometry = new THREE.SphereGeometry(SKY_RADIUS, 48, 40);
   const stops: Array<[number, THREE.Color]> = [
-    [-1, new THREE.Color(skyFog)], [-0.05, new THREE.Color("#d3c3a2")], [0, new THREE.Color("#f0d4a4")], [0.08, new THREE.Color("#e9cfae")],
-    [0.22, new THREE.Color("#b8cbd6")], [0.5, new THREE.Color("#86abc9")], [1, new THREE.Color("#4f7fae")],
+    [-1, new THREE.Color(skyFog)],
+    [-0.04, new THREE.Color("#141522")],
+    [0, new THREE.Color("#2a1921")],
+    [0.08, new THREE.Color("#1d1724")],
+    [0.24, new THREE.Color("#101421")],
+    [0.55, new THREE.Color("#090b13")],
+    [1, new THREE.Color("#05060a")],
   ];
-  const glow = new THREE.Color("#ffb36b");
-  const sun = new THREE.Vector3(0.28, 0.1, 0.96).normalize();
+  const horizonGlow = new THREE.Color("#c9814b");
+  const rubyWash = new THREE.Color("#8a152c");
+  const sun = new THREE.Vector3(0.28, 0.08, -0.96).normalize();
   const position = geometry.getAttribute("position");
   const colors = new Float32Array(position.count * 3);
   const dir = new THREE.Vector3();
@@ -71,7 +77,9 @@ function buildSky() {
     while (k < stops.length - 1 && dir.y > stops[k][0]) k++;
     const [t0, c0] = stops[k - 1], [t1, c1] = stops[k];
     color.copy(c0).lerp(c1, smooth(t0, t1, dir.y));
-    color.lerp(glow, Math.pow(Math.max(0, dir.dot(sun)), 6) * 0.3 * (1 - smooth(0, 0.45, dir.y)));
+    const horizonBand = 1 - smooth(0, 0.32, Math.abs(dir.y));
+    color.lerp(horizonGlow, Math.pow(Math.max(0, dir.dot(sun)), 5) * 0.24 * horizonBand);
+    color.lerp(rubyWash, Math.pow(Math.max(0, -dir.z), 3) * 0.14 * horizonBand);
     colors.set([color.r, color.g, color.b], i * 3);
   }
   geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
@@ -82,7 +90,35 @@ function buildSky() {
   return { mesh, geometry, material };
 }
 
-// Calm harbour: a hazed teal gradient with soft glints driven by a cheap per-vertex colour update.
+function buildStars(detail: number) {
+  const count = detail >= 2 ? 220 : detail === 1 ? 140 : 80;
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  const rng = mulberry32(1932);
+  const warm = new THREE.Color("#f3e0b8");
+  const cool = new THREE.Color("#b7cae6");
+  const c = new THREE.Color();
+  for (let i = 0; i < count; i++) {
+    const theta = rng() * Math.PI * 2;
+    const phi = Math.acos(0.14 + rng() * 0.84);
+    const r = SKY_RADIUS - 6;
+    positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    positions[i * 3 + 1] = r * Math.cos(phi);
+    positions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+    c.copy(cool).lerp(warm, rng()).multiplyScalar(0.35 + rng() * 0.55);
+    colors.set([c.r, c.g, c.b], i * 3);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+  const material = new THREE.PointsMaterial({ size: 1.5, sizeAttenuation: true, vertexColors: true, transparent: true, opacity: 0.78, fog: false, depthWrite: false, toneMapped: false });
+  const points = new THREE.Points(geometry, material);
+  points.renderOrder = -999;
+  points.frustumCulled = false;
+  return { mesh: points, geometry, material };
+}
+
+// Calm nocturnal harbour: obsidian-navy water with shimmering gold & ruby reflection paths.
 function buildWater(detail: number) {
   const nx = detail >= 2 ? 72 : 48, nz = detail >= 2 ? 36 : 24;
   const geometry = new THREE.PlaneGeometry(660, 290, nx, nz);
@@ -92,8 +128,9 @@ function buildWater(detail: number) {
   const base = new Float32Array(position.count * 3);
   const phase = new Float32Array(position.count);
   const depth = new Float32Array(position.count);
+  const rubyMask = new Float32Array(position.count);
   const rng = mulberry32(2024);
-  const near = new THREE.Color("#1f4f58"), far = new THREE.Color("#c9b98f"), color = new THREE.Color();
+  const near = new THREE.Color("#070c15"), far = new THREE.Color("#141926"), color = new THREE.Color();
   for (let i = 0; i < position.count; i++) {
     let x = position.getX(i), z = position.getZ(i);
     const r = Math.hypot(x, z);
@@ -103,7 +140,9 @@ function buildWater(detail: number) {
     color.copy(near).lerp(far, t);
     base.set([color.r, color.g, color.b], i * 3);
     phase[i] = rng() * 6.28;
-    depth[i] = smooth(60, 200, d);
+    depth[i] = smooth(45, 195, d);
+    // Subtle ruby shimmer band under the bridge/city reflection corridor.
+    rubyMask[i] = Math.exp(-(((x - 32) / 54) ** 2)) * 0.7 + Math.exp(-(((x + 28) / 48) ** 2)) * 0.35;
   }
   geometry.setAttribute("color", new THREE.BufferAttribute(base.slice(), 3));
   const material = new THREE.MeshBasicMaterial({ vertexColors: true, fog: false, toneMapped: false });
@@ -112,25 +151,28 @@ function buildWater(detail: number) {
   const update = (time: number) => {
     const out = colorAttr.array as Float32Array;
     for (let i = 0; i < position.count; i++) {
-      const glint = Math.pow(Math.max(0, Math.sin(time * 1.6 + phase[i])), 12) * 0.34 * depth[i];
-      out[i * 3] = base[i * 3] + glint; out[i * 3 + 1] = base[i * 3 + 1] + glint * 0.93; out[i * 3 + 2] = base[i * 3 + 2] + glint * 0.7;
+      const wave = Math.pow(Math.max(0, Math.sin(time * 1.45 + phase[i])), 10) * 0.32 * depth[i];
+      const ruby = rubyMask[i];
+      out[i * 3] = base[i * 3] + wave * (0.88 + ruby * 0.28);
+      out[i * 3 + 1] = base[i * 3 + 1] + wave * (0.68 - ruby * 0.38);
+      out[i * 3 + 2] = base[i * 3 + 2] + wave * (0.34 + ruby * 0.08);
     }
     colorAttr.needsUpdate = true;
   };
   return { mesh, geometry, material, update };
 }
 
-// Opera-house-like white shells: spherical lunes (partial spheres) with apexes leaning back.
+// Opera-house-like shells: warmly uplit champagne sandstone against the night harbour.
 function addShell(bag: Bag, detail: number, x: number, z: number, height: number, yaw: number, baseY: number) {
   const theta = 1.3, spread = 0.78;
   const radius = height / (1 - Math.cos(theta));
   const wSeg = detail === 0 ? 6 : detail === 1 ? 14 : 24, hSeg = detail === 0 ? 5 : detail === 1 ? 8 : 14;
   const g = new THREE.SphereGeometry(radius, wSeg, hSeg, Math.PI / 2 - spread / 2, spread, 0, theta);
   const colors = new Float32Array(g.getAttribute("position").count * 3);
-  const top = haze("#fbf6ea", 0.22), bottom = haze("#e7d9bf", 0.26), c = new THREE.Color();
+  const top = haze("#f0e1c6", 0.16), bottom = haze("#98866c", 0.24), c = new THREE.Color();
   for (let iy = 0, i = 0; iy <= hSeg; iy++) for (let ix = 0; ix <= wSeg; ix++, i++) {
     c.copy(top).lerp(bottom, iy / hSeg);
-    if (detail > 0 && ix % 2 === 1) c.multiplyScalar(0.94); // gore ribs
+    if (detail > 0 && ix % 2 === 1) c.multiplyScalar(0.92); // gore ribs
     colors.set([c.r, c.g, c.b], i * 3);
   }
   g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
@@ -140,11 +182,11 @@ function addShell(bag: Bag, detail: number, x: number, z: number, height: number
   bag.add(g, null);
 }
 
-function buildOpera(bag: Bag, detail: number) {
-  const sandstone = haze("#d8c9ab", 0.28), glass = haze("#3c5460", 0.3);
+function buildOpera(bag: Bag, glow: Bag, detail: number) {
+  const sandstone = haze("#6b6052", 0.26), foyerGlow = new THREE.Color("#ebc278");
   const podiumTop = 6;
   bag.box([122, podiumTop, 108], [-5, podiumTop / 2 - 0.2, -18], sandstone);
-  for (let s = 0; s < 3; s++) bag.box([90 - s * 8, 1.2, 12], [-10, 1.2 * s + 0.6, 40 - s * 5], haze("#cdbd9e", 0.3)); // broad steps
+  for (let s = 0; s < 3; s++) bag.box([90 - s * 8, 1.2, 12], [-10, 1.2 * s + 0.6, 40 - s * 5], haze("#5d5347", 0.28)); // broad steps
   const shells: Array<[number, number, number, number]> = [
     [-46, 0, 54, 0.05], [-27, -8, 47, -0.04], [-9, -16, 39, 0.06], [8, -24, 30, -0.05], // concert hall
     [-36, -40, 44, 0.03], [-17, -48, 37, -0.05], [1, -56, 29, 0.05], // opera theatre, behind
@@ -154,9 +196,9 @@ function buildOpera(bag: Bag, detail: number) {
   const used = detail === 0 ? [0, 1, 2, 3, 4, 5, 7] : shells.map((_, i) => i);
   for (const i of used.slice(0, count)) { const [x, z, h, yaw] = shells[i]; addShell(bag, detail, x, z, h, yaw, podiumTop); }
   if (detail > 0) {
-    // Glazed end walls under the shells.
-    bag.box([44, 8, 0.6], [-30, podiumTop + 4, 28], glass);
-    bag.box([30, 6, 0.6], [26, podiumTop + 3, 20], glass);
+    // Warm uplit glazed foyers under the shells.
+    glow.box([44, 8, 0.6], [-30, podiumTop + 4, 28], foyerGlow);
+    glow.box([30, 6, 0.6], [26, podiumTop + 3, 20], foyerGlow);
   }
 }
 
@@ -165,16 +207,19 @@ function member(bag: Bag, p0: [number, number], p1: [number, number], z: number,
   bag.box([len, thick, thick], [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2, z], color, Math.atan2(p1[1] - p0[1], p1[0] - p0[0]));
 }
 
-// Steel through-arch bridge: twin ribs, a deck, hangers, and four stone pylons.
-function buildBridge(bag: Bag, detail: number, cx: number, cz: number) {
-  const steel = haze("#6f7780", 0.42), deckColor = haze("#575b62", 0.42), granite = haze("#a99c85", 0.4);
+// Steel through-arch bridge: dark steel silhouette with gilt deck lights and ruby pylon beacons.
+function buildBridge(bag: Bag, glow: Bag, detail: number, cx: number, cz: number) {
+  const steel = haze("#2c3442", 0.32), deckColor = haze("#222731", 0.34), granite = haze("#5e574d", 0.34);
+  const deckGlow = new THREE.Color("#e8c37a"), rubyBeacon = new THREE.Color("#d91e3e");
   const span = 100, deckY = 19, ribZ = 4.5;
   const lower = (x: number) => 7 + 33 * (1 - (x / (span / 2)) ** 2);
   const depth = (x: number) => 4 + 9 * (x / (span / 2)) ** 2;
   const panels = detail === 0 ? 14 : 24;
   const px = (x: number) => x + cx;
   bag.box([span + 24, 1.8, 9.5], [cx, deckY, cz], deckColor);
-  bag.box([span + 24, 0.2, 8.4], [cx, deckY + 0.95, cz], haze("#4a4d52", 0.4));
+  bag.box([span + 24, 0.2, 8.4], [cx, deckY + 0.95, cz], haze("#1b1f27", 0.35));
+  // Subtle golden roadway ribbon along the bridge span.
+  glow.box([span + 18, 0.25, 0.35], [cx, deckY + 1.05, cz + ribZ + 0.2], deckGlow);
   for (const side of [-1, 1]) {
     const z = cz + side * ribZ;
     let prev: { x: number; lo: number; up: number } | null = null;
@@ -204,36 +249,54 @@ function buildBridge(bag: Bag, detail: number, cx: number, cz: number) {
     pylon.rotateY(Math.PI / 4);
     pylon.translate(cx + end * (span / 2 + 2), 18.5, cz + side * 6.5);
     bag.add(pylon, granite);
-    bag.box([5.4, 1.6, 5.4], [cx + end * (span / 2 + 2), 39, cz + side * 6.5], haze("#8f826b", 0.4));
+    bag.box([5.4, 1.6, 5.4], [cx + end * (span / 2 + 2), 39, cz + side * 6.5], haze("#4f4940", 0.35));
+    // Ruby aviation beacons at pylon summits.
+    glow.box([1.1, 1.1, 1.1], [cx + end * (span / 2 + 2), 40.4, cz + side * 6.5], rubyBeacon);
   }
   if (detail >= 2) for (const x of [-58, -40, 40, 58]) bag.box([2.6, deckY + 3, 3], [px(x), (deckY - 3) / 2, cz], granite); // approach piers
 }
 
 function buildSkyline(bag: Bag, detail: number) {
   const rng = mulberry32(55);
-  const tones = ["#8f9aa6", "#9aa3ac", "#a5a8a8", "#868f9b", "#a9a9a1"];
+  const tones = ["#141925", "#181e2c", "#1c2231", "#111621", "#202534"];
+  const goldLight = new THREE.Color("#e8c37a");
+  const amberLight = new THREE.Color("#c9a45c");
+  const rubyLight = new THREE.Color("#d91e3e");
   const cluster = (x0: number, x1: number, z: number, hMin: number, hMax: number, step: number, amount: number) => {
     for (let x = x0; x < x1; x += step * (0.8 + rng() * 0.6)) {
       const w = step * (0.9 + rng() * 0.9), h = hMin + rng() * (hMax - hMin);
-      bag.box([w, h, 14 + rng() * 10], [x, h / 2 - 2, z - rng() * 14], haze(tones[Math.floor(rng() * tones.length)], amount));
+      const bz = z - rng() * 14;
+      bag.box([w, h, 14 + rng() * 10], [x, h / 2 - 2, bz], haze(tones[Math.floor(rng() * tones.length)], amount));
+      if (h > 26) {
+        const crown = rng() < 0.35 ? rubyLight : goldLight;
+        bag.box([w * 0.52, 0.9, 1.4], [x, h - 2.6, bz + 7.2], crown);
+      }
+      const bands = detail >= 1 ? 3 : 1;
+      for (let b = 0; b < bands; b++) {
+        if (rng() < 0.7) {
+          const wy = h * (0.28 + b * 0.22);
+          bag.box([w * 0.6, 0.95, 0.6], [x, wy, bz + 7.3], rng() < 0.6 ? goldLight : amberLight);
+        }
+      }
     }
   };
-  cluster(40, 165, -275, 22, 74, 7, 0.55);
-  cluster(-210, -95, -262, 12, 34, 9, 0.62);
-  if (detail >= 1) cluster(165, 240, -245, 14, 40, 9, 0.6);
-  // A slim observation tower among the distant blocks.
+  cluster(40, 165, -275, 22, 74, 7, 0.42);
+  cluster(-210, -95, -262, 12, 34, 9, 0.48);
+  if (detail >= 1) cluster(165, 240, -245, 14, 40, 9, 0.46);
+  // A slim observation tower among the distant blocks with golden/ruby crown rings.
   const mast = new THREE.CylinderGeometry(0.9, 1.6, 100, 8);
   mast.translate(112, 48, -272);
-  bag.add(mast, haze("#a79f8c", 0.5));
+  bag.add(mast, haze("#262b38", 0.4));
   const pod = new THREE.CylinderGeometry(4.5, 3.2, 6, 10);
   pod.translate(112, 78, -272);
-  bag.add(pod, haze("#b9a77c", 0.5));
+  bag.add(pod, goldLight);
+  bag.box([2.2, 1.6, 2.2], [112, 98.5, -272], rubyLight);
 }
 
 function buildRidge() {
   const steps = 120, a0 = -1.75, a1 = 1.75;
   const positions: number[] = [], colors: number[] = [], index: number[] = [];
-  const top = haze("#8a9486", 0.55), bottom = haze("#a9a894", 0.7);
+  const top = haze("#121722", 0.38), bottom = haze("#0d1018", 0.6);
   for (let i = 0; i <= steps; i++) {
     const a = a0 + ((a1 - a0) * i) / steps;
     const taper = smooth(0, 0.12, i / steps) * smooth(0, 0.12, 1 - i / steps);
@@ -252,10 +315,10 @@ function buildRidge() {
 }
 
 /**
- * Stylised harbour backdrop: sky dome, calm water, white-shell opera building, steel arch bridge,
- * distant towers and a hazy far shore. Everything is `fog: false` with haze baked into the colours,
- * so a short `scene.fog` cannot erase it. Requires `camera.far >= landmarkFarClip` (420).
- * Draw calls: sky, water, ridge, lit landmarks, flat skyline = 5.
+ * Stylised nocturnal Sydney harbour backdrop: night sky dome, seeded stars, calm water with
+ * gold/ruby reflections, uplit opera shells, steel arch bridge with beacons, skyline lights and far shore.
+ * Everything is `fog: false` with haze baked into the colours, so `scene.fog` cannot erase it.
+ * Requires `camera.far >= landmarkFarClip` (420). Draw calls: sky, stars, ridge, water, lit landmarks, flat skyline/beacons = 6.
  */
 export function Landmarks() {
   const { scheduler, quality } = useSceneClock();
@@ -267,23 +330,27 @@ export function Landmarks() {
     if (!parent) return;
     const detail = quality.landmarkDetail;
     const disposables: Array<{ dispose: () => void }> = [];
-    const track = <T extends { geometry: THREE.BufferGeometry; material: THREE.Material; mesh: THREE.Mesh }>(part: T) => {
+    const track = <T extends { geometry: THREE.BufferGeometry; material: THREE.Material; mesh: THREE.Object3D }>(part: T) => {
       parent.add(part.mesh);
       disposables.push(part.geometry, part.material);
       return part;
     };
     track(buildSky());
+    track(buildStars(detail));
     track(buildRidge());
     const water = track(buildWater(detail));
 
     const lit = createBag();
-    lit.setOrigin(...OPERA_AT, .68);
-    buildOpera(lit, detail);
-    lit.setOrigin(48, 0, -175, 1.2);
-    buildBridge(lit, detail, 0, 0);
-    lit.setOrigin(0, 0, 0);
-    lit.box([800, 2.3, 1.2], [0, -1.17, layout.harbour.waterZ - 0.4], haze("#8b8574", 0.2)); // sea wall under the quay edge
     const flat = createBag();
+    lit.setOrigin(...OPERA_AT, .68);
+    flat.setOrigin(...OPERA_AT, .68);
+    buildOpera(lit, flat, detail);
+    lit.setOrigin(48, 0, -175, 1.2);
+    flat.setOrigin(48, 0, -175, 1.2);
+    buildBridge(lit, flat, detail, 0, 0);
+    lit.setOrigin(0, 0, 0);
+    flat.setOrigin(0, 0, 0);
+    lit.box([800, 2.3, 1.2], [0, -1.17, layout.harbour.waterZ - 0.4], haze("#181a20", 0.25)); // sea wall under the quay edge
     buildSkyline(flat, detail);
     const litGeometry = lit.build(), flatGeometry = flat.build();
     if (litGeometry) {

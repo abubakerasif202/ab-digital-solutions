@@ -11,10 +11,10 @@ type BoxDetail = readonly [
 ];
 
 const noRaycast = () => {};
-const gold = "#c9a76e";
-const light = "#e9d6ad";
-const ink = "#171d23";
-const ruby = "#792337";
+const gold = "#c9a45c";
+const light = "#edd9b0";
+const ink = "#101418";
+const ruby = "#a31630";
 
 /** Batch small decorative pieces by object, not by piece. Existing room hit targets stay separate. */
 function DetailBoxes({ pieces, metalness = .35, roughness = .55 }: { pieces: readonly BoxDetail[]; metalness?: number; roughness?: number }) {
@@ -146,7 +146,11 @@ export function GalleryStatusLight({ active, animate }: { active: boolean; anima
   return <group ref={ref} position={[0,-1.22,.128]}>
     <mesh raycast={noRaycast}>
       <boxGeometry args={[active ? 1.28 : .35,.024,.015]} />
-      <meshBasicMaterial color={active ? "#f5d99b" : "#625541"} />
+      <meshBasicMaterial color={active ? "#c8173a" : "#5e4f3b"} />
     </mesh>
+    {active && <mesh position={[0,.022,0]} raycast={noRaycast}>
+      <boxGeometry args={[.72,.01,.015]} />
+      <meshBasicMaterial color="#f5d99b" />
+    </mesh>}
   </group>;
 }

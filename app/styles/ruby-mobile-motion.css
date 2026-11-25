@@ -32,3 +32,186 @@
 @media (max-width: 340px) {
   .film-controls .film-time { display: none; }
 }
+
+/* 8. Graceful 3D / media fallback presentation when GPU is constrained or disabled. */
+.hero-3d-bg-wrap[data-hero-mode="fallback"] .hero-3d-fallback,
+[data-quality-tier="fallback"] .hero-3d-fallback {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(64% 56% at 50% 42%, var(--gold-glow, color-mix(in srgb, var(--gold, #c9a45c) 14%, transparent)), transparent 72%),
+    radial-gradient(48% 40% at 20% 85%, var(--ruby-glow, rgba(179, 18, 46, 0.16)), transparent 70%);
+}
+
+[data-quality-tier="fallback"] .sydney-night-stage,
+[data-quality-tier="low"] .sydney-night-stage {
+  border-color: var(--gold-hairline, rgba(201, 164, 92, 0.26));
+  background: var(--obsidian-elevated, #100f0e);
+}
+
+[data-quality-tier="fallback"] .cinema-media-video,
+[data-quality-tier="low"] .work-wall-column {
+  will-change: auto;
+}
+
+/* 9. Safe-area & overflow containment across mobile and tablet viewports (320px-1024px). */
+@media (max-width: 1024px) {
+  .ruby-page,
+  .cinema-interior {
+    overflow-x: clip;
+  }
+
+  .cinema-shell,
+  .studio-shell {
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+  }
+
+  .ruby-discipline,
+  .ruby-service-row,
+  .work-wall-control,
+  .cinema-media-control,
+  .ruby-service-ticker-control,
+  .work-index-filter,
+  .cinema-link,
+  .exhibition-tab,
+  .exhibition-nav {
+    min-height: 44px;
+  }
+
+  .work-wall-control,
+  .cinema-media-control,
+  .ruby-service-ticker-control {
+    min-width: 44px;
+  }
+
+  /* Calm pointer-oriented hover transforms on touchscreens. */
+  @media (hover: none) {
+    .ruby-proof li a:hover,
+    .cinema-link:hover svg,
+    .ruby-service-enquire:hover svg {
+      transform: none;
+      translate: none;
+    }
+  }
+}
+
+/* 10. Mobile typography, spacing & touch-target ergonomics (320px-720px). */
+@media (max-width: 720px) {
+  .site-header .nav-wrap {
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+  }
+
+  .site-nav.is-open {
+    padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .site-nav a {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  .ruby-page :is(h1, h2, .ruby-title, .ruby-statement, .studio-display),
+  .cinema-interior :is(h1, h2, .studio-display) {
+    overflow-wrap: break-word;
+  }
+
+  .ruby-eyebrow,
+  .cinema-label,
+  .eyebrow {
+    font-size: var(--fs-label);
+  }
+
+  .ruby-hero-actions a,
+  .home-studio-actions a,
+  .studio-enquiry .button,
+  .content-actions .button {
+    min-height: 48px;
+  }
+
+  .home-studio-rooms li,
+  .ruby-process-deliverable,
+  .ruby-next-steps,
+  .studio-contact-rows li {
+    min-width: 0;
+  }
+}
+
+/* 11. Compact narrow-phone refinements (320px-430px): prevent CTA/topline collisions. */
+@media (max-width: 430px) {
+  .home-hero .ruby-hero-actions,
+  .home-studio-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-hero .ruby-hero-actions a,
+  .home-studio-actions a {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .ruby-hero-topline {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .ruby-proof-index {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 375px) {
+  .cinema-shell {
+    width: calc(100% - 32px);
+  }
+
+  .ruby-page .ruby-title {
+    font-size: clamp(28px, 9.2vw, 40px);
+    line-height: 1.08;
+  }
+
+  .ruby-page .ruby-statement,
+  .ruby-section-header h2 {
+    font-size: clamp(30px, 9.4vw, 44px);
+    line-height: 1.08;
+  }
+
+  .studio-footer-closing h2 {
+    font-size: clamp(2.1rem, 9.5vw, 2.75rem);
+  }
+}
+
+/* 12. Landscape phone viewport: keep hero composition visible without awkward min-height push. */
+@media (max-width: 960px) and (max-height: 520px) and (orientation: landscape) {
+  .ruby-page .ruby-hero,
+  .ruby-page .ruby-hero.work-first-hero {
+    min-height: auto;
+  }
+
+  .ruby-hero-composition {
+    padding-block: 24px 28px;
+  }
+}
+
+/* 13. Full reduced-motion fallback for progressive & kinetic layers. */
+@media (prefers-reduced-motion: reduce) {
+  .ruby-hero-light,
+  .work-wall-column,
+  .ruby-service-ticker-track,
+  .studio-plate-glint {
+    animation: none !important;
+    will-change: auto;
+  }
+
+  .ruby-page .reveal[data-reveal-state="armed"][data-reveal-variant="mask"],
+  .ruby-page .reveal[data-reveal-state="armed"] .ruby-line > span {
+    clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
