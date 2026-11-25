@@ -14,16 +14,18 @@ const expectedServices = [
 
 test("homepage and contact use identical budget choices and preselect canonical service slugs", async ({ page }) => {
   await page.goto("/");
-  const homeOptions = await page.locator('form.enquiry-form input[name="budget"]').evaluateAll(
-    (inputs) => inputs.map((input) => input.value),
+  const homeBudget = page.getByRole("combobox", { name: /Budget/ });
+  await expect(homeBudget).toHaveValue("");
+  const homeOptions = await homeBudget.locator("option").evaluateAll(
+    (options) => options.map((option) => option.value),
   );
-  expect(homeOptions).toEqual(expectedBudgets);
+  expect(homeOptions).toEqual(["", ...expectedBudgets]);
 
   await page.goto("/contact?service=custom-software-business-systems");
   const contactOptions = await page.locator('form.enquiry-form input[name="budget"]').evaluateAll(
     (inputs) => inputs.map((input) => input.value),
   );
-  expect(contactOptions).toEqual(homeOptions);
+  expect(contactOptions).toEqual(expectedBudgets);
   await expect(page.locator('form.enquiry-form input[name="service"]:checked')).toHaveValue("Custom software & business systems");
 });
 
