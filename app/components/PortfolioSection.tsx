@@ -80,7 +80,7 @@ export function PortfolioSection() {
           </ul>
         </div>
         <FeaturedWorkNavigator items={featured.map(({ slug }) => {
-          const project = projects.find((item) => item.slug === slug);
+          const project: Project | undefined = projects.find((item) => item.slug === slug);
           return { slug, title: project?.titleName ?? project?.name ?? slug };
         })} />
       </div>
