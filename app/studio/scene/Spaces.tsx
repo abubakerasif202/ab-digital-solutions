@@ -3,9 +3,9 @@ import { Html, RoundedBox, useTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { monogramUrl, screenTextureUrl } from "../studio-assets";
-import { Block, MarbleBlock, brass } from "./Architecture";
+import { Block, MarbleBlock, TrimBatch, brass } from "./Architecture";
 import { useStudioModel } from "./load-model";
-import { BrassMaterial, MarbleMaterial, VelvetMaterial } from "./Materials";
+import { BrassMaterial, MarbleMaterial, RubyLacquerMaterial, VelvetMaterial } from "./Materials";
 import { ConsultationDetail, GalleryStatusLight, ReceptionDetail, ServiceExhibit } from "./RoomDetails";
 import { useSceneClock } from "../world/SceneClock";
 import type { Area } from "../studio-state";
@@ -26,6 +26,7 @@ const hotspotA = new THREE.Vector3();
 const hotspotB = new THREE.Vector3();
 const hotspotC = new THREE.Vector3();
 const hotspotD = new THREE.Vector3();
+const noRaycast = () => {};
 
 function Hotspot({ area, label, position, onSelect }: { area: Area; label: string; position: [number,number,number]; onSelect: (area: Area) => void }) {
   const portal = useContext(HotspotPortalContext);
@@ -127,7 +128,7 @@ function HarbourInlay() {
   }, []);
   // A small harbour-bridge maker's mark, using the studio's ruby and brass palette.
   return <group position={[-5,.58,4.556]}>
-    <Block position={[0,0,-.004]} size={[1.3,.46,.034]} color="#481923" roughness={.38} />
+    <mesh position={[0,0,-.004]}><boxGeometry args={[1.3,.46,.034]} /><RubyLacquerMaterial color="#4b1622" /></mesh>
     <Block position={[0,-.09,.016]} size={[1.09,.024,.01]} color="#d8b879" metalness={.65} />
     <mesh position={[0,0,.016]}>
       <shapeGeometry args={[arch, 16]} />
@@ -183,6 +184,8 @@ function ProjectDisplay({ project, position, selected, crisp, onOpen }: { projec
       <boxGeometry args={[3.65,2.58,.22]} />
       <meshStandardMaterial color={selected ? "#c9a45c" : hover ? "#9b7e47" : "#2b2520"} emissive={selected ? "#523811" : hover ? "#2d1a0b" : "#000000"} emissiveIntensity={selected ? .35 : hover ? .18 : 0} metalness={.78} roughness={.32} />
     </mesh>
+    {/* Gilt slip between the frame and the capture, as a museum mount would have. Decorative only. */}
+    <mesh position={[0,0,.118]} raycast={noRaycast}><boxGeometry args={[3.5,2.43,.02]} /><BrassMaterial /></mesh>
     <Suspense fallback={null}><DisplayImage image={screenTextureUrl(project.slug, crisp)} /></Suspense>
     <GalleryStatusLight active={selected} animate={crisp} />
   </group>;
@@ -204,10 +207,14 @@ export function Gallery({ projects, selected, crisp, onSelect, onProject }: { pr
   </group>;
 }
 
+// Recessed shadow-gap bases lift each marble plinth off the floor; one draw call for all four.
+const plinthBases = [0,1,2,3].map((index) => [[2.2 + index*2.2,.06,-4.4], [1.22,.1,1.22]] as const);
+
 export function Services({ onSelect, onService }: { onSelect: (area: Area) => void; onService: (index: number) => void }) {
   return <group>
+    <TrimBatch pieces={plinthBases}><meshStandardMaterial color="#0b0b0d" metalness={.3} roughness={.4} /></TrimBatch>
     {[0,1,2,3].map((index) => <group key={index} position={[2.2 + index*2.2,0,-4.4]}>
-      <MarbleBlock position={[0,.5,0]} size={[1.35,1,1.35]} />
+      <MarbleBlock position={[0,.56,0]} size={[1.35,.88,1.35]} />
       <Block position={[0,1.03,0]} size={[1.4,.05,1.4]} color="#a38a5e" metalness={.8} />
       <ServiceExhibit index={index} onOpen={() => onService(index)} />
       <mesh position={[0,.08,0]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[.95,.98,32]} /><meshBasicMaterial color="#b99a61" /></mesh>

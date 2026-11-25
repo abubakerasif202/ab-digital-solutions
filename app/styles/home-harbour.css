@@ -1,0 +1,89 @@
+/* Homepage hero: the authentic Sydney Harbour night plate (see docs/cinematic-footage.md),
+   graded toward the studio's ruby/gilt palette and sitting behind the drifting work wall.
+   Transform/opacity-only motion. It starts only once the work-wall pause control is
+   interactive and shares that pause (WCAG 2.2.2). Static under reduced motion. */
+.work-first-hero .hero-harbour {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  overflow: clip;
+  pointer-events: none;
+  contain: strict;
+}
+
+/* The plate itself. Grade: lifted blacks, warm highlights, cooled water, restrained saturation. */
+.work-first-hero .hero-harbour::before {
+  position: absolute;
+  inset: -4% -3%;
+  background: url("/cinematic/sydney-plate-harbour.webp") 62% 46% / cover no-repeat;
+  filter: brightness(.58) contrast(1.12) saturate(.78) sepia(.16);
+  transform-origin: 64% 44%;
+  content: "";
+}
+
+/* Colour grade: ruby shadow wash, gilt key light on the bridge, and a vignette that
+   hands the left edge to the headline. Gradients only, so no extra requests. */
+.work-first-hero .hero-harbour::after {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 34% 30% at 58% 24%, rgba(226, 197, 138, 0.2), transparent 72%),
+    radial-gradient(ellipse 52% 46% at 72% 86%, color-mix(in srgb, var(--ruby, #b3122e) 30%, transparent), transparent 74%),
+    linear-gradient(180deg, rgba(10, 6, 9, 0.5) 0%, rgba(10, 6, 9, 0) 34%, rgba(7, 7, 8, 0) 62%, rgba(7, 7, 8, 0.86) 100%),
+    radial-gradient(ellipse 120% 90% at 70% 45%, transparent 46%, rgba(7, 7, 8, 0.82) 100%);
+  content: "";
+}
+
+/* A single warm band of harbour reflection that breathes. Opacity and transform only. */
+.work-first-hero .hero-harbour-glint {
+  position: absolute;
+  inset: 58% 8% 14% 34%;
+  z-index: 1;
+  background:
+    repeating-linear-gradient(180deg, rgba(226, 197, 138, 0.16) 0 1px, transparent 1px 7px),
+    radial-gradient(ellipse 50% 40% at 50% 30%, rgba(201, 164, 92, 0.22), transparent 70%);
+  mix-blend-mode: screen;
+  opacity: .42;
+  mask-image: radial-gradient(ellipse 60% 55% at 50% 40%, #000 30%, transparent 78%);
+}
+
+@keyframes hero-harbour-drift {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to { transform: scale(1.075) translate3d(-1.6%, -.8%, 0); }
+}
+
+@keyframes hero-harbour-glint {
+  0%, 100% { opacity: .3; transform: translate3d(0, 0, 0) scaleX(1); }
+  50% { opacity: .58; transform: translate3d(-1.5%, .6%, 0) scaleX(1.06); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .work-first-hero:has(> .work-wall-control[data-ready]) .hero-harbour::before {
+    animation: hero-harbour-drift 48s cubic-bezier(.45, 0, .55, 1) infinite alternate;
+    will-change: transform;
+  }
+
+  .work-first-hero:has(> .work-wall-control[data-ready]) .hero-harbour-glint {
+    animation: hero-harbour-glint 11s ease-in-out infinite;
+  }
+
+  /* :is() cannot match pseudo-elements, so the plate and glint pause with explicit selectors. */
+  .work-first-hero:has(> .work-wall-control[aria-pressed="true"]) .hero-harbour::before { animation-play-state: paused; }
+  .work-first-hero:has(> .work-wall-control[aria-pressed="true"]) .hero-harbour-glint { animation-play-state: paused; }
+}
+
+/* Phones and tablets: the plate sits under the work-wall band at the top of the hero. */
+@media (max-width: 900px) {
+  .work-first-hero .hero-harbour { inset: 0 0 auto; height: clamp(340px, 92vw, 600px); }
+  .work-first-hero .hero-harbour::before { background-position: 58% 40%; filter: brightness(.52) contrast(1.1) saturate(.74) sepia(.16); }
+  .work-first-hero .hero-harbour-glint { inset: 56% 4% 10% 20%; }
+}
+
+/* Save-Data users still get the composition, without the 149 KB plate. */
+@media (prefers-reduced-data: reduce) {
+  .work-first-hero .hero-harbour::before { background-image: none; }
+}
+
+@media (forced-colors: active) {
+  .work-first-hero .hero-harbour { display: none; }
+}

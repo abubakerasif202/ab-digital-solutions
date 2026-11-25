@@ -49,6 +49,12 @@ const counter: readonly BoxDetail[] = [
   [gold, [-7.48,.575,4.572], [.018,.52,.021]],
   [gold, [-2.52,.575,4.572], [.018,.52,.021]],
   [ink, [-6.7,1.013,4.27], [.56,.025,.39]],
+  // Reeded brass fascia either side of the harbour inlay; the reeds stop short of the maker's mark.
+  ...Array.from({ length: 22 }, (_, i) => -7.36 + i * .22)
+    .filter((x) => Math.abs(x + 5) > .74)
+    .map((x) => [gold, [x,.575,4.566], [.028,.46,.012]] satisfies BoxDetail),
+  // Ruby piping under the counter's marble nosing.
+  [ruby, [-5,.875,4.572], [5.46,.012,.014]],
 ];
 
 export function ReceptionDetail() {
