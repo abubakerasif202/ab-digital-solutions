@@ -121,7 +121,7 @@ export function ConsultationDetail() {
   return <group position={[5.6,1.2,4.3]}>
     <DetailBoxes pieces={table} />
     {/* Gilt edge reveal under the marble top: emissive material only, no light. */}
-    <mesh position={[0,-.055,0]} rotation={[Math.PI/2,0,0]} raycast={noRaycast}>
+    <mesh position={[0,-.151,0]} rotation={[Math.PI/2,0,0]} raycast={noRaycast}>
       <torusGeometry args={[1.79,.012,4,48]} />
       <meshBasicMaterial color="#e7c27a" />
     </mesh>

@@ -24,7 +24,11 @@ test("mobile selected work supports keyboard navigation and exposes the current 
   await expect(third).toBeFocused();
   await expect(third).toHaveAttribute("aria-current", "true");
   await expect(next).toHaveAttribute("aria-disabled", "true");
-  await expect(gallery.getByRole("link", { name: /247 Inventory/ })).toBeVisible();
+  await expect.poll(() => gallery.getByRole("link", { name: /247 Inventory/ }).evaluate((link) => {
+    const scroller = link.closest(".home-work-scroll").getBoundingClientRect();
+    const card = link.getBoundingClientRect();
+    return Math.min(scroller.right, card.right) - Math.max(scroller.left, card.left) > card.width / 2;
+  })).toBe(true);
 
   await page.setViewportSize({ width: 1440, height: 900 });
   await expect(controls).toBeHidden();
