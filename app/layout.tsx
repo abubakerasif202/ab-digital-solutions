@@ -157,6 +157,7 @@ const structuredData = {
 const sansFont = Schibsted_Grotesk({
   subsets: ["latin"],
   display: "swap",
+  preload: false,
   variable: "--font-sans",
 });
 

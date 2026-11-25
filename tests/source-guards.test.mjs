@@ -214,7 +214,7 @@ test("reviewed design issues remain remediated", async () => {
   assert.match(showcase, /!event\.currentTarget\.contains\(event\.relatedTarget\)[\s\S]*?setFocused\(false\)/);
   assert.match(showcase, /setSliderPauseOverride\(true\)/);
   assert.match(homepage, /href=\{`\/services\/\$\{service\.slug\}`\}/);
-  assert.match(homepage, /serviceContactHref\(service\)/);
+  assert.match(homepage, /className="ruby-service-row" href=\{\x60\/services\/\$\{service\.slug\}\x60\}/);
   assert.match(chrome, /<ABBrandImage decorative eager navigation/);
   assert.match(chrome, /AB Web Studio/);
   assert.match(servicePage, /<SiteHeader/);
@@ -256,7 +256,7 @@ test("mobile navigation keeps keyboard focus within its open menu", async () => 
   assert.match(chrome, /inert=\{!ctaShown\}/);
   assert.match(chrome, /const pathname = usePathname\(\)/);
   assert.match(chrome, /const visibleConversionAreas = new Set<Element>\(\)/);
-  assert.doesNotMatch(chrome, /getBoundingClientRect/);
+  assert.equal(chrome.match(/getBoundingClientRect/g)?.length, 1, "only the menu-open snapshot reads section geometry");
   assert.match(chrome, /\}, \[pathname\]\);/);
 });
 
@@ -681,7 +681,7 @@ test("second-pass compositions: real pages, varied portfolio and case-study syst
   // Coverage of every service is asserted by "homepage service pillars cover every service page exactly once".
   assert.match(home, /serviceDisciplines\.map\(/);
   assert.match(home, /findService\(slug\)/);
-  assert.match(home, /serviceContactHref\(service\)/);
+  assert.match(home, /className="ruby-service-row" href=\{\x60\/services\/\$\{service\.slug\}\x60\}/);
 
   // Scroll-linked motion is opt-in and switched off for reduced motion.
   assert.match(compositions, /@media \(prefers-reduced-motion: no-preference\)[\s\S]*?animation-timeline: view\(\)/);

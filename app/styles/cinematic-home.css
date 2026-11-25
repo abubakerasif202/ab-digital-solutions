@@ -11,7 +11,7 @@
 .home-work-head {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 4px 24px;
   margin-bottom: 20px;
@@ -41,7 +41,7 @@
 
 .cinematic-home .ruby-services .ruby-discipline { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
 .cinematic-home .ruby-services .ruby-service-options { padding-inline-start: 0; }
-.cinematic-home .ruby-services :is(a, summary):focus-visible { outline-color: var(--ruby-text-paper); }
+.cinematic-home .ruby-services :is(a, button):focus-visible { outline-color: var(--ruby-text-paper); outline-offset: -3px; }
 
 .site-footer.studio-footer--home { padding-top: clamp(26px, 4vw, 60px); }
 
@@ -171,4 +171,132 @@
 @media (max-width: 560px) {
   .hero-project-inspector { width: min(43vw, 175px); }
   .hero-project-inspector-details span { display: none; }
+}
+
+/* Homepage section rhythm; diagonal clearance is contained within Services. */
+.cinematic-home { --section-y: clamp(48px, 5vw, 78px); }
+.cinematic-home :is(.home-work, .home-studio, .ruby-process),
+.ruby-cinematic .cinematic-home .ruby-contact .studio-enquiry { padding-block: var(--section-y); }
+.cinematic-home .ruby-services { padding-block: calc(var(--section-y) + var(--cut)); }
+.cinematic-home .home-work { padding-block-start: calc(var(--section-y) * .65); }
+.cinematic-home .home-work-head .ruby-eyebrow { margin-block: 0 5px; }
+.cinematic-home .ruby-section-header { display: block; margin-block-end: clamp(20px, 3vw, 40px); }
+.cinematic-home .ruby-eyebrow { margin-block-end: 12px; }
+.cinematic-home .ruby-services .ruby-eyebrow { color: var(--ruby-text-paper); }
+
+.cinematic-home .ruby-services .ruby-discipline { grid-template-columns: 1fr 1fr; gap: 10px 28px; padding-block: 18px; }
+.cinematic-home .ruby-services .ruby-discipline-copy {
+  grid-column: auto;
+  grid-row: auto;
+  margin: 0;
+  color: #474340;
+  font: 1rem/1.55 var(--sans), sans-serif;
+}
+.cinematic-home .ruby-discipline-arrow { display: none; }
+.cinematic-home .ruby-service-options { display: block; padding: 0 0 14px; }
+.cinematic-home .ruby-service-options li { display: block; padding: 0; }
+.cinematic-home .ruby-service-options .ruby-service-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 44px;
+  padding: 7px 4px;
+}
+.ruby-service-row .ruby-service-enquire { display: inline-flex; align-items: center; white-space: nowrap; }
+.ruby-service-row .ruby-service-enquire svg { width: 16px; }
+
+.cinematic-home .ruby-process-step { min-block-size: 0; grid-template-columns: 1fr; gap: 8px; padding-block: clamp(14px, 1.6vw, 23px); }
+.cinematic-home .ruby-process-marker { position: static; }
+.cinematic-home .ruby-process-marker h3 { margin-block: 5px 0; }
+.cinematic-home .ruby-process-detail { gap: 10px; }
+.cinematic-home .ruby-process-deliverable { margin: 0; gap: 3px; padding: 8px 12px; }
+.cinematic-home .ruby-process-detail p { max-width: 62ch; }
+
+.home-work-card-link { display: flex; flex-direction: column; height: 100%; color: inherit; text-decoration: none; }
+.home-work-card-link:hover .cinema-link { text-decoration: underline; }
+.cinematic-home .home-work-card-link:focus-visible { outline-offset: -4px; }
+
+.work-first-hero .ruby-hero-topline .cinema-label { white-space: nowrap; }
+
+.cinematic-home .ruby-next-steps h3 { font: 600 1rem/1.4 var(--sans), sans-serif; letter-spacing: normal; text-transform: none; }
+.cinematic-home .ruby-next-steps ol { list-style: none; margin: 0; padding: 0; }
+.cinematic-home .ruby-next-steps li { display: grid; grid-template-columns: 2ch 1fr; gap: 12px; }
+.cinematic-home .ruby-next-steps .cinema-label { color: var(--cinema-gold); }
+.studio-footer--home .studio-footer-col--services ul { display: grid; gap: 10px; }
+.studio-footer--home .studio-footer-col--services li { margin: 0; line-height: 1.45; }
+
+
+@media (min-width: 1024px) {
+  .cinematic-home .ruby-process > .cinema-shell { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(28px, 5vw, 80px); }
+  .cinematic-home .ruby-process .ruby-section-header { position: sticky; top: calc(var(--header-height) + 24px); align-self: start; }
+  .cinematic-home .ruby-process-step { padding-block: 12px; }
+  .cinematic-home .ruby-process-marker { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+  .cinematic-home .ruby-process-marker h3 { margin: 0; font-size: clamp(23px, 2.2vw, 32px); }
+  .cinematic-home .ruby-process-detail p { font-size: 1rem; line-height: 1.5; }
+  .cinematic-home .ruby-process-deliverable { grid-template-columns: max-content 1fr; align-items: baseline; gap: 12px; }
+}
+@media (min-width: 961px) {
+  .cinematic-home .studio-split--enquiry {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas: "copy form" "steps form";
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    row-gap: 24px;
+  }
+  .cinematic-home .studio-enquiry-copy { grid-area: copy; }
+  .cinematic-home .studio-enquiry-form { grid-area: form; }
+  .cinematic-home .ruby-next-steps { grid-area: steps; }
+}
+
+@media (max-width: 1024px) {
+  .cinematic-home .work-wall { opacity: .19; }
+  .cinematic-home .work-wall-tile > span { display: none; }
+  .cinematic-home .ruby-hero-shade {
+    background: linear-gradient(0deg, var(--hero-ink), transparent 80%),
+      linear-gradient(90deg, #0c0b0b9c, transparent 95%);
+  }
+}
+@media (max-width: 767px) {
+  .cinematic-home .home-work-scroll { overflow-x: auto; padding-block-end: 12px; scroll-snap-type: x mandatory; }
+  .cinematic-home .home-work-grid { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 84%; }
+  .home-work-card { scroll-snap-align: start; }
+  .home-work-image { aspect-ratio: 16 / 10; }
+
+  .cinematic-home .ruby-services .ruby-discipline { grid-template-columns: minmax(0, 1fr) auto; }
+  .cinematic-home .ruby-services .ruby-discipline-copy { grid-column: 1; }
+  .cinematic-home .ruby-discipline-arrow {
+    display: grid;
+    grid-column: 2;
+    grid-row: 1 / 3;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    color: #13110f;
+  }
+  .cinematic-home .ruby-discipline-arrow::before { position: static; width: auto; height: auto; background: none; content: "+"; font: 1.5rem/1 var(--sans), sans-serif; }
+  .cinematic-home .ruby-discipline-arrow::after { content: none; }
+  .cinematic-home .ruby-discipline-arrow[aria-expanded="true"]::before { content: "−"; }
+  .cinematic-home .ruby-service-options[data-expanded="false"] { display: none; }
+
+  .cinematic-home .studio-split--enquiry { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .cinematic-home .studio-contact-rows { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cinematic-home .studio-contact-rows a { display: grid; place-items: center; padding: 5px 2px; min-height: 44px; }
+  .cinematic-home .studio-contact-rows a > :is(strong, svg) { display: none; }
+  .cinematic-home .studio-contact-rows .studio-contact-label {
+    font: 600 .9375rem/1.2 var(--sans), sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+  .cinematic-home .studio-enquiry-location { display: none; }
+  .cinematic-home .ruby-contact .contact-form.enquiry-form { gap: 18px; }
+  .cinematic-home .ruby-contact .contact-form.enquiry-form textarea { min-height: 112px; }
+  .cinematic-home .ruby-next-steps { margin-block: 0; }
+}
+@media (max-width: 640px) {
+  .home-hero.work-first-hero .ruby-hero-topline { margin-block-end: clamp(105px, 32vw, 200px); padding-inline-end: 54px; }
+  .home-hero .ruby-hero-topline > :nth-child(2),
+  .home-hero .ruby-proof ul,
+  .home-hero .hero-project-inspector { display: none; }
 }

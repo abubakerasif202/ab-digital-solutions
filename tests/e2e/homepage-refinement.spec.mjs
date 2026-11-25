@@ -20,9 +20,9 @@ test("hero work anchor focuses Selected work below the sticky header", async ({ 
 test("all featured work and both studio entries reach their destinations", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   const links = [
-    ["View case study for Jufaja Homes", "/work/jufaja-homes"],
-    ["View case study for On Call Trailers", "/work/on-call-trailers"],
-    ["View case study for 247 Inventory System", "/work/247-inventory-system"],
+    [/Jufaja Homes.*View case study/, "/work/jufaja-homes"],
+    [/On Call Trailers.*View case study/, "/work/on-call-trailers"],
+    [/247 Inventory System.*View case study/, "/work/247-inventory-system"],
     [/Explore all \d+ projects/, "/work"],
     ["Enter the Virtual Studio", "/studio"],
     ["Explore the studio without 3D", "/studio#studio-content"],

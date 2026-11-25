@@ -20,10 +20,10 @@ export function HeroWorkWall() {
       <div id="work-wall-track" className="work-wall-track" aria-hidden="true">
         {columns.map((column, columnIndex) => (
           <ul className="work-wall-column" role="list" key={columnIndex} style={{ "--column": columnIndex } as CSSProperties}>
-            {[0, 1].flatMap(copy => column.map((project, index) => (
+            {[0, 1].flatMap(copy => column.map(project => (
               <li className="work-wall-tile" key={`${copy}-${project.slug}`}>
                 <div className="work-wall-frame">
-                  <ProjectArtwork project={project} sizes="(max-width: 900px) 46vw, 22vw" decorative priority={copy === 0 && index === 0 && columnIndex < 2} />
+                  <ProjectArtwork project={project} sizes="(max-width: 900px) 42vw, (max-width: 1580px) 24vw, 380px" decorative />
                 </div>
                 <span>{project.titleName ?? project.name}</span>
               </li>

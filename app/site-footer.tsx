@@ -81,7 +81,7 @@ export function SiteFooter({ currentYear, home = false }: { currentYear: number;
                 ))}
               </ul>
             </li>
-            <li><a href={siteConfig.url}>abwebstudio.com.au</a></li>
+            {!home && <li><a href={siteConfig.url}>abwebstudio.com.au</a></li>}
           </ul>
         </div>
       </div>

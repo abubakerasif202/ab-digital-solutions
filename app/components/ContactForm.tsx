@@ -190,7 +190,7 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
         </div>
         <div className="form-field">
           <label htmlFor="phone">Phone <span className="form-optional">(optional)</span></label>
-          <input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={50} placeholder="04xx xxx xxx" />
+          <input id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={50} placeholder="04xx xxx xxx" />
         </div>
         <div className="form-field">
           <label htmlFor="business">Business <span className="form-optional">(optional)</span></label>
@@ -246,7 +246,7 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
 
       <div className="form-actions">
         <button className="button button-primary" type="submit" disabled={formState === "sending"}>
-          {formState === "sending" ? "Sending…" : "Send project enquiry"} <ArrowIcon direction="right" />
+          {formState === "sending" ? <>Sending… <span className="form-spinner" aria-hidden="true" /></> : <>Send project enquiry <ArrowIcon direction="right" /></>}
         </button>
         <a className="form-call" href={`tel:${siteConfig.phoneInternational}`}>Or call {siteConfig.phoneDisplay}</a>
       </div>

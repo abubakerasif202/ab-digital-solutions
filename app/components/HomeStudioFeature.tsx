@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowIcon } from "../icons";
+import { SectionEyebrow } from "./SectionEyebrow";
 import { Reveal } from "./motion/Reveal";
 import "./HomeStudioFeature.css";
 
@@ -14,7 +15,7 @@ export function HomeStudioFeature() {
     <section className="home-studio" id="virtual-studio" aria-labelledby="home-studio-heading">
       <div className="cinema-shell home-studio-grid">
         <div className="home-studio-copy">
-          <p className="cinema-label">The Virtual Studio</p>
+          <SectionEyebrow section="virtual-studio" />
           <Reveal as="h2" id="home-studio-heading">A different <em>perspective.</em></Reveal>
           <p className="home-studio-lede">A place for ideas to take shape. Four spaces. One considered approach.</p>
           <ol className="home-studio-rooms" aria-label="The four spaces of the virtual studio">

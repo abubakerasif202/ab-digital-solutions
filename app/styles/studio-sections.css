@@ -429,3 +429,14 @@
 }
 
 .cinematic-home .studio-about { --cv-size: 1100px; }
+.form-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .form-spinner { animation: enquiry-spinner .65s linear infinite; }
+}
+@keyframes enquiry-spinner { to { transform: rotate(1turn); } }

@@ -1,4 +1,4 @@
-import { sectionEyebrow } from "../home-sections";
+import { SectionEyebrow } from "./SectionEyebrow";
 import { serviceDelivery } from "../services/service-data";
 import { Reveal } from "./motion/Reveal";
 
@@ -16,7 +16,7 @@ export function ProcessSection() {
     <section className="ruby-process" id="process" aria-labelledby="process-heading">
       <div className="cinema-shell">
         <header className="ruby-section-header">
-          <Reveal as="p" className="cinema-label ruby-eyebrow">{sectionEyebrow("process")}</Reveal>
+          <SectionEyebrow section="process" />
           <Reveal as="h2" id="process-heading">How a project runs.</Reveal>
         </header>
         <ol className="ruby-process-steps">

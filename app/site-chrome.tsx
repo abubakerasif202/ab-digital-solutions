@@ -294,7 +294,7 @@ export function SiteHeader() {
 
   useEffect(() => {
     if (pathname !== "/") return;
-    const sections = ["services", "work", "process", "about", "contact"]
+    const sections = ["work", "services", "process", "virtual-studio", "contact"]
       .map((id) => document.getElementById(id))
       .filter((element): element is HTMLElement => element !== null);
     if (sections.length === 0) return;
@@ -329,8 +329,22 @@ export function SiteHeader() {
     return () => mobileNavViewport.removeEventListener("change", closeWhenDesktop);
   }, []);
 
-  const handleNavLinkClick = () => {
+  const handleMenuToggle = () => {
+    if (!menuOpen && pathname === "/") {
+      const readingLine = window.innerHeight * 0.5;
+      const current = document.querySelectorAll<HTMLElement>("#work, #services, #process, #virtual-studio, #contact");
+      setActiveSection(Array.from(current).find((section) => {
+        const { top, bottom } = section.getBoundingClientRect();
+        return top <= readingLine && bottom > readingLine;
+      })?.id ?? null);
+    }
+    setMenuOpen(!menuOpen);
+  };
+
+  const handleNavLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (!menuOpen) return;
+    const { hash, pathname: destination } = new URL(event.currentTarget.href);
+    if (pathname === "/" && destination === "/" && hash) setActiveSection(hash.slice(1));
     setMenuOpen(false);
     // Focus sat inside the panel that is now hidden; return it to the toggle
     // (same as Escape) instead of dropping it to <body>.
@@ -344,8 +358,8 @@ export function SiteHeader() {
     : pathname.startsWith("/about") ? "about"
     : pathname.startsWith("/contact") ? "contact"
     : null;
-  const navLinkClass = (id: string) => (activeSection === id || routeSection === id ? "is-active" : undefined);
-  const navLinkCurrent = (id: string) => (routeSection === id ? "page" : activeSection === id ? "location" : undefined);
+  const navLinkClass = (id: string) => ((pathname === "/" && activeSection === (id === "studio" ? "virtual-studio" : id)) || routeSection === id ? "is-active" : undefined);
+  const navLinkCurrent = (id: string) => (routeSection === id ? "page" : pathname === "/" && activeSection === id ? "location" : undefined);
 
   return (
     <>
@@ -363,7 +377,7 @@ export function SiteHeader() {
             aria-expanded={menuOpen}
             aria-controls="primary-navigation"
             aria-label={menuOpen ? "Close navigation" : "Open navigation"}
-            onClick={() => setMenuOpen((open) => !open)}
+            onClick={handleMenuToggle}
           >
             <span />
             <span />
@@ -378,7 +392,7 @@ export function SiteHeader() {
           >
             <Link href="/work" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("work")} aria-current={navLinkCurrent("work")}>Work</Link>
             {/* Never prefetched: the studio route ships the 3D experience, which other pages should not pay for. */}
-            <Link href="/studio" prefetch={false} onClick={handleNavLinkClick} className={navLinkClass("studio")} aria-current={navLinkCurrent("studio")}>Studio</Link>
+            <Link href="/studio" prefetch={false} onClick={handleNavLinkClick} className={navLinkClass("studio")} aria-current={navLinkCurrent("studio")}>Virtual Studio</Link>
             <Link href="/services" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("services")} aria-current={navLinkCurrent("services")}>Services</Link>
             <Link href="/#process" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("process")} aria-current={navLinkCurrent("process")}>Process</Link>
             <Link href="/about" prefetch={prefetchNavigation} onClick={handleNavLinkClick} className={navLinkClass("about")} aria-current={navLinkCurrent("about")}>About</Link>
