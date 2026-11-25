@@ -32,7 +32,10 @@
 
 .work-first-hero .ruby-hero-actionline > p {
   max-width: 44ch;
-  color: #ebe9e8;
+  padding-inline-start: 16px;
+  border-inline-start: 2px solid var(--gold, #c9a45c);
+  color: #f1ede9;
+  text-shadow: 0 1px 18px rgba(7, 7, 8, 0.85);
 }
 
 .work-wall {
@@ -171,4 +174,14 @@
   padding: 5px 9px;
   background: #0c0b0bcc;
   backdrop-filter: blur(6px);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+/* Hierarchy: studio label leads in gold, location recedes to a quiet ivory. */
+.work-first-hero .ruby-hero-topline .cinema-label:first-child { color: var(--gold-bright, #e2c58a); border-inline-start: 2px solid var(--ruby, #b3122e); }
+.work-first-hero .ruby-hero-topline .cinema-label:last-child { color: #d6d1cd; }
+
+@media (prefers-reduced-motion: reduce) {
+  .work-first-hero .ruby-signal { animation: none; }
 }
