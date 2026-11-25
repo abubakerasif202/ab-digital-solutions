@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { servicePages } from "../../app/services/service-data.ts";
 
 const expectedBudgets = [
   "$2,000\u2013$4,000", "$4,000\u2013$8,000",
@@ -69,13 +70,26 @@ test("case-study pagination includes project 17 to 20 before wrapping", async ({
   }
 });
 
-test("global header/footer, service index and JSON-LD remain complete across routes", async ({ page }) => {
-  for (const route of [
-    "/", "/work", "/work/jufaja-homes", "/services",
-    "/services/custom-software-business-systems", "/studio",
-    "/about", "/contact", "/privacy",
+test("public routes emit canonical links and complete navigation and structured data", async ({ page }) => {
+  const origin = "https://www.abwebstudio.com.au";
+  const organizationId = `${origin}/#organization`;
+  const service = servicePages.find(({ slug }) => slug === "custom-software-business-systems");
+  for (const [route, pageType, breadcrumbPaths] of [
+    ["/", null, []],
+    ["/work", "CollectionPage", ["", "/work"]],
+    ["/work/jufaja-homes", "CreativeWork", ["", "/work", "/work/jufaja-homes"]],
+    ["/services", "CollectionPage", ["", "/services"]],
+    [`/services/${service.slug}`, "Service", ["", "/services", `/services/${service.slug}`]],
+    ["/studio", "WebPage", []],
+    ["/about", "AboutPage", ["", "/about"]],
+    ["/contact", "ContactPage", ["", "/contact"]],
+    ["/privacy", "WebPage", ["", "/privacy"]],
   ]) {
     await page.goto(route);
+    const canonical = origin + (route === "/" ? "" : route);
+    const canonicalLink = page.locator('link[rel="canonical"]');
+    await expect(canonicalLink).toHaveCount(1);
+    await expect(canonicalLink).toHaveAttribute("href", canonical);
     const header = page.locator("nav#primary-navigation");
     for (const href of ["/work", "/services", "/studio", "/#process", "/about", "/contact"]) {
       await expect(header.locator(`a[href="${href}"]`)).toHaveCount(1);
@@ -87,22 +101,40 @@ test("global header/footer, service index and JSON-LD remain complete across rou
       await expect(page.locator("footer").getByRole("link", { name: new RegExp(label, "i") }).first()).toBeAttached();
     }
 
-    const structured = await page.locator('script[type="application/ld+json"]').evaluateAll((nodes) =>
-      nodes.flatMap((node) => {
-        try {
-          const value = JSON.parse(node.textContent || "{}");
-          return Array.isArray(value["@graph"]) ? value["@graph"] : [value];
-        } catch { return []; }
-      }),
+    const documents = await page.locator('script[type="application/ld+json"]').evaluateAll((scripts) =>
+      scripts.map((script) => JSON.parse(script.textContent)),
     );
-    for (const breadcrumb of structured.filter((entry) => entry["@type"] === "BreadcrumbList")) {
-      for (const item of breadcrumb.itemListElement || []) {
-        expect(typeof item.name).toBe("string");
-        expect(item.name.trim().length).toBeGreaterThan(0);
-      }
+    expect(documents.length, route).toBeGreaterThan(0);
+    for (const document of documents) expect(document["@context"], route).toBe("https://schema.org");
+    const entries = documents.flatMap((document) => document["@graph"] ?? [document]);
+    const byType = (type) => entries.filter((entry) => [entry["@type"]].flat().includes(type));
+    const organizations = byType("Organization");
+    expect(organizations, route).toHaveLength(1);
+    expect(organizations[0]).toMatchObject({ "@id": organizationId, url: origin, name: "AB Web Studio" });
+    expect(byType("WebSite"), route).toEqual([expect.objectContaining({
+      "@id": `${origin}/#website`, url: origin, publisher: { "@id": organizationId },
+    })]);
+    if (pageType) {
+      expect(byType(pageType), route).toEqual([expect.objectContaining({ url: canonical })]);
     }
-    if (route.startsWith("/services/")) {
-      expect(structured.some((entry) => entry["@type"] === "FAQPage")).toBeTruthy();
+
+    const breadcrumbs = byType("BreadcrumbList");
+    expect(breadcrumbs, route).toHaveLength(breadcrumbPaths.length ? 1 : 0);
+    if (breadcrumbPaths.length) {
+      expect(breadcrumbs[0].itemListElement, route).toEqual(breadcrumbPaths.map((path, index) =>
+        expect.objectContaining({
+          "@type": "ListItem", position: index + 1, name: expect.stringMatching(/\S/), item: origin + path,
+        }),
+      ));
+    }
+    const faq = byType("FAQPage");
+    expect(faq, route).toHaveLength(pageType === "Service" ? 1 : 0);
+    if (pageType === "Service") {
+      expect(byType("Service")[0]).toMatchObject({ name: service.title, provider: { "@id": organizationId } });
+      expect(service.faqs.length).toBeGreaterThan(0);
+      expect(faq[0].mainEntity).toEqual(service.faqs.map(({ question, answer }) => ({
+        "@type": "Question", name: question, acceptedAnswer: { "@type": "Answer", text: answer },
+      })));
     }
   }
 });
