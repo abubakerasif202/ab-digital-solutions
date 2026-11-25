@@ -37,8 +37,11 @@ const Exterior = lazy(() => loadExterior().then((module) => ({ default: module.E
 const Traffic = lazy(() => loadTraffic().then((module) => ({ default: module.Traffic })));
 const Pedestrians = lazy(() => loadPedestrians().then((module) => ({ default: module.Pedestrians })));
 
-// This module is imported after Enter, so these requests can overlap canvas setup.
+const loadEnvironmentBuffer = (loader: THREE.FileLoader) => loader.setResponseType("arraybuffer");
+
+// Start both core assets on entry, before the WebGL context and canvas commit.
 useStudioModel.preload(monogramUrl);
+useLoader.preload(THREE.FileLoader, environmentUrl, loadEnvironmentBuffer);
 
 const shots: Record<Area, { position: [number,number,number]; target: [number,number,number] }> = {
   reception: { position: [-1.4,1.85,6.8], target: [-5.8,1.35,2.9] },
@@ -73,7 +76,7 @@ function attachEnvironment(scene: THREE.Scene, texture: THREE.Texture) {
 
 function Lighting({ onReady }: { onReady: () => void }) {
   const { gl, scene, invalidate } = useThree();
-  const buffer = useLoader(THREE.FileLoader, environmentUrl, (loader) => loader.setResponseType("arraybuffer"));
+  const buffer = useLoader(THREE.FileLoader, environmentUrl, loadEnvironmentBuffer);
   const texture = useMemo(() => {
     if (!(buffer instanceof ArrayBuffer)) throw new Error("Invalid Studio environment response");
     return createStudioEnvironment(buffer);

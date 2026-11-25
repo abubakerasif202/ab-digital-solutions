@@ -4,7 +4,7 @@ import * as THREE from "three";
 import sharp from "sharp";
 import { studioProjects } from "../../app/studio/studio-data.ts";
 // Exercise WebGL in full Chromium, including its production compositor.
-test.use({ channel: "chromium" });
+if (!process.env.QA_BROWSER || process.env.QA_BROWSER === "chromium") test.use({ channel: "chromium" });
 const output = process.env.QA_OUT || "qa/virtual-studio";
 test.beforeAll(() => {
   if (!["localhost", "127.0.0.1"].includes(new URL(process.env.QA_BASE_URL || "http://127.0.0.1:3100").hostname)) {
@@ -159,7 +159,8 @@ test("server HTML works without JavaScript; homepage preview loads no model", as
   await expect(page.getByRole("link", { name: "Virtual Studio", exact: true }).first()).toHaveAttribute("href", "/studio"); expect(models).toEqual([]);
 });
 
-test("touch orbit changes view and vertical swipe scrolls the page", async ({ browser }) => {
+test("touch orbit changes view and vertical swipe scrolls the page", async ({ browser, browserName }) => {
+  test.skip(browserName !== "chromium", "Synthetic touch input uses Chromium DevTools Protocol");
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   const page = await context.newPage(); await intercept(page); await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio" }).tap();
@@ -459,7 +460,7 @@ test("phone camera controls return the scene to view and label the exterior corr
   }
 });
 
-test("warmup fetches gallery textures alongside the model and commits stages in order", async ({ page }) => {
+test("warmup overlaps compressed reflections and gallery textures with the model and commits stages in order", async ({ page }) => {
   let releaseModel;
   const pendingModel = new Promise((resolve) => { releaseModel = resolve; });
   let modelRequests = 0;
@@ -484,8 +485,12 @@ test("warmup fetches gallery textures alongside the model and commits stages in 
   try {
     await page.goto("/studio", { waitUntil: "networkidle" });
     expect(galleryRequests).toBe(0);
+    const reflections = page.waitForResponse((response) => response.url().endsWith("/room-environment.bin"));
     await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
     await expect.poll(() => modelRequests).toBeGreaterThan(0);
+    const environment = await reflections;
+    expect(environment.ok()).toBe(true);
+    expect(await environment.headerValue("content-encoding")).toBe("gzip");
     await expect.poll(() => galleryRequests).toBe(3);
     await expect(page.locator("[data-warmup]")).toHaveAttribute("data-warmup", "core");
   } finally {

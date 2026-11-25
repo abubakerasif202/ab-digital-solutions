@@ -45,3 +45,16 @@ test("absent parallel-shader support remains usable without blocking status quer
   const h = harness({ extension: false }), job = h.start();
   h.frame(); await job.ready; assert.equal(h.reads(), 0);
 });
+
+test("later stages reuse completed shader status for the same renderer", async () => {
+  const h = harness();
+  h.finish();
+  const first = h.start();
+  h.frame();
+  await first.ready;
+  assert.equal(h.reads(), 1);
+  const second = h.start();
+  h.frame();
+  await second.ready;
+  assert.equal(h.reads(), 1);
+});

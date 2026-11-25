@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
+import { gunzipSync } from "node:zlib";
 import { CubeUVReflectionMapping, HalfFloatType, LinearFilter, LinearSRGBColorSpace } from "three";
 import { createStudioEnvironment } from "../app/studio/scene/environment.ts";
 
@@ -23,4 +24,10 @@ test("corrupt or mismatched environment resources fail instead of showing change
     const corrupt = buffer.slice(0); new Uint8Array(corrupt)[offset] ^= 1;
     assert.throws(() => createStudioEnvironment(corrupt), /environment/);
   }
+});
+
+test("the precompressed environment serves the identical HDR pixels at a smaller transfer size", async () => {
+  const compressed = await readFile(new URL("../public/studio/room-environment.bin.gz", import.meta.url));
+  assert.deepEqual(gunzipSync(compressed), bytes);
+  assert.ok(compressed.length < bytes.length / 3);
 });
