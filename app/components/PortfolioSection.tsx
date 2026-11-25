@@ -3,6 +3,7 @@ import { SectionEyebrow } from "./SectionEyebrow";
 import { ArrowIcon } from "../icons";
 import { projectDestinationLabel, projects, type Project } from "../project-data";
 import { ProjectArtwork } from "../project-artwork";
+import { FeaturedWorkNavigator } from "./FeaturedWorkNavigator";
 
 const featured = [
   {
@@ -78,6 +79,10 @@ export function PortfolioSection() {
             })}
           </ul>
         </div>
+        <FeaturedWorkNavigator items={featured.map(({ slug }) => {
+          const project = projects.find((item) => item.slug === slug);
+          return { slug, title: project?.titleName ?? project?.name ?? slug };
+        })} />
       </div>
     </section>
   );
