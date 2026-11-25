@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { monogramUrl, screenTextureUrl } from "../studio-assets";
 import { Block, MarbleBlock, brass } from "./Architecture";
 import { useStudioModel } from "./load-model";
-import { BrassMaterial, MarbleMaterial } from "./Materials";
+import { BrassMaterial, MarbleMaterial, VelvetMaterial } from "./Materials";
 import { ConsultationDetail, GalleryStatusLight, ReceptionDetail, ServiceExhibit } from "./RoomDetails";
 import { useSceneClock } from "../world/SceneClock";
 import type { Area } from "../studio-state";
@@ -196,6 +196,9 @@ export function Gallery({ projects, selected, crisp, onSelect, onProject }: { pr
   const start = galleryWindowStart(selected, projects.length);
   return <group>
     <Block position={[-5,.13,-4.5]} size={[10,.22,5.3]} color="#171d20" />
+    {/* Gilt front reveal and ruby inset ground the gallery platform; emissive only, no extra light. */}
+    <mesh position={[-5,.1,-1.84]}><boxGeometry args={[9.6,.02,.012]} /><meshBasicMaterial color="#d9b66f" /></mesh>
+    <mesh position={[-5,.245,-2.3]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[9.2,.05]} /><meshBasicMaterial color="#7a1228" /></mesh>
     {projects.slice(start, start + FRAMES).map((project, offset) => <ProjectDisplay key={project.slug} project={project} position={[-8.7 + offset*3.8,2.45,-5]} selected={start + offset === selected} crisp={crisp} onOpen={() => onProject(start + offset)} />)}
     <Hotspot area="gallery" label="Portfolio" position={[-5,.5,-1.6]} onSelect={onSelect} />
   </group>;
@@ -215,16 +218,16 @@ export function Services({ onSelect, onService }: { onSelect: (area: Area) => vo
 
 function Chair({ position, rotation = 0 }: { position: [number,number,number]; rotation?: number }) {
   return <group position={position} rotation={[0,rotation,0]}>
-    <RoundedBox position={[0,.64,0]} args={[1.12,.28,1.08]} radius={.12} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#581425" roughness={.86} /></RoundedBox>
-    <RoundedBox position={[0,1.08,-.43]} rotation={[-.12,0,0]} args={[1.22,1.02,.24]} radius={.11} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#731a30" roughness={.84} /></RoundedBox>
-    {[-.57,.57].map(x => <RoundedBox key={x} position={[x,.91,0]} args={[.17,.36,.88]} radius={.08} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#64172b" roughness={.84} /></RoundedBox>)}
+    <RoundedBox position={[0,.64,0]} args={[1.12,.28,1.08]} radius={.12} smoothness={1} bevelSegments={2}><VelvetMaterial color="#581425" /></RoundedBox>
+    <RoundedBox position={[0,1.08,-.43]} rotation={[-.12,0,0]} args={[1.22,1.02,.24]} radius={.11} smoothness={1} bevelSegments={2}><VelvetMaterial color="#731a30" /></RoundedBox>
+    {[-.57,.57].map(x => <RoundedBox key={x} position={[x,.91,0]} args={[.17,.36,.88]} radius={.08} smoothness={1} bevelSegments={2}><VelvetMaterial color="#64172b" /></RoundedBox>)}
     <mesh position={[0,.3,0]}><cylinderGeometry args={[.075,.075,.58,12]} /><BrassMaterial /></mesh>
     <mesh position={[0,.035,0]}><cylinderGeometry args={[.49,.52,.06,24]} /><BrassMaterial /></mesh>
   </group>;
 }
 function Bench({ position }: { position: [number,number,number] }) {
   return <group position={position} rotation={[0,.3,0]}>
-    <RoundedBox position={[0,.58,0]} args={[2.2,.3,.85]} radius={.12} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#651629" roughness={.86} /></RoundedBox>
+    <RoundedBox position={[0,.58,0]} args={[2.2,.3,.85]} radius={.12} smoothness={1} bevelSegments={2}><VelvetMaterial color="#651629" /></RoundedBox>
     {[-.85,.85].map(x => <mesh key={x} position={[x,.24,0]}><boxGeometry args={[.06,.48,.65]} /><BrassMaterial /></mesh>)}
   </group>;
 }
@@ -232,6 +235,8 @@ export function Consultation({ onSelect }: { onSelect: (area: Area) => void }) {
   return <group>
     <mesh position={[5.6,.08,4.3]} rotation={[-Math.PI/2,0,0]}><circleGeometry args={[3.4,48]} /><meshStandardMaterial color="#171316" roughness={.95} /></mesh>
     <mesh position={[5.6,.085,4.3]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[3.35,3.41,48]} /><meshBasicMaterial color="#c9a45c" /></mesh>
+    {/* Deep ruby rug under the seating ring adds colour contrast against the dark floor and marble top. */}
+    <mesh position={[5.6,.087,4.3]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[1.95,3.2,48]} /><meshStandardMaterial color="#3d0f1b" roughness={.95} emissive="#2a0610" emissiveIntensity={.35} /></mesh>
     <mesh position={[5.6,1.13,4.3]}><cylinderGeometry args={[1.8,1.8,.14,48]} /><MarbleMaterial /></mesh>
     <mesh position={[5.6,.56,4.3]}><cylinderGeometry args={[.42,.7,1.02,24]} /><meshStandardMaterial {...brass} /></mesh>
     {[0,1,2,3].map((i) => { const angle = i * Math.PI/2; return <Chair key={i} position={[5.6+Math.sin(angle)*2.45,0,4.3+Math.cos(angle)*2.45]} rotation={angle+Math.PI} />; })}

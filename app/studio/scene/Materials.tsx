@@ -47,9 +47,14 @@ export function MaterialLibrary({ children }: { children: ReactNode }) {
 }
 export function MarbleMaterial() {
   const maps = useContext(Maps);
-  return <meshStandardMaterial map={maps?.map} color="#d8cec0" roughness={.26} metalness={.14} />;
+  // Warm bone tint with a faint ruby-gilt self-glow so veined stone keeps depth in shadowed corners.
+  return <meshStandardMaterial map={maps?.map} color="#e0d2c0" roughness={.24} metalness={.16} emissive="#2a1208" emissiveIntensity={.22} />;
 }
 export function BrassMaterial() {
   const maps = useContext(Maps);
-  return <meshStandardMaterial color="#c9a45c" metalness={.88} roughness={.52} roughnessMap={maps?.roughness} />;
+  return <meshStandardMaterial color="#cfa95f" metalness={.9} roughness={.46} roughnessMap={maps?.roughness} emissive="#3a2208" emissiveIntensity={.18} />;
+}
+/** Soft matte ruby upholstery: high roughness against polished marble and brass, with a restrained warm lift. */
+export function VelvetMaterial({ color }: { color: string }) {
+  return <meshStandardMaterial color={color} roughness={.92} metalness={0} emissive="#3a0a16" emissiveIntensity={.28} />;
 }

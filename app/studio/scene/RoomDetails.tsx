@@ -38,7 +38,7 @@ function DetailBoxes({ pieces, metalness = .35, roughness = .55 }: { pieces: rea
   }, [pieces]);
   return <instancedMesh ref={ref} args={[undefined, undefined, pieces.length]} raycast={noRaycast}>
     <boxGeometry />
-    <meshStandardMaterial metalness={metalness} roughness={roughness} />
+    <meshStandardMaterial metalness={metalness} roughness={roughness} emissive="#24100a" emissiveIntensity={.4} />
   </instancedMesh>;
 }
 
@@ -54,6 +54,11 @@ const counter: readonly BoxDetail[] = [
 export function ReceptionDetail() {
   return <>
     <DetailBoxes pieces={counter} />
+    {/* Ruby toe-kick glow and a gilt floor reveal separate the counter from the dark plinth. */}
+    <mesh position={[-5,.2,4.583]} raycast={noRaycast}>
+      <boxGeometry args={[5.1,.025,.012]} />
+      <meshBasicMaterial color="#c8173a" />
+    </mesh>
     {/* An inset light channel is an emissive surface, not another shadow-casting light. */}
     <mesh position={[-5,2.45,2.635]} raycast={noRaycast}>
       <torusGeometry args={[1.97,.019,6,32,Math.PI]} />
@@ -115,6 +120,11 @@ const table: readonly BoxDetail[] = [
 export function ConsultationDetail() {
   return <group position={[5.6,1.2,4.3]}>
     <DetailBoxes pieces={table} />
+    {/* Gilt edge reveal under the marble top: emissive material only, no light. */}
+    <mesh position={[0,-.055,0]} rotation={[Math.PI/2,0,0]} raycast={noRaycast}>
+      <torusGeometry args={[1.79,.012,4,48]} />
+      <meshBasicMaterial color="#e7c27a" />
+    </mesh>
     <mesh position={[0,-.12,0]} raycast={noRaycast}>
       <cylinderGeometry args={[1.72,1.72,.04,32]} />
       <meshStandardMaterial {...brass} roughness={.35} />
