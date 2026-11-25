@@ -185,12 +185,18 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     const nav = roomNav.current;
     const prior = navDocumentTop.current;
     if (!nav || prior === null) return;
-    const next = nav.getBoundingClientRect().top + scrollY;
+    const bounds = nav.getBoundingClientRect();
+    const next = bounds.top + scrollY;
     navDocumentTop.current = next;
-    if (Math.abs(next - prior) > 1) {
-      scrollBy({ top: next - prior, behavior: "instant" });
+    const priorTop = prior - scrollY;
+    const targetTop = priorTop >= 0 && priorTop < innerHeight
+      ? Math.min(priorTop, Math.max(0, innerHeight - bounds.height))
+      : priorTop;
+    const adjustment = bounds.top - targetTop;
+    if (Math.abs(adjustment) > 1) {
+      scrollBy({ top: adjustment, behavior: "instant" });
     }
-  }, [state.panel]);
+  }, [state.area, state.panel]);
 
   // Creating the AudioContext is synchronous main-thread work (about 80 ms on a mid-range phone), and browsers keep
   // audio locked until a gesture anyway. The saved sound choice loads when idle; the engine starts on the first
@@ -282,7 +288,9 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const isMapOpen = useEffectEvent(() => mapOpen);
   useEffect(() => {
     if (state.panel) {
-      showStage();
+      const bar = roomNav.current?.getBoundingClientRect();
+      // The layout effect already positions visible tabs when the stacked panel changes stage height.
+      if (!bar || bar.top < -1 || bar.bottom > innerHeight + 1) showStage();
       if (tabbing.current) {
         tabbing.current = false;
         areaButtons.current[state.area]?.focus({ preventScroll: true });

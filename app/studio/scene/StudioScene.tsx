@@ -27,12 +27,17 @@ import { canvasPixelRatio, pickTier, readRuntimeCapabilities, stepDownTier } fro
 import type { Area, StudioState } from "../studio-state";
 import type { StudioProject } from "../studio-data";
 
-const Wildlife = lazy(() => import("../world/wildlife/Wildlife").then((module) => ({ default: module.Wildlife })));
-const Exterior = lazy(() => import("../world/Exterior").then((module) => ({ default: module.Exterior })));
-const Traffic = lazy(() => import("../world/Traffic").then((module) => ({ default: module.Traffic })));
-const Pedestrians = lazy(() => import("../world/Pedestrians").then((module) => ({ default: module.Pedestrians })));
+const loadWildlife = () => import("../world/wildlife/Wildlife");
+const loadExterior = () => import("../world/Exterior");
+const loadTraffic = () => import("../world/Traffic");
+const loadPedestrians = () => import("../world/Pedestrians");
 
-// This module is imported only after Enter; preload the small essential model.
+const Wildlife = lazy(() => loadWildlife().then((module) => ({ default: module.Wildlife })));
+const Exterior = lazy(() => loadExterior().then((module) => ({ default: module.Exterior })));
+const Traffic = lazy(() => loadTraffic().then((module) => ({ default: module.Traffic })));
+const Pedestrians = lazy(() => loadPedestrians().then((module) => ({ default: module.Pedestrians })));
+
+// This module is imported after Enter, so these requests can overlap canvas setup.
 useStudioModel.preload(monogramUrl);
 
 const shots: Record<Area, { position: [number,number,number]; target: [number,number,number] }> = {
@@ -295,12 +300,16 @@ function GalleryTextureWarmup({ image }: { image: string }) {
   return null;
 }
 
-function GalleryWarmup({ projects, selected }: { projects: StudioProject[]; selected: number }) {
+function galleryWarmupImages(projects: StudioProject[], selected: number) {
   const start = galleryWindowStart(selected, projects.length);
+  return projects.slice(start, start + 3).map((project) => screenTextureUrl(project.slug, false));
+}
+
+function GalleryWarmup({ projects, selected }: { projects: StudioProject[]; selected: number }) {
   // ProjectDisplay keeps a local Suspense boundary for later image changes.
   // Gate the initial three cached textures here so that boundary cannot allow
   // the arrival film to begin with empty gallery screens.
-  return projects.slice(start, start + 3).map((project) => <GalleryTextureWarmup key={project.slug} image={screenTextureUrl(project.slug, false)} />);
+  return galleryWarmupImages(projects, selected).map((image) => <GalleryTextureWarmup key={image} image={image} />);
 }
 
 export default function StudioScene({ state, mapOpen, projects, selectedProject, visible, onReady, onFailure, onSelect, onProject, onService, onManual, onArrive }: {
@@ -317,6 +326,17 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
   const [environmentReady, setEnvironmentReady] = useState(false);
   const onEnvironmentReady = useCallback(() => setEnvironmentReady(true), []);
   const preparation = { environmentReady, onFailure };
+  useEffect(() => {
+    // Fetch world modules in parallel while geometry and shaders still warm up in order.
+    // If a request fails, its lazy boundary handles the error when the stage mounts.
+    void Promise.allSettled([loadExterior(), loadTraffic(), loadPedestrians(), loadWildlife()]);
+  }, []);
+  useEffect(() => {
+    if (phase !== "core") return;
+    // Match the gallery's singleton loader keys so its initial requests share
+    // the same cache entries and can overlap core model and shader preparation.
+    for (const image of galleryWarmupImages(projects, selectedProject)) useTexture.preload(image);
+  }, [phase, projects, selectedProject]);
   const [software, setSoftware] = useState(false);
   const [pixelRatio, setPixelRatio] = useState(1);
   useEffect(() => {

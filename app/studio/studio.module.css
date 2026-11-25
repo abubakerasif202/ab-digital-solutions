@@ -200,6 +200,16 @@
   /* Leave room for the site's sticky "Start a project" button and the device safe area. */
   .directory { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
 }
+@media (max-width: 600px) {
+  .areaNav button {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-content: center;
+    align-items: baseline;
+    column-gap: 8px;
+  }
+  .areaNav button span { margin-right: 0; }
+}
 @media (prefers-reduced-motion: reduce) { .previewFrame::before { animation: none; } }
 /* Short landscape phones: the scene fills the visible height (this must follow the generic .stage rule above). */
 @media (max-width: 999px) and (max-height: 500px) and (orientation: landscape) {
