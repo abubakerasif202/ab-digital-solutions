@@ -456,9 +456,9 @@
   }
   .home-work-rail-stop[aria-current="true"]::before { background: var(--ruby, #B3122E); transform: scaleY(2.5); }
 
-  /* Only dim siblings once JS has confirmed the scroller is usable. */
-  .home-work-scroll[data-gallery="ready"] .home-work-card:not([data-current]) { opacity: .6; }
-  .home-work-scroll[data-touched] .home-work-card { transition-property: opacity, border-color, box-shadow, transform; }
+  /* Dim only the artwork; adjacent card text and focus indicators stay legible. */
+  .home-work-scroll[data-gallery="ready"] .home-work-card:not([data-current]) .home-work-image { opacity: .6; }
+  .home-work-scroll[data-touched] .home-work-image { transition: opacity 300ms ease; }
   .home-work-nav[data-touched] .home-work-rail-stop::before { transition: background-color 300ms ease, transform 300ms ease; }
 
   .cinematic-home .ruby-services .ruby-discipline { grid-template-columns: minmax(0, 1fr) auto; }
