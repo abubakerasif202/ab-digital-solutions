@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageTransition } from "../../components/motion/PageTransition";
+import { Reveal } from "../../components/motion/Reveal";
 import { notFound } from "next/navigation";
 import { ProjectArtwork } from "../../project-artwork";
 import { findProject, projectDisplayDomain } from "../../project-data";
@@ -216,11 +217,11 @@ export default async function ServicePage({ params }: Props) {
               <h2 id="service-process-heading">From first conversation to a dependable result.</h2>
             </div>
             <ol>
-              {process.map(([number, title, description]) => (
-                <li key={number} data-reveal>
+              {process.map(([number, title, description], index) => (
+                <Reveal as="li" key={number} variant="fade-up" delay={index * 60}>
                   <span>{number}</span>
                   <div><h3>{title}</h3><p>{description}</p></div>
-                </li>
+                </Reveal>
               ))}
             </ol>
           </section>

@@ -31,12 +31,20 @@ test("mobile homepage protects hero legibility, menu focus, work scrolling and c
   await page.keyboard.press("Escape");
   await expect(toggle).toBeFocused();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
-  await toggle.click();
-  await nav.getByRole("link", { name: "Process" }).click();
+  await page.keyboard.press("Enter");
+  await expect(nav.getByRole("link", { name: "Work", exact: true })).toBeFocused();
+  for (const name of ["Virtual Studio", "Services", "Process"]) {
+    await page.keyboard.press("Tab");
+    await expect(nav.getByRole("link", { name, exact: true })).toBeFocused();
+  }
+  await expect(page.locator("#main-content")).toHaveJSProperty("inert", true);
+  await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#process$/);
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(page.locator("#main-content")).toHaveJSProperty("inert", false);
+  await expect(page.locator("#process")).toBeFocused();
 
-  const work = page.getByRole("group", { name: "Selected work" });
+  const work = page.getByRole("group", { name: "Selected work", exact: true });
   await expect(work).toHaveCSS("scroll-snap-type", "x mandatory");
   expect(await work.evaluate(region => region.scrollWidth > region.clientWidth)).toBe(true);
   for (const card of await work.getByRole("article").all()) {

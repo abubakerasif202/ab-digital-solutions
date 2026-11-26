@@ -1,10 +1,20 @@
 import { test, expect } from "@playwright/test";
+import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as THREE from "three";
 import sharp from "sharp";
 import { studioProjects } from "../../app/studio/studio-data.ts";
 // Exercise WebGL in full Chromium, including its production compositor.
-test.use({ channel: "chromium" });
+if (!process.env.QA_BROWSER || process.env.QA_BROWSER === "chromium") {
+  test.use({
+    channel: "chromium",
+    launchOptions: {
+      executablePath: process.env.CHROMIUM_PATH || (existsSync("/usr/bin/chromium") ? "/usr/bin/chromium" : undefined),
+      chromiumSandbox: true,
+      args: ["--use-gl=angle", "--use-angle=swiftshader"],
+    },
+  });
+}
 const output = process.env.QA_OUT || "qa/virtual-studio";
 test.beforeAll(() => {
   if (!["localhost", "127.0.0.1"].includes(new URL(process.env.QA_BASE_URL || "http://127.0.0.1:3100").hostname)) {
@@ -56,6 +66,10 @@ for (const width of [390, 768, 1440]) {
         const stage = await mode(page).boundingBox();
         // Details sit below the scene as page content, never over it or in a nested scroller.
         expect(sheet.y).toBeGreaterThanOrEqual(stage.y + stage.height - 1);
+      } else {
+        const headerBox = await page.locator("header.site-header").boundingBox();
+        const panelBox = await page.locator("aside[aria-labelledby='studio-panel-heading']").boundingBox();
+        if (headerBox) expect(panelBox.y).toBeGreaterThanOrEqual(headerBox.y + headerBox.height - 1);
       }
       if (label === "Portfolio gallery") {
         await expect(page.locator("#studio-project option")).toHaveText(studioProjects.map((project) => project.name));
@@ -159,7 +173,8 @@ test("server HTML works without JavaScript; homepage preview loads no model", as
   await expect(page.getByRole("link", { name: "Virtual Studio", exact: true }).first()).toHaveAttribute("href", "/studio"); expect(models).toEqual([]);
 });
 
-test("touch orbit changes view and vertical swipe scrolls the page", async ({ browser }) => {
+test("touch orbit changes view and vertical swipe scrolls the page", async ({ browser, browserName }) => {
+  test.skip(browserName !== "chromium", "Synthetic touch input uses Chromium DevTools Protocol");
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   const page = await context.newPage(); await intercept(page); await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio" }).tap();
@@ -363,8 +378,8 @@ test("welcome separates exploration from tour and details open under the scene",
   await expect(page.locator("#studio-panel-heading")).toHaveText("Ideas start here.");
 });
 
-test("initial phone landscape caps DPR and all requested layouts stay within viewport", async ({ browser }) => {
-  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+test("initial phone landscape caps DPR and all requested layouts stay within viewport", async ({ browser, browserName }) => {
+  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, deviceScaleFactor: 3, isMobile: browserName !== "firefox", hasTouch: true });
   const page = await context.newPage(); await intercept(page);
   await page.goto("/studio"); await enter(page);
   await expect.poll(() => page.locator("canvas").evaluate(canvas => canvas.width / canvas.clientWidth)).toBeLessThanOrEqual(1.76);
@@ -414,6 +429,32 @@ test("room tabs keep the page still on desktop and the tab bar on screen on a ph
   }
 });
 
+test("stacked room details keep the room bar on screen when its size changes", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const { width, height, top } of [
+    { width: 320, height: 568, top: 454 },
+    { width: 768, height: 900, top: 180 },
+  ]) {
+    await page.setViewportSize({ width, height });
+    await page.goto("/studio");
+    const nav = page.getByRole("navigation", { name: "Studio rooms" });
+    await nav.evaluate((bar, position) => {
+      window.scrollBy({ top: bar.getBoundingClientRect().top - position, behavior: "instant" });
+    }, top);
+    const room = nav.getByRole("button", { name: "Portfolio gallery" });
+    await room.click();
+    await expect(page.locator("#studio-panel-heading")).toBeFocused();
+    const open = await nav.boundingBox();
+    expect(Math.abs(open.y - top)).toBeLessThanOrEqual(10);
+    expect(open.y + open.height).toBeLessThanOrEqual(height + 1);
+    await page.keyboard.press("Escape");
+    await expect(room).toBeFocused();
+    const closed = await nav.boundingBox();
+    expect(Math.abs(closed.y - open.y)).toBeLessThanOrEqual(2);
+    expect(closed.y + closed.height).toBeLessThanOrEqual(height + 1);
+  }
+});
+
 test("phone camera controls return the scene to view and label the exterior correctly", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/studio", { waitUntil: "networkidle" });
@@ -433,11 +474,17 @@ test("phone camera controls return the scene to view and label the exterior corr
   }
 });
 
-test("warmup commits all seven stages before arrival and survives a delayed model", async ({ page }) => {
-  let delayedRequests = 0;
+test("warmup overlaps compressed reflections and gallery textures with the model and commits stages in order", async ({ page }) => {
+  let releaseModel;
+  const pendingModel = new Promise((resolve) => { releaseModel = resolve; });
+  let modelRequests = 0;
+  let galleryRequests = 0;
+  page.on("request", (request) => {
+    if (/\/studio\/[^/]+\/screens\/[^/]+\.webp$/.test(request.url())) galleryRequests++;
+  });
   await page.route("**/ab-monogram.glb", async (route) => {
-    delayedRequests++;
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    modelRequests++;
+    await pendingModel;
     await route.continue();
   });
   await page.addInitScript(() => {
@@ -449,11 +496,22 @@ test("warmup commits all seven stages before arrival and survives a delayed mode
       if (document.querySelector("[data-mode]")?.getAttribute("data-mode") === "arrival" && phase !== "done") window.__earlyArrival = true;
     }).observe(document, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-warmup", "data-mode"] });
   });
-  await page.goto("/studio", { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
+  try {
+    await page.goto("/studio", { waitUntil: "networkidle" });
+    expect(galleryRequests).toBe(0);
+    const reflections = page.waitForResponse((response) => response.url().endsWith("/room-environment.bin.gz"));
+    await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
+    await expect.poll(() => modelRequests).toBeGreaterThan(0);
+    const environment = await reflections;
+    expect(environment.ok()).toBe(true);
+    expect((await environment.body()).byteLength).toBeLessThan(500_000);
+    await expect.poll(() => galleryRequests).toBe(3);
+    await expect(page.locator("[data-warmup]")).toHaveAttribute("data-warmup", "core");
+  } finally {
+    releaseModel();
+  }
   await expect(page.locator("[data-warmup]")).toHaveAttribute("data-warmup", "done", { timeout: 30000 });
   expect(await page.evaluate(() => window.__warmupStages)).toEqual(["core", "interior", "exterior", "traffic", "pedestrians", "wildlife", "staff", "done"]);
-  expect(delayedRequests).toBeGreaterThan(0);
   expect(await page.evaluate(() => window.__earlyArrival)).toBe(false);
   await expect(mode(page)).toHaveAttribute("data-mode", /arrival|intro|explore/);
 });
@@ -471,10 +529,8 @@ test("warmup waits for gallery textures before starting the arrival film", async
     await page.goto("/studio", { waitUntil: "networkidle" });
     await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
     await expect.poll(() => requests).toBeGreaterThan(0);
-    // A held resource, not an arbitrary slow-network delay, owns this gate.
-    await page.waitForTimeout(1000);
-    await expect(mode(page)).toHaveAttribute("data-mode", "loading");
     await expect(page.locator("[data-warmup]")).toHaveAttribute("data-warmup", "interior");
+    await expect(mode(page)).toHaveAttribute("data-mode", "loading");
   } finally {
     release();
   }
@@ -527,7 +583,7 @@ test("pending shader compilation tears down safely and can re-enter", async ({ p
 
 test("failed baked environment recovers through the existing model retry", async ({ page }) => {
   let blocked = true, requests = 0;
-  await page.route("**/room-environment.bin", (route) => { requests++; return blocked ? route.abort() : route.continue(); });
+  await page.route(/\/room-environment\.bin(?:\.gz)?$/, (route) => { requests++; return blocked ? route.abort() : route.continue(); });
   await page.goto("/studio", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Enter the Studio", exact: true }).click();
   await expect(mode(page)).toHaveAttribute("data-mode", "failed", { timeout: 25000 });

@@ -1,18 +1,62 @@
-// Quality tiers come from measured capability (cores, memory, input type, texture limit, a short
-// frame-time probe) and never from screen width alone.
+// Quality tiers use browser capability hints, renderer limits, and sustained frame timing.
 export type Tier = "low" | "medium" | "high";
-export type Capabilities = { cores?: number; memoryGb?: number; coarsePointer?: boolean; saveData?: boolean; maxTexture?: number; medianFrameMs?: number };
+export type Capabilities = {
+  cores?: number;
+  memoryGb?: number;
+  coarsePointer?: boolean;
+  saveData?: boolean;
+  reducedMotion?: boolean;
+  lowBattery?: boolean;
+  effectiveType?: string;
+  softwareRenderer?: boolean;
+  maxTexture?: number;
+  medianFrameMs?: number;
+};
 export type TierConfig = { tier: Tier; cars: number; pedestrians: number; walkingStaff: boolean; simHz: number; landmarkDetail: 0 | 1 | 2; trees: number; dpr: number };
 
-export function pickTier(c: Capabilities): Tier {
-  if (c.saveData) return "low";
+export function pickTier(c: Capabilities, ceiling: Tier = "high"): Tier {
+  if (
+    ceiling === "low" ||
+    c.saveData ||
+    c.reducedMotion ||
+    c.lowBattery ||
+    c.softwareRenderer ||
+    c.effectiveType === "slow-2g" ||
+    c.effectiveType === "2g"
+  ) {
+    return "low";
+  }
   let score = 0;
   score += c.cores === undefined ? 1 : c.cores >= 8 ? 2 : c.cores >= 6 ? 1.5 : c.cores >= 4 ? 1 : 0;
   score += c.memoryGb === undefined ? 1 : c.memoryGb >= 8 ? 2 : c.memoryGb >= 4 ? 1 : 0;
-  score += c.maxTexture !== undefined && c.maxTexture >= 8192 ? 1 : 0;
   if (c.coarsePointer) score -= 1;
   if (c.medianFrameMs !== undefined) score += c.medianFrameMs <= 12 ? 1 : c.medianFrameMs <= 20 ? 0 : -2;
-  return score >= 4 ? "high" : score >= 2 ? "medium" : "low";
+  if (score < 2) return "low";
+  // Texture capacity is a ceiling only. A large limit says little about render throughput.
+  const limitedTextureSize = c.maxTexture !== undefined && c.maxTexture < 8192;
+  return score >= 4 && ceiling === "high" && !limitedTextureSize && !c.coarsePointer && c.effectiveType !== "3g"
+    ? "high"
+    : "medium";
+}
+
+export function stepDownTier(tier: Tier): Tier {
+  return tier === "high" ? "medium" : "low";
+}
+
+export function readRuntimeCapabilities(): Capabilities {
+  if (typeof window === "undefined" || typeof navigator === "undefined") return {};
+  const nav = navigator as Navigator & {
+    deviceMemory?: number;
+    connection?: { saveData?: boolean; effectiveType?: string };
+  };
+  return {
+    cores: typeof nav.hardwareConcurrency === "number" ? nav.hardwareConcurrency : undefined,
+    memoryGb: typeof nav.deviceMemory === "number" ? nav.deviceMemory : undefined,
+    coarsePointer: window.matchMedia("(pointer: coarse)").matches,
+    saveData: Boolean(nav.connection?.saveData),
+    effectiveType: nav.connection?.effectiveType,
+    reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  };
 }
 
 export const tierConfig: Record<Tier, TierConfig> = {

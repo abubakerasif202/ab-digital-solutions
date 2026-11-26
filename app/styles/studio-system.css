@@ -6,18 +6,18 @@
 
 :root {
   /* Surfaces */
-  --obsidian: #070708;
-  --surface: #0f0f12;
-  --surface-2: #151519;
+  --obsidian: var(--obsidian-void, #070708);
+  --surface: var(--obsidian-elevated, #100F0E);
+  --surface-2: #161513;
   /* Type */
-  --ivory: #f4f1ea;
-  --ivory-muted: #a7a29a;
-  --placeholder: #8b867c;
+  --ivory: var(--paper-ivory, #f4f1ea);
+  --ivory-muted: var(--ink-muted-dark, #b6b0a8);
+  --placeholder: #8e8880;
   /* Metal + ruby */
   --gilt-bright: var(--gold-bright);
   /* Lines */
-  --hair: rgba(244, 241, 234, 0.13);
-  --hair-strong: rgba(244, 241, 234, 0.24);
+  --hair: var(--hairline-ivory, rgba(244, 241, 234, 0.13));
+  --hair-strong: var(--hairline-ivory-strong, rgba(244, 241, 234, 0.24));
   /* Layout */
   --gutter: clamp(16px, 4vw, 48px);
   --shell: 1280px;
@@ -33,6 +33,40 @@
   --dur-ui: 300ms;
   /* Italic accent colour: overridden only where a surface needs it. */
   --accent-ink: var(--gilt);
+}
+
+/* Sydney-night atmospheric surface & lighting primitives --------------------- */
+.sydney-night-surface {
+  position: relative;
+  background: var(--sydney-harbour-ambient), var(--sydney-architectural-falloff), var(--obsidian-base, #0a0908);
+}
+
+.sydney-night-elevated {
+  background: linear-gradient(180deg, rgba(201, 164, 92, 0.035) 0%, transparent 40%), var(--obsidian-elevated, #100f0e);
+  border: 1px solid var(--gold-hairline, rgba(201, 164, 92, 0.26));
+}
+
+.sydney-night-vignette {
+  position: relative;
+}
+
+.sydney-night-vignette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--sydney-night-vignette);
+}
+
+.sydney-night-spotlight {
+  background:
+    radial-gradient(ellipse 42% 46% at var(--ruby-x, 76%) var(--ruby-y, 32%), rgba(201, 164, 92, 0.12), transparent 64%),
+    radial-gradient(ellipse 46% 52% at var(--ruby-x, 24%) var(--ruby-y, 78%), rgba(179, 18, 46, 0.14), transparent 70%);
+}
+
+.gilt-hairline {
+  border-color: var(--gold-hairline, rgba(201, 164, 92, 0.26));
 }
 
 @media (max-width: 720px) {
@@ -323,8 +357,10 @@ body { background: var(--obsidian); color: var(--ivory); }
 /* Footer ----------------------------------------------------------------------- */
 .site-footer.studio-footer {
   padding: clamp(56px, 7vw, 96px) 0 32px;
-  border-top: 1px solid var(--hair);
-  background: var(--surface);
+  border-top: 1px solid color-mix(in srgb, var(--gold) 24%, var(--hair));
+  background:
+    radial-gradient(ellipse 68% 45% at 50% 0%, rgba(201, 164, 92, 0.055), transparent 72%),
+    var(--surface);
   color: var(--ivory);
 }
 

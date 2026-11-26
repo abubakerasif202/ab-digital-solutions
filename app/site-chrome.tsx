@@ -16,6 +16,7 @@ export function SiteHeader() {
   // Keep speculative route assets off the homepage's initial rendering path.
   const prefetchNavigation = (pathname !== "/" && pathname !== "/studio") || menuOpen;
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const pendingSectionFocus = useRef<HTMLElement | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const mobileCtaRef = useRef<HTMLAnchorElement>(null);
   const topSentinelRef = useRef<HTMLDivElement>(null);
@@ -93,7 +94,16 @@ export function SiteHeader() {
       }
       focusFrame = window.requestAnimationFrame(focusFirstLink);
     };
-    if (menuOpen) focusFrame = window.requestAnimationFrame(focusFirstLink);
+    if (menuOpen) {
+      focusFrame = window.requestAnimationFrame(focusFirstLink);
+    } else if (pendingSectionFocus.current) {
+      const section = pendingSectionFocus.current;
+      pendingSectionFocus.current = null;
+      // The background is interactive again. Let link navigation handle scrolling.
+      if (!section.hasAttribute("tabindex")) section.tabIndex = -1;
+      section.focus({ preventScroll: true });
+      if (document.activeElement !== section) menuButtonRef.current?.focus();
+    }
     return () => {
       if (focusFrame !== null) window.cancelAnimationFrame(focusFrame);
       document.removeEventListener("keydown", onKeyDown);
@@ -342,13 +352,16 @@ export function SiteHeader() {
   };
 
   const handleNavLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!menuOpen) return;
+    if (!menuOpen || event.defaultPrevented || event.button !== 0 ||
+        event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const { hash, pathname: destination } = new URL(event.currentTarget.href);
-    if (pathname === "/" && destination === "/" && hash) setActiveSection(hash.slice(1));
+    if (pathname === "/" && destination === "/" && hash) {
+      const sectionId = hash.slice(1);
+      setActiveSection(sectionId);
+      pendingSectionFocus.current = document.getElementById(sectionId);
+    }
     setMenuOpen(false);
-    // Focus sat inside the panel that is now hidden; return it to the toggle
-    // (same as Escape) instead of dropping it to <body>.
-    menuButtonRef.current?.focus();
+    if (!pendingSectionFocus.current) menuButtonRef.current?.focus();
   };
   // Real pages mark their own nav item as the current page; on the homepage
   // the scroll-spy marks the in-page section being read instead.

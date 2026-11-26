@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { StudioAbout } from "../components/studio/StudioAbout";
 import { PageTransition } from "../components/motion/PageTransition";
+import { Reveal } from "../components/motion/Reveal";
 import { ArrowIcon } from "../icons";
 import { ProjectArtwork } from "../project-artwork";
 import { findProject, projects, type Project } from "../project-data";
@@ -83,11 +84,11 @@ export default function AboutPage() {
 
         <section className="gr-about-collage" aria-labelledby="collage-heading">
           <div className="container">
-            <div className="gr-about-collage-head" data-reveal>
+            <Reveal className="gr-about-collage-head">
               <p className="eyebrow">Selected studio projects</p>
               <h2 id="collage-heading">From a first impression to <span className="accent-serif">day-to-day operations.</span></h2>
               <Link className="text-link" href="/work">See all {projects.length} projects <ArrowIcon /></Link>
-            </div>
+            </Reveal>
             <div className="gr-about-collage-grid">
               {collage.map((project, index) => (
                 <Link className={`gr-about-tile gr-about-tile--${index + 1}`} href={`/work/${project.slug}`} key={project.slug} data-cursor="VIEW" data-reveal>
@@ -108,11 +109,11 @@ export default function AboutPage() {
           </div>
           <ol className="gr-about-approach-list">
             {approach.map(([title, copy], index) => (
-              <li key={title} data-reveal>
+              <Reveal as="li" key={title} variant="fade-up" delay={index * 70}>
                 <span className="gr-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                 <h3>{title}</h3>
                 <p>{copy}</p>
-              </li>
+              </Reveal>
             ))}
           </ol>
         </section>
@@ -124,26 +125,26 @@ export default function AboutPage() {
               <h2 id="principles-heading" className="gr-display-l">Feel the quality. <span className="accent-serif">Then see the thinking.</span></h2>
             </div>
             <ol className="gr-about-principles-list">
-              {principles.map(([number, title, copy]) => (
-                <li key={number} data-reveal>
+              {principles.map(([number, title, copy], index) => (
+                <Reveal as="li" key={number} variant="fade-up" delay={index * 60}>
                   <span>{number}</span>
                   <h3>{title}</h3>
                   <p>{copy}</p>
-                </li>
+                </Reveal>
               ))}
             </ol>
           </div>
         </section>
 
         <aside className="gr-final-cta" aria-labelledby="about-cta-heading">
-          <div className="container gr-final-cta-inner" data-reveal>
+          <Reveal className="container gr-final-cta-inner">
             <p className="eyebrow">Start a conversation</p>
             <h2 id="about-cta-heading">Tell us what you are building and where you want the business to <span className="accent-serif">go.</span></h2>
             <div className="content-actions">
               <Link className="button button-primary" href="/contact">Start a project <ArrowIcon /></Link>
               <Link className="button button-ghost" href="/services">Explore services <ArrowIcon direction="right" /></Link>
             </div>
-          </div>
+          </Reveal>
         </aside>
 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />

@@ -233,7 +233,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
                   <Reveal as="div" delay={idx * 110}>
                     <figure>
                     <div className="gr-cs-gallery-frame" style={{ aspectRatio: shot.aspectRatio ?? projectArtworkRatio(project) }}>
-                      <Image src={shot.src} alt={shot.alt} {...artworkDimensions(shot.aspectRatio ?? projectArtworkRatio(project))} style={fillFrame} loading="lazy" sizes="(max-width: 860px) 100vw, 33vw" />
+                      <Image src={shot.src} alt={shot.alt} {...artworkDimensions(shot.aspectRatio ?? projectArtworkRatio(project))} style={fillFrame} loading="lazy" decoding="async" quality={85} sizes="(max-width: 860px) 100vw, 33vw" />
                     </div>
                     <figcaption>{shot.caption}</figcaption>
                     </figure>

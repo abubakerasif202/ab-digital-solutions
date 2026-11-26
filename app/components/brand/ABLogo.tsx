@@ -26,7 +26,7 @@ export function ABLogo({ className, title = "AB Web Studio", decorative = false,
       {!decorative && <title id={titleId}>{title}</title>}
       <path d={LOGO_PATHS.letterA} fill="currentColor" />
       <path d={LOGO_PATHS.letterB} fill="currentColor" />
-      <path d={LOGO_PATHS.slash} fill={monochrome ? "currentColor" : "#D21736"} />
+      <path d={LOGO_PATHS.slash} fill={monochrome ? "currentColor" : "var(--ruby, #B3122E)"} />
     </svg>
   );
 }

@@ -10,6 +10,7 @@ import { ProcessSection } from "./components/ProcessSection";
 import { EnquirySection } from "./components/studio/EnquirySection";
 import { HeroWorkWall } from "./components/cinematic/HeroWorkWall";
 import "./components/cinematic/work-wall.css";
+import "./styles/home-harbour.css";
 import { projects, type Project } from "./project-data";
 import { ProjectArtwork } from "./project-artwork";
 import { siteConfig } from "./site-config";
@@ -28,6 +29,8 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
       <SiteHeader />
       <main id="main-content" className="cinematic-home cinema-page ruby-page">
         <section className="cinema-hero ruby-hero work-first-hero home-hero" aria-labelledby="hero-heading">
+          {/* Graded night frame of Sydney Harbour (docs/cinematic-footage.md); CSS-only, decorative, behind the work wall. */}
+          <div className="hero-harbour" aria-hidden="true"><span className="hero-harbour-glint" /></div>
           <HeroWorkWall />
           <div className="hero-project-inspector" aria-hidden="true">
             {proofProjects.map((project, index) => (
@@ -95,9 +98,14 @@ export default function AgencyHome({ currentYear }: { currentYear: number }) {
 
         <section id="services" className="ruby-services" aria-labelledby="services-heading">
           <div className="cinema-shell">
-            <header className="ruby-section-header">
-              <SectionEyebrow section="services" />
-              <h2 id="services-heading">Services</h2>
+            <header className="ruby-section-header ruby-services-header">
+              <div>
+                <SectionEyebrow section="services" />
+                <h2 id="services-heading">Services</h2>
+              </div>
+              <Link className="cinema-link ruby-services-all" href="/services" prefetch={false}>
+                Explore all services <ArrowIcon direction="right" />
+              </Link>
             </header>
             <ol className="ruby-disciplines" aria-label="Service pillars">
               {serviceDisciplines.map((discipline, index) => (

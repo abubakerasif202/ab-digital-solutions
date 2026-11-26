@@ -23,7 +23,7 @@ export function HeroWorkWall() {
             {[0, 1].flatMap(copy => column.map(project => (
               <li className="work-wall-tile" key={`${copy}-${project.slug}`}>
                 <div className="work-wall-frame">
-                  <ProjectArtwork project={project} sizes="(max-width: 900px) 42vw, (max-width: 1580px) 24vw, 380px" decorative />
+                  <ProjectArtwork project={project} sizes="(max-width: 900px) 42vw, (max-width: 1580px) 24vw, 380px" eager={copy === 0} decorative />
                 </div>
                 <span>{project.titleName ?? project.name}</span>
               </li>

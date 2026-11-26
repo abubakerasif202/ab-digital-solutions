@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { readFile, writeFile } from "node:fs/promises";
 import { chromium } from "@playwright/test";
 import { createHash } from "node:crypto";
+import { gzipSync } from "node:zlib";
 
 const routes = {
   "/three.js": "node_modules/three/build/three.module.js",
@@ -68,6 +69,7 @@ try {
   const bytes = Buffer.concat([header, Buffer.from(baked.base64, "base64")]);
   const path = "public/studio/room-environment.bin";
   await writeFile(path, bytes);
+  await writeFile(`${path}.gz`, gzipSync(bytes, { level: 9 }));
   await writeFile("docs/studio-environment.json", JSON.stringify({ ...baked.metadata, source: "Three RoomEnvironment; PMREM.fromScene(room, .04, .1, 100, {size:128})", path, bytes: bytes.length, sha256: createHash("sha256").update(bytes).digest("hex"), browser: browser.version() }, null, 2));
   console.log(JSON.stringify(baked.metadata), bytes.length);
 } finally {

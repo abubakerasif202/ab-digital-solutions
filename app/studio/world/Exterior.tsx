@@ -21,10 +21,41 @@ const BRASS = "#bca06b";
 const CHARCOAL = "#22272a";
 const LINE_Y = 0.014;
 
+// Precomputed unit-box (36 vertices) and horizontal unit-quad (6 vertices) eliminate hundreds
+// of temporary BoxGeometry/PlaneGeometry allocations and toNonIndexed() copies on street mount.
+const UNIT_BOX = (() => {
+  const g = new THREE.BoxGeometry(1, 1, 1);
+  const nonIndexed = g.toNonIndexed();
+  g.dispose();
+  const pos = Float32Array.from(nonIndexed.getAttribute("position").array as Float32Array);
+  const norm = Float32Array.from(nonIndexed.getAttribute("normal").array as Float32Array);
+  nonIndexed.dispose();
+  return { pos, norm };
+})();
+
+const UNIT_FLAT = (() => {
+  const g = new THREE.PlaneGeometry(1, 1);
+  g.rotateX(-Math.PI / 2);
+  const nonIndexed = g.toNonIndexed();
+  g.dispose();
+  const pos = Float32Array.from(nonIndexed.getAttribute("position").array as Float32Array);
+  const norm = Float32Array.from(nonIndexed.getAttribute("normal").array as Float32Array);
+  nonIndexed.dispose();
+  return { pos, norm };
+})();
+
+type RawBucket = { positions: number[]; normals: number[]; colors: number[] };
+
 // Collects coloured primitives per material key and merges each key into one draw call.
 function createMesher() {
   const buckets = new Map<string, THREE.BufferGeometry[]>();
+  const rawBuckets = new Map<string, RawBucket>();
   const tint = new THREE.Color();
+  const getRaw = (key: string) => {
+    let bucket = rawBuckets.get(key);
+    if (!bucket) { bucket = { positions: [], normals: [], colors: [] }; rawBuckets.set(key, bucket); }
+    return bucket;
+  };
   const push = (key: string, source: THREE.BufferGeometry, hex: string) => {
     const g = source.index ? source.toNonIndexed() : source;
     if (g !== source) source.dispose();
@@ -32,19 +63,34 @@ function createMesher() {
     const count = g.getAttribute("position").count;
     tint.set(hex);
     const colors = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) { colors[i * 3] = tint.r; colors[i * 3 + 1] = tint.g; colors[i * 3 + 2] = tint.b; }
+    const r = tint.r, gr = tint.g, b = tint.b;
+    for (let i = 0; i < count; i++) { const idx = i * 3; colors[idx] = r; colors[idx + 1] = gr; colors[idx + 2] = b; }
     g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     const list = buckets.get(key);
     if (list) list.push(g); else buckets.set(key, [g]);
   };
   return {
     box(key: string, size: V3, pos: V3, hex: string, rot: V3 = [0, 0, 0]) {
-      const g = new THREE.BoxGeometry(...size);
-      if (rot[0]) g.rotateX(rot[0]);
-      if (rot[1]) g.rotateY(rot[1]);
-      if (rot[2]) g.rotateZ(rot[2]);
-      g.translate(...pos);
-      push(key, g, hex);
+      if (rot[0] || rot[1] || rot[2]) {
+        const g = new THREE.BoxGeometry(...size);
+        if (rot[0]) g.rotateX(rot[0]);
+        if (rot[1]) g.rotateY(rot[1]);
+        if (rot[2]) g.rotateZ(rot[2]);
+        g.translate(...pos);
+        push(key, g, hex);
+        return;
+      }
+      tint.set(hex);
+      const raw = getRaw(key);
+      const [sx, sy, sz] = size;
+      const [px, py, pz] = pos;
+      const r = tint.r, g = tint.g, b = tint.b;
+      const { pos: bp, norm: bn } = UNIT_BOX;
+      for (let i = 0; i < bp.length; i += 3) {
+        raw.positions.push(bp[i] * sx + px, bp[i + 1] * sy + py, bp[i + 2] * sz + pz);
+        raw.normals.push(bn[i], bn[i + 1], bn[i + 2]);
+        raw.colors.push(r, g, b);
+      }
     },
     cyl(key: string, rTop: number, rBottom: number, height: number, pos: V3, hex: string, segments = 8, rotZ = 0) {
       const g = new THREE.CylinderGeometry(rTop, rBottom, height, segments);
@@ -54,10 +100,17 @@ function createMesher() {
     },
     // Horizontal quad (road paint, paving joints) facing up.
     flat(key: string, x0: number, x1: number, z0: number, z1: number, y: number, hex: string) {
-      const g = new THREE.PlaneGeometry(x1 - x0, z1 - z0);
-      g.rotateX(-Math.PI / 2);
-      g.translate((x0 + x1) / 2, y, (z0 + z1) / 2);
-      push(key, g, hex);
+      tint.set(hex);
+      const raw = getRaw(key);
+      const sx = x1 - x0, sz = z1 - z0;
+      const px = (x0 + x1) / 2, pz = (z0 + z1) / 2;
+      const r = tint.r, g = tint.g, b = tint.b;
+      const { pos: fp, norm: fn } = UNIT_FLAT;
+      for (let i = 0; i < fp.length; i += 3) {
+        raw.positions.push(fp[i] * sx + px, fp[i + 1] + y, fp[i + 2] * sz + pz);
+        raw.normals.push(fn[i], fn[i + 1], fn[i + 2]);
+        raw.colors.push(r, g, b);
+      }
     },
     disc(key: string, radius: number, pos: V3, hex: string, rotY: number) {
       const g = new THREE.CircleGeometry(radius, 14);
@@ -66,17 +119,31 @@ function createMesher() {
       push(key, g, hex);
     },
     build(key: string) {
-      const list = buckets.get(key);
-      return list ? mergeGeometries(list) : null;
+      const list = buckets.get(key) ?? [];
+      const raw = rawBuckets.get(key);
+      if (raw && raw.positions.length) {
+        const batched = new THREE.BufferGeometry();
+        batched.setAttribute("position", new THREE.Float32BufferAttribute(raw.positions, 3));
+        batched.setAttribute("normal", new THREE.Float32BufferAttribute(raw.normals, 3));
+        batched.setAttribute("color", new THREE.Float32BufferAttribute(raw.colors, 3));
+        list.push(batched);
+        buckets.set(key, list);
+        rawBuckets.delete(key);
+      }
+      return list.length ? mergeGeometries(list) : null;
     },
-    dispose() { buckets.forEach((list) => list.forEach((g) => g.dispose())); buckets.clear(); },
+    dispose() {
+      buckets.forEach((list) => list.forEach((g) => g.dispose()));
+      buckets.clear();
+      rawBuckets.clear();
+    },
   };
 }
 type Mesher = ReturnType<typeof createMesher>;
 
 function buildGround(m: Mesher) {
-  const footpath = "#bbb09b", joint = "#a09580", asphalt = "#47494c", kerb = "#cfc8b8", tactile = "#c8a43a";
-  m.box("solid", [2 * HALF * 2, 0.2, 149], [0, -0.13, 34.5], "#7a7566"); // quay and verge, from the harbour wall to the far buildings
+  const footpath = "#423e39", joint = "#2f2c28", asphalt = "#1e2025", kerb = "#58534b", tactile = "#c9a45c";
+  m.box("solid", [2 * HALF * 2, 0.2, 149], [0, -0.13, 34.5], "#1c1c20"); // quay and verge, from the harbour wall to the far buildings
   m.box("solid", [2 * HALF, FP_Y, NEAR_KERB - layout.footpath.z0], [0, FP_Y / 2, (layout.footpath.z0 + NEAR_KERB) / 2], footpath);
   m.box("solid", [2 * HALF, 0.02, layout.road.z1 - layout.road.z0], [0, 0, layout.road.centerZ], asphalt);
   // Far footpath and kerb stop at the side street, which carries asphalt through the gap.
@@ -129,14 +196,14 @@ function buildMarkings(m: Mesher) {
 
 type Building = { x0: number; x1: number; h: number; wall: string; accent: string; trim: string };
 const BUILDINGS: Building[] = [
-  { x0: -HALF, x1: -48, h: 14, wall: "#8d5b46", accent: "#792c40", trim: "#6e4636" },
-  { x0: -40, x1: -28, h: 19, wall: "#cdbb98", accent: "#2e5c6e", trim: "#a8966f" },
-  { x0: -28, x1: -18, h: 11, wall: "#8e9a86", accent: "#bca06b", trim: "#6f7a68" },
-  { x0: -18, x1: -6, h: 16, wall: "#bda889", accent: "#792c40", trim: "#8f7d62" },
-  { x0: -6, x1: 8, h: 22, wall: "#51463f", accent: "#bca06b", trim: "#2f2925" },
-  { x0: 8, x1: 22, h: 13, wall: "#a8654b", accent: "#22272a", trim: "#7d4836" },
-  { x0: 22, x1: 38, h: 18, wall: "#9aa5a8", accent: "#792c40", trim: "#6f7b7e" },
-  { x0: 38, x1: HALF, h: 12, wall: "#d6c7a4", accent: "#2e5c6e", trim: "#a99a78" },
+  { x0: -HALF, x1: -48, h: 14, wall: "#2b2123", accent: "#7b192c", trim: "#1c1618" },
+  { x0: -40, x1: -28, h: 19, wall: "#302b28", accent: "#1d3845", trim: "#221e1c" },
+  { x0: -28, x1: -18, h: 11, wall: "#232826", accent: "#c9a45c", trim: "#171a19" },
+  { x0: -18, x1: -6, h: 16, wall: "#2d2824", accent: "#7b192c", trim: "#1d1a18" },
+  { x0: -6, x1: 8, h: 22, wall: "#1e1b1d", accent: "#c9a45c", trim: "#141214" },
+  { x0: 8, x1: 22, h: 13, wall: "#2a201f", accent: "#22272a", trim: "#1b1414" },
+  { x0: 22, x1: 38, h: 18, wall: "#22262c", accent: "#7b192c", trim: "#16191e" },
+  { x0: 38, x1: HALF, h: 12, wall: "#2c2824", accent: "#1d3845", trim: "#1e1b18" },
 ];
 
 function buildFacades(m: Mesher) {

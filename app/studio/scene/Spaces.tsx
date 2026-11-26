@@ -1,12 +1,13 @@
 import { createContext, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { Html, RoundedBox, useTexture } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { monogramUrl, screenTextureUrl } from "../studio-assets";
-import { Block, MarbleBlock, brass } from "./Architecture";
+import { Block, MarbleBlock, TrimBatch, brass } from "./Architecture";
 import { useStudioModel } from "./load-model";
-import { BrassMaterial, MarbleMaterial } from "./Materials";
+import { BrassMaterial, MarbleMaterial, RubyLacquerMaterial, VelvetMaterial } from "./Materials";
 import { ConsultationDetail, GalleryStatusLight, ReceptionDetail, ServiceExhibit } from "./RoomDetails";
+import { useSceneClock } from "../world/SceneClock";
 import type { Area } from "../studio-state";
 import type { StudioProject } from "../studio-data";
 import { collectHotspotOccluders } from "./hotspot-occlusion";
@@ -25,6 +26,7 @@ const hotspotA = new THREE.Vector3();
 const hotspotB = new THREE.Vector3();
 const hotspotC = new THREE.Vector3();
 const hotspotD = new THREE.Vector3();
+const noRaycast = () => {};
 
 function Hotspot({ area, label, position, onSelect }: { area: Area; label: string; position: [number,number,number]; onSelect: (area: Area) => void }) {
   const portal = useContext(HotspotPortalContext);
@@ -88,15 +90,30 @@ function Hotspot({ area, label, position, onSelect }: { area: Area; label: strin
 function Sculpture({ animate }: { animate: boolean }) {
   const { scene } = useStudioModel(monogramUrl);
   const model = useMemo(() => scene.clone(true), [scene]);
+  const { scheduler } = useSceneClock();
   const group = useRef<THREE.Group>(null);
-  const elapsed = useRef(0);
-  useFrame((_, delta) => {
-    if (!animate || !group.current) return;
-    elapsed.current += Math.min(delta,.05);
-    group.current.rotation.y = Math.sin(elapsed.current * .8) * .12;
-  });
+  const halo = useRef<THREE.Mesh>(null);
+  useEffect(() => {
+    if (!animate) return;
+    return scheduler.add("reception-monogram", (_dt, time) => {
+      if (group.current) {
+        group.current.rotation.y = Math.sin(time * 0.72) * 0.14;
+        group.current.position.y = 3.15 + Math.sin(time * 1.15) * 0.04;
+      }
+      if (halo.current) {
+        const s = 1 + Math.sin(time * 1.4) * 0.03;
+        halo.current.scale.set(s, s, 1);
+      }
+    });
+  }, [animate, scheduler]);
   // The monogram is roughly 3.2 x 1.8 m at source scale. Raised and pulled forward so the brass arch frames the letters.
-  return <group ref={group} position={[-5, 3.15, 1.7]} scale={.4}><primitive object={model} /></group>;
+  return <>
+    <mesh ref={halo} position={[-5, 3.15, 1.56]}>
+      <ringGeometry args={[1.08, 1.13, 48]} />
+      <meshBasicMaterial color="#c8173a" transparent opacity={0.48} side={THREE.DoubleSide} depthWrite={false} />
+    </mesh>
+    <group ref={group} position={[-5, 3.15, 1.7]} scale={.4}><primitive object={model} /></group>
+  </>;
 }
 
 function HarbourInlay() {
@@ -111,7 +128,7 @@ function HarbourInlay() {
   }, []);
   // A small harbour-bridge maker's mark, using the studio's ruby and brass palette.
   return <group position={[-5,.58,4.556]}>
-    <Block position={[0,0,-.004]} size={[1.3,.46,.034]} color="#481923" roughness={.38} />
+    <mesh position={[0,0,-.004]}><boxGeometry args={[1.3,.46,.034]} /><RubyLacquerMaterial color="#4b1622" /></mesh>
     <Block position={[0,-.09,.016]} size={[1.09,.024,.01]} color="#d8b879" metalness={.65} />
     <mesh position={[0,0,.016]}>
       <shapeGeometry args={[arch, 16]} />
@@ -122,7 +139,8 @@ function HarbourInlay() {
 
 export function Reception({ animate, onSelect }: { animate: boolean; onSelect: (area: Area) => void }) {
   return <group>
-    <Block position={[-5,.08,3.4]} size={[7,.08,5]} color="#171d20" roughness={.8} />
+    {/* Nero Portoro reception dais (top at the 0.12 m floor height); tiled so veins stay at slab scale. */}
+    <MarbleBlock position={[-5,.08,3.4]} size={[7,.08,5]} repeat={[3,2]} />
     <MarbleBlock position={[-5,.46,4.25]} size={[5.6,.88,.6]} />
     <Block position={[-5,.15,4.56]} size={[5.5,.09,.03]} color="#c2a166" metalness={.8} />
     <RoundedBox position={[-5,.94,4.25]} args={[5.8,.12,.9]} radius={.06} smoothness={1} bevelSegments={2}><MarbleMaterial /></RoundedBox>
@@ -154,19 +172,21 @@ function DisplayImage({ image }: { image: string }) {
   const texture = useTexture(image);
   const gl = useThree((state) => state.gl);
   useLayoutEffect(() => {
-    applyScreenSampling(texture, gl.capabilities.getMaxAnisotropy());
+    applyScreenSampling(texture, Math.min(4, gl.capabilities.getMaxAnisotropy()));
   }, [texture, gl]);
   return <mesh position={[0,0,.13]}><planeGeometry args={[3.4,2.33]} /><meshBasicMaterial map={texture} toneMapped={false} /></mesh>;
 }
 function ProjectDisplay({ project, position, selected, crisp, onOpen }: { project: StudioProject; position: [number,number,number]; selected: boolean; crisp: boolean; onOpen: () => void }) {
   const [hover, setHover] = useState(false);
   return <group position={position}>
-    <Block position={[0,-1.55,0]} size={[.19,.95,.15]} color="#ad9361" metalness={.8} />
-    <Block position={[0,-2.01,.1]} size={[1.2,.07,.69]} color="#423e34" metalness={.6} />
+    <Block position={[0,-1.55,0]} size={[.19,.95,.15]} color="#c9a45c" metalness={.85} />
+    <Block position={[0,-2.01,.1]} size={[1.2,.07,.69]} color="#16181c" metalness={.55} />
     <mesh onClick={(event) => { event.stopPropagation(); onOpen(); }} onPointerOver={() => setHover(true)} onPointerOut={() => setHover(false)}>
       <boxGeometry args={[3.65,2.58,.22]} />
-      <meshStandardMaterial color={selected ? "#c4a06c" : hover ? "#9e825d" : "#655543"} emissive={selected ? "#6b4f1c" : "#000000"} emissiveIntensity={selected ? .3 : 0} metalness={.75} roughness={.36} />
+      <meshStandardMaterial color={selected ? "#c9a45c" : hover ? "#9b7e47" : "#2b2520"} emissive={selected ? "#523811" : hover ? "#2d1a0b" : "#000000"} emissiveIntensity={selected ? .35 : hover ? .18 : 0} metalness={.78} roughness={.32} />
     </mesh>
+    {/* Gilt slip between the frame and the capture, as a museum mount would have. Decorative only. */}
+    <mesh position={[0,0,.118]} raycast={noRaycast}><boxGeometry args={[3.5,2.43,.02]} /><BrassMaterial /></mesh>
     <Suspense fallback={null}><DisplayImage image={screenTextureUrl(project.slug, crisp)} /></Suspense>
     <GalleryStatusLight active={selected} animate={crisp} />
   </group>;
@@ -179,16 +199,24 @@ export function galleryWindowStart(selected: number, total: number) {
 export function Gallery({ projects, selected, crisp, onSelect, onProject }: { projects: StudioProject[]; selected: number; crisp: boolean; onSelect: (area: Area) => void; onProject: (index: number) => void }) {
   const start = galleryWindowStart(selected, projects.length);
   return <group>
-    <Block position={[-5,.13,-4.5]} size={[10,.22,5.3]} color="#171d20" />
+    {/* Gallery stage in the same Portoro (top at the 0.24 m floor height), same footprint as before. */}
+    <MarbleBlock position={[-5,.13,-4.5]} size={[10,.22,5.3]} repeat={[4,2]} />
+    {/* Gilt front reveal and ruby inset ground the gallery platform; emissive only, no extra light. */}
+    <mesh position={[-5,.1,-1.84]}><boxGeometry args={[9.6,.02,.012]} /><meshBasicMaterial color="#d9b66f" /></mesh>
+    <mesh position={[-5,.245,-2.3]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[9.2,.05]} /><meshBasicMaterial color="#7a1228" /></mesh>
     {projects.slice(start, start + FRAMES).map((project, offset) => <ProjectDisplay key={project.slug} project={project} position={[-8.7 + offset*3.8,2.45,-5]} selected={start + offset === selected} crisp={crisp} onOpen={() => onProject(start + offset)} />)}
     <Hotspot area="gallery" label="Portfolio" position={[-5,.5,-1.6]} onSelect={onSelect} />
   </group>;
 }
 
+// Recessed shadow-gap bases lift each marble plinth off the floor; one draw call for all four.
+const plinthBases = [0,1,2,3].map((index) => [[2.2 + index*2.2,.06,-4.4], [1.22,.1,1.22]] as const);
+
 export function Services({ onSelect, onService }: { onSelect: (area: Area) => void; onService: (index: number) => void }) {
   return <group>
+    <TrimBatch pieces={plinthBases}><meshStandardMaterial color="#0b0b0d" metalness={.3} roughness={.4} /></TrimBatch>
     {[0,1,2,3].map((index) => <group key={index} position={[2.2 + index*2.2,0,-4.4]}>
-      <MarbleBlock position={[0,.5,0]} size={[1.35,1,1.35]} />
+      <MarbleBlock position={[0,.56,0]} size={[1.35,.88,1.35]} />
       <Block position={[0,1.03,0]} size={[1.4,.05,1.4]} color="#a38a5e" metalness={.8} />
       <ServiceExhibit index={index} onOpen={() => onService(index)} />
       <mesh position={[0,.08,0]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[.95,.98,32]} /><meshBasicMaterial color="#b99a61" /></mesh>
@@ -199,22 +227,25 @@ export function Services({ onSelect, onService }: { onSelect: (area: Area) => vo
 
 function Chair({ position, rotation = 0 }: { position: [number,number,number]; rotation?: number }) {
   return <group position={position} rotation={[0,rotation,0]}>
-    <RoundedBox position={[0,.64,0]} args={[1.12,.28,1.08]} radius={.12} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#52232f" roughness={.9} /></RoundedBox>
-    <RoundedBox position={[0,1.08,-.43]} rotation={[-.12,0,0]} args={[1.22,1.02,.24]} radius={.11} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#792c40" roughness={.88} /></RoundedBox>
-    {[-.57,.57].map(x => <RoundedBox key={x} position={[x,.91,0]} args={[.17,.36,.88]} radius={.08} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#672333" roughness={.88} /></RoundedBox>)}
+    <RoundedBox position={[0,.64,0]} args={[1.12,.28,1.08]} radius={.12} smoothness={1} bevelSegments={2}><VelvetMaterial color="#581425" /></RoundedBox>
+    <RoundedBox position={[0,1.08,-.43]} rotation={[-.12,0,0]} args={[1.22,1.02,.24]} radius={.11} smoothness={1} bevelSegments={2}><VelvetMaterial color="#731a30" /></RoundedBox>
+    {[-.57,.57].map(x => <RoundedBox key={x} position={[x,.91,0]} args={[.17,.36,.88]} radius={.08} smoothness={1} bevelSegments={2}><VelvetMaterial color="#64172b" /></RoundedBox>)}
     <mesh position={[0,.3,0]}><cylinderGeometry args={[.075,.075,.58,12]} /><BrassMaterial /></mesh>
     <mesh position={[0,.035,0]}><cylinderGeometry args={[.49,.52,.06,24]} /><BrassMaterial /></mesh>
   </group>;
 }
 function Bench({ position }: { position: [number,number,number] }) {
   return <group position={position} rotation={[0,.3,0]}>
-    <RoundedBox position={[0,.58,0]} args={[2.2,.3,.85]} radius={.12} smoothness={1} bevelSegments={2}><meshStandardMaterial color="#652335" roughness={.9} /></RoundedBox>
+    <RoundedBox position={[0,.58,0]} args={[2.2,.3,.85]} radius={.12} smoothness={1} bevelSegments={2}><VelvetMaterial color="#651629" /></RoundedBox>
     {[-.85,.85].map(x => <mesh key={x} position={[x,.24,0]}><boxGeometry args={[.06,.48,.65]} /><BrassMaterial /></mesh>)}
   </group>;
 }
 export function Consultation({ onSelect }: { onSelect: (area: Area) => void }) {
   return <group>
-    <mesh position={[5.6,.08,4.3]} rotation={[-Math.PI/2,0,0]}><circleGeometry args={[3.4,48]} /><meshStandardMaterial color="#32272a" roughness={1} /></mesh>
+    <mesh position={[5.6,.08,4.3]} rotation={[-Math.PI/2,0,0]}><circleGeometry args={[3.4,48]} /><MarbleMaterial repeat={[2,2]} /></mesh>
+    <mesh position={[5.6,.085,4.3]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[3.35,3.41,48]} /><meshBasicMaterial color="#c9a45c" /></mesh>
+    {/* Deep ruby rug under the seating ring adds colour contrast against the dark floor and marble top. */}
+    <mesh position={[5.6,.087,4.3]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[1.95,3.2,48]} /><meshStandardMaterial color="#3d0f1b" roughness={.95} emissive="#2a0610" emissiveIntensity={.35} /></mesh>
     <mesh position={[5.6,1.13,4.3]}><cylinderGeometry args={[1.8,1.8,.14,48]} /><MarbleMaterial /></mesh>
     <mesh position={[5.6,.56,4.3]}><cylinderGeometry args={[.42,.7,1.02,24]} /><meshStandardMaterial {...brass} /></mesh>
     {[0,1,2,3].map((i) => { const angle = i * Math.PI/2; return <Chair key={i} position={[5.6+Math.sin(angle)*2.45,0,4.3+Math.cos(angle)*2.45]} rotation={angle+Math.PI} />; })}

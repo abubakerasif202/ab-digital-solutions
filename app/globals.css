@@ -3208,3 +3208,47 @@ h1 em {
   .brand-film-section { --cv-size: 974px; }
   .stack-section { --cv-size: 1711px; }
 }
+
+/* Below-fold homepage and interior chapters: defer offscreen layout/paint until
+   near the viewport while preserving anchor scroll offsets via auto intrinsic size.
+   Excludes above-fold hero, enquiry, and shared footer. */
+.ruby-services,
+.ruby-process,
+.home-studio,
+.gr-cs-features,
+.gr-cs-detail,
+.gr-cs-live,
+.gr-cs-next,
+.gr-svc-process,
+.studio-systems-proof,
+.gr-final-cta {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto var(--cv-size, 760px);
+}
+
+.ruby-services { --cv-size: 820px; }
+.ruby-process { --cv-size: 640px; }
+.home-studio { --cv-size: 680px; }
+.gr-cs-features { --cv-size: 720px; }
+.gr-cs-detail { --cv-size: 920px; }
+.gr-cs-live { --cv-size: 420px; }
+.gr-cs-next { --cv-size: 460px; }
+.gr-svc-process { --cv-size: 640px; }
+.studio-systems-proof { --cv-size: 540px; }
+.gr-final-cta { --cv-size: 460px; }
+
+@media (max-width: 960px) {
+  .ruby-services { --cv-size: 980px; }
+  .ruby-process { --cv-size: 820px; }
+  .home-studio { --cv-size: 940px; }
+  .gr-cs-detail { --cv-size: 760px; }
+}
+
+@media (max-width: 720px) {
+  .ruby-services { --cv-size: 1120px; }
+  .ruby-process { --cv-size: 960px; }
+  .home-studio { --cv-size: 1020px; }
+  .gr-cs-features { --cv-size: 940px; }
+  .gr-cs-detail { --cv-size: 680px; }
+  .gr-cs-next { --cv-size: 560px; }
+}

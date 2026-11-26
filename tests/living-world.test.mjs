@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { initialStudioState, studioReducer } from "../app/studio/studio-state.ts";
 import { AnimationScheduler, MAX_STEP } from "../app/studio/world/sim/scheduler.ts";
-import { canvasPixelRatio, pickTier, shouldDowngrade, tierConfig, DOWNGRADE_WINDOW } from "../app/studio/world/sim/quality.ts";
+import { canvasPixelRatio, pickTier, shouldDowngrade, stepDownTier, tierConfig, DOWNGRADE_WINDOW } from "../app/studio/world/sim/quality.ts";
 import { ARRIVAL_SECONDS, GREET_AT, SUMMON_KANGAROO_AT, arrivalPose } from "../app/studio/world/sim/arrival.ts";
 import { mulberry32 } from "../app/studio/world/sim/rng.ts";
 
@@ -82,6 +82,27 @@ test("quality tier follows measured capability, not width, and degrades one way"
 test("seeded random is reproducible", () => {
   const a = mulberry32(7), b = mulberry32(7);
   assert.deepEqual([a(), a(), a()], [b(), b(), b()]);
+});
+
+test("browser preferences and measured renderer limits cap otherwise fast devices", () => {
+  const fast = { cores: 16, memoryGb: 16, maxTexture: 16384 };
+  assert.equal(pickTier(fast), "high");
+  assert.equal(pickTier({ ...fast, reducedMotion: true }), "low");
+  assert.equal(pickTier({ ...fast, effectiveType: "slow-2g" }), "low");
+  assert.equal(pickTier({ ...fast, effectiveType: "2g" }), "low");
+  assert.equal(pickTier({ ...fast, effectiveType: "3g" }), "medium");
+  assert.equal(pickTier({ ...fast, coarsePointer: true }), "medium");
+  assert.equal(pickTier({ ...fast, maxTexture: 4096 }), "medium");
+  assert.equal(pickTier({ ...fast, softwareRenderer: true }), "low");
+});
+
+test("late renderer measurements and runtime feedback can only lower the tier", () => {
+  const fast = { cores: 16, memoryGb: 16, maxTexture: 16384 };
+  assert.equal(pickTier({ ...fast, maxTexture: 4096 }, "high"), "medium");
+  assert.equal(pickTier(fast, "medium"), "medium");
+  assert.equal(pickTier(fast, "low"), "low");
+  assert.equal(pickTier({ ...fast, softwareRenderer: true }, "medium"), "low");
+  assert.deepEqual(["high", "medium", "low"].map(stepDownTier), ["medium", "low", "low"]);
 });
 
 test("renderer caps software fill rate and respects quality on high-DPR phones", () => {

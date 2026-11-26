@@ -1,6 +1,9 @@
 import { defineConfig } from "@playwright/test";
 import { existsSync } from "node:fs";
 
+const browserName = process.env.QA_BROWSER || "chromium";
+if (!["chromium", "firefox", "webkit"].includes(browserName)) throw new Error(`Unsupported QA_BROWSER: ${browserName}`);
+
 export default defineConfig({
   testDir: "./tests/e2e",
   testMatch: "**/*.spec.mjs",
@@ -12,13 +15,13 @@ export default defineConfig({
   outputDir: process.env.QA_TEST_RESULTS || "test-results/virtual-studio",
   use: {
     baseURL: process.env.QA_BASE_URL || "http://127.0.0.1:3100",
-    browserName: "chromium",
+    browserName,
     actionTimeout: 10000,
     navigationTimeout: 30000,
-    launchOptions: {
+    launchOptions: browserName === "chromium" ? {
       executablePath: process.env.CHROMIUM_PATH || (existsSync("/usr/bin/chromium") ? "/usr/bin/chromium" : undefined),
-      args: ["--no-sandbox", "--enable-unsafe-swiftshader"],
-    },
+      chromiumSandbox: true,
+    } : {},
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },

@@ -23,7 +23,7 @@ export function ProcessSection() {
           {steps.map(([name, description], index) => {
             const deliverable = deliverables[index];
             return (
-              <li key={name} className="ruby-process-step">
+              <Reveal as="li" key={name} className="ruby-process-step" variant="fade-up" delay={index * 60}>
                 <div className="ruby-process-marker">
                   <span className="ruby-process-number cinema-label">{String(index + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</span>
                   <h3>{name}</h3>
@@ -34,7 +34,7 @@ export function ProcessSection() {
                     <p className="ruby-process-deliverable"><span className="cinema-label">You receive</span>{deliverable}</p>
                   )}
                 </div>
-              </li>
+              </Reveal>
             );
           })}
         </ol>

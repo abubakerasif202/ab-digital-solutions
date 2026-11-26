@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { isLowBattery, isSlowConnection, probeWebGLCapability } from "../lib/device-quality";
 import { HeroFallback } from "./HeroFallback";
 
 const Hero3DCanvas = dynamic(
@@ -13,6 +14,16 @@ const Hero3DCanvas = dynamic(
 );
 
 type Hero3DMode = "fallback" | "mobile" | "tablet" | "desktop";
+
+interface ConnectionLike extends EventTarget {
+  saveData?: boolean;
+  effectiveType?: string;
+}
+
+interface BatteryLike extends EventTarget {
+  level?: number;
+  charging?: boolean;
+}
 
 /**
  * `fallback` replaces the static artwork shown on phones, with reduced motion,
@@ -32,10 +43,13 @@ export function Hero3DExperience({ fallback }: { fallback?: ReactNode } = {}) {
     const mobileQuery = window.matchMedia("(max-width: 720px)");
     const coarseQuery = window.matchMedia("(pointer: coarse)");
     const tabletQuery = window.matchMedia("(max-width: 1024px)");
-    const connection = (navigator as Navigator & {
-      connection?: EventTarget & { saveData?: boolean };
-    }).connection;
-    const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+    const nav = navigator as Navigator & {
+      connection?: ConnectionLike;
+      deviceMemory?: number;
+      getBattery?: () => Promise<BatteryLike>;
+    };
+    const connection = nav.connection;
+    const deviceMemory = nav.deviceMemory;
     const idleWindow = window as typeof window & {
       requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
       cancelIdleCallback?: (id: number) => void;
@@ -44,9 +58,14 @@ export function Hero3DExperience({ fallback }: { fallback?: ReactNode } = {}) {
     let hasIntent = false;
     let stageVisible = false;
     let activated = false;
+    let disposed = false;
+    let batteryRef: BatteryLike | null = null;
+    let lowBattery = false;
+    let webglChecked = false;
+    let webglUsable = true;
 
     const updateMode = () => {
-      if (!ready || !hasIntent || (!activated && (!stageVisible || document.hidden)) || motionQuery.matches || mobileQuery.matches || coarseQuery.matches || connection?.saveData) {
+      if (!ready || !hasIntent || (!activated && (!stageVisible || document.hidden)) || motionQuery.matches || mobileQuery.matches || coarseQuery.matches || connection?.saveData || isSlowConnection(connection?.effectiveType) || lowBattery) {
         setMode("fallback");
         return;
       }
@@ -56,6 +75,17 @@ export function Hero3DExperience({ fallback }: { fallback?: ReactNode } = {}) {
 
       if (constrainedDevice) {
         setMode("fallback");
+        return;
+      }
+
+      if (!webglChecked) {
+        webglChecked = true;
+        const cap = probeWebGLCapability();
+        webglUsable = cap.supported && !cap.softwareRenderer;
+      }
+
+      if (!webglUsable) {
+        setMode("fallback");
       } else if (tabletQuery.matches) {
         activated = true;
         setMode("tablet");
@@ -64,6 +94,25 @@ export function Hero3DExperience({ fallback }: { fallback?: ReactNode } = {}) {
         setMode("desktop");
       }
     };
+
+    const onBatteryChange = () => {
+      if (!batteryRef) return;
+      lowBattery = isLowBattery(batteryRef.level, batteryRef.charging);
+      updateMode();
+    };
+
+    if (typeof nav.getBattery === "function") {
+      void nav.getBattery().then((battery) => {
+        if (disposed) return;
+        batteryRef = battery;
+        lowBattery = isLowBattery(battery.level, battery.charging);
+        battery.addEventListener("levelchange", onBatteryChange);
+        battery.addEventListener("chargingchange", onBatteryChange);
+        updateMode();
+      }).catch(() => {
+        /* Battery API is optional and may be blocked by browser policy. */
+      });
+    }
 
     // Keep the first paint entirely static. Entering the installation expresses
     // intent to explore it; the expensive GPU setup then runs after input yields.
@@ -105,6 +154,7 @@ export function Hero3DExperience({ fallback }: { fallback?: ReactNode } = {}) {
     }
 
     return () => {
+      disposed = true;
       cancelDelay();
       stageObserver.disconnect();
       window.removeEventListener("pointermove", handlePointerIntent);
@@ -114,11 +164,21 @@ export function Hero3DExperience({ fallback }: { fallback?: ReactNode } = {}) {
       tabletQuery.removeEventListener("change", updateMode);
       coarseQuery.removeEventListener("change", updateMode);
       connection?.removeEventListener?.("change", updateMode);
+      batteryRef?.removeEventListener("levelchange", onBatteryChange);
+      batteryRef?.removeEventListener("chargingchange", onBatteryChange);
     };
   }, []);
 
+  const qualityTier = mode === "fallback" ? "fallback" : mode === "tablet" ? "medium" : "high";
+
   return (
-    <div ref={stageRef} className="hero-3d-bg-wrap" aria-hidden="true">
+    <div
+      ref={stageRef}
+      className="hero-3d-bg-wrap"
+      data-hero-mode={mode}
+      data-quality-tier={qualityTier}
+      aria-hidden="true"
+    >
       {mode === "fallback" ? (fallback ?? <HeroFallback />) : <Hero3DCanvas quality={mode} fallback={fallback} />}
     </div>
   );

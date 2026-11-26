@@ -50,7 +50,7 @@ function profile(points: Array<[number, number]>, depth: number, rgb: [number, n
   }
   shape.closePath();
   const bevel = 0.03;
-  const g = new THREE.ExtrudeGeometry(shape, { depth: depth - bevel * 2, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 2, curveSegments: 4 });
+  const g = new THREE.ExtrudeGeometry(shape, { depth: depth - bevel * 2, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 1, curveSegments: 3 });
   g.translate(0, 0, -(depth - bevel * 2) / 2);
   return paint(g, rgb);
 }

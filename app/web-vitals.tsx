@@ -20,6 +20,15 @@ type AnalyticsPayload = {
   navigation_type?: string;
 };
 
+// Matches app/api/analytics/route.ts `allowedMetrics` so Next.js internal
+// metrics (e.g. Next.js-hydration) do not trigger 400 responses.
+const ALLOWED_WEB_VITALS = new Set(["CLS", "FCP", "FID", "INP", "LCP", "TTFB"]);
+
+function formatMetricValue(name: string, value: number): number {
+  if (!Number.isFinite(value)) return 0;
+  return name === "CLS" ? Math.round(value * 10000) / 10000 : Math.round(value * 100) / 100;
+}
+
 function sendAnalytics(payload: AnalyticsPayload) {
   if (typeof window === "undefined") return;
   if (navigator.doNotTrack === "1" || (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl) return;
@@ -100,7 +109,7 @@ export function WebVitals() {
     function trackEnquiry() {
       sendAnalytics({ event_name: "project_enquiry", path: window.location.pathname, label: "contact_form" });
     }
-    document.addEventListener("click", trackClick, { capture: true });
+    document.addEventListener("click", trackClick, { capture: true, passive: true });
     window.addEventListener("ab:enquiry-success", trackEnquiry);
     return () => {
       document.removeEventListener("click", trackClick, { capture: true });
@@ -117,11 +126,13 @@ export function WebVitals() {
       }
     }
 
+    if (!ALLOWED_WEB_VITALS.has(metric.name)) return;
+
     sendAnalytics({
       event_name: "web_vital",
       path: window.location.pathname,
       metric_name: metric.name,
-      metric_value: metric.value,
+      metric_value: formatMetricValue(metric.name, metric.value),
       metric_rating: metric.rating || "",
       navigation_type: metric.navigationType || "",
     });

@@ -26,3 +26,8 @@ export function panelFrameOffset(width: number, panelOpen: boolean, stacked: boo
 export function cameraFieldOfView(compact: boolean, portrait: boolean, wideInterior = false) {
   return compact ? (portrait ? 80 : 52) : wideInterior ? 54 : 42;
 }
+
+/** Frame-rate-independent exponential damping factor for smooth camera and object transitions. */
+export function dampFactor(speed: number, deltaSeconds: number) {
+  return 1 - Math.exp(-Math.max(0, speed) * Math.min(Math.max(0, deltaSeconds), 0.1));
+}

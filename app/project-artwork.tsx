@@ -7,6 +7,8 @@ type Props = {
   project: Project;
   sizes: string;
   priority?: boolean;
+  eager?: boolean;
+  quality?: 75 | 85 | 90;
   decorative?: boolean;
   onLoad?: () => void;
   onError?: () => void;
@@ -27,7 +29,16 @@ export function projectArtworkRatio(project: Project): string {
  */
 export const fillFrame: CSSProperties = { position: "absolute", inset: 0, width: "100%", height: "100%" };
 
-export function ProjectArtwork({ project, sizes, priority = false, decorative = false, onLoad, onError }: Props) {
+export function ProjectArtwork({
+  project,
+  sizes,
+  priority = false,
+  eager = false,
+  quality = 85,
+  decorative = false,
+  onLoad,
+  onError,
+}: Props) {
   const { width, height } = artworkDimensions(projectArtworkRatio(project));
   return (
     <Image
@@ -37,7 +48,9 @@ export function ProjectArtwork({ project, sizes, priority = false, decorative = 
       height={height}
       style={fillFrame}
       preload={priority}
-      loading={priority ? undefined : "lazy"}
+      loading={priority ? undefined : eager ? "eager" : "lazy"}
+      decoding="async"
+      quality={quality}
       sizes={sizes}
       onLoad={onLoad}
       onError={onError}

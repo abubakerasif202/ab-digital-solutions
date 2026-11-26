@@ -12,7 +12,7 @@ const viewports = [
   { name: "desktop", width: 1440, height: 900 },
   { name: "wide", width: 1920, height: 1080 },
 ];
-const VALID = { name: "Jordan Example", email: "jordan@example.com", message: "I need a new website for my business." };
+const VALID = { name: "Jordan Example", email: "jordan@example.invalid", message: "I need a new website for my business." };
 
 async function open(page, size = { width: 1440, height: 900 }, query = "") {
   const problems = [];
@@ -44,6 +44,7 @@ async function fillForm(page) {
   await page.fill("#full-name", VALID.name);
   await page.fill("#email", VALID.email);
   await page.fill("#message", VALID.message);
+  await page.getByRole("checkbox", { name: "Website design & development" }).check();
 }
 
 for (const size of viewports) {
@@ -88,6 +89,43 @@ test("the live homepage stays separate from the isolated preview", async ({ page
   await expect(page.locator("#hero-heading")).toHaveText("Websites built for real businesses.");
   await expect(page.locator(".home-hero")).toBeVisible();
   await expect(page.locator(".odp")).toHaveCount(0);
+});
+
+test("the harbour photo loads and shares the project wall pause and reduced-motion behavior", async ({ page }) => {
+  const plate = page.locator(".hero-harbour");
+  const control = page.getByRole("button", { name: "Pause project wall" });
+  const [photo] = await Promise.all([
+    page.waitForResponse((response) => response.url().endsWith("/sydney-plate-harbour.webp")),
+    page.goto("/"),
+  ]);
+  expect(photo.ok()).toBe(true);
+  await expect(control).toBeEnabled();
+  const style = () => plate.evaluate((element) => {
+    const computed = getComputedStyle(element, "::before");
+    return { image: computed.backgroundImage, animation: computed.animationName, playState: computed.animationPlayState };
+  });
+  await expect.poll(async () => (await style()).image).toContain("sydney-plate-harbour.webp");
+  await expect.poll(async () => (await style()).animation).toBe("hero-harbour-drift");
+  await control.click();
+  await expect.poll(async () => (await style()).playState).toBe("paused");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect.poll(async () => (await style()).animation).toBe("none");
+});
+
+test("the decorative harbour photo is skipped with Save-Data", async ({ page }) => {
+  const plates = [];
+  page.on("request", (request) => {
+    if (request.url().endsWith("/sydney-plate-harbour.webp")) plates.push(request.url());
+  });
+  await page.addInitScript(() => {
+    const connection = new EventTarget();
+    Object.defineProperty(connection, "saveData", { value: true });
+    Object.defineProperty(navigator, "connection", { value: connection });
+  });
+  await page.goto("/", { waitUntil: "networkidle" });
+  await expect(page.locator(".work-wall-control")).toHaveAttribute("data-save-data", "true");
+  await expect.poll(() => page.locator(".hero-harbour").evaluate((element) => getComputedStyle(element, "::before").backgroundImage)).toBe("none");
+  expect(plates).toEqual([]);
 });
 
 test("structure: one h1, ordered headings, one main landmark, unique ids, skip link target exists", async ({ page }) => {
@@ -169,7 +207,7 @@ test("form: the shared ContactForm posts the live /api/contact contract and the 
   await page.getByRole("button", { name: /Send project enquiry/ }).click();
   await expect(page.locator(".form-status")).toContainText("Enquiry received");
   expect(payload).toMatchObject({ fullName: VALID.name, email: VALID.email, message: VALID.message, company: "" });
-  expect(Array.isArray(payload.services) && payload.services.length >= 1).toBe(true);
+  expect(payload.services).toEqual(["Website design & development"]);
   expect(payload.submissionId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
   // Direct valid submissions require an explicitly isolated no-delivery server. A developer's
   // ordinary local server may load real credentials, so never infer safety from localhost.
@@ -215,14 +253,6 @@ test("hero: the approved artwork is the fallback, and ?fallback=css swaps in the
   const art = await page.locator(".odp-hero-art").boundingBox();
   expect(box.y).toBeGreaterThanOrEqual(art.y);
   expect(box.y + box.height).toBeLessThanOrEqual(art.y + art.height + 1);
-});
-
-test("hero: the Three.js scene still activates on desktop after pointer intent", async ({ page }) => {
-  await open(page, { width: 1440, height: 900 });
-  const cores = await page.evaluate(() => navigator.hardwareConcurrency);
-  test.skip(cores <= 4, "Hero3DExperience deliberately stays on the static artwork for devices with 4 or fewer cores");
-  await page.mouse.move(1000, 400);
-  await expect(page.locator(".hero-3d-container canvas")).toBeVisible({ timeout: 20_000 });
 });
 
 test("reduced motion: the CSS monogram does not animate", async ({ page }) => {

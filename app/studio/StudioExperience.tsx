@@ -50,6 +50,7 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const mapButton = useRef<HTMLButtonElement>(null);
   const firstMapRoom = useRef<HTMLButtonElement>(null);
   const [touch, setTouch] = useState(false);
+  const experience = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const roomNav = useRef<HTMLElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -173,24 +174,38 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     const nav = roomNav.current;
     const scene = stage.current;
     if (!nav || !scene) return;
+    // Keep native anchoring from applying the room-tab scroll correction twice.
+    const root = document.documentElement;
+    const priorAnchoring = root.style.overflowAnchor;
+    root.style.overflowAnchor = "none";
     const measure = () => { navDocumentTop.current = nav.getBoundingClientRect().top + scrollY; };
     const resize = new ResizeObserver(measure);
     resize.observe(scene);
     resize.observe(nav);
     measure();
     addEventListener("resize", measure);
-    return () => { resize.disconnect(); removeEventListener("resize", measure); };
+    return () => {
+      resize.disconnect();
+      removeEventListener("resize", measure);
+      root.style.overflowAnchor = priorAnchoring;
+    };
   }, []);
   useLayoutEffect(() => {
     const nav = roomNav.current;
     const prior = navDocumentTop.current;
     if (!nav || prior === null) return;
-    const next = nav.getBoundingClientRect().top + scrollY;
+    const bounds = nav.getBoundingClientRect();
+    const next = bounds.top + scrollY;
     navDocumentTop.current = next;
-    if (Math.abs(next - prior) > 1) {
-      scrollBy({ top: next - prior, behavior: "instant" });
+    const priorTop = prior - scrollY;
+    const targetTop = priorTop >= 0 && priorTop < innerHeight
+      ? Math.min(priorTop, Math.max(0, innerHeight - bounds.height))
+      : priorTop;
+    const adjustment = bounds.top - targetTop;
+    if (Math.abs(adjustment) > 1) {
+      scrollBy({ top: adjustment, behavior: "instant" });
     }
-  }, [state.panel]);
+  }, [state.area, state.panel]);
 
   // Creating the AudioContext is synchronous main-thread work (about 80 ms on a mid-range phone), and browsers keep
   // audio locked until a gesture anyway. The saved sound choice loads when idle; the engine starts on the first
@@ -230,9 +245,16 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     update();
     motion.addEventListener("change", update);
     coarse.addEventListener("change", update);
-    connection?.addEventListener("change", update);
-    return () => { motion.removeEventListener("change", update); coarse.removeEventListener("change", update); connection?.removeEventListener("change", update); };
+    connection?.addEventListener?.("change", update);
+    return () => { motion.removeEventListener("change", update); coarse.removeEventListener("change", update); connection?.removeEventListener?.("change", update); };
   }, []);
+
+  useEffect(() => {
+    if (policy || state.mode !== "static") return;
+    // Warm the StudioScene JS chunk during idle on /studio so entering 3D starts
+    // asset fetches immediately; StudioScene keeps model/env/texture requests gated on mount.
+    return whenIdle(() => { void import("./scene/StudioScene"); });
+  }, [policy, state.mode]);
 
   useEffect(() => {
     let intersects = false;
@@ -282,7 +304,9 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const isMapOpen = useEffectEvent(() => mapOpen);
   useEffect(() => {
     if (state.panel) {
-      showStage();
+      const bar = roomNav.current?.getBoundingClientRect();
+      // The layout effect already positions visible tabs when the stacked panel changes stage height.
+      if (!bar || bar.top < -1 || bar.bottom > innerHeight + 1) showStage();
       if (tabbing.current) {
         tabbing.current = false;
         areaButtons.current[state.area]?.focus({ preventScroll: true });
@@ -334,7 +358,30 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     : active ? "No scroll lock. Escape closes room details or pauses the tour. Sound can be switched off above."
     : "Still view: choose a room to see its details. Switch to 3D view whenever you like.";
 
-  return <section className={styles.experience} aria-label="Interactive virtual studio" data-conversion-area data-panel={state.panel} data-view={active ? "3d" : "still"} data-map={mapOpen}>
+  useLayoutEffect(() => {
+    const exp = experience.current;
+    const scene = stage.current;
+    if (!exp || !scene) return;
+    if (!state.panel) { exp.style.removeProperty("--panel-top"); return; }
+    const updatePanelTop = () => {
+      const desktopOverlay = window.innerWidth >= 900 && !(window.innerHeight <= 500 && window.innerWidth > window.innerHeight);
+      if (!desktopOverlay) { exp.style.removeProperty("--panel-top"); return; }
+      const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 80;
+      const rect = scene.getBoundingClientRect();
+      const maxTop = Math.max(82, rect.height - 260);
+      const panelTop = Math.min(maxTop, Math.max(82, Math.round(header + 12 - rect.top)));
+      exp.style.setProperty("--panel-top", `${panelTop}px`);
+    };
+    updatePanelTop();
+    window.addEventListener("scroll", updatePanelTop, { passive: true });
+    window.addEventListener("resize", updatePanelTop, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", updatePanelTop);
+      window.removeEventListener("resize", updatePanelTop);
+    };
+  }, [state.panel, state.area]);
+
+  return <section ref={experience} className={styles.experience} aria-label="Interactive virtual studio" data-conversion-area data-panel={state.panel} data-view={active ? "3d" : "still"} data-map={mapOpen}>
     <noscript><p className={styles.accessNote}>JavaScript is off. <a href="#studio-content">Explore the projects, services and contact links below.</a></p></noscript>
     <div className={styles.stage} ref={stage} data-mode={state.mode}>
       <Image src="/studio/studio-poster.png" alt="An original cutaway studio with brass architecture, a reception monogram, project gallery and ruby meeting lounge" width={1440} height={900} sizes="(max-width: 768px) 100vw, 1440px" className={styles.poster} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} preload />

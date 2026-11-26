@@ -84,8 +84,12 @@ export function Hero3DCanvas({ className = "", quality = "desktop", fallback }: 
       fragmentShader: `uniform sampler2D artwork; uniform float progress; varying vec2 artworkUv;
         void main() {
           vec4 pixel = texture2D(artwork, artworkUv);
-          float band = pow(max(0.0, 1.0 - abs(artworkUv.x + artworkUv.y * 0.18 - progress) / 0.12), 2.0);
-          gl_FragColor = vec4(pixel.rgb * vec3(1.0, 0.88, 0.62), pixel.a * band * 0.24);
+          float dist = abs(artworkUv.x + artworkUv.y * 0.18 - progress);
+          float goldBand = pow(max(0.0, 1.0 - dist / 0.12), 2.0);
+          float rubyEdge = pow(max(0.0, 1.0 - abs(dist - 0.07) / 0.07), 2.0);
+          vec3 tint = pixel.rgb * vec3(1.0, 0.86, 0.56) * goldBand * 0.26
+                    + pixel.rgb * vec3(0.92, 0.12, 0.28) * rubyEdge * 0.16;
+          gl_FragColor = vec4(tint, pixel.a * (goldBand * 0.24 + rubyEdge * 0.12));
         }`,
       transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
     });
@@ -136,7 +140,7 @@ export function Hero3DCanvas({ className = "", quality = "desktop", fallback }: 
         particles = buildParticles(logoParticles, isTablet ? 450 : 900);
         positions = new Float32Array(particles.length * 3);
         const colours = new Float32Array(particles.length * 3);
-        const palette = ["#a87a2c", "#d1a64c", "#efc96a", "#fff1cf", "#d21736"];
+        const palette = ["#9e7f43", "#c9a45c", "#e2c58a", "#fff1cf", "#c8173a"];
         particles.forEach((particle, index) => {
           new THREE.Color(palette[particle.col]).toArray(colours, index * 3);
         });
@@ -206,12 +210,15 @@ export function Hero3DCanvas({ className = "", quality = "desktop", fallback }: 
         nextRenderTime += frameInterval;
       } while (nextRenderTime <= timestamp);
 
-      // Smooth mouse lerping
-      mouseX += (targetMouseX - mouseX) * 0.05;
-      mouseY += (targetMouseY - mouseY) * 0.05;
+      const dtSeconds = Math.min(0.05, Math.max(0.001, (lastFrameTime ? timestamp - lastFrameTime : 16) / 1000));
+      const damp = 1 - Math.exp(-3.4 * dtSeconds);
+
+      // Smooth frame-rate-independent mouse lerping
+      mouseX += (targetMouseX - mouseX) * damp;
+      mouseY += (targetMouseY - mouseY) * damp;
 
       // Smooth scroll lerping
-      scrollY += (targetScrollY - scrollY) * 0.05;
+      scrollY += (targetScrollY - scrollY) * damp;
       const scrollFactor = Math.min(scrollY / 1000, 2);
 
       if (introProgress < 1) {

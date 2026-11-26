@@ -325,7 +325,7 @@
 
 .contact-form.enquiry-form :is(input:not([type="checkbox"], [type="radio"]), textarea):focus {
   border-color: var(--ruby-text-dark);
-  background: #18181d;
+  background: var(--surface-2, #161513);
   box-shadow: 0 0 0 4px var(--ruby-glow);
   outline: 0;
 }

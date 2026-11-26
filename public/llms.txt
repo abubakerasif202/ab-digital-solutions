@@ -29,29 +29,25 @@
 
 ## Selected Portfolio (websites, hosted showcases and software)
 
-- [Jufaja Construction / Jufaja Homes](https://www.jufajaconstructions.com.au/): Construction / property — premium digital platform with home design navigation and dedicated enquiry pathways.
-- [Aftab & Sons Transport](https://www.aftabandsons.com.au/): Transport & logistics — industrial identity, responsive interface and conversion-focused presentation for heavy-vehicle transport.
-- [247 Inventory System](https://247trucktyreservices.store/): Custom business software — role-protected inventory, purchasing, sales and finance platform for 24/7 Truck Tyre Services.
-- [Adelaide Wholesale Tyres](https://adelaidewholesaletyres.com.au/): E-commerce / wholesale — searchable wholesale tyre catalogue with enquiry workflows.
-- [24/7 Truck Tyre Services](https://www.247trucktyreservices.com.au/): Automotive / roadside assistance — emergency-led service enquiries for truck tyre support.
-- [Maple Rentals](https://www.maplerentals.com.au/): Mobility / car rentals — premium driver rentals and streamlined online applications.
-- [Gala Rentals](https://www.galarentals.com.au/): Mobility / car rentals — weekly car rental booking experience in Sydney.
-- [ZQ Removals](https://zqremovalsadelaide.com.au/): Services / removals — local-service positioning with a direct path to quote requests.
-- [MRK Removals Adelaide](https://mrkremovalsadelaide.com.au/): Services / removals — house, apartment and office moves with clear quote and call actions.
-- [DECENT Development](https://www.decentdevelopment.com.au/): Property / development — digital presence for a Sydney construction business.
-- [Milestone Development](https://milestonedevelopment.com.au/): Property / construction — project-led residential and commercial showcase.
-- [Milestone Renovate](https://milestonerenovate.com/): Renovation planning platform — indicative cost planner, design studio moodboard, questionnaire and NSW approvals guide.
-- [4 Point Concrete](https://4point-concrete-website.vercel.app/): Construction / civil — capability-focused concrete and structural works site.
-- [1st Class Express](https://www.1stclassexpress.com.au/): Transport & logistics — interstate freight positioning, fleet showcase and quote enquiries.
-- [HF Removals Adelaide](https://www.hfremovalsadelaide.com.au/): Services / removals — published reference rates with an instant quote request flow.
-- [Cheap Adelaide Removalist](https://www.cheapadelaideremovalist.com.au/): Services / removals — service-area information, published pricing and quote enquiries.
-
+- [Jufaja Construction / Jufaja Homes](https://www.jufajaconstructions.com.au/): Construction / property — premium digital platform with home design navigation and dedicated enquiry pathways. Case study: https://www.abwebstudio.com.au/work/jufaja-homes.
+- [Aftab & Sons Transport](https://www.aftabandsons.com.au/): Transport & logistics — industrial identity, responsive interface and conversion-focused presentation for heavy-vehicle transport. Case study: https://www.abwebstudio.com.au/work/aftab-sons-transport.
+- [247 Inventory System](https://247trucktyreservices.store/): Custom business software — role-protected inventory, purchasing, sales and finance platform for 24/7 Truck Tyre Services. Case study: https://www.abwebstudio.com.au/work/247-inventory-system.
+- [Adelaide Wholesale Tyres](https://adelaidewholesaletyres.com.au/): E-commerce / wholesale — searchable wholesale tyre catalogue with enquiry workflows. Case study: https://www.abwebstudio.com.au/work/adelaide-wholesale-tyres.
+- [24/7 Truck Tyre Services](https://www.247trucktyreservices.com.au/): Automotive / roadside assistance — emergency-led service enquiries for truck tyre support. Case study: https://www.abwebstudio.com.au/work/247-truck-tyre-services.
+- [Maple Rentals](https://www.maplerentals.com.au/): Mobility / car rentals — premium driver rentals and streamlined online applications. Case study: https://www.abwebstudio.com.au/work/maple-rentals.
+- [Gala Rentals](https://www.galarentals.com.au/): Mobility / car rentals — weekly car rental booking experience in Sydney. Case study: https://www.abwebstudio.com.au/work/gala-rentals.
+- [ZQ Removals](https://zqremovalsadelaide.com.au/): Services / removals — local-service positioning with a direct path to quote requests. Case study: https://www.abwebstudio.com.au/work/zq-removals.
+- [MRK Removals Adelaide](https://mrkremovalsadelaide.com.au/): Services / removals — house, apartment and office moves with clear quote and call actions. Case study: https://www.abwebstudio.com.au/work/mrk-removals-adelaide.
+- [DECENT Development](https://www.decentdevelopment.com.au/): Property / development — digital presence for a Sydney construction business. Case study: https://www.abwebstudio.com.au/work/decent-development.
+- [Milestone Development](https://milestonedevelopment.com.au/): Property / construction — project-led residential and commercial showcase. Case study: https://www.abwebstudio.com.au/work/milestone-development.
+- [Milestone Renovate](https://milestonerenovate.com/): Renovation planning platform — indicative cost planner, design studio moodboard, questionnaire and NSW approvals guide. Case study: https://www.abwebstudio.com.au/work/milestone-renovate.
+- [4 Point Concrete](https://4point-concrete-website.vercel.app/): Construction / civil — capability-focused concrete and structural works site. Case study: https://www.abwebstudio.com.au/work/4-point-concrete.
+- [1st Class Express](https://www.1stclassexpress.com.au/): Transport & logistics — interstate freight positioning, fleet showcase and quote enquiries. Case study: https://www.abwebstudio.com.au/work/1st-class-express.
+- [HF Removals Adelaide](https://www.hfremovalsadelaide.com.au/): Services / removals — published reference rates with an instant quote request flow. Case study: https://www.abwebstudio.com.au/work/hf-removals-adelaide.
+- [Cheap Adelaide Removalist](https://www.cheapadelaideremovalist.com.au/): Services / removals — service-area information, published pricing and quote enquiries. Case study: https://www.abwebstudio.com.au/work/cheap-adelaide-removalist.
 - [Fresh Stop](https://www.freshstop.com.au/): Published Sydney grocery and fresh produce catalogue by AB Web Studio — fruit, vegetables, pantry and frozen foods, indicative prices, cart-based enquiries, wholesale pathways and email/WhatsApp home delivery enquiries. Case study: https://www.abwebstudio.com.au/work/fresh-stop.
-
 - [Wild Pest Solutions](https://wildpestsolutions.com.au/): NSW feral animal management website with species-led navigation and property enquiries. Case study: https://www.abwebstudio.com.au/work/wild-pest-solutions.
-
 - [Pept Up Labs](https://peptuplabs.com.au/): Responsive laboratory research product catalogue with variant browsing and support pathways. Case study: https://www.abwebstudio.com.au/work/pept-up-labs.
-
 - [On Call Trailers](https://oncalltrailers.com.au/): Sydney trailer hire website with fleet comparison, towing guidance and direct booking pathways. Case study: https://www.abwebstudio.com.au/work/on-call-trailers.
 
 ## Contact & Authority Information

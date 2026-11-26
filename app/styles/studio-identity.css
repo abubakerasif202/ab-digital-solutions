@@ -36,23 +36,29 @@
 :root :is(h1, h2) em { letter-spacing: -0.01em !important; }
 
 /* Closing call to action: a solid ruby band with white type. */
-.studio-footer-closing { background: var(--ruby); border-bottom-color: var(--ruby-deep); }
+.studio-footer-closing { background: var(--ruby); border-bottom-color: var(--ruby-deep); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--gold) 36%, transparent); }
 .studio-footer-closing .cinema-label,
 .studio-footer-closing h2,
 .studio-footer-closing h2 em { color: var(--ruby-on) !important; }
 .studio-footer-closing .ruby-project-cta:focus-visible { outline: 2px solid var(--ruby-on); outline-offset: 3px; }
 
 /* About plate: three overlapping captures of real client sites instead of stock artwork. */
-.studio-plate--work { position: relative; overflow: hidden; background: #0f0c0a; }
+.studio-plate--work {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 68% 60% at 75% 22%, rgba(201, 164, 92, 0.08), transparent 68%),
+    var(--obsidian-void, #070708);
+}
 .studio-plate--work .studio-plate-shot {
   position: absolute;
   width: 84%;
   aspect-ratio: 1348 / 926;
   overflow: hidden;
-  border: 1px solid #f7f1eb2e;
+  border: 1px solid color-mix(in srgb, var(--gold) 28%, rgba(244, 241, 234, 0.14));
   border-radius: 6px;
-  background: #1a1512;
-  box-shadow: 0 24px 60px #00000099;
+  background: var(--obsidian-elevated, #100f0e);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.68);
 }
 .studio-plate--work .studio-plate-shot img { object-fit: cover; object-position: top center; }
 .studio-plate--work [data-shot="0"] { top: 5%; left: 4%; transform: rotate(-2deg); }

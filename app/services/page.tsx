@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageTransition } from "../components/motion/PageTransition";
+import { Reveal } from "../components/motion/Reveal";
 import { ProjectArtwork } from "../project-artwork";
 import { findProject, projects } from "../project-data";
 import { ServiceIndex, type ServiceIndexItem } from "../components/ServiceIndex";
@@ -149,19 +150,19 @@ export default function ServicesPage() {
               </div>
             </div>
             <ol className="gr-steps">
-              {processSteps.map(([number, title, description]) => (
-                <li key={number} data-reveal>
+              {processSteps.map(([number, title, description], index) => (
+                <Reveal as="li" key={number} variant="fade-up" delay={index * 60}>
                   <span className="gr-steps-num" aria-hidden="true">{number}</span>
                   <h3>{title}</h3>
                   <p>{description}</p>
-                </li>
+                </Reveal>
               ))}
             </ol>
           </div>
         </section>
 
         <aside className="gr-final-cta" aria-labelledby="services-cta-heading">
-          <div className="container gr-final-cta-inner" data-reveal>
+          <Reveal className="container gr-final-cta-inner">
             <p className="eyebrow">Ready when you are</p>
             <h2 id="services-cta-heading">Not sure which service fits? <span className="accent-serif">Start with a conversation.</span></h2>
             <p className="content-lead">Tell us what you are working toward. We will respond with a practical recommendation and a clear next step.</p>
@@ -169,7 +170,7 @@ export default function ServicesPage() {
               <Link className="button button-primary" href="/contact" data-magnetic>Start a Project <ArrowIcon /></Link>
               <a className="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}>Call {siteConfig.phoneDisplay}</a>
             </div>
-          </div>
+          </Reveal>
         </aside>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       </main>

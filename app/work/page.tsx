@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageTransition } from "../components/motion/PageTransition";
+import { Reveal } from "../components/motion/Reveal";
 import { WorkIndexBody } from "../components/WorkIndexBody";
 import { SiteHeader } from "../site-chrome";
 import { SiteFooter } from "../site-footer";
@@ -75,7 +76,7 @@ export default function WorkPage() {
         <WorkIndexBody />
 
         <aside className="gr-final-cta gr-final-cta--work" aria-labelledby="work-cta-heading">
-          <div className="container gr-final-cta-inner" data-reveal>
+          <Reveal className="container gr-final-cta-inner">
             <p className="eyebrow">Next</p>
             <h2 id="work-cta-heading">Your project could be the next one on <span className="accent-serif">this list.</span></h2>
             <p className="content-lead">
@@ -90,7 +91,7 @@ export default function WorkPage() {
                 Call {siteConfig.phoneDisplay}
               </a>
             </div>
-          </div>
+          </Reveal>
         </aside>
 
         <script

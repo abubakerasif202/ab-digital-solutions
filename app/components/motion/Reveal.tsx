@@ -3,7 +3,7 @@
 import { useEffect, useRef, type Ref, type CSSProperties, type ElementType, type HTMLAttributes, type ReactNode } from "react";
 
 type RevealVariant = "fade-up" | "blur" | "mask" | "line";
-type RevealTag = "div" | "p" | "dl" | "h2" | "h3" | "ul" | "span";
+type RevealTag = "div" | "p" | "dl" | "h2" | "h3" | "ul" | "li" | "span";
 
 interface RevealProps extends HTMLAttributes<HTMLElement> {
   as?: RevealTag;
