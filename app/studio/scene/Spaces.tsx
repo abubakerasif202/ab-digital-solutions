@@ -139,7 +139,8 @@ function HarbourInlay() {
 
 export function Reception({ animate, onSelect }: { animate: boolean; onSelect: (area: Area) => void }) {
   return <group>
-    <Block position={[-5,.08,3.4]} size={[7,.08,5]} color="#171d20" roughness={.8} />
+    {/* Nero Portoro reception dais (top at the 0.12 m floor height); tiled so veins stay at slab scale. */}
+    <MarbleBlock position={[-5,.08,3.4]} size={[7,.08,5]} repeat={[3,2]} />
     <MarbleBlock position={[-5,.46,4.25]} size={[5.6,.88,.6]} />
     <Block position={[-5,.15,4.56]} size={[5.5,.09,.03]} color="#c2a166" metalness={.8} />
     <RoundedBox position={[-5,.94,4.25]} args={[5.8,.12,.9]} radius={.06} smoothness={1} bevelSegments={2}><MarbleMaterial /></RoundedBox>
@@ -198,7 +199,8 @@ export function galleryWindowStart(selected: number, total: number) {
 export function Gallery({ projects, selected, crisp, onSelect, onProject }: { projects: StudioProject[]; selected: number; crisp: boolean; onSelect: (area: Area) => void; onProject: (index: number) => void }) {
   const start = galleryWindowStart(selected, projects.length);
   return <group>
-    <Block position={[-5,.13,-4.5]} size={[10,.22,5.3]} color="#171d20" />
+    {/* Gallery stage in the same Portoro (top at the 0.24 m floor height), same footprint as before. */}
+    <MarbleBlock position={[-5,.13,-4.5]} size={[10,.22,5.3]} repeat={[4,2]} />
     {/* Gilt front reveal and ruby inset ground the gallery platform; emissive only, no extra light. */}
     <mesh position={[-5,.1,-1.84]}><boxGeometry args={[9.6,.02,.012]} /><meshBasicMaterial color="#d9b66f" /></mesh>
     <mesh position={[-5,.245,-2.3]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[9.2,.05]} /><meshBasicMaterial color="#7a1228" /></mesh>
@@ -240,7 +242,7 @@ function Bench({ position }: { position: [number,number,number] }) {
 }
 export function Consultation({ onSelect }: { onSelect: (area: Area) => void }) {
   return <group>
-    <mesh position={[5.6,.08,4.3]} rotation={[-Math.PI/2,0,0]}><circleGeometry args={[3.4,48]} /><meshStandardMaterial color="#171316" roughness={.95} /></mesh>
+    <mesh position={[5.6,.08,4.3]} rotation={[-Math.PI/2,0,0]}><circleGeometry args={[3.4,48]} /><MarbleMaterial repeat={[2,2]} /></mesh>
     <mesh position={[5.6,.085,4.3]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[3.35,3.41,48]} /><meshBasicMaterial color="#c9a45c" /></mesh>
     {/* Deep ruby rug under the seating ring adds colour contrast against the dark floor and marble top. */}
     <mesh position={[5.6,.087,4.3]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[1.95,3.2,48]} /><meshStandardMaterial color="#3d0f1b" roughness={.95} emissive="#2a0610" emissiveIntensity={.35} /></mesh>

@@ -16,7 +16,7 @@
   position: absolute;
   inset: -4% -3%;
   background: 62% 46% / cover no-repeat;
-  opacity: .58;
+  opacity: .64;
   transform-origin: 64% 44%;
   content: "";
 }
@@ -26,25 +26,35 @@
   background-image: url("/cinematic/sydney-plate-harbour.webp");
 }
 
-/* Colour grade: ruby shadow wash, gilt key light on the bridge, and a vignette that
-   hands the left edge to the headline. Gradients only, so no extra requests. */
+/* Colour grade, top to bottom of the stack: gilt key light on the bridge arch, a cool
+   blue-hour lift over the water so it reads as night harbour rather than black, a ruby
+   shadow wash, the left-edge headline scrim, sky/foreground falloff and the vignette.
+   Gradients only, so no extra requests. */
 .work-first-hero .hero-harbour::after {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 34% 30% at 58% 24%, rgba(226, 197, 138, 0.2), transparent 72%),
-    radial-gradient(ellipse 52% 46% at 72% 86%, color-mix(in srgb, var(--ruby, #b3122e) 30%, transparent), transparent 74%),
-    linear-gradient(180deg, rgba(10, 6, 9, 0.5) 0%, rgba(10, 6, 9, 0) 34%, rgba(7, 7, 8, 0) 62%, rgba(7, 7, 8, 0.86) 100%),
-    radial-gradient(ellipse 120% 90% at 70% 45%, transparent 46%, rgba(7, 7, 8, 0.82) 100%);
+    radial-gradient(ellipse 34% 30% at 60% 24%, rgba(226, 197, 138, 0.22), transparent 72%),
+    radial-gradient(ellipse 58% 22% at 66% 68%, rgba(70, 104, 132, 0.16), transparent 78%),
+    radial-gradient(ellipse 52% 46% at 74% 88%, color-mix(in srgb, var(--ruby, #b3122e) 26%, transparent), transparent 74%),
+    linear-gradient(90deg, rgba(7, 7, 8, 0.78) 0%, rgba(7, 7, 8, 0.52) 24%, rgba(7, 7, 8, 0.14) 46%, rgba(7, 7, 8, 0) 60%),
+    linear-gradient(180deg, rgba(10, 6, 9, 0.5) 0%, rgba(10, 6, 9, 0) 32%, rgba(7, 7, 8, 0) 62%, rgba(7, 7, 8, 0.88) 100%),
+    radial-gradient(ellipse 120% 90% at 70% 45%, transparent 50%, rgba(7, 7, 8, 0.8) 100%);
   content: "";
 }
 
-/* A single warm band of harbour reflection that breathes. Opacity and transform only. */
+/* Warm bridge reflection on the water: a soft pool plus fine horizontal ripple streaks,
+   masked to the pool so it reads as broken light on a swell. It breathes with opacity
+   and transform only; the streaks are static paint inside the same composited layer. */
 .work-first-hero .hero-harbour-glint {
   position: absolute;
   inset: 58% 8% 14% 34%;
   z-index: 1;
-  background: radial-gradient(ellipse 50% 30% at 50% 34%, rgba(221, 179, 102, 0.27), transparent 76%);
+  background:
+    repeating-linear-gradient(180deg, rgba(240, 206, 140, 0.22) 0 1px, transparent 1px 7px),
+    radial-gradient(ellipse 50% 30% at 50% 34%, rgba(221, 179, 102, 0.27), transparent 76%);
+  -webkit-mask-image: radial-gradient(ellipse 46% 42% at 50% 36%, #000 30%, transparent 78%);
+  mask-image: radial-gradient(ellipse 46% 42% at 50% 36%, #000 30%, transparent 78%);
   opacity: .42;
 }
 
@@ -77,6 +87,15 @@
   .work-first-hero .hero-harbour { inset: 0 0 auto; height: clamp(340px, 92vw, 600px); }
   .work-first-hero .hero-harbour::before { background-position: 58% 40%; opacity: .52; }
   .work-first-hero .hero-harbour-glint { inset: 56% 4% 10% 20%; }
+  /* Portrait: the headline sits below the band, so the scrim moves from the left edge to the
+     foot of the plate and the bridge keeps the full width. */
+  .work-first-hero .hero-harbour::after {
+    background:
+      radial-gradient(ellipse 52% 34% at 58% 26%, rgba(226, 197, 138, 0.2), transparent 72%),
+      radial-gradient(ellipse 70% 24% at 56% 66%, rgba(70, 104, 132, 0.14), transparent 78%),
+      linear-gradient(180deg, rgba(10, 6, 9, 0.42) 0%, rgba(10, 6, 9, 0) 28%, rgba(7, 7, 8, 0) 58%, rgba(7, 7, 8, 0.94) 100%),
+      radial-gradient(ellipse 130% 100% at 56% 40%, transparent 52%, rgba(7, 7, 8, 0.72) 100%);
+  }
 }
 
 /* Save-Data users still get the composition, without the 149 KB plate. */

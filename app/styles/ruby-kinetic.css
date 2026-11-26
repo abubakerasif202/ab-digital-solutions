@@ -51,13 +51,19 @@
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
-  transition: border-color .2s, background .2s;
+  transition: border-color .2s, background .2s, transform .32s var(--ease-lux, cubic-bezier(.16,1,.3,1));
 }
-.ruby-project-cta { border: 1px solid #ef9684; background: #a93018; }
-.ruby-project-cta:is(:hover, :active) { border-color: var(--ruby-text-dark); background: #ba3a21; }
+/* Primary hero CTA uses the shared AA-verified ruby, not a one-off rust tone. */
+.ruby-project-cta { border: 1px solid var(--ruby-text-dark); background: var(--ruby); }
+.ruby-project-cta:is(:hover, :active) { border-color: #ffc2cb; background: var(--ruby-hover); }
 .ruby-ghost-cta { border: 1px solid #92857b; background: #0d0b0ad9; }
 .ruby-ghost-cta:is(:hover, :active) { border-color: var(--cinema-paper); background: #29231f; }
-.ruby-hero-actions svg { width: 18px; }
+.ruby-hero-actions svg { width: 18px; transition: transform .32s var(--ease-lux, cubic-bezier(.16,1,.3,1)); }
+/* Precise pointers: a 2px lift and an arrow nudge. Composited transforms only. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .ruby-hero-actions a:hover { transform: translate3d(0, -2px, 0); }
+  .ruby-hero-actions a:hover svg { transform: translate3d(3px, 0, 0); }
+}
 .ruby-hero-actions a:focus-visible { outline: 2px solid var(--cinema-paper); outline-offset: 4px; }
 .ruby-hero-bottomline { justify-content: flex-end; border-top-color: #f7f1eb46; }
 /* The readable, single-copy strip is the default even before hydration. */

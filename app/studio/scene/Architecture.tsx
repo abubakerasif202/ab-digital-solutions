@@ -2,7 +2,8 @@ import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { BrassMaterial, MarbleMaterial, RubyLacquerMaterial, useBlockResources } from "./Materials";
 import * as THREE from "three";
 
-export const brass = { color: "#c9a45c", metalness: 0.88, roughness: 0.2 };
+// Roughness .3, not mirror-smooth: thin brass tori and posts alias badly at grazing angles when glossier.
+export const brass = { color: "#c9a45c", metalness: 0.88, roughness: 0.3 };
 export const charcoal = { color: "#14171b", metalness: 0.22, roughness: 0.48 };
 
 export function Block({ position, size, color = "#14171b", metalness = 0.18, roughness = 0.48 }: { position: [number, number, number]; size: [number, number, number]; color?: string; metalness?: number; roughness?: number }) {
@@ -11,8 +12,8 @@ export function Block({ position, size, color = "#14171b", metalness = 0.18, rou
   return <mesh position={position} scale={size} geometry={geometry} material={material} dispose={null} />;
 }
 
-export function MarbleBlock({ position, size }: { position: [number, number, number]; size: [number, number, number] }) {
-  return <mesh position={position}><boxGeometry args={size} /><MarbleMaterial /></mesh>;
+export function MarbleBlock({ position, size, repeat }: { position: [number, number, number]; size: [number, number, number]; repeat?: readonly [number, number] }) {
+  return <mesh position={position}><boxGeometry args={size} /><MarbleMaterial repeat={repeat} /></mesh>;
 }
 
 type Piece = readonly [position: readonly [number, number, number], size: readonly [number, number, number]];
@@ -44,10 +45,15 @@ export function TrimBatch({ pieces, children }: { pieces: readonly Piece[]; chil
 const columnXs = [-10.5, 0, 10.5] as const;
 const columnZs = [-7.8, 7.8] as const;
 
-// Brushed brass: floor reveals, columns and capitals, beams, cornice lip, dado rail, niche architraves.
+// Floor reveal grid: hairline inlays seen almost edge-on, so they get a honed gilt finish (below)
+// instead of polished brass, which sparkled pixel to pixel along their length.
+const floorInlays: readonly Piece[] = [
+  ...[-7.5, -3.75, 0, 3.75, 7.5].map((x) => [[x, .05, 0], [.016, .008, 17.3]] as const),
+  ...[-5.75, -2.9, 0, 2.9, 5.75].map((z) => [[0, .05, z], [22.3, .008, .016]] as const),
+];
+
+// Brushed brass: columns and capitals, beams, cornice lip, dado rail, niche architraves.
 const brassTrim: readonly Piece[] = [
-  ...[-7.5, -3.75, 0, 3.75, 7.5].map((x) => [[x, .05, 0], [.014, .008, 17.3]] as const),
-  ...[-5.75, -2.9, 0, 2.9, 5.75].map((z) => [[0, .05, z], [22.3, .008, .014]] as const),
   ...columnXs.flatMap((x) => columnZs.flatMap((z) => [
     [[x, 2.3, z], [.24, 4.6, .24]] as const,
     [[x, 4.64, z], [.55, .12, .55]] as const,
@@ -77,8 +83,15 @@ const brassTrim: readonly Piece[] = [
     [[x, .85, -8.245], [2.5, .022, .018]] as const,
     [[x - 1.25, 2.1, -8.245], [.022, 2.52, .018]] as const,
     [[x + 1.25, 2.1, -8.245], [.022, 2.52, .018]] as const,
+    // Slim picture-light hood over each niche panel (its lamp is the emissive strip below).
+    [[x, 3.56, -8.2], [1.3, .035, .09]] as const,
   ]),
+  // Brass book-match seams split the marble panel into three slabs, as a real wall would be laid.
+  ...[-6.617, -3.383].map((x) => [[x, 2.1, -8.335], [.018, 3.5, .012]] as const),
 ];
+
+// Lamps of the niche picture lights: emissive only, so they read as light without another light source.
+const nichePictureLamps: readonly Piece[] = [2.45, 5.4, 8.35].map((x) => [[x, 3.535, -8.165], [1.22, .012, .02]] as const);
 
 // Shadow-gap skirting and stone column plinths: dark, low and grounding.
 const plinthTrim: readonly Piece[] = [
@@ -98,6 +111,8 @@ export function Architecture() {
     <Block position={[0,2,-8.6]} size={[22.5,4,.3]} color="#131014" roughness={.55} />
     <Block position={[-11.1,1.8,0]} size={[.3,3.6,17.5]} color="#141014" roughness={.55} />
     <TrimBatch pieces={brassTrim}><BrassMaterial /></TrimBatch>
+    <TrimBatch pieces={floorInlays}><meshStandardMaterial color="#b4935a" metalness={.6} roughness={.58} /></TrimBatch>
+    <TrimBatch pieces={nichePictureLamps}><meshBasicMaterial color="#ffe2a8" /></TrimBatch>
     <TrimBatch pieces={plinthTrim}><meshStandardMaterial color="#0b0b0d" metalness={.3} roughness={.36} /></TrimBatch>
     {/* Vertical brass fluting behind the marble and niche. */}
     <WallFlutes />
