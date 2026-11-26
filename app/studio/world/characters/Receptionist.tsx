@@ -6,7 +6,7 @@ import { useSceneClock } from "../SceneClock";
 import { worldState } from "../worldState";
 import { createGreetingCue, createReceptionist } from "../sim/receptionist-behavior";
 import type { VisitorAim } from "../sim/receptionist-behavior";
-import { CAST, createHumanoid, createHumanoidKit } from "./humanoid";
+import { CAST, acquireSharedHumanoidKit, createHumanoid } from "./humanoid";
 import { createScreen, Keyboard, Monitor, OfficeChair } from "./StudioStaff";
 
 const BRASS = "#bca06b", CREAM = "#e8dcc4";
@@ -25,8 +25,8 @@ export function Receptionist({ greeting = false, position = [-6.1, 0.12, 2.95], 
   const id = useId();
   const [px, py, pz] = position;
   const sim = useMemo(() => createReceptionist(20260503), []);
-  const kit = useMemo(() => createHumanoidKit(), []);
-  const rig = useMemo(() => { const r = createHumanoid(kit, CAST.receptionist, { shadowRadius: 0.55 }); r.apply(sim.pose); return r; }, [kit, sim]);
+  const kitHandle = useMemo(() => acquireSharedHumanoidKit(), []);
+  const rig = useMemo(() => { const r = createHumanoid(kitHandle.kit, CAST.receptionist, { shadowRadius: 0.55 }); r.apply(sim.pose); return r; }, [kitHandle, sim]);
   const screen = useMemo(() => createScreen("dashboard", 11), []);
   const greetingRef = useRef(greeting);
   useEffect(() => { greetingRef.current = greeting; }, [greeting]);
@@ -44,7 +44,7 @@ export function Receptionist({ greeting = false, position = [-6.1, 0.12, 2.95], 
     const offScreen = scheduler.add(`receptionist-screen-${id}`, () => screen.repaint(), 1.1);
     return () => { offSim(); offScreen(); };
   }, [scheduler, id, sim, rig, screen, px, py, pz]);
-  useEffect(() => () => { kit.dispose(); screen.dispose(); }, [kit, screen]);
+  useEffect(() => () => { rig.dispose(); kitHandle.release(); screen.dispose(); }, [rig, kitHandle, screen]);
 
   const shelf = shelfY - py; // shelf height above her floor
   return <group position={[px, py, pz]}>

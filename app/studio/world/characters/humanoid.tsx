@@ -28,9 +28,12 @@ const FACE = { eyeX: 0.034, eyeY: 0.012, eyeZ: 0.086, browY: 0.037, browZ: 0.088
 /** Scalp cap per style: polar extent from the crown and backward tilt. Both give a hairline 50 degrees from the crown. */
 const SCALP = { short: { tilt: -0.5 }, long: { tilt: -0.62 } } as const;
 
+type NonIndexedTemplate = { pos: Float32Array; norm: Float32Array; count: number };
+
 type Kit = {
   mat: (color: string, roughness?: number, metalness?: number) => THREE.MeshStandardMaterial;
   geo: Record<"capsule" | "sphere" | "head" | "box" | "torso" | "foot" | "mouth" | "eyes" | "eyeShine" | "brows" | "hairCap" | "hairCapShort" | "shadow", THREE.BufferGeometry>;
+  template: (geometry: THREE.BufferGeometry) => NonIndexedTemplate;
   shadowMaterial: THREE.MeshBasicMaterial;
   track: (resource: { dispose: () => void }) => void;
   dispose: () => void;
@@ -39,6 +42,7 @@ type Kit = {
 /** One kit is shared by every figure a component renders: unit geometries plus a colour-keyed material cache. */
 export function createHumanoidKit(): Kit {
   const materials = new Map<string, THREE.MeshStandardMaterial>();
+  const templates = new Map<THREE.BufferGeometry, NonIndexedTemplate>();
   const resources: Array<{ dispose: () => void }> = [];
   const torsoProfile: [number, number][] = [[0, -0.075], [0.11, -0.07], [0.122, -0.02], [0.118, 0.05], [0.13, 0.13], [0.15, 0.24], [0.165, 0.33], [0.158, 0.395], [0.12, 0.435], [0.05, 0.462], [0, 0.47]];
   const pair = (make: (side: 1 | -1) => THREE.BufferGeometry) => {
@@ -66,6 +70,18 @@ export function createHumanoidKit(): Kit {
   return {
     geo,
     shadowMaterial,
+    template(geometry) {
+      let cached = templates.get(geometry);
+      if (!cached) {
+        const nonIndexed = geometry.index ? geometry.toNonIndexed() : geometry;
+        const pos = nonIndexed.getAttribute("position").array as Float32Array;
+        const norm = nonIndexed.getAttribute("normal").array as Float32Array;
+        cached = { pos: Float32Array.from(pos), norm: Float32Array.from(norm), count: pos.length / 3 };
+        if (nonIndexed !== geometry) nonIndexed.dispose();
+        templates.set(geometry, cached);
+      }
+      return cached;
+    },
     track(resource) { resources.push(resource); },
     mat(color, roughness = 0.8, metalness = 0.02) {
       const key = `${color}|${roughness}|${metalness}`;
@@ -76,10 +92,33 @@ export function createHumanoidKit(): Kit {
     dispose() {
       for (const resource of resources) resource.dispose();
       resources.length = 0;
+      templates.clear();
       for (const g of Object.values(geo)) g.dispose();
       for (const m of materials.values()) m.dispose();
       materials.clear();
       shadowMaterial.dispose();
+    },
+  };
+}
+
+let sharedKit: Kit | null = null;
+let sharedKitRefs = 0;
+
+/** Shares one unit-geometry & material kit across Receptionist and StudioStaff, disposing when all unmount. */
+export function acquireSharedHumanoidKit(): { kit: Kit; release: () => void } {
+  sharedKit ??= createHumanoidKit();
+  sharedKitRefs++;
+  let released = false;
+  return {
+    kit: sharedKit,
+    release() {
+      if (released) return;
+      released = true;
+      sharedKitRefs = Math.max(0, sharedKitRefs - 1);
+      if (sharedKitRefs === 0 && sharedKit) {
+        sharedKit.dispose();
+        sharedKit = null;
+      }
     },
   };
 }
@@ -89,6 +128,7 @@ export type HumanoidRig = {
   /** Contact shadow on the floor under the figure. A sibling of `root`, so the figure stays one skinned mesh. */
   shadow: THREE.Mesh;
   apply: (pose: Pose) => void;
+  dispose: () => void;
 };
 export type HumanoidOptions = { /** Shadow radius in metres before height scaling. Seated figures use a wider one to clear the chair base. */ shadowRadius?: number };
 
@@ -169,28 +209,49 @@ export function createHumanoid(kit: Kit, a: Appearance, { shadowRadius = 0.36 }:
   root.updateMatrixWorld(true);
   const inverseRoot = root.matrixWorld.clone().invert();
   const transform = new THREE.Matrix4();
-  const chunks = parts.map(({ bone, geometry, color }) => {
-    const chunk = geometry.index ? geometry.toNonIndexed() : geometry.clone();
+  const normalMatrix = new THREE.Matrix3();
+  const v = new THREE.Vector3();
+  const n = new THREE.Vector3();
+  const partEntries = parts.map((part) => ({ ...part, tpl: kit.template(part.geometry) }));
+  let totalVertices = 0;
+  for (const entry of partEntries) totalVertices += entry.tpl.count;
+
+  const positions = new Float32Array(totalVertices * 3);
+  const normals = new Float32Array(totalVertices * 3);
+  const colors = new Float32Array(totalVertices * 3);
+  const indices = new Uint16Array(totalVertices * 4);
+  const weights = new Float32Array(totalVertices * 4);
+  const boneIndices = new Map<THREE.Bone, number>();
+  bones.forEach((b, idx) => boneIndices.set(b, idx));
+
+  let offset = 0;
+  for (const { bone, color, tpl } of partEntries) {
     transform.multiplyMatrices(inverseRoot, bone.matrixWorld);
-    chunk.applyMatrix4(transform);
-    chunk.deleteAttribute("uv");
-    const count = chunk.getAttribute("position").count;
-    const colors = new Float32Array(count * 3);
-    const indices = new Uint16Array(count * 4);
-    const weights = new Float32Array(count * 4);
-    const boneIndex = bones.indexOf(bone);
+    normalMatrix.getNormalMatrix(transform);
+    const boneIndex = boneIndices.get(bone)!;
+    const r = color.r, g = color.g, b = color.b;
+    const { pos, norm, count } = tpl;
     for (let i = 0; i < count; i++) {
-      colors.set([color.r, color.g, color.b], i * 3);
-      indices[i * 4] = boneIndex;
-      weights[i * 4] = 1;
+      const s3 = i * 3;
+      const d3 = (offset + i) * 3;
+      const d4 = (offset + i) * 4;
+      v.set(pos[s3], pos[s3 + 1], pos[s3 + 2]).applyMatrix4(transform);
+      positions[d3] = v.x; positions[d3 + 1] = v.y; positions[d3 + 2] = v.z;
+      n.set(norm[s3], norm[s3 + 1], norm[s3 + 2]).applyMatrix3(normalMatrix).normalize();
+      normals[d3] = n.x; normals[d3 + 1] = n.y; normals[d3 + 2] = n.z;
+      colors[d3] = r; colors[d3 + 1] = g; colors[d3 + 2] = b;
+      indices[d4] = boneIndex;
+      weights[d4] = 1;
     }
-    chunk.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    chunk.setAttribute("skinIndex", new THREE.Uint16BufferAttribute(indices, 4));
-    chunk.setAttribute("skinWeight", new THREE.Float32BufferAttribute(weights, 4));
-    return chunk;
-  });
-  const geometry = mergeGeometries(chunks)!;
-  chunks.forEach(chunk => chunk.dispose());
+    offset += count;
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
+  geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+  geometry.setAttribute("skinIndex", new THREE.Uint16BufferAttribute(indices, 4));
+  geometry.setAttribute("skinWeight", new THREE.Float32BufferAttribute(weights, 4));
   const material = kit.mat("#ffffff", 0.75, 0.02);
   material.vertexColors = true;
   const figure = new THREE.SkinnedMesh(geometry, material);
@@ -231,5 +292,9 @@ export function createHumanoid(kit: Kit, a: Appearance, { shadowRadius = 0.36 }:
     mouth.scale.set(0.014 + 0.009 * smile, 0.0075 + 0.013 * smile, 0.01);
     mouth.position.y = cy + FACE.mouthY + 0.004 * smile;
   };
-  return { root, shadow, apply };
+  const dispose = () => {
+    geometry.dispose();
+    skeleton.dispose();
+  };
+  return { root, shadow, apply, dispose };
 }

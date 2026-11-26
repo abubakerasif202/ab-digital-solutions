@@ -37,9 +37,11 @@ const Exterior = lazy(() => loadExterior().then((module) => ({ default: module.E
 const Traffic = lazy(() => loadTraffic().then((module) => ({ default: module.Traffic })));
 const Pedestrians = lazy(() => loadPedestrians().then((module) => ({ default: module.Pedestrians })));
 
-// Start both core assets on entry, before the WebGL context and canvas commit.
-useStudioModel.preload(monogramUrl);
-useLoader.preload(StudioEnvironmentLoader, environmentUrl);
+// Triggered once the visitor actually enters the 3D studio (never merely by preloading this JS chunk).
+function preloadCoreStudioAssets() {
+  useStudioModel.preload(monogramUrl);
+  useLoader.preload(StudioEnvironmentLoader, environmentUrl);
+}
 
 const shots: Record<Area, { position: [number,number,number]; target: [number,number,number] }> = {
   reception: { position: [-1.4,1.85,6.8], target: [-5.8,1.35,2.9] },
@@ -268,10 +270,12 @@ function StudioWarmup({ phase, onPhase, onReady, environmentReady, onFailure, gr
       reveal: () => { root.visible = true; invalidate(); },
       onFailure,
       advance: () => {
-        invalidate();
         const next = nextWarmupPhase(phase);
         onPhase(next);
-        if (next === "done") onReady();
+        if (next === "done") {
+          invalidate();
+          onReady();
+        }
       },
       yieldTask: () => {
         const scheduler = (globalThis as typeof globalThis & { scheduler?: { yield: () => Promise<void> } }).scheduler;
@@ -339,8 +343,11 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
     for (const image of galleryWarmupImages(projects, selectedProject)) useTexture.preload(image);
   }, [phase, projects, selectedProject]);
   const [software, setSoftware] = useState(false);
-  const [detailedMaterials, setDetailedMaterials] = useState<boolean | null>(null);
+  const [detailedMaterials, setDetailedMaterials] = useState<boolean | null>(() => (tier === "low" ? false : null));
   const [pixelRatio, setPixelRatio] = useState(1);
+  useEffect(() => {
+    preloadCoreStudioAssets();
+  }, []);
   useEffect(() => {
     const element = viewport.current;
     if (!element) return;
@@ -362,7 +369,7 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
   const greeting = state.mode === "intro" || (state.mode === "explore" && state.area === "reception" && !state.outside) || (state.mode === "arrival" && greetedShot === state.shot);
   const downgrade = useCallback(() => setTier(stepDownTier), [setTier]);
   return <div ref={viewport} className="ab-spatial-canvas" data-warmup={phase} style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-    <style>{`.ab-spatial-hotspot{display:flex;align-items:center;gap:8px;white-space:nowrap;min-height:44px;padding:6px 13px 6px 7px;border:1px solid #c4a56f88;background:#101619e8;color:#f1e2c2;font:11px var(--font-sans),sans-serif;cursor:pointer;box-shadow:0 4px 16px #0005}.ab-spatial-hotspot span{display:grid;place-items:center;width:25px;height:25px;border:1px solid #d4b67888;border-radius:50%;color:#e9cc96;font-size:17px}.ab-spatial-hotspot:hover{background:#3a3020;border-color:#efd49c}.ab-spatial-canvas canvas{touch-action:pan-y!important}`}</style>
+    <style>{`.ab-spatial-hotspot{display:flex;align-items:center;gap:8px;white-space:nowrap;min-height:44px;padding:6px 13px 6px 7px;border:1px solid #c4a56f88;background:#101619e8;color:#f1e2c2;font:var(--fs-label) var(--font-sans),sans-serif;cursor:pointer;box-shadow:0 4px 16px #0005}.ab-spatial-hotspot span{display:grid;place-items:center;width:25px;height:25px;border:1px solid #d4b67888;border-radius:50%;color:#e9cc96;font-size:17px}.ab-spatial-hotspot:hover{background:#3a3020;border-color:#efd49c}.ab-spatial-canvas canvas{touch-action:pan-y!important}`}</style>
     <div ref={portal} style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }} />
     <Canvas frameloop={visible ? "demand" : "never"} dpr={pixelRatio} camera={{ position: initialPose.position, fov: initialPose.fov, near: .1, far: 560 }} gl={{ antialias: false, powerPreference: "low-power", alpha: false }} fallback={<p>3D unavailable. Explore the studio using the space buttons below.</p>} onCreated={({ gl, scene, size, setDpr }) => {
       // Software rasterizers can expose many CPU cores and large texture limits. Start them at

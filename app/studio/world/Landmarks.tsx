@@ -20,10 +20,25 @@ const HAZE = new THREE.Color(skyFog);
 const haze = (hex: string, amount: number) => new THREE.Color(hex).lerp(HAZE, amount);
 const smooth = (a: number, b: number, x: number) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 
+// Precomputed unit-box (36 non-indexed vertices: 6 faces x 2 triangles x 3 vertices) so
+// landmark blocks append straight into flat arrays without creating temporary BoxGeometries.
+const UNIT_BOX = (() => {
+  const g = new THREE.BoxGeometry(1, 1, 1);
+  const nonIndexed = g.toNonIndexed();
+  g.dispose();
+  const pos = Float32Array.from(nonIndexed.getAttribute("position").array as Float32Array);
+  const norm = Float32Array.from(nonIndexed.getAttribute("normal").array as Float32Array);
+  nonIndexed.dispose();
+  return { pos, norm };
+})();
+
 // Stylised backdrop only: nothing here claims to be the studio's real location.
 type Bag = ReturnType<typeof createBag>;
 function createBag() {
   const list: THREE.BufferGeometry[] = [];
+  const positions: number[] = [];
+  const normals: number[] = [];
+  const colors: number[] = [];
   const origin = new THREE.Vector3();
   let scale = 1;
   return {
@@ -36,25 +51,58 @@ function createBag() {
       g.scale(scale, scale, scale).translate(origin.x, origin.y, origin.z);
       if (color) {
         const count = g.getAttribute("position").count;
-        const colors = new Float32Array(count * 3);
-        for (let i = 0; i < count; i++) { colors[i * 3] = color.r; colors[i * 3 + 1] = color.g; colors[i * 3 + 2] = color.b; }
-        g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+        const c = new Float32Array(count * 3);
+        const r = color.r, gr = color.g, b = color.b;
+        for (let i = 0; i < count; i++) {
+          const idx = i * 3;
+          c[idx] = r; c[idx + 1] = gr; c[idx + 2] = b;
+        }
+        g.setAttribute("color", new THREE.BufferAttribute(c, 3));
       }
       list.push(g);
     },
     box(size: [number, number, number], pos: [number, number, number], color: THREE.Color, rotZ = 0) {
-      const g = new THREE.BoxGeometry(...size);
-      if (rotZ) g.rotateZ(rotZ);
-      g.translate(...pos);
-      this.add(g, color);
+      const sx = size[0] * scale, sy = size[1] * scale, sz = size[2] * scale;
+      const px = pos[0] * scale + origin.x, py = pos[1] * scale + origin.y, pz = pos[2] * scale + origin.z;
+      const cos = rotZ ? Math.cos(rotZ) : 1;
+      const sin = rotZ ? Math.sin(rotZ) : 0;
+      const r = color.r, g = color.g, b = color.b;
+      const { pos: bp, norm: bn } = UNIT_BOX;
+      for (let i = 0; i < bp.length; i += 3) {
+        const lx = bp[i] * sx, ly = bp[i + 1] * sy, lz = bp[i + 2] * sz;
+        const nx = bn[i], ny = bn[i + 1], nz = bn[i + 2];
+        if (rotZ) {
+          positions.push(lx * cos - ly * sin + px, lx * sin + ly * cos + py, lz + pz);
+          normals.push(nx * cos - ny * sin, nx * sin + ny * cos, nz);
+        } else {
+          positions.push(lx + px, ly + py, lz + pz);
+          normals.push(nx, ny, nz);
+        }
+        colors.push(r, g, b);
+      }
     },
-    build() { return list.length ? mergeGeometries(list) : null; },
-    dispose() { list.forEach((g) => g.dispose()); list.length = 0; },
+    build() {
+      if (positions.length) {
+        const batched = new THREE.BufferGeometry();
+        batched.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+        batched.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
+        batched.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+        list.push(batched);
+      }
+      return list.length ? mergeGeometries(list) : null;
+    },
+    dispose() {
+      list.forEach((g) => g.dispose());
+      list.length = 0;
+      positions.length = 0;
+      normals.length = 0;
+      colors.length = 0;
+    },
   };
 }
 
-function buildSky() {
-  const geometry = new THREE.SphereGeometry(SKY_RADIUS, 48, 40);
+function buildSky(detail: number) {
+  const geometry = new THREE.SphereGeometry(SKY_RADIUS, detail === 0 ? 24 : 48, detail === 0 ? 18 : 40);
   const stops: Array<[number, THREE.Color]> = [
     [-1, new THREE.Color(skyFog)],
     [-0.04, new THREE.Color("#141522")],
@@ -80,7 +128,8 @@ function buildSky() {
     const horizonBand = 1 - smooth(0, 0.32, Math.abs(dir.y));
     color.lerp(horizonGlow, Math.pow(Math.max(0, dir.dot(sun)), 5) * 0.24 * horizonBand);
     color.lerp(rubyWash, Math.pow(Math.max(0, -dir.z), 3) * 0.14 * horizonBand);
-    colors.set([color.r, color.g, color.b], i * 3);
+    const idx = i * 3;
+    colors[idx] = color.r; colors[idx + 1] = color.g; colors[idx + 2] = color.b;
   }
   geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
   const material = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false, toneMapped: false });
@@ -120,7 +169,7 @@ function buildStars(detail: number) {
 
 // Calm nocturnal harbour: obsidian-navy water with shimmering gold & ruby reflection paths.
 function buildWater(detail: number) {
-  const nx = detail >= 2 ? 72 : 48, nz = detail >= 2 ? 36 : 24;
+  const nx = detail >= 2 ? 72 : detail === 1 ? 48 : 24, nz = detail >= 2 ? 36 : detail === 1 ? 24 : 12;
   const geometry = new THREE.PlaneGeometry(660, 290, nx, nz);
   geometry.rotateX(-Math.PI / 2);
   geometry.translate(0, layout.harbour.waterY, layout.harbour.waterZ - 145);
@@ -138,7 +187,8 @@ function buildWater(detail: number) {
     const d = Math.hypot(x, z - 30);
     const t = Math.pow(Math.min(1, d / 300), 1.3);
     color.copy(near).lerp(far, t);
-    base.set([color.r, color.g, color.b], i * 3);
+    const idx = i * 3;
+    base[idx] = color.r; base[idx + 1] = color.g; base[idx + 2] = color.b;
     phase[i] = rng() * 6.28;
     depth[i] = smooth(45, 195, d);
     // Subtle ruby shimmer band under the bridge/city reflection corridor.
@@ -293,8 +343,8 @@ function buildSkyline(bag: Bag, detail: number) {
   bag.box([2.2, 1.6, 2.2], [112, 98.5, -272], rubyLight);
 }
 
-function buildRidge() {
-  const steps = 120, a0 = -1.75, a1 = 1.75;
+function buildRidge(detail: number) {
+  const steps = detail === 0 ? 64 : 120, a0 = -1.75, a1 = 1.75;
   const positions: number[] = [], colors: number[] = [], index: number[] = [];
   const top = haze("#121722", 0.38), bottom = haze("#0d1018", 0.6);
   for (let i = 0; i <= steps; i++) {
@@ -335,9 +385,9 @@ export function Landmarks() {
       disposables.push(part.geometry, part.material);
       return part;
     };
-    track(buildSky());
+    track(buildSky(detail));
     track(buildStars(detail));
-    track(buildRidge());
+    track(buildRidge(detail));
     const water = track(buildWater(detail));
 
     const lit = createBag();

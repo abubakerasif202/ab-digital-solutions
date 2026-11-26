@@ -66,6 +66,10 @@ for (const width of [390, 768, 1440]) {
         const stage = await mode(page).boundingBox();
         // Details sit below the scene as page content, never over it or in a nested scroller.
         expect(sheet.y).toBeGreaterThanOrEqual(stage.y + stage.height - 1);
+      } else {
+        const headerBox = await page.locator("header.site-header").boundingBox();
+        const panelBox = await page.locator("aside[aria-labelledby='studio-panel-heading']").boundingBox();
+        if (headerBox) expect(panelBox.y).toBeGreaterThanOrEqual(headerBox.y + headerBox.height - 1);
       }
       if (label === "Portfolio gallery") {
         await expect(page.locator("#studio-project option")).toHaveText(studioProjects.map((project) => project.name));

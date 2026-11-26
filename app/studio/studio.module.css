@@ -116,7 +116,7 @@
 .page :focus-visible { outline: 2px solid #efd49c; outline-offset: 2px; }
 
 /* Room details overlay the scene beside the 3D view on wide screens. */
-.panel { position: absolute; z-index: 5; top: 82px; right: 24px; bottom: auto; width: min(400px, calc(100% - 48px)); max-height: calc(var(--stage-h) - 106px); overflow-y: auto; padding: 24px 26px 26px; border-radius: 0; }
+.panel { position: absolute; z-index: 5; top: var(--panel-top, 82px); right: 24px; bottom: auto; width: min(400px, calc(100% - 48px)); max-height: calc(var(--stage-h) - var(--panel-top, 82px) - 24px); overflow-y: auto; padding: 24px 26px 26px; border-radius: 0; }
 .panel h2 { font-size: 34px; margin: 6px 0 16px; }
 .panel h3 { font-size: 22px; margin: 16px 0 10px; }
 .panel li { margin-block: 4px; }

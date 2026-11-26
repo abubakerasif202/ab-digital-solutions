@@ -11,7 +11,7 @@ const source = (await readFile(sourceUrl, "utf8")).replace(/from "([^"]+)"/g, (_
   const resolved = specifier.startsWith(".") ? new URL(`${specifier}.ts`, sourceUrl).href : import.meta.resolve(specifier);
   return `from "${resolved}"`;
 });
-const { CAST, createHumanoidKit, createHumanoid, createPose, poseSeatedTyping, poseWalk } = await import(`data:text/javascript;base64,${Buffer.from(stripTypeScriptTypes(source)).toString("base64")}`);
+const { CAST, acquireSharedHumanoidKit, createHumanoidKit, createHumanoid, createPose, poseSeatedTyping, poseWalk } = await import(`data:text/javascript;base64,${Buffer.from(stripTypeScriptTypes(source)).toString("base64")}`);
 
 test("each character renders one skinned mesh with rigid normalized weights", () => {
   const kit = createHumanoidKit();
@@ -123,4 +123,22 @@ test("staff clothing is distinguishable from skin so no figure reads as a bare m
     const ratio = (Math.max(luminance(a.top), luminance(a.skin)) + .05) / (Math.min(luminance(a.top), luminance(a.skin)) + .05);
     assert.ok(ratio >= 1.5, `${name}: top ${a.top} against skin ${a.skin} is ${ratio.toFixed(2)}:1`);
   }
+});
+
+test("shared humanoid kit reuses unit geometry across stages and disposes on last release", () => {
+  const first = acquireSharedHumanoidKit();
+  const second = acquireSharedHumanoidKit();
+  assert.equal(first.kit, second.kit);
+  let kitSphereDisposed = false;
+  first.kit.geo.sphere.addEventListener("dispose", () => { kitSphereDisposed = true; });
+  const rig = createHumanoid(second.kit, CAST.designer);
+  let rigGeoDisposed = false;
+  const figure = rig.root.children.find(object => object.isSkinnedMesh);
+  figure.geometry.addEventListener("dispose", () => { rigGeoDisposed = true; });
+  first.release();
+  assert.equal(kitSphereDisposed, false);
+  rig.dispose();
+  assert.equal(rigGeoDisposed, true);
+  second.release();
+  assert.equal(kitSphereDisposed, true);
 });

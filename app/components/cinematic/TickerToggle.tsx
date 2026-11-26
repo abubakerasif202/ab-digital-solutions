@@ -12,8 +12,8 @@ const connection = () => (navigator as Navigator & { connection?: DataSavingConn
 const hasSaveData = () => Boolean(connection()?.saveData);
 function subscribeToSaveData(notify: () => void) {
   const network = connection();
-  network?.addEventListener("change", notify);
-  return () => network?.removeEventListener("change", notify);
+  network?.addEventListener?.("change", notify);
+  return () => network?.removeEventListener?.("change", notify);
 }
 
 /**
