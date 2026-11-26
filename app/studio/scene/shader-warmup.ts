@@ -18,17 +18,33 @@ export function compileStageShaders(renderer: WebGLRenderer, root: Object3D, cam
   try {
     renderer.compile(root, camera, scene);
     const context = renderer.getContext();
+    if (context.isContextLost()) {
+      rejectReady(new Error("Studio shader context lost"));
+      return { ready, cancel() { cancelled = true; resolveReady(); } };
+    }
     const extension = context.getExtension("KHR_parallel_shader_compile");
+    if (!extension) {
+      // Without KHR_parallel_shader_compile, renderer.compile() already finished synchronously.
+      resolveReady();
+      return { ready, cancel() { cancelled = true; resolveReady(); } };
+    }
     // info.programs is renderer-owned. Validate its handles rather than reading
     // private per-material state that disappears during resource disposal.
     const completed = completedPrograms.get(renderer) ?? new WeakSet<WebGLProgram>();
     completedPrograms.set(renderer, completed);
-    const programs = new Set((renderer.info.programs ?? []).map((entry) => entry.program));
+    const programs = new Set<WebGLProgram>();
+    for (const entry of renderer.info.programs ?? []) {
+      const program = entry.program as WebGLProgram | null | undefined;
+      if (program && !completed.has(program)) programs.add(program);
+    }
+    if (programs.size === 0) {
+      resolveReady();
+      return { ready, cancel() { cancelled = true; resolveReady(); } };
+    }
     const check = () => {
       if (cancelled) return;
       try {
         if (context.isContextLost()) throw new Error("Studio shader context lost");
-        if (!extension) { resolveReady(); return; } // Functional fallback; first use may still stall.
         for (const program of programs) {
           if (!isShaderProgram(context, program)) throw new Error("Studio shader program disposed during preparation");
           if (completed.has(program) || context.getProgramParameter(program, extension.COMPLETION_STATUS_KHR)) {

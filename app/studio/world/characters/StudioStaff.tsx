@@ -6,7 +6,7 @@ import { Block } from "../../scene/Architecture";
 import { useSceneClock } from "../SceneClock";
 import { worldState } from "../worldState";
 import { createStaff, STATIONS } from "../sim/staff-behavior";
-import { CAST, createHumanoid, createHumanoidKit } from "./humanoid";
+import { CAST, acquireSharedHumanoidKit, createHumanoid } from "./humanoid";
 
 const CHARCOAL = "#22272a", BRASS = "#bca06b", RUBY = "#792c40", CREAM = "#e8dcc4";
 
@@ -131,12 +131,12 @@ export function StudioStaff() {
   const { scheduler, quality } = useSceneClock();
   const id = useId();
   const sim = useMemo(() => createStaff(20260427), []);
-  const kit = useMemo(() => createHumanoidKit(), []);
+  const kitHandle = useMemo(() => acquireSharedHumanoidKit(), []);
   const rigs = useMemo(() => {
-    const r = { designer: createHumanoid(kit, CAST.designer, { shadowRadius: 0.55 }), developer: createHumanoid(kit, CAST.developer), walker: createHumanoid(kit, CAST.walker) };
+    const r = { designer: createHumanoid(kitHandle.kit, CAST.designer, { shadowRadius: 0.55 }), developer: createHumanoid(kitHandle.kit, CAST.developer), walker: createHumanoid(kitHandle.kit, CAST.walker) };
     r.designer.apply(sim.designer); r.developer.apply(sim.developer); r.walker.apply(sim.walker);
     return r;
-  }, [kit, sim]);
+  }, [kitHandle, sim]);
   const screens = useMemo(() => ({ design: createScreen("design", 3), code: createScreen("code", 7) }), []);
   const walking = useRef(quality.walkingStaff);
   useEffect(() => { walking.current = quality.walkingStaff; }, [quality.walkingStaff]);
@@ -149,7 +149,11 @@ export function StudioStaff() {
     const offScreens = scheduler.add(`staff-screens-${id}`, () => { screens.design.repaint(); screens.code.repaint(); }, 0.9);
     return () => { offSim(); offScreens(); };
   }, [scheduler, id, sim, rigs, screens]);
-  useEffect(() => () => { kit.dispose(); screens.design.dispose(); screens.code.dispose(); }, [kit, screens]);
+  useEffect(() => () => {
+    rigs.designer.dispose(); rigs.developer.dispose(); rigs.walker.dispose();
+    kitHandle.release();
+    screens.design.dispose(); screens.code.dispose();
+  }, [rigs, kitHandle, screens]);
 
   return <group>
     <DesignerStation screen={screens.design} />

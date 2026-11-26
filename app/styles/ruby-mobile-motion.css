@@ -8,6 +8,8 @@
   .ruby-service-enquire:active svg { transform: translateX(5px); }
   .ruby-discipline:active::before { opacity: 1; }
   .ruby-hero-light, .ruby-discipline::before { transition: opacity .5s; }
+  /* Press feedback stands in for hover on touch: a short scale-down, transform only. */
+  .ruby-hero-actions a:active, .ruby-proof li a:active { transform: scale(.98); transition-duration: .12s; }
 }
 @keyframes ruby-light-drift {
   from { transform: translate3d(-4%, 3%, 0) scale(1.06); opacity: .82; }
@@ -206,6 +208,12 @@
   .studio-plate-glint {
     animation: none !important;
     will-change: auto;
+  }
+
+  .ruby-hero-actions a,
+  .ruby-hero-actions svg {
+    transition: border-color .2s, background .2s;
+    transform: none !important;
   }
 
   .ruby-page .reveal[data-reveal-state="armed"][data-reveal-variant="mask"],

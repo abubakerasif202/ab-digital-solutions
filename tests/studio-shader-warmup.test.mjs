@@ -54,7 +54,13 @@ test("later stages reuse completed shader status for the same renderer", async (
   await first.ready;
   assert.equal(h.reads(), 1);
   const second = h.start();
-  h.frame();
   await second.ready;
   assert.equal(h.reads(), 1);
+});
+
+test("already-lost context fails shader preparation without waiting for a frame", async () => {
+  const h = harness();
+  h.lose();
+  const job = h.start();
+  await assert.rejects(job.ready, /context lost/);
 });

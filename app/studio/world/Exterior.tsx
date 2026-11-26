@@ -21,10 +21,41 @@ const BRASS = "#bca06b";
 const CHARCOAL = "#22272a";
 const LINE_Y = 0.014;
 
+// Precomputed unit-box (36 vertices) and horizontal unit-quad (6 vertices) eliminate hundreds
+// of temporary BoxGeometry/PlaneGeometry allocations and toNonIndexed() copies on street mount.
+const UNIT_BOX = (() => {
+  const g = new THREE.BoxGeometry(1, 1, 1);
+  const nonIndexed = g.toNonIndexed();
+  g.dispose();
+  const pos = Float32Array.from(nonIndexed.getAttribute("position").array as Float32Array);
+  const norm = Float32Array.from(nonIndexed.getAttribute("normal").array as Float32Array);
+  nonIndexed.dispose();
+  return { pos, norm };
+})();
+
+const UNIT_FLAT = (() => {
+  const g = new THREE.PlaneGeometry(1, 1);
+  g.rotateX(-Math.PI / 2);
+  const nonIndexed = g.toNonIndexed();
+  g.dispose();
+  const pos = Float32Array.from(nonIndexed.getAttribute("position").array as Float32Array);
+  const norm = Float32Array.from(nonIndexed.getAttribute("normal").array as Float32Array);
+  nonIndexed.dispose();
+  return { pos, norm };
+})();
+
+type RawBucket = { positions: number[]; normals: number[]; colors: number[] };
+
 // Collects coloured primitives per material key and merges each key into one draw call.
 function createMesher() {
   const buckets = new Map<string, THREE.BufferGeometry[]>();
+  const rawBuckets = new Map<string, RawBucket>();
   const tint = new THREE.Color();
+  const getRaw = (key: string) => {
+    let bucket = rawBuckets.get(key);
+    if (!bucket) { bucket = { positions: [], normals: [], colors: [] }; rawBuckets.set(key, bucket); }
+    return bucket;
+  };
   const push = (key: string, source: THREE.BufferGeometry, hex: string) => {
     const g = source.index ? source.toNonIndexed() : source;
     if (g !== source) source.dispose();
@@ -32,19 +63,34 @@ function createMesher() {
     const count = g.getAttribute("position").count;
     tint.set(hex);
     const colors = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) { colors[i * 3] = tint.r; colors[i * 3 + 1] = tint.g; colors[i * 3 + 2] = tint.b; }
+    const r = tint.r, gr = tint.g, b = tint.b;
+    for (let i = 0; i < count; i++) { const idx = i * 3; colors[idx] = r; colors[idx + 1] = gr; colors[idx + 2] = b; }
     g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     const list = buckets.get(key);
     if (list) list.push(g); else buckets.set(key, [g]);
   };
   return {
     box(key: string, size: V3, pos: V3, hex: string, rot: V3 = [0, 0, 0]) {
-      const g = new THREE.BoxGeometry(...size);
-      if (rot[0]) g.rotateX(rot[0]);
-      if (rot[1]) g.rotateY(rot[1]);
-      if (rot[2]) g.rotateZ(rot[2]);
-      g.translate(...pos);
-      push(key, g, hex);
+      if (rot[0] || rot[1] || rot[2]) {
+        const g = new THREE.BoxGeometry(...size);
+        if (rot[0]) g.rotateX(rot[0]);
+        if (rot[1]) g.rotateY(rot[1]);
+        if (rot[2]) g.rotateZ(rot[2]);
+        g.translate(...pos);
+        push(key, g, hex);
+        return;
+      }
+      tint.set(hex);
+      const raw = getRaw(key);
+      const [sx, sy, sz] = size;
+      const [px, py, pz] = pos;
+      const r = tint.r, g = tint.g, b = tint.b;
+      const { pos: bp, norm: bn } = UNIT_BOX;
+      for (let i = 0; i < bp.length; i += 3) {
+        raw.positions.push(bp[i] * sx + px, bp[i + 1] * sy + py, bp[i + 2] * sz + pz);
+        raw.normals.push(bn[i], bn[i + 1], bn[i + 2]);
+        raw.colors.push(r, g, b);
+      }
     },
     cyl(key: string, rTop: number, rBottom: number, height: number, pos: V3, hex: string, segments = 8, rotZ = 0) {
       const g = new THREE.CylinderGeometry(rTop, rBottom, height, segments);
@@ -54,10 +100,17 @@ function createMesher() {
     },
     // Horizontal quad (road paint, paving joints) facing up.
     flat(key: string, x0: number, x1: number, z0: number, z1: number, y: number, hex: string) {
-      const g = new THREE.PlaneGeometry(x1 - x0, z1 - z0);
-      g.rotateX(-Math.PI / 2);
-      g.translate((x0 + x1) / 2, y, (z0 + z1) / 2);
-      push(key, g, hex);
+      tint.set(hex);
+      const raw = getRaw(key);
+      const sx = x1 - x0, sz = z1 - z0;
+      const px = (x0 + x1) / 2, pz = (z0 + z1) / 2;
+      const r = tint.r, g = tint.g, b = tint.b;
+      const { pos: fp, norm: fn } = UNIT_FLAT;
+      for (let i = 0; i < fp.length; i += 3) {
+        raw.positions.push(fp[i] * sx + px, fp[i + 1] + y, fp[i + 2] * sz + pz);
+        raw.normals.push(fn[i], fn[i + 1], fn[i + 2]);
+        raw.colors.push(r, g, b);
+      }
     },
     disc(key: string, radius: number, pos: V3, hex: string, rotY: number) {
       const g = new THREE.CircleGeometry(radius, 14);
@@ -66,10 +119,24 @@ function createMesher() {
       push(key, g, hex);
     },
     build(key: string) {
-      const list = buckets.get(key);
-      return list ? mergeGeometries(list) : null;
+      const list = buckets.get(key) ?? [];
+      const raw = rawBuckets.get(key);
+      if (raw && raw.positions.length) {
+        const batched = new THREE.BufferGeometry();
+        batched.setAttribute("position", new THREE.Float32BufferAttribute(raw.positions, 3));
+        batched.setAttribute("normal", new THREE.Float32BufferAttribute(raw.normals, 3));
+        batched.setAttribute("color", new THREE.Float32BufferAttribute(raw.colors, 3));
+        list.push(batched);
+        buckets.set(key, list);
+        rawBuckets.delete(key);
+      }
+      return list.length ? mergeGeometries(list) : null;
     },
-    dispose() { buckets.forEach((list) => list.forEach((g) => g.dispose())); buckets.clear(); },
+    dispose() {
+      buckets.forEach((list) => list.forEach((g) => g.dispose()));
+      buckets.clear();
+      rawBuckets.clear();
+    },
   };
 }
 type Mesher = ReturnType<typeof createMesher>;
