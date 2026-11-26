@@ -173,13 +173,21 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
     const nav = roomNav.current;
     const scene = stage.current;
     if (!nav || !scene) return;
+    // Keep native anchoring from applying the room-tab scroll correction twice.
+    const root = document.documentElement;
+    const priorAnchoring = root.style.overflowAnchor;
+    root.style.overflowAnchor = "none";
     const measure = () => { navDocumentTop.current = nav.getBoundingClientRect().top + scrollY; };
     const resize = new ResizeObserver(measure);
     resize.observe(scene);
     resize.observe(nav);
     measure();
     addEventListener("resize", measure);
-    return () => { resize.disconnect(); removeEventListener("resize", measure); };
+    return () => {
+      resize.disconnect();
+      removeEventListener("resize", measure);
+      root.style.overflowAnchor = priorAnchoring;
+    };
   }, []);
   useLayoutEffect(() => {
     const nav = roomNav.current;

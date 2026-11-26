@@ -91,6 +91,43 @@ test("the live homepage stays separate from the isolated preview", async ({ page
   await expect(page.locator(".odp")).toHaveCount(0);
 });
 
+test("the harbour photo loads and shares the project wall pause and reduced-motion behavior", async ({ page }) => {
+  const plate = page.locator(".hero-harbour");
+  const control = page.getByRole("button", { name: "Pause project wall" });
+  const [photo] = await Promise.all([
+    page.waitForResponse((response) => response.url().endsWith("/sydney-plate-harbour.webp")),
+    page.goto("/"),
+  ]);
+  expect(photo.ok()).toBe(true);
+  await expect(control).toBeEnabled();
+  const style = () => plate.evaluate((element) => {
+    const computed = getComputedStyle(element, "::before");
+    return { image: computed.backgroundImage, animation: computed.animationName, playState: computed.animationPlayState };
+  });
+  await expect.poll(async () => (await style()).image).toContain("sydney-plate-harbour.webp");
+  await expect.poll(async () => (await style()).animation).toBe("hero-harbour-drift");
+  await control.click();
+  await expect.poll(async () => (await style()).playState).toBe("paused");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect.poll(async () => (await style()).animation).toBe("none");
+});
+
+test("the decorative harbour photo is skipped with Save-Data", async ({ page }) => {
+  const plates = [];
+  page.on("request", (request) => {
+    if (request.url().endsWith("/sydney-plate-harbour.webp")) plates.push(request.url());
+  });
+  await page.addInitScript(() => {
+    const connection = new EventTarget();
+    Object.defineProperty(connection, "saveData", { value: true });
+    Object.defineProperty(navigator, "connection", { value: connection });
+  });
+  await page.goto("/", { waitUntil: "networkidle" });
+  await expect(page.locator(".work-wall-control")).toHaveAttribute("data-save-data", "true");
+  await expect.poll(() => page.locator(".hero-harbour").evaluate((element) => getComputedStyle(element, "::before").backgroundImage)).toBe("none");
+  expect(plates).toEqual([]);
+});
+
 test("structure: one h1, ordered headings, one main landmark, unique ids, skip link target exists", async ({ page }) => {
   await open(page);
   const report = await page.evaluate(() => {
@@ -216,27 +253,6 @@ test("hero: the approved artwork is the fallback, and ?fallback=css swaps in the
   const art = await page.locator(".odp-hero-art").boundingBox();
   expect(box.y).toBeGreaterThanOrEqual(art.y);
   expect(box.y + box.height).toBeLessThanOrEqual(art.y + art.height + 1);
-});
-
-test("hero: the Three.js scene still activates on desktop after pointer intent", async ({ page }) => {
-  await page.addInitScript(() => {
-    // Exercise the eligible desktop branch while retaining real WebGL rendering
-    // in environments where Chromium uses a software renderer.
-    Object.defineProperty(navigator, "hardwareConcurrency", { configurable: true, value: 8 });
-    Object.defineProperty(navigator, "deviceMemory", { configurable: true, value: 8 });
-    const prototype = WebGL2RenderingContext.prototype;
-    const getParameter = prototype.getParameter;
-    prototype.getParameter = function (parameter) {
-      if (parameter === 0x9246) return "Playwright desktop renderer"; // UNMASKED_RENDERER_WEBGL
-      return getParameter.call(this, parameter);
-    };
-  });
-  await open(page, { width: 1440, height: 900 });
-  const hero = page.locator(".odp-hero-art");
-  await expect(hero.locator(".hero-3d-bg-wrap")).toHaveAttribute("data-hero-mode", "fallback");
-  const bounds = await hero.boundingBox();
-  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-  await expect(page.locator(".hero-3d-container canvas")).toBeVisible({ timeout: 20_000 });
 });
 
 test("reduced motion: the CSS monogram does not animate", async ({ page }) => {

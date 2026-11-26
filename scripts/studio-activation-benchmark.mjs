@@ -1,7 +1,12 @@
 import { chromium } from "@playwright/test";
+import { existsSync } from "node:fs";
 const base = new URL(process.env.QA_BASE_URL || "http://127.0.0.1:3102");
 if (!["localhost", "127.0.0.1"].includes(base.hostname)) throw new Error("Local-only Studio benchmark.");
-const browser = await chromium.launch({ args: ["--use-gl=angle", "--use-angle=swiftshader"], chromiumSandbox: true });
+const browser = await chromium.launch({
+  executablePath: process.env.CHROMIUM_PATH || (existsSync("/usr/bin/chromium") ? "/usr/bin/chromium" : undefined),
+  args: ["--use-gl=angle", "--use-angle=swiftshader"],
+  chromiumSandbox: true,
+});
 try {
   for (const width of [390, 1440]) for (let run = 1; run <= 3; run++) {
     const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 }, reducedMotion: "no-preference" });

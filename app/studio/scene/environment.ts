@@ -18,16 +18,22 @@ export function createStudioEnvironment(buffer: ArrayBuffer): DataTexture {
   return texture;
 }
 
-async function fetchEnvironment(url: string): Promise<ArrayBuffer> {
-  const decompress = typeof DecompressionStream === "function"
-    ? new DecompressionStream("gzip")
-    : null;
-  const response = await fetch(decompress ? `${url}.gz` : url);
+async function fetchEnvironmentResponse(url: string) {
+  const response = await fetch(url);
   if (!response.ok) throw new Error(`Studio environment request failed (${response.status})`);
-  if (decompress && response.body) {
-    return new Response(response.body.pipeThrough(decompress)).arrayBuffer();
+  return response;
+}
+
+async function fetchEnvironment(url: string): Promise<ArrayBuffer> {
+  if (typeof DecompressionStream === "function") {
+    try {
+      const { body } = await fetchEnvironmentResponse(`${url}.gz`);
+      if (body) return await new Response(body.pipeThrough(new DecompressionStream("gzip"))).arrayBuffer();
+    } catch {
+      // A proxy can strip or unpack the gzip resource. The original HDR map is still available.
+    }
   }
-  return response.arrayBuffer();
+  return (await fetchEnvironmentResponse(url)).arrayBuffer();
 }
 
 /** Gives preload, rendering and retry the same React Three Fiber cache entry. */

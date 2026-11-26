@@ -339,6 +339,7 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
     for (const image of galleryWarmupImages(projects, selectedProject)) useTexture.preload(image);
   }, [phase, projects, selectedProject]);
   const [software, setSoftware] = useState(false);
+  const [detailedMaterials, setDetailedMaterials] = useState<boolean | null>(null);
   const [pixelRatio, setPixelRatio] = useState(1);
   useEffect(() => {
     const element = viewport.current;
@@ -377,6 +378,8 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
       setDpr(initialDpr);
       setPixelRatio(initialDpr);
       setSoftware(softwareRenderer);
+      // Keep shader variants fixed after entry, even if the frame-time probe later lowers simulation quality.
+      setDetailedMaterials(initialTier !== "low");
       setTier((current) => pickTier(capabilities, current));
       gl.domElement.setAttribute("aria-hidden", "true");
       gl.domElement.tabIndex = -1;
@@ -390,7 +393,7 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
       <HotspotPortalContext.Provider value={portal}>
       <HotspotsHiddenContext.Provider value={!!state.animal}>
       <SceneClock tier={tier} active={visible && animate && phase === "done"} onDowngrade={tier === "low" ? undefined : downgrade}>
-      <MaterialLibrary>
+      {detailedMaterials !== null && <MaterialLibrary detailed={detailedMaterials}>
         <WarmupStage name="core" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}>
           <Architecture />
           <Facade />
@@ -411,7 +414,7 @@ export default function StudioScene({ state, mapOpen, projects, selectedProject,
         <WarmupStage name="pedestrians" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}><Pedestrians /></WarmupStage>
         <WarmupStage name="wildlife" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}><Wildlife /></WarmupStage>
         <WarmupStage name="staff" phase={phase} onPhase={setPhase} onReady={onReady} {...preparation}><StudioStaff /></WarmupStage>
-      </MaterialLibrary>
+      </MaterialLibrary>}
       </SceneClock>
       </HotspotsHiddenContext.Provider>
       </HotspotPortalContext.Provider>

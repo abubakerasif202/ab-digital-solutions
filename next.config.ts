@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 // This file is loaded in isolation by the security test, so it cannot import the app.
 // Keep this string identical to STUDIO_ASSET_REV in app/studio/studio-assets.ts.
-const STUDIO_ASSET_REV = "r3";
+const STUDIO_ASSET_REV = "r2";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 const contentSecurityPolicy = [

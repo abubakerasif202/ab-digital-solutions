@@ -15,10 +15,15 @@
 .work-first-hero .hero-harbour::before {
   position: absolute;
   inset: -4% -3%;
-  background: url("/cinematic/sydney-plate-harbour.webp") 62% 46% / cover no-repeat;
-  filter: brightness(.58) contrast(1.12) saturate(.78) sepia(.16);
+  background: 62% 46% / cover no-repeat;
+  opacity: .58;
   transform-origin: 64% 44%;
   content: "";
+}
+
+/* Wait for connection preferences before requesting the decorative photo. */
+.work-first-hero:has(> .work-wall-control[data-ready]:where(:not([data-save-data]))) .hero-harbour::before {
+  background-image: url("/cinematic/sydney-plate-harbour.webp");
 }
 
 /* Colour grade: ruby shadow wash, gilt key light on the bridge, and a vignette that
@@ -39,12 +44,8 @@
   position: absolute;
   inset: 58% 8% 14% 34%;
   z-index: 1;
-  background:
-    repeating-linear-gradient(180deg, rgba(226, 197, 138, 0.16) 0 1px, transparent 1px 7px),
-    radial-gradient(ellipse 50% 40% at 50% 30%, rgba(201, 164, 92, 0.22), transparent 70%);
-  mix-blend-mode: screen;
+  background: radial-gradient(ellipse 50% 30% at 50% 34%, rgba(221, 179, 102, 0.27), transparent 76%);
   opacity: .42;
-  mask-image: radial-gradient(ellipse 60% 55% at 50% 40%, #000 30%, transparent 78%);
 }
 
 @keyframes hero-harbour-drift {
@@ -58,12 +59,11 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .work-first-hero:has(> .work-wall-control[data-ready]) .hero-harbour::before {
+  .work-first-hero:has(> .work-wall-control[data-ready]:where(:not([data-save-data]))) .hero-harbour::before {
     animation: hero-harbour-drift 48s cubic-bezier(.45, 0, .55, 1) infinite alternate;
-    will-change: transform;
   }
 
-  .work-first-hero:has(> .work-wall-control[data-ready]) .hero-harbour-glint {
+  .work-first-hero:has(> .work-wall-control[data-ready]:where(:not([data-save-data]))) .hero-harbour-glint {
     animation: hero-harbour-glint 11s ease-in-out infinite;
   }
 
@@ -75,13 +75,13 @@
 /* Phones and tablets: the plate sits under the work-wall band at the top of the hero. */
 @media (max-width: 900px) {
   .work-first-hero .hero-harbour { inset: 0 0 auto; height: clamp(340px, 92vw, 600px); }
-  .work-first-hero .hero-harbour::before { background-position: 58% 40%; filter: brightness(.52) contrast(1.1) saturate(.74) sepia(.16); }
+  .work-first-hero .hero-harbour::before { background-position: 58% 40%; opacity: .52; }
   .work-first-hero .hero-harbour-glint { inset: 56% 4% 10% 20%; }
 }
 
 /* Save-Data users still get the composition, without the 149 KB plate. */
 @media (prefers-reduced-data: reduce) {
-  .work-first-hero .hero-harbour::before { background-image: none; }
+  .work-first-hero .hero-harbour { display: none; }
 }
 
 @media (forced-colors: active) {

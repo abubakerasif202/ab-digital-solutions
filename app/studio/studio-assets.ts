@@ -1,6 +1,6 @@
 // Bump this when the bytes of a studio asset change. The public files keep
 // stable names; only the URL segment is versioned, and Next rewrites it back.
-export const STUDIO_ASSET_REV = "r3";
+export const STUDIO_ASSET_REV = "r2";
 
 export const monogramUrl = `/studio/${STUDIO_ASSET_REV}/ab-monogram.glb`;
 export const environmentUrl = `/studio/${STUDIO_ASSET_REV}/room-environment.bin`;

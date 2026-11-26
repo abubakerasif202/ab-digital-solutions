@@ -53,3 +53,13 @@ test("the environment loader decompresses gzip and uses the raw asset on older e
     Object.defineProperty(globalThis, "DecompressionStream", original);
   }
 });
+
+
+test("the environment loader recovers from a compressed download or decode failure", async (t) => {
+  const request = t.mock.method(globalThis, "fetch");
+  for (const failedResponse of [() => new Response(null, { status: 404 }), () => new Response("invalid gzip")]) {
+    request.mock.mockImplementation(async (url) => url.endsWith(".gz") ? failedResponse() : new Response(bytes));
+    assert.deepEqual(await new StudioEnvironmentLoader().loadAsync(environmentUrl), buffer);
+    assert.deepEqual(request.mock.calls.slice(-2).map(({ arguments: [url] }) => url), [`${environmentUrl}.gz`, environmentUrl]);
+  }
+});

@@ -21,7 +21,6 @@ export default defineConfig({
     launchOptions: browserName === "chromium" ? {
       executablePath: process.env.CHROMIUM_PATH || (existsSync("/usr/bin/chromium") ? "/usr/bin/chromium" : undefined),
       chromiumSandbox: true,
-      args: ["--use-gl=angle", "--use-angle=swiftshader"],
     } : {},
     screenshot: "only-on-failure",
     trace: "retain-on-failure",

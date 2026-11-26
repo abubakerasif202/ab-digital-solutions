@@ -1,10 +1,20 @@
 import { test, expect } from "@playwright/test";
+import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as THREE from "three";
 import sharp from "sharp";
 import { studioProjects } from "../../app/studio/studio-data.ts";
 // Exercise WebGL in full Chromium, including its production compositor.
-if (!process.env.QA_BROWSER || process.env.QA_BROWSER === "chromium") test.use({ channel: "chromium" });
+if (!process.env.QA_BROWSER || process.env.QA_BROWSER === "chromium") {
+  test.use({
+    channel: "chromium",
+    launchOptions: {
+      executablePath: process.env.CHROMIUM_PATH || (existsSync("/usr/bin/chromium") ? "/usr/bin/chromium" : undefined),
+      chromiumSandbox: true,
+      args: ["--use-gl=angle", "--use-angle=swiftshader"],
+    },
+  });
+}
 const output = process.env.QA_OUT || "qa/virtual-studio";
 test.beforeAll(() => {
   if (!["localhost", "127.0.0.1"].includes(new URL(process.env.QA_BASE_URL || "http://127.0.0.1:3100").hostname)) {
