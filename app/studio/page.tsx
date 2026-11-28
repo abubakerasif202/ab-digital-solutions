@@ -22,13 +22,9 @@ export default function StudioPage() {
   return <>
     <SiteHeader />
     <main id="main-content" className={styles.page}>
-      <header className={styles.introduction}>
-        <div><p className={styles.kicker}>The Virtual Studio / Spatial edition · 01</p><h1>A different <em>perspective.</em></h1></div>
-        <p>A place for ideas to take shape.<br /> Step inside our virtual studio.</p>
-      </header>
       <StudioExperience projects={studioProjects} services={studioServices} />
-      <section id="studio-content" className={styles.directory} aria-labelledby="directory-title">
-        <div className={styles.directoryIntro}><p className={styles.kicker}>Beyond the space</p><h2 id="directory-title">Good design opens <em>doors.</em></h2><p>The studio is a virtual expression of AB Web Studio, an independent digital studio in Sydney. Explore the same work and services here, with or without 3D.</p><Link href="/contact" className={styles.primary}>Start a project <StudioArrow /></Link></div>
+      <section id="studio-content" tabIndex={-1} className={styles.directory} aria-labelledby="directory-title">
+        <div className={styles.directoryIntro}><p className={styles.kicker}>Beyond the space</p><h2 id="directory-title">Projects and services</h2><p>The studio is a virtual expression of AB Web Studio, an independent digital studio in Sydney. Explore the same work and services here, with or without 3D.</p><Link href="/contact" className={styles.primary}>Start a project <StudioArrow /></Link></div>
         <div className={styles.directoryItems}>
           <article><p className={styles.kicker}>01 / Reception</p><h3>Welcome to AB.</h3><p>Design-led websites. Purpose-built technology. Meet the studio and the thinking behind the work.</p><Link href="/about">Meet the studio <StudioArrow /></Link></article>
           <article><p className={styles.kicker}>02 / Portfolio gallery</p><h3>Real work. Real context.</h3><p>Explore {studioProjects.length} project case studies, including public websites, hosted showcases and business systems. Each case study explains its destination.</p><details><summary>Browse the projects</summary><ul>{studioProjects.map((project) => <li key={project.slug}><Link href={`/work/${project.slug}`}>{project.name}</Link></li>)}</ul></details><Link href="/work">View all work <StudioArrow /></Link></article>

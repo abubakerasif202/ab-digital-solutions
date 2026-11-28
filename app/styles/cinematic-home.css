@@ -45,7 +45,6 @@
 
 .site-footer.studio-footer--home { padding-top: clamp(26px, 4vw, 60px); }
 
-.enquiry-form--simple .form-chip[hidden] { display: none; }
 .enquiry-form--simple select {
   width: 100%;
   min-height: 48px;

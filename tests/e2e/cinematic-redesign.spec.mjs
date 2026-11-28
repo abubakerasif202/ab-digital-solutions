@@ -129,7 +129,7 @@ test("mobile menu preserves keyboard focus and homepage enquiries retain submiss
   await page.getByRole("radio", { name: "Website", exact: true }).check();
   await page.getByLabel("Name").fill("Cinematic QA");
   await page.getByLabel("Email").fill("qa@example.invalid");
-  await page.getByLabel(/Tell us about your project/).fill("Automated browser validation. No real email is sent.");
+  await page.getByLabel(/Project details/).fill("Automated browser validation. No real email is sent.");
   await page.getByRole("button", { name: "Send project enquiry", exact: true }).click();
   await expect(page.getByRole("status")).toContainText(/sent|thank|received/i);
   expect(submissions).toBe(1);

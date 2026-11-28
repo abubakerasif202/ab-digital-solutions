@@ -38,7 +38,7 @@ test.describe("contact form service group", () => {
 
     await page.getByLabel("Name").fill("Accessibility QA");
     await page.getByLabel("Email").fill("qa@example.invalid");
-    await page.getByLabel(/Tell us about your project/).fill("Automated check; the request is intercepted.");
+    await page.getByLabel(/Project details/).fill("Automated check; the request is intercepted.");
     await page.getByRole("button", { name: /Send project enquiry/ }).click();
     await expect(alert).toBeVisible();
     await expect(web).toBeFocused();

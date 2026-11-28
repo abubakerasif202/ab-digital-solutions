@@ -22,12 +22,14 @@ const homepageServices = [
   [contactServiceKeys["web-design"], "Website"],
   [contactServiceKeys.ecommerce, "Online store"],
   [contactServiceKeys["custom-software"], "Business system"],
+  [contactServiceKeys.seo, contactServiceKeys.seo],
+  [contactServiceKeys.marketing, contactServiceKeys.marketing],
+  [contactServiceKeys.branding, contactServiceKeys.branding],
+  [contactServiceKeys.maintenance, contactServiceKeys.maintenance],
   [UNSURE_SERVICE, UNSURE_SERVICE],
 ] as const;
 
 const detailedServices = contactServices.map((service) => [service, service] as const);
-const additionalServices = detailedServices.filter(([service]) => !homepageServices.some(([value]) => value === service));
-const simplifiedServices = [...homepageServices, ...additionalServices];
 
 export function ContactForm({ titleAs: Title = "h3", simplified = false }: ContactFormProps) {
   const titleId = useId();
@@ -74,7 +76,7 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
   }, []);
 
   const serviceError = simplified ? "Choose a project type." : "Choose at least one service.";
-  const serviceChoices = simplified ? simplifiedServices : detailedServices;
+  const serviceChoices = simplified ? homepageServices : detailedServices;
 
   const clearError = (key: string) => setFieldErrors((current) => (current[key] ? { ...current, [key]: "" } : current));
 
@@ -202,8 +204,8 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
         <legend>What do you need? <span className="form-req" aria-hidden="true">*</span><span className="sr-only"> (required)</span></legend>
         <span className="sr-only" id={SERVICES_HELP_ID}>{simplified ? "Choose one project type." : "Choose at least one service. You can select more than one."}</span>
         <div className="form-chip-row">
-          {serviceChoices.map(([service, label], index) => (
-            <label className="form-chip" key={service} hidden={simplified && index >= homepageServices.length}>
+          {serviceChoices.map(([service, label]) => (
+            <label className="form-chip" key={service}>
               <input type={simplified ? "radio" : "checkbox"} name="service" value={service} />
               <span>{label}</span>
             </label>
@@ -236,11 +238,11 @@ export function ContactForm({ titleAs: Title = "h3", simplified = false }: Conta
       )}
 
       <div className="form-field">
-        <label htmlFor="message">Tell us about your project <span className="form-req" aria-hidden="true">*</span></label>
+        <label htmlFor="message">Project details <span className="form-req" aria-hidden="true">*</span></label>
         <textarea id="message" name="message" rows={5} maxLength={4000} required aria-required="true"
           placeholder="What you are building, who it is for and what success looks like."
           aria-invalid={Boolean(fieldErrors.message)} aria-describedby={describedBy("message", "message-help")} />
-        <p className="form-help" id="message-help">A few sentences is plenty. We reply with a practical next step.</p>
+        <p className="form-help" id="message-help">A few sentences is plenty.</p>
         {fieldErrors.message && <span className="field-error" id="message-error">{fieldErrors.message}</span>}
       </div>
 

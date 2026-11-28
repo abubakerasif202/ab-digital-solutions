@@ -50,7 +50,14 @@ export function GalleryPanel({ projects, index, onIndex }: { projects: StudioPro
   };
 
   return <>
-    <p className={styles.counter} role="status" aria-live="polite">Project {index + 1} of {projects.length}: {project.name}</p>
+    <p className={styles.counter} role="status" aria-live="polite">Project {index + 1} of {projects.length}<span className="sr-only">: {project.name}</span></p>
+    <h3>{project.name}</h3>
+    <p><Link prefetch={false} className={styles.primary} href={`/work/${project.slug}`}>View case study <StudioArrow /></Link></p>
+    <div className={styles.previewFrame}>
+      <Image key={project.slug} src={project.image} alt={project.alt} width={560} height={384} sizes="(max-width: 600px) 90vw, 360px" loading="eager" className={styles.projectImage} />
+    </div>
+    <p className={styles.kicker}>{project.sector} · {project.destinationLabel}</p>
+    <p>{project.description}</p>
     <div className={styles.stepper}>
       <button type="button" onClick={() => step(-1)} aria-label="Previous project">← Previous</button>
       <button type="button" onClick={() => step(1)} aria-label="Next project">Next →</button>
@@ -62,13 +69,6 @@ export function GalleryPanel({ projects, index, onIndex }: { projects: StudioPro
         </button>
       </li>)}
     </ul>
-    <div className={styles.previewFrame}>
-      <Image key={project.slug} src={project.image} alt={project.alt} width={560} height={384} sizes="(max-width: 600px) 90vw, 360px" loading="eager" className={styles.projectImage} />
-    </div>
-    <p className={styles.kicker}>{project.sector} · {project.destinationLabel}</p>
-    <h3>{project.name}</h3>
-    <p>{project.description}</p>
-    <Link prefetch={false} className={styles.primary} href={`/work/${project.slug}`}>View case study <StudioArrow /></Link>
     <label className={styles.fieldLabel} htmlFor="studio-project">Jump to a project</label>
     <select id="studio-project" value={index} onChange={(event) => onIndex(Number(event.target.value))}>{projects.map((entry, position) => <option value={position} key={entry.slug}>{entry.name}</option>)}</select>
   </>;
