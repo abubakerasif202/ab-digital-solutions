@@ -72,7 +72,8 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
   const kangarooBeat = useRef(0);
   const welcomed = useRef(false);
   const active = state.mode === "loading" || state.mode === "arrival" || state.mode === "intro" || state.mode === "explore";
-  const showBubble = active && bubblesOn && caption !== null;
+  const showEntrance = !active && (!state.panel || state.mode === "failed");
+  const showBubble = active && sceneReady && bubblesOn && caption !== null;
   const pendingIntro = state.mode === "loading" || state.mode === "arrival" || state.mode === "intro";
   const onFailure = useCallback(() => dispatch({ type: "fail" }), []);
   const onReady = useCallback(() => { setSceneReady(true); dispatch({ type: "ready" }); }, []);
@@ -336,16 +337,16 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
 
   return <section className={styles.experience} aria-label="Interactive virtual studio" data-conversion-area data-panel={state.panel} data-view={active ? "3d" : "still"} data-map={mapOpen}>
     <noscript><p className={styles.accessNote}>JavaScript is off. <a href="#studio-content">Explore the projects, services and contact links below.</a></p></noscript>
-    <div className={styles.stage} ref={stage} data-mode={state.mode}>
-      <Image src="/studio/studio-poster.png" alt="An original cutaway studio with brass architecture, a reception monogram, project gallery and ruby meeting lounge" width={1440} height={900} sizes="(max-width: 768px) 100vw, 1440px" className={styles.poster} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} preload />
-      {active && <SceneBoundary onFailure={onFailure}><StudioScene state={state} mapOpen={mapOpen} projects={projects} selectedProject={projectIndex} visible={visible} onReady={onReady} onFailure={onFailure} onSelect={onSelect} onProject={(index) => { selectProject(index); onSelect("gallery"); }} onService={(index) => { setServiceIndex(featuredServiceIndexes[index] ?? 0); onSelect("services"); }} onManual={onManual} onArrive={onArrive} /></SceneBoundary>}
-      <div className={styles.stageTop}><span className={styles.edition}>AB / THE VIRTUAL STUDIO</span><Link prefetch={false} href="/" className={styles.smallButton}>Back to website <StudioArrow /></Link></div>
-      {!active && (!state.panel || state.mode === "failed") ? <div className={styles.entry}>
-        <p className={styles.kicker}>{state.still ? "Still view" : "An independent perspective"}</p><h2>{state.still ? <>Choose a<br /><em>room.</em></> : <>Make yourself<br /><em>at home.</em></>}</h2>
-        <p>{state.mode === "failed" ? "3D could not load on this device. The studio’s projects, services and enquiry links are still available." : policy || (state.still ? "Pick a room below to see its details, or switch to the 3D view." : "Four spaces. One considered approach. Discover our work, our craft and what we could build together.")}</p>
+    <div className={styles.stage} ref={stage} data-mode={state.mode} data-entrance={showEntrance}>
+      <Image src="/studio/studio-poster.png" alt="An original cutaway studio with brass architecture, a reception monogram, project gallery and ruby meeting lounge" width={1440} height={900} sizes="(max-width: 768px) 100vw, 1440px" className={styles.poster} preload />
+      {active && <div className={styles.sceneLayer} data-ready={sceneReady} inert={!sceneReady}><SceneBoundary onFailure={onFailure}><StudioScene state={state} mapOpen={mapOpen} projects={projects} selectedProject={projectIndex} visible={visible} onReady={onReady} onFailure={onFailure} onSelect={onSelect} onProject={(index) => { selectProject(index); onSelect("gallery"); }} onService={(index) => { setServiceIndex(featuredServiceIndexes[index] ?? 0); onSelect("services"); }} onManual={onManual} onArrive={onArrive} /></SceneBoundary></div>}
+      {!showEntrance && <div className={styles.stageTop}><span className={styles.edition}>AB / THE VIRTUAL STUDIO</span><Link prefetch={false} href="/" className={styles.smallButton}>Back to website <StudioArrow /></Link></div>}
+      {showEntrance ? <div className={styles.entry}>
+        <h1>The Virtual <em>Studio</em></h1>
+        <p>{state.mode === "failed" ? "3D could not load on this device. The studio’s projects, services and enquiry links are still available." : policy || (state.still ? "Pick a room below to see its details, or switch to the 3D view." : "Visit our reception and portfolio gallery, or browse the work and services directly.")}</p>
         {!policy && <button ref={enterButton} type="button" className={styles.primary} onClick={() => enter(state.still)}>{state.mode === "failed" ? "Try 3D again" : state.still ? "Switch to 3D view" : "Enter the Studio"} <StudioArrow /></button>}
-        {!state.still && <a href="#studio-content" className={styles.textLink}>Explore without 3D ↓</a>}
-      </div> : null}
+        <a href="#studio-content" className={styles.textLink}>Explore without 3D <span aria-hidden="true">↓</span></a>
+      </div> : <h1 className="sr-only">The Virtual Studio</h1>}
       {pendingIntro && <div className={styles.loading} data-stage={state.mode}>
         <p role="status">{state.mode === "loading" ? (state.resume ? "Returning to the 3D view…" : "Preparing your studio…") : state.mode === "arrival" ? "Arriving in Sydney…" : "Welcome inside AB Web Studio"}</p>
         {state.mode === "intro" && <p className={styles.welcome}>“Welcome to AB Web Studio. Feel free to explore.”</p>}
@@ -354,9 +355,9 @@ export function StudioExperience({ projects, services }: { projects: StudioProje
           <button ref={skipButton} type="button" className={styles.smallButton} onClick={() => dispatch({ type: "skip" })}>Skip intro</button>
         </div>}
       </div>}
-      {active && !showBubble && <div className={styles.sceneCaption}><span>{state.outside ? "Sydney / Studio entrance" : state.mode === "arrival" ? "Sydney / Arrival" : mapOpen && state.overview ? "Studio overview" : `${String(roomNumber).padStart(2, "0")} / ${areaLabels[state.area]}`}</span>{hintOn && <span className={styles.hint}>{hint}</span>}</div>}
+      {active && sceneReady && !showBubble && <div className={styles.sceneCaption}><span>{state.outside ? "Sydney / Studio entrance" : state.mode === "arrival" ? "Sydney / Arrival" : mapOpen && state.overview ? "Studio overview" : `${String(roomNumber).padStart(2, "0")} / ${areaLabels[state.area]}`}</span>{hintOn && <span className={styles.hint}>{hint}</span>}</div>}
       {showBubble && <LocalBubble caption={caption} onDismiss={dismissCaption} />}
-      {!active && (state.panel || state.still) && <div className={styles.sceneCaption}><span>{String(roomNumber).padStart(2, "0")} / {areaLabels[state.area]}</span><span>Still view</span></div>}
+      {!active && !showEntrance && (state.panel || state.still) && <div className={styles.sceneCaption}><span>{String(roomNumber).padStart(2, "0")} / {areaLabels[state.area]}</span><span>Still view</span></div>}
     </div>
     <div className={styles.controls}>
       <nav ref={roomNav} className={styles.areaNav} aria-label="Studio rooms" onKeyDown={onRoomKey}>{areaOrder.map((area, index) => {

@@ -9,6 +9,7 @@ import { BrassMaterial, MarbleMaterial } from "./Materials";
 import { ConsultationDetail, GalleryStatusLight, ReceptionDetail, ServiceExhibit } from "./RoomDetails";
 import type { Area } from "../studio-state";
 import type { StudioProject } from "../studio-data";
+import { galleryDisplaySlots } from "./gallery-layout";
 import { collectHotspotOccluders } from "./hotspot-occlusion";
 
 /** Room labels step aside while an animal is framed, so they never cover it or swallow taps meant for it. */
@@ -150,16 +151,17 @@ function applyScreenSampling(map: THREE.Texture, anisotropy: number) {
   map.needsUpdate = true;
 }
 
-function DisplayImage({ image }: { image: string }) {
+function DisplayImage({ image, dimmed }: { image: string; dimmed: boolean }) {
   const texture = useTexture(image);
   const gl = useThree((state) => state.gl);
   useLayoutEffect(() => {
     applyScreenSampling(texture, gl.capabilities.getMaxAnisotropy());
   }, [texture, gl]);
-  return <mesh position={[0,0,.13]}><planeGeometry args={[3.4,2.33]} /><meshBasicMaterial map={texture} toneMapped={false} /></mesh>;
+  return <mesh position={[0,0,.13]}><planeGeometry args={[3.4,2.33]} /><meshBasicMaterial map={texture} color={dimmed ? "#888888" : "#ffffff"} toneMapped={false} /></mesh>;
 }
 function ProjectDisplay({ project, position, selected, crisp, onOpen }: { project: StudioProject; position: [number,number,number]; selected: boolean; crisp: boolean; onOpen: () => void }) {
   const [hover, setHover] = useState(false);
+  const preview = <DisplayImage image={screenTextureUrl(project.slug, false)} dimmed={crisp && !selected && !hover} />;
   return <group position={position}>
     <Block position={[0,-1.55,0]} size={[.19,.95,.15]} color="#ad9361" metalness={.8} />
     <Block position={[0,-2.01,.1]} size={[1.2,.07,.69]} color="#423e34" metalness={.6} />
@@ -167,21 +169,21 @@ function ProjectDisplay({ project, position, selected, crisp, onOpen }: { projec
       <boxGeometry args={[3.65,2.58,.22]} />
       <meshStandardMaterial color={selected ? "#c4a06c" : hover ? "#9e825d" : "#655543"} emissive={selected ? "#6b4f1c" : "#000000"} emissiveIntensity={selected ? .3 : 0} metalness={.75} roughness={.36} />
     </mesh>
-    <Suspense fallback={null}><DisplayImage image={screenTextureUrl(project.slug, crisp)} /></Suspense>
+    <Suspense fallback={null}>
+      {crisp && selected
+        ? <Suspense fallback={preview}><DisplayImage image={screenTextureUrl(project.slug, true)} dimmed={false} /></Suspense>
+        : preview}
+    </Suspense>
     <GalleryStatusLight active={selected} animate={crisp} />
   </group>;
 }
-const FRAMES = 3;
-export function galleryWindowStart(selected: number, total: number) {
-  return Math.min(Math.max(selected - 1, 0), Math.max(total - FRAMES, 0));
-}
 /** Three physical frames slide over the whole portfolio, so at most three textures are live at once. */
 export function Gallery({ projects, selected, crisp, onSelect, onProject }: { projects: StudioProject[]; selected: number; crisp: boolean; onSelect: (area: Area) => void; onProject: (index: number) => void }) {
-  const start = galleryWindowStart(selected, projects.length);
+  const slots = galleryDisplaySlots(selected, projects.length);
   return <group>
     <Block position={[-5,.13,-4.5]} size={[10,.22,5.3]} color="#171d20" />
-    {projects.slice(start, start + FRAMES).map((project, offset) => <ProjectDisplay key={project.slug} project={project} position={[-8.7 + offset*3.8,2.45,-5]} selected={start + offset === selected} crisp={crisp} onOpen={() => onProject(start + offset)} />)}
-    <Hotspot area="gallery" label="Portfolio" position={[-5,.5,-1.6]} onSelect={onSelect} />
+    {slots.map((index, slot) => index === null ? null : <ProjectDisplay key={projects[index].slug} project={projects[index]} position={[-8.7 + slot * 3.8, 2.45, index === selected ? -4.8 : -5]} selected={index === selected} crisp={crisp} onOpen={() => onProject(index)} />)}
+    <Hotspot area="gallery" label="Portfolio" position={[-3.7,1.2,-1.6]} onSelect={onSelect} />
   </group>;
 }
 

@@ -10,7 +10,8 @@ import { MaterialLibrary } from "./Materials";
 import { cameraFov, cameraProgress, cameraFieldOfView, facadeWaypoint, panelFrameOffset } from "./camera-motion";
 import { Architecture } from "./Architecture";
 import { environmentUrl, monogramUrl, screenTextureUrl } from "../studio-assets";
-import { Consultation, Gallery, galleryWindowStart, HotspotPortalContext, HotspotsHiddenContext, Reception, Services } from "./Spaces";
+import { Consultation, Gallery, HotspotPortalContext, HotspotsHiddenContext, Reception, Services } from "./Spaces";
+import { galleryDisplaySlots } from "./gallery-layout";
 import { useStudioModel } from "./load-model";
 import { Facade, Ground } from "./Facade";
 import { SceneClock } from "../world/SceneClock";
@@ -21,7 +22,7 @@ import { mobileWildlifeShots, wildlifeShots } from "../world/sim/wildlife";
 import { Receptionist } from "../world/characters/Receptionist";
 import { StudioStaff } from "../world/characters/StudioStaff";
 import { worldState } from "../world/worldState";
-import { ARRIVAL_SECONDS, GREET_AT, SUMMON_KANGAROO_AT, arrivalPose } from "../world/sim/arrival";
+import { ARRIVAL_SECONDS, GREET_AT, SUMMON_KANGAROO_AT, arrivalEnd, arrivalPose } from "../world/sim/arrival";
 import { canvasPixelRatio, pickTier, type Tier } from "../world/sim/quality";
 import type { Area, StudioState } from "../studio-state";
 import type { StudioProject } from "../studio-data";
@@ -35,8 +36,8 @@ const Pedestrians = lazy(() => import("../world/Pedestrians").then((module) => (
 useStudioModel.preload(monogramUrl);
 
 const shots: Record<Area, { position: [number,number,number]; target: [number,number,number] }> = {
-  reception: { position: [-1.4,1.85,6.8], target: [-5.8,1.35,2.9] },
-  gallery: { position: [-1,2.3,1], target: [-5,1.8,-5] },
+  reception: { position: arrivalEnd(false).p, target: arrivalEnd(false).l },
+  gallery: { position: [-4.9,2.55,1.25], target: [-4.9,2.3,-4.8] },
   // Frontal view of all four pedestals (x 2.2 to 8.8), clear of the lounge chairs behind the camera.
   services: { position: [5.5,2.3,1.9], target: [5.5,1.35,-4.4] },
   // Pulled back and raised so the table, chairs and the harbour view read together.
@@ -44,18 +45,16 @@ const shots: Record<Area, { position: [number,number,number]; target: [number,nu
 };
 
 const mobileShots: typeof shots = {
-  reception: { position: [-.5,1.8,8.2], target: [-5,1.9,3] },
-  gallery: { position: [-5,1.75,1], target: [-5,1.8,-5] },
+  reception: { position: arrivalEnd(true).p, target: arrivalEnd(true).l },
+  gallery: { position: [-4.9,2.25,.6], target: [-4.9,2.3,-4.8] },
   services: { position: [5.5,2.6,2.35], target: [5.5,1.5,-4.25] },
   consultation: { position: [2.5,1.8,7.5], target: [5.6,1.5,4.3] },
 };
 
 const entranceShot = { position: [-.5, 2.3, 16.8] as [number,number,number], target: [-.5, 2.4, 9] as [number,number,number] };
 const mobileEntranceShot = { position: [-.5, 2.1, 18] as [number,number,number], target: [-.5, 2.2, 9] as [number,number,number] };
-const welcomeShot = { position: [-1.4, 1.62, 6.6] as [number,number,number], target: [-5.8, 1.85, 2.9] as [number,number,number] };
 const mapShot = { position: [8, 18, 23] as [number,number,number], target: [0, 1.1, 0] as [number,number,number] };
 const portraitMapShot = { position: [3, 34, 18] as [number,number,number], target: [0, 1.1, 0] as [number,number,number] };
-const overviewShot = { position: [10.5, 8.2, 14.5] as [number,number,number], target: [0, 1.4, 1] as [number,number,number] };
 
 // Three's scene is an imperative GPU resource, not React state.
 function attachEnvironment(scene: THREE.Scene, texture: THREE.Texture) {
@@ -82,9 +81,10 @@ function Lighting({ onReady }: { onReady: () => void }) {
     <ambientLight intensity={.3} color="#e4d9cd" />
     <directionalLight position={[3,12,8]} intensity={1.8} color="#ffe2ae" />
     <directionalLight position={[-8,8,-6]} intensity={.65} color="#c4c7d6" />
-    <pointLight position={[-5,4,3]} intensity={24} distance={9} color="#ffd28a" />
+    <pointLight position={[-5,4,3]} intensity={24} distance={10} color="#ffd28a" />
     <pointLight position={[5,4,-4]} intensity={22} distance={10} color="#ffc67b" />
     <pointLight position={[5.6,3.5,4.3]} intensity={20} distance={8} color="#ffdca5" />
+    <pointLight position={[-4.4,3.6,-2]} intensity={16} distance={6} color="#ffe2b1" />
   </>;
 }
 
@@ -138,14 +138,12 @@ function CameraRig({ state, mapOpen, visible, onManual, onArrive, onGreet }: { s
       invalidate();
       return;
     }
-    // Show the whole cutaway for orientation. Room and street shots take over on selection.
-    const overview = (state.mode === "loading" && !state.resume) || (state.overview && !state.panel && !state.tour && !state.outside && state.mode !== "intro");
-    const mapping = mapOpen && overview;
+    // The first inside view is Reception. Reserve the wide cutaway for the room map.
+    const mapping = mapOpen && state.overview && !state.panel && !state.tour && !state.outside;
     const narrowMap = size.width < size.height;
-    let shot = mobile ? mobileShots[state.area] : overview ? overviewShot : shots[state.area];
+    let shot = (mobile ? mobileShots : shots)[state.area];
     if (mapping) shot = narrowMap ? portraitMapShot : mapShot;
     if (state.mode === "loading" && !state.resume) { const first = arrivalPose(0, mobile && portrait, baseFov); shot = { position: first.position, target: first.target }; }
-    else if (state.mode === "intro") shot = mobile ? mobileShots.reception : welcomeShot;
     else if (state.outside) shot = mobile ? mobileEntranceShot : entranceShot;
     if (state.animal && state.mode !== "loading" && state.mode !== "intro") shot = (mobile ? mobileWildlifeShots : wildlifeShots)[state.animal];
     if (camera instanceof THREE.PerspectiveCamera) {
@@ -293,11 +291,10 @@ function GalleryTextureWarmup({ image }: { image: string }) {
 }
 
 function GalleryWarmup({ projects, selected }: { projects: StudioProject[]; selected: number }) {
-  const start = galleryWindowStart(selected, projects.length);
   // ProjectDisplay keeps a local Suspense boundary for later image changes.
   // Gate the initial three cached textures here so that boundary cannot allow
   // the arrival film to begin with empty gallery screens.
-  return projects.slice(start, start + 3).map((project) => <GalleryTextureWarmup key={project.slug} image={screenTextureUrl(project.slug, false)} />);
+  return galleryDisplaySlots(selected, projects.length).map((index) => index === null ? null : <GalleryTextureWarmup key={projects[index].slug} image={screenTextureUrl(projects[index].slug, false)} />);
 }
 
 function readCapabilities(): Tier {

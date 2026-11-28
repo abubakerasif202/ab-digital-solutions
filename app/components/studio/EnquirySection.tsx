@@ -43,10 +43,10 @@ export function EnquirySection({
             <span className="section-index-num">{index}</span><span className="micro-rule" aria-hidden="true" />Start a conversation
           </Reveal>}
           <Heading id={headingId} className="studio-display">
-            Let’s build your next <em>digital advantage.</em>
+            Tell us about <em>your project</em>
           </Heading>
           <Reveal as="p" className="studio-body studio-body--lead" variant="blur" delay={80}>
-            Tell us what you are building and where you want the business to go. We will come back with a practical next step.
+            You don’t need a finished brief. We’ll review your enquiry and suggest a practical next step.
           </Reveal>
           <Reveal as="ul" className="studio-contact-rows" variant="fade-up" delay={140} aria-label="Contact directly">
             <li>

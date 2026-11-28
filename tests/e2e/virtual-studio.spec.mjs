@@ -40,7 +40,7 @@ for (const width of [390, 768, 1440]) {
     page.on("pageerror", (error) => errors.push(error.stack || error.message));
     page.on("request", (request) => { if (/\.glb/.test(request.url())) models.push(request.url()); });
     await page.goto("/studio", { waitUntil: "networkidle" });
-    await expect(page.locator("h1")).toHaveText("A different perspective.");
+    await expect(page.locator("h1")).toHaveText("The Virtual Studio");
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.abwebstudio.com.au/studio");
     await expect(page.locator("canvas")).toHaveCount(0); expect(models).toEqual([]);
     await page.screenshot({ path: `${output}/${width}-entry.png`, fullPage: true });
@@ -101,6 +101,7 @@ test("keyboard enters, skips, opens and closes without trapping focus", async ({
   const gallery = page.getByRole("navigation", { name: "Studio rooms" }).getByRole("button", { name: "Portfolio gallery" });
   await gallery.focus(); await page.keyboard.press("Enter");
   await expect(page.locator("#studio-panel-heading")).toBeFocused();
+  await page.keyboard.press("Tab"); await expect(page.getByRole("link", { name: "View case study" })).toBeFocused();
   await page.keyboard.press("Tab"); await expect(page.getByRole("button", { name: "Previous project" })).toBeFocused();
   await page.keyboard.press("Escape"); await expect(gallery).toBeFocused();
   await page.keyboard.press("Tab");
@@ -149,7 +150,7 @@ test("model load failure recovers even after Skip Intro", async ({ page }) => {
 test("server HTML works without JavaScript; homepage preview loads no model", async ({ browser, page }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
   const staticPage = await context.newPage(); await staticPage.goto("/studio");
-  await expect(staticPage.getByRole("heading", { name: "Good design opens doors." })).toBeVisible();
+  await expect(staticPage.getByRole("heading", { name: "Projects and services" })).toBeVisible();
   await staticPage.getByText("Browse the projects", { exact: true }).click();
   await expect(staticPage.locator("#studio-content").getByRole("link", { name: "Milestone Renovate", exact: true })).toBeVisible();
   await staticPage.screenshot({ path: `${output}/390-no-javascript.png`, fullPage: true });

@@ -57,7 +57,7 @@ test("homepage enquiry keeps inputs after failure and accepts an undecided proje
   const submit = form.getByRole("button", { name: "Send project enquiry" });
   await form.getByRole("textbox", { name: "Name", exact: true }).fill("Homepage QA");
   await form.getByRole("textbox", { name: "Email", exact: true }).fill("qa@example.invalid");
-  await form.getByLabel("Tell us about your project").fill("A local QA enquiry with no live delivery.");
+  await form.getByLabel("Project details").fill("A local QA enquiry with no live delivery.");
   let submissions = 0;
   await page.route("**/api/contact", async route => {
     submissions++;

@@ -56,6 +56,10 @@ test("desktop exposes all service categories and keeps Process within its height
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/");
   await expect(page.locator("#services button:visible")).toHaveCount(0);
-  await expect(page.locator("#services .ruby-service-options:visible")).toHaveCount(3);
+  await expect(page.locator("#services .ruby-service-options:visible")).toHaveCount(5);
+  const marketing = page.locator("#services li").filter({ has: page.getByRole("heading", { name: "Marketing & visibility" }) });
+  const support = page.locator("#services li").filter({ has: page.getByRole("heading", { name: "Ongoing support" }) });
+  await expect(marketing.getByRole("link", { name: /SEO & Local Visibility/i })).toHaveAttribute("href", "/services/seo-local-visibility");
+  await expect(support.getByRole("link", { name: /Website Maintenance & Support/i })).toHaveAttribute("href", "/services/website-maintenance");
   expect((await page.locator("#process").boundingBox()).height).toBeLessThanOrEqual(850);
 });

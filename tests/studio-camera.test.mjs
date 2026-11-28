@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { galleryDisplaySlots } from "../app/studio/scene/gallery-layout.ts";
 import { cameraFov, cameraProgress, cameraFieldOfView, facadeWaypoint, panelFrameOffset } from "../app/studio/scene/camera-motion.ts";
 
 test("camera travel clamps late frames and never overshoots", () => {
@@ -47,4 +48,11 @@ test("portrait framing follows the device orientation, not the resized stage", (
   assert.equal(cameraFieldOfView(true, false), 52);
   assert.equal(cameraFieldOfView(false, true), 42);
   assert.equal(cameraFieldOfView(false, false, true), 54);
+});
+test("the selected gallery screen stays centred from first to last", () => {
+  assert.deepEqual(galleryDisplaySlots(0, 6), [1, 0, 2]);
+  assert.deepEqual(galleryDisplaySlots(2, 6), [1, 2, 3]);
+  assert.deepEqual(galleryDisplaySlots(5, 6), [3, 5, 4]);
+  assert.deepEqual(galleryDisplaySlots(0, 1), [null, 0, null]);
+  assert.deepEqual(galleryDisplaySlots(0, 0), [null, null, null]);
 });

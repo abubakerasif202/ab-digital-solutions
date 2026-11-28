@@ -1,18 +1,15 @@
 .page { padding-top: var(--header-height, 80px); background: #08090a; color: #f4f1ea; }
-.introduction { width: min(1440px, 100%); margin: auto; padding: 54px clamp(20px, 4vw, 64px) 38px; display: flex; justify-content: space-between; align-items: end; gap: 32px; }
 .kicker { font: 500 var(--fs-label)/1.6 var(--font-mono), monospace; letter-spacing: .17em; text-transform: uppercase; color: #c5aa78; margin: 0 0 16px; }
-.introduction h1 { font: 400 clamp(42px, 5.1vw, 76px)/1.02 var(--font-display), serif; letter-spacing: -.035em; margin: 0; }
 .page em { color: #dec18b; font-family: var(--font-display), serif; font-weight: 400; }
-.introduction > p { font-size: 13px; line-height: 1.8; color: #a9a69f; margin: 0 0 3px; }
 .experience { width: min(1440px, 100%); margin-inline: auto; }
 .stage { scroll-margin-top: calc(var(--header-height, 80px) + 12px); height: min(70vw, 710px); min-height: 480px; position: relative; isolation: isolate; overflow: hidden; background: #101112; border-block: 1px solid #c5aa7829; }
-.poster { object-fit: cover; object-position: center; z-index: -2; opacity: .72; }
+.poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: -2; opacity: .72; }
 .stage[data-mode="static"]::after, .stage[data-mode="failed"]::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #080a0ce8 0%, #080a0cbb 28%, #080a0c00 75%), linear-gradient(0deg, #080a0c88, transparent 35%); z-index: -1; pointer-events: none; }
 .stageTop { position: absolute; left: 32px; right: 32px; top: 24px; display: flex; align-items: center; justify-content: space-between; pointer-events: none; z-index: 2; }
 .edition { font: var(--fs-label) var(--font-mono), monospace; letter-spacing: .17em; color: #dfd7c7; text-shadow: 0 1px 8px #000; }
 .smallButton { display: inline-flex; align-items: center; gap: 16px; border: 1px solid #bda77c55; background: #121516d9; color: #efe8d9; padding: 10px 16px; font-size: var(--fs-label); min-height: 44px; text-decoration: none; cursor: pointer; pointer-events: auto; }
 .entry { position: absolute; top: 50%; left: clamp(24px, 5vw, 80px); transform: translateY(-46%); width: min(360px, calc(100% - 48px)); }
-.entry h2 { font: 400 clamp(48px, 5.8vw, 80px)/.98 var(--font-display), serif; letter-spacing: -.03em; margin: 18px 0 24px; }
+.entry h1 { font: 400 clamp(48px, 5.8vw, 80px)/.98 var(--font-display), serif; letter-spacing: -.03em; margin: 18px 0 24px; }
 .entry > p:not(.kicker) { color: #c1bdb4; font-size: 14px; line-height: 1.8; margin-bottom: 25px; max-width: 310px; }
 .primary { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; background: #d8bb83; color: #141312 !important; border: 1px solid #d8bb83; min-height: 48px; padding: 13px 22px; font: 600 13px/1.4 var(--font-sans), sans-serif; cursor: pointer; text-decoration: none; transition: background .2s; }
 .primary:hover { background: #efdab0; }
@@ -73,8 +70,8 @@
 .previewArt { display: block; position: relative; border: 1px solid #bba07255; }
 .previewArt img { width: 100%; height: auto; display: block; }
 .previewArt span { position: absolute; bottom: 16px; left: 16px; font: var(--fs-label) var(--font-mono), monospace; letter-spacing: .13em; color: #ead5ab; }
-@media (max-width: 900px) { .introduction { padding-top: 38px; } .introduction > p { max-width: 160px; font-size: var(--fs-label); } .directory { gap: 40px; grid-template-columns: 1fr; padding-block: 70px; } .directoryIntro { max-width: 520px; } .previewInner { gap: 28px; } .areaNav button { padding-inline: 6px; font-size: var(--fs-label); } .areaNav button span { margin-right: 6px; } }
-@media (max-width: 600px) { .introduction { padding: 32px 22px 24px; display: block; } .introduction > p { max-width: none; margin-top: 16px; } .introduction > p br { display: none; } .introduction h1 { font-size: 43px; } .stage { min-height: 570px; height: 72svh; max-height: 720px; } .poster { object-position: 58% center; } .stageTop { left: 18px; right: 18px; top: 18px; } .edition { font-size: var(--fs-label); max-width: 130px; line-height: 1.8; } .entry { left: 24px; top: 49%; } .entry h2 { font-size: 62px; } .entry > p:not(.kicker) { max-width: 280px; } .controls { padding-inline: 16px; } .areaNav { grid-template-columns: repeat(2, 1fr); } .areaNav button { padding: 16px 8px; min-height: 54px; font-size: var(--fs-label); } .areaNav button span { margin-right: 12px; } .secondaryControls { gap: 8px 16px; font-size: var(--fs-label); padding-block: 8px; } .secondaryControls > span { max-width: 130px; } .accessNote { padding-inline: 22px; font-size: var(--fs-label); } .sceneCaption { left: 18px; right: 18px; bottom: 18px; flex-direction: column; font-size: var(--fs-label); } .panel { top: auto; bottom: 70px; max-height: 48%; right: 14px; width: calc(100% - 28px); padding: 18px 22px; } .panel h2 { font-size: 33px; } .panelTop .kicker { letter-spacing: .08em; } .loading { left: 14px; right: 14px; top: 76px; bottom: auto; gap: 8px; justify-content: space-between; padding: 8px 12px; } .loading p { font-size: var(--fs-label); } .directoryItems { grid-template-columns: 1fr; gap: 28px; } .previewInner { grid-template-columns: 1fr; padding-block: 44px; } .previewArt { order: -1; } }
+@media (max-width: 900px) { .directory { gap: 40px; grid-template-columns: 1fr; padding-block: 70px; } .directoryIntro { max-width: 520px; } .previewInner { gap: 28px; } .areaNav button { padding-inline: 6px; font-size: var(--fs-label); } .areaNav button span { margin-right: 6px; } }
+@media (max-width: 600px) { .stage { min-height: 570px; height: 72svh; max-height: 720px; } .poster { object-position: 58% center; } .stageTop { left: 18px; right: 18px; top: 18px; } .edition { font-size: var(--fs-label); max-width: 130px; line-height: 1.8; } .entry { left: 24px; top: 49%; } .entry > p:not(.kicker) { max-width: 280px; } .controls { padding-inline: 16px; } .areaNav { grid-template-columns: repeat(2, 1fr); } .areaNav button { padding: 16px 8px; min-height: 54px; font-size: var(--fs-label); } .areaNav button span { margin-right: 12px; } .secondaryControls { gap: 8px 16px; font-size: var(--fs-label); padding-block: 8px; } .secondaryControls > span { max-width: 130px; } .accessNote { padding-inline: 22px; font-size: var(--fs-label); } .sceneCaption { left: 18px; right: 18px; bottom: 18px; flex-direction: column; font-size: var(--fs-label); } .panel { top: auto; bottom: 70px; max-height: 48%; right: 14px; width: calc(100% - 28px); padding: 18px 22px; } .panel h2 { font-size: 33px; } .panelTop .kicker { letter-spacing: .08em; } .loading { left: 14px; right: 14px; top: 76px; bottom: auto; gap: 8px; justify-content: space-between; padding: 8px 12px; } .loading p { font-size: var(--fs-label); } .directoryItems { grid-template-columns: 1fr; gap: 28px; } .previewInner { grid-template-columns: 1fr; padding-block: 44px; } .previewArt { order: -1; } }
 @media (prefers-reduced-motion: reduce) { .primary { transition: none; } }
 
 @media (max-width: 699px) {
@@ -299,7 +296,7 @@
   .stageTop .edition { max-width: 100%; white-space: nowrap; }
   .stageTop .smallButton { white-space: nowrap; gap: 10px; padding: 8px 14px; }
   .loading { top: max(108px, 7rem); }
-  .entry { top: 7rem; transform: none; max-height: calc(100% - 7.5rem); overflow-y: auto; }
+
 }
 
 @media (max-width: 520px) and (max-height: 340px) and (orientation: landscape) {
@@ -366,4 +363,31 @@
     margin: 0;
     box-shadow: 0 18px 45px #0007;
   }
+}
+
+
+.sceneLayer { position: absolute; inset: 0; opacity: 0; transition: opacity .3s ease; }
+.sceneLayer[data-ready="true"] { opacity: 1; }
+.entry .textLink { gap: .55em; }
+
+@media (max-width: 699px), (max-width: 999px) and (max-height: 500px) and (orientation: landscape) {
+  .experience .stage[data-entrance="true"] { height: auto; min-height: 0; max-height: none; }
+  .stage[data-entrance="true"]::after { content: none; }
+  .stage[data-entrance="true"] .poster {
+    position: relative;
+    display: block;
+    height: auto;
+    aspect-ratio: 8 / 5;
+    z-index: auto;
+    opacity: 1;
+  }
+  .entry { position: static; width: auto; padding: 22px 24px 18px; transform: none; }
+  .entry h1 { font-size: clamp(39px, 11vw, 54px); margin: 0 0 12px; }
+  .entry > p:not(.kicker) { max-width: 37ch; margin: 0 0 15px; }
+  .entry .textLink { margin-top: 6px; }
+  .stage:has(.sceneLayer[data-ready="false"]) .poster { object-fit: contain; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sceneLayer { transition: none; }
 }
